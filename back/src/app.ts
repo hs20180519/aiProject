@@ -10,7 +10,7 @@ import passport from "passport";
 import { local, jwt, kakao } from "./passport";
 import authRouter from "./routers/authRouter";
 
-const app = express();
+const app: express.Application = express();
 
 app.use(cors());
 app.use(express.json());
