@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "/Users/daechanjo/coding/project/ts/back/src/logs/debug/.b548c793c5af7b53da97de1c4a84b1584a0b7665-audit.json",
+    "files": [
+        {
+            "date": 1694243564049,
+            "name": "/Users/daechanjo/coding/project/ts/back/src/logs/debug/debug-2023-09-09.log",
+            "hash": "eeb0928a345d2e620acd496ba5d021b46858ec3501638f0d10dce24de867a36f"
+        }
+    ],
+    "hashType": "sha256"
+}
