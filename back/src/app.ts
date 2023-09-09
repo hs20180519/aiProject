@@ -18,9 +18,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(
-	"/api-docs",
-	swaggerUi.serve,
-	swaggerUi.setup(swaggerFile, { explorer: true }),
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerFile, { explorer: true }),
 );
 app.use(resLogingMiddleware);
 app.use(passport.initialize());
