@@ -9,6 +9,11 @@
             "date": 1694243564049,
             "name": "/Users/daechanjo/coding/project/ts/back/src/logs/info/info-2023-09-09.log",
             "hash": "7ab07c099af0424d9405354d8c7e96db69642a5e6ec67b05019d1111f51a6cf9"
+        },
+        {
+            "date": 1694275461978,
+            "name": "/Users/daechanjo/coding/project/ts/back/src/logs/info/info-2023-09-10.log",
+            "hash": "5cb582bd1bcb1f2f193594a8997813e551b65f29e2e5e0bbfe09761a832213de"
         }
     ],
     "hashType": "sha256"

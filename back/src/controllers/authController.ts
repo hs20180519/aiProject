@@ -52,6 +52,7 @@ export const login = async (
 ) => {
     try {
         const authReq = req as AuthenticatedRequest;
+        console.log(authReq);
         if (!authReq.user)
             return res
                 .status(401)
@@ -61,9 +62,7 @@ export const login = async (
             user: authReq.user.name,
             nickname: authReq.user.nickname,
         };
-        res.status(200).json({
-            message: `어서오세요 ${loginUser.nickname}님!`,
-        });
+        res.status(200).json(loginUser);
     } catch (error) {
         console.error(error);
         next(error);

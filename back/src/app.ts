@@ -9,6 +9,7 @@ import swaggerUi from "swagger-ui-express";
 import passport from "passport";
 import { local, jwt, kakao } from "./passport";
 import authRouter from "./routers/authRouter";
+import uploadRouter from "./routers/uploadRouter";
 
 const app: express.Application = express();
 
@@ -29,6 +30,7 @@ passport.use("jwt", jwt);
 passport.use("kakao", kakao);
 
 app.use("/auth", authRouter);
+app.use("/upload", uploadRouter);
 // app.use(postRouter);
 // app.use(commentRouter);
 app.use(errorMiddleware);
