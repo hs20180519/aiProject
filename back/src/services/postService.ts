@@ -24,6 +24,63 @@ export const createPost = async (
 
 export const getPostByPostId = async (postId: number) => {
     try {
+        return await prisma.post.findUnique({
+            where: { id: postId },
+            include: {
+                comment: true,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const getPostsByUserId = async (
+    userId: number,
+    page?: number,
+    limit?: number,
+) => {
+    try {
+        const totalPostsCount = await prisma.post.count({
+            where: { authorId: userId },
+        });
+        const totalPages = Math.ceil(totalPostsCount / (limit || 10));
+        const offset =
+            page !== undefined && limit !== undefined
+                ? { skip: (page - 1) * limit, take: limit }
+                : {};
+
+        const posts = await prisma.post.findMany({
+            where: { authorId: userId },
+            include: {
+                comment: true,
+            },
+            ...(offset as object),
+        });
+        return { posts, currentPage: page, totalPages: totalPages };
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const getAllPosts = async (page?: number, limit?: number) => {
+    try {
+        const totalPostsCount = await prisma.post.count();
+        const totalPages = Math.ceil(totalPostsCount / (limit || 10));
+        const offset =
+            page !== undefined && limit !== undefined
+                ? { skip: (page - 1) * limit, take: limit }
+                : {};
+        const posts = await prisma.post.findMany({
+            include: {
+                comment: true,
+            },
+            ...(offset as object),
+        });
+
+        return { posts, currentPage: page, totalPages: totalPages };
     } catch (error) {
         console.error(error);
         throw error;
