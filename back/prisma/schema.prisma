@@ -34,6 +34,7 @@ model Post {
   updatedAt DateTime  @updatedAt
   author    User?     @relation(fields: [authorId], references: [id])
   authorId  Int?
+  viewCount Int       @default(0)
   comment   Comment[]
 }
 

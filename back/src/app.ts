@@ -10,6 +10,7 @@ import passport from "passport";
 import { local, jwt, kakao } from "./passport";
 import authRouter from "./routers/authRouter";
 import uploadRouter from "./routers/uploadRouter";
+import postRouter from "./routers/postRouter";
 
 const app: express.Application = express();
 
@@ -31,7 +32,7 @@ passport.use("kakao", kakao);
 
 app.use("/auth", authRouter);
 app.use("/upload", uploadRouter);
-// app.use(postRouter);
+app.use("/post", postRouter);
 // app.use(commentRouter);
 app.use(errorMiddleware);
 

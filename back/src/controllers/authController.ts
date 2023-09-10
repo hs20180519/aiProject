@@ -15,7 +15,6 @@ export const createUser = async (
 ) => {
     try {
         const { email, password, name, nickname } = req.body;
-        console.log(req.body);
         const emailDuplicateCheck = await authService.isEmailTaken(email);
         const nicknameDuplicateCheck = await authService.isNicknameTaken(
             nickname,
@@ -39,7 +38,6 @@ export const createUser = async (
             message: `회원가입에 성공했습니다 :: ${newUser.nickname}`,
         });
     } catch (error) {
-        console.log(error);
         console.error(error);
         next(error);
     }
@@ -52,7 +50,6 @@ export const login = async (
 ) => {
     try {
         const authReq = req as AuthenticatedRequest;
-        console.log(authReq);
         if (!authReq.user)
             return res
                 .status(401)
