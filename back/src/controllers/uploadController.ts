@@ -8,6 +8,11 @@ export const uploadProfileImage = async (
     res: Response,
     next: NextFunction,
 ) => {
+    /**
+     * #swagger.tags = ['Upload']
+     * #swagger.summary = '프로필 이미지 업로드'
+     * #swagger.description = '프로필 이미지 업로드 후 업로드된 이미지 경로 반환. 실제 이미지는 public/images에 저장'
+     */
     try {
         const userId = (req.user as User).id;
         const imageUrl = path.join(

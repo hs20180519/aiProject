@@ -7,6 +7,11 @@ export const createPost = async (
     res: Response,
     next: NextFunction,
 ) => {
+    /**
+     * #swagger.tags = ['Post']
+     * #swagger.summary = '게시글 작성'
+     * #swagger.description = '게시글 작성 후 게시글 반환'
+     */
     try {
         const userId = (req.user as User).id;
         const { title, content } = req.body;
@@ -23,6 +28,11 @@ export const getPosts = async (
     res: Response,
     next: NextFunction,
 ) => {
+    /**
+     * #swagger.tags = ['Post']
+     * #swagger.summary = '게시글 조회'
+     * #swagger.description = '요청 쿼리에 따라 게시글 조회. postId가 있으면 해당 게시글 조회, userId가 있으면 해당 유저의 게시글 조회, 둘 다 없으면 모든 게시글 조회'
+     */
     try {
         const postId = Number(req.query.postId);
         const userId = Number(req.query.userId);
@@ -60,6 +70,11 @@ export const updatePost = async (
     res: Response,
     next: NextFunction,
 ) => {
+    /**
+     * #swagger.tags = ['Post']
+     * #swagger.summary = '게시글 수정'
+     * #swagger.description = '게시글 작성자 또는 관리자만 수정 가능'
+     */
     try {
         const user = req.user as User;
         const postId = Number(req.params.postId);
@@ -88,6 +103,11 @@ export const deletePost = async (
     res: Response,
     next: NextFunction,
 ) => {
+    /**
+     * #swagger.tags = ['Post']
+     * #swagger.summary = '게시글 삭제'
+     * #swagger.description = '게시글 작성자 또는 관리자만 삭제 가능. 게시글 삭제 시 해당 게시글의 댓글도 함께 삭제'
+     */
     try {
         const postId = Number(req.params.postId);
         const post = await postService.getPostByPostId(postId);

@@ -13,6 +13,11 @@ export const createUser = async (
     res: Response,
     next: NextFunction,
 ) => {
+    /**
+     * #swagger.tags = ['Auth']
+     * #swagger.summary = '회원가입'
+     * #swagger.description = '이메일과 닉네임 중복 검사 후 회원가입'
+     */
     try {
         const { email, password, name, nickname } = req.body;
         const emailDuplicateCheck = await authService.isEmailTaken(email);
@@ -49,6 +54,11 @@ export const login = async (
     next: NextFunction,
 ) => {
     try {
+        /**
+         * #swagger.tags = ['Auth']
+         * #swagger.summary = '로그인'
+         * #swagger.description = '로컬 로그인. 로그인 성공 시 JWT 발급'
+         */
         const authReq = req as AuthenticatedRequest;
         if (!authReq.user)
             return res

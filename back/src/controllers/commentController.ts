@@ -7,6 +7,10 @@ export const createComment = async (
     res: Response,
     next: NextFunction,
 ) => {
+    /**
+     * #swagger.tags = ['Comment']
+     * #swagger.summary = '댓글 작성'
+     */
     try {
         const userId = (req.user as User).id;
         const postId = Number(req.query.postId);
@@ -31,6 +35,11 @@ export const updateComment = async (
     res: Response,
     next: NextFunction,
 ) => {
+    /**
+     * #swagger.tags = ['Comment']
+     * #swagger.summary = '댓글 수정'
+     * #swagger.description = '댓글 작성자 또는 관리자만 수정 가능'
+     */
     try {
         const user = req.user as User;
         const commentId = Number(req.params.commentId);
@@ -58,6 +67,11 @@ export const deleteComment = async (
     res: Response,
     next: NextFunction,
 ) => {
+    /**
+     * #swagger.tags = ['Comment']
+     * #swagger.summary = '댓글 삭제'
+     * #swagger.description = '댓글 작성자 또는 관리자만 삭제 가능'
+     */
     try {
         const user = req.user as User;
         const commentId = Number(req.params.commentId);
