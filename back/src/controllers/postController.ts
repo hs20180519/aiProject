@@ -61,6 +61,7 @@ export const updatePost = async (
     next: NextFunction,
 ) => {
     try {
+        const user = req.user as User;
         const postId = Number(req.params.postId);
         const { title, content } = req.body;
         const post = await postService.getPostByPostId(postId);
@@ -68,10 +69,7 @@ export const updatePost = async (
             return res
                 .status(404)
                 .json({ message: "존재하지 않는 게시글입니다." });
-        if (
-            post.authorId !== (req.user as User).id &&
-            !(req.user as User).manager
-        )
+        if (post.authorId !== user.id && !user.manager)
             return res.status(403).json({ message: "수정할 권한이 없습니다." });
         const updatedPost = await postService.updatePost(
             postId,

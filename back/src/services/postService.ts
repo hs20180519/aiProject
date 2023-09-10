@@ -117,10 +117,15 @@ export const updatePost = async (
 };
 
 export const deletePostAndComments = async (postId: number) => {
-    await prisma.comment.deleteMany({
-        where: { postId: postId },
-    });
-    await prisma.post.delete({
-        where: { id: postId },
-    });
+    try {
+        await prisma.comment.deleteMany({
+            where: { postId: postId },
+        });
+        await prisma.post.delete({
+            where: { id: postId },
+        });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 };
