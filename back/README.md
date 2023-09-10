@@ -16,6 +16,13 @@ MVC 아키텍쳐 패턴 기반 타입스크립트 보일러 플레이트
 
 ---
 
+> __ERD__
+
+![boilerplate_erd](https://github.com/daechan-jo/express.ts-prisma-boilerplate/assets/103374153/12a3b1a5-5878-4875-b0c9-3d6ca84e1e8f)
+
+
+---
+
 > __실행하기__
 
 1. 서버 루트 경로에 dotenv 파일 생성 및 설정
