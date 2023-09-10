@@ -86,3 +86,41 @@ export const getAllPosts = async (page?: number, limit?: number) => {
         throw error;
     }
 };
+
+export const updatePostViewCount = async (postId: number) => {
+    try {
+        return await prisma.post.update({
+            where: { id: postId },
+            data: { viewCount: { increment: 1 } },
+            include: { comment: true },
+        });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const updatePost = async (
+    postId: number,
+    title: string,
+    content: string,
+) => {
+    try {
+        return await prisma.post.update({
+            where: { id: postId },
+            data: { title, content },
+        });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const deletePostAndComments = async (postId: number) => {
+    await prisma.comment.deleteMany({
+        where: { postId: postId },
+    });
+    await prisma.post.delete({
+        where: { id: postId },
+    });
+};
