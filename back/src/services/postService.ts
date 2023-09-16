@@ -45,7 +45,7 @@ export const getPostsByUserId = async (
         const totalPostsCount = await prisma.post.count({
             where: { authorId: userId },
         });
-        const totalPages = Math.ceil(totalPostsCount / (limit || 10));
+        const totalPages = Math.ceil(totalPostsCount / (limit ?? 10));
         const offset =
             page !== undefined && limit !== undefined
                 ? { skip: (page - 1) * limit, take: limit }
@@ -68,7 +68,7 @@ export const getPostsByUserId = async (
 export const getAllPosts = async (page?: number, limit?: number) => {
     try {
         const totalPostsCount = await prisma.post.count();
-        const totalPages = Math.ceil(totalPostsCount / (limit || 10));
+        const totalPages = Math.ceil(totalPostsCount / (limit ?? 10));
         const offset =
             page !== undefined && limit !== undefined
                 ? { skip: (page - 1) * limit, take: limit }

@@ -20,15 +20,13 @@ export const createUser = async (
      */
     try {
         const { email, password, name, nickname } = req.body;
-        const emailDuplicateCheck = await authService.isEmailTaken(email);
-        const nicknameDuplicateCheck = await authService.isNicknameTaken(
-            nickname,
-        );
-        if (emailDuplicateCheck)
+        const { emailExists, nicknameExists } =
+            await authService.signUpDuplicateCheck(email, nickname);
+        if (emailExists)
             return res
                 .status(409)
                 .json({ message: "이미 존재하는 이메일입니다." });
-        if (nicknameDuplicateCheck)
+        if (nicknameExists)
             return res
                 .status(409)
                 .json({ message: "이미 존재하는 닉네임입니다." });
@@ -69,7 +67,7 @@ export const login = async (
             user: authReq.user.name,
             nickname: authReq.user.nickname,
         };
-        res.status(200).json(loginUser);
+        return res.status(200).json(loginUser);
     } catch (error) {
         console.error(error);
         next(error);

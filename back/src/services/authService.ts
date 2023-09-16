@@ -2,31 +2,35 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const isEmailTaken = async (email: any) => {
-	const user = await prisma.user.findUnique({
-		where: {
-			email,
-		},
-	});
-	return !!user;
-};
-
-export const isNicknameTaken = async (nickname: string) => {
-	const user = await prisma.user.findUnique({
-		where: {
-			nickname,
-		},
-	});
-	return !!user;
+export const signUpDuplicateCheck = async (email: string, nickname: string) => {
+    try {
+        const user = await prisma.user.findFirst({
+            where: {
+                OR: [{ email }, { nickname }],
+            },
+        });
+        return {
+            emailExists: user?.email === email,
+            nicknameExists: user?.nickname === nickname,
+        };
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 };
 
 export const createUser = async (userData: {
-	email: any;
-	name: string;
-	nickname: string;
-	password: string;
+    email: string;
+    name: string;
+    nickname: string;
+    password: string;
 }) => {
-	return prisma.user.create({
-		data: userData,
-	});
+    try {
+        return await prisma.user.create({
+            data: userData,
+        });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 };

@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
     destination: path.join(__dirname, "../../public/images"),
     filename: (req, file, callback) => {
         const imageFormat = file.mimetype.split("/")[1];
-        let filename = `img_${uuidv4()}.${imageFormat}`;
+        const filename = `img_${uuidv4()}.${imageFormat}`;
         callback(null, filename);
     },
 });

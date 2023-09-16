@@ -20,7 +20,7 @@ const passportJwt = (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate(
         "jwt",
         { session: false },
-        (error: Error | null, user: User, info?: any) => {
+        (error: Error | null, user: User) => {
             if (error) {
                 console.error(error);
                 return next(error);

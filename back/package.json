@@ -4,10 +4,10 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "npx prisma generate --schema=./prisma/schema.prisma && nodemon --exec ts-node index.ts",
+		"start": "npx prisma generate --schema=./prisma/schema.prisma && ts-node ./src/config/swagger.ts && nodemon --exec ts-node index.ts",
 		"build": "npx prisma generate --schema=./prisma/schema.prisma && tsc && babel src --out-dir dist --extensions '.ts,.tsx'",
 		"start:prod": "node ./dist/index.js",
-		"swagger-autogen": "node ./src/config/swagger.ts"
+		"swagger-autogen": "ts-node ./src/config/swagger.ts"
 	},
 	"keywords": [],
 	"author": "daechanJo",

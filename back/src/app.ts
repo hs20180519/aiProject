@@ -25,16 +25,19 @@ app.use(
     swaggerUi.serve,
     swaggerUi.setup(swaggerFile, { explorer: true }),
 );
-app.use(resLogingMiddleware);
+
 app.use(passport.initialize());
 passport.use("local", local);
 passport.use("jwt", jwt);
 passport.use("kakao", kakao);
 
+app.use(resLogingMiddleware);
+
 app.use("/auth", authRouter);
 app.use("/upload", uploadRouter);
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
+
 app.use(errorMiddleware);
 
 export default app;

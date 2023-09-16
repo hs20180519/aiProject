@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
 		/* Visit https://aka.ms/tsconfig to read more about this file */
-
 		/* Projects */
 		// "incremental": true,                              /* Save .tsbuildinfo files to allow for incremental compilation of projects. */
 		// "composite": true,                                /* Enable constraints that allow a TypeScript project to be used with project references. */
@@ -49,7 +48,7 @@
 		/* Enable importing .json files. */
 		"allowArbitraryExtensions": true,
 		/* Enable importing files with any extension, provided a declaration file is present. */
-		// "noResolve": true,                                /* Disallow 'import's, 'require's or '<reference>'s from expanding the number of files TypeScript should add to a project. */
+		// "noResolve": true,                                /* Disallow 'import's, 'requires or '<reference>'s from expanding the number of files TypeScript should add to a project. */
 
 		/* JavaScript Support */
 		// "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
@@ -63,7 +62,7 @@
 		"sourceMap": true,
 		/* Create source map files for emitted JavaScript files. */
 		// "inlineSourceMap": true,                          /* Include sourcemap files inside the emitted JavaScript. */
-		// "outFile": "./",                                  /* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
+		// "outFile": "./",/* Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output. */
 		"outDir": "./dist",
 		/* Specify an output folder for all emitted files. */
 		// "removeComments": true,                           /* Disable emitting comments. */
@@ -107,7 +106,7 @@
 		// "noUnusedLocals": true,                           /* Enable error reporting when local variables aren't read. */
 		// "noUnusedParameters": true,                       /* Raise an error when a function parameter isn't read. */
 		// "exactOptionalPropertyTypes": true,               /* Interpret optional property types as written, rather than adding 'undefined'. */
-		// "noImplicitReturns": true,                        /* Enable error reporting for codepaths that do not explicitly return in a function. */
+//		 "noImplicitReturns": false,                        /* Enable error reporting for codepaths that do not explicitly return in a function. */
 		// "noFallthroughCasesInSwitch": true,               /* Enable error reporting for fallthrough cases in switch statements. */
 		// "noUncheckedIndexedAccess": true,                 /* Add 'undefined' to a type when accessed using an index. */
 		// "noImplicitOverride": true,                       /* Ensure overriding members in derived classes are marked with an override modifier. */
@@ -119,5 +118,5 @@
 		// "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
 		"skipLibCheck": true
 		/* Skip type checking all .d.ts files. */
-	}
+	},
 }

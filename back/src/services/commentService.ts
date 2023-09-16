@@ -13,7 +13,6 @@ export const createComment = async (
             where: { id: userId },
             select: { nickname: true },
         });
-        if (!user) throw new Error("존재하지 않는 유저입니다.");
         const comment = await prisma.comment.create({
             data: {
                 content,
@@ -22,7 +21,7 @@ export const createComment = async (
                 parentId: parentId,
             },
         });
-        return { ...comment, nickname: user.nickname };
+        return { ...comment, nickname: user!.nickname };
     } catch (error) {
         console.error(error);
         throw error;
@@ -31,7 +30,7 @@ export const createComment = async (
 
 export const getCommentByCommentId = async (commentId: number) => {
     try {
-        return prisma.comment.findUnique({ where: { id: commentId } });
+        return await prisma.comment.findUnique({ where: { id: commentId } });
     } catch (error) {
         console.error(error);
         throw error;
@@ -40,7 +39,7 @@ export const getCommentByCommentId = async (commentId: number) => {
 
 export const updateComment = async (commentId: number, content: string) => {
     try {
-        return prisma.comment.update({
+        return await prisma.comment.update({
             where: { id: commentId },
             data: { content },
         });

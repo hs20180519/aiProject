@@ -15,7 +15,7 @@ const passportLocal = (
     passport.authenticate(
         "local",
         { session: false },
-        (error: Error, user: User, info: any) => {
+        (error: Error, user: User) => {
             if (error) {
                 console.error(error);
                 return next(error);
