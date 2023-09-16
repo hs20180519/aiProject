@@ -73,3 +73,44 @@ export const login = async (
         next(error);
     }
 };
+
+export const editUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    /**
+     * #swagger.tags = ['Auth']
+     * #swagger.summary = '유저 업데이트'
+     * #swagger.description = '회원 정보 수정. JWT 토큰 필요. 요청 받은 필드만 수정'
+     */
+    try {
+        const userId = (req.user as User).id;
+        const updatedData = req.body;
+        const updatedUser = await authService.editUser(userId, updatedData);
+        return res.status(201).json(updatedUser);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+};
+
+export const getProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    /**
+     * #swagger.tags = ['Auth']
+     * #swagger.summary = '프로필'
+     * #swagger.description = '유저 상세 정보'
+     */
+    try {
+        const userId = (req.user as User).id;
+        const user = await authService.getUserById(userId);
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+};
