@@ -1,0 +1,10 @@
+node_modules
+*.env
+dist
+logs
+/back/src/logs/
+/back/public/images/
+/back/prisma/migrations/
+/back/.idea/
+.idea
+/back/node_modules/
