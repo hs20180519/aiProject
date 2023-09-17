@@ -61,14 +61,16 @@ KAKAO_ID=""
 
 	 ```server 에러 로그 = src/logs/except.log```
 
-	 개발 진행 도중에는 [console.log] 사용해주세요. <br>
+	 개발 진행 도중에는 [console.log] 를 적극적으로 활용해주세요. <br>
 	 성공 응답과 에러 응답을 처리하는 미들웨어는 응답을 캡쳐할 뿐 가로채지 않습니다.<br>
+	 따라서, 미들웨어에서 응답을 처리하기 전에 [console.log]를 통해 응답을 확인할 수 있습니다.
 
 
 3. passport 인가 미들웨어
 
 	 ```passportJwt 미들웨어를 인가가 필요한 라우트핸들러에 추가. 해당 미들웨어는 다음 핸들러에 req객체에 로그인한 사용자의 데이터를 user프로퍼티(type: User)에 추가하고 전달합니다.```<br>
-	 (예시) userId = (req.user as User).id
+	 ex) userId = (req.user as User).id <br>
+	 ex) isManager = (req.user as User).manager <br>
 
 ---
 
