@@ -37,10 +37,14 @@ export const createUser = async (userData: {
 
 export const editUser = async (userId: number, updatedData: Partial<User>) => {
     try {
-        return await prisma.user.update({
+        const updatedUser = await prisma.user.update({
             where: { id: userId },
             data: updatedData,
         });
+        if (updatedUser) {
+            const { password, ...userWithoutPassword } = updatedUser;
+            return userWithoutPassword;
+        }
     } catch (error) {
         console.error(error);
         throw error;
@@ -49,9 +53,13 @@ export const editUser = async (userId: number, updatedData: Partial<User>) => {
 
 export const getUserById = async (userId: number) => {
     try {
-        return await prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: { id: userId },
         });
+        if (user) {
+            const { password, ...userWithoutPassword } = user;
+            return userWithoutPassword;
+        }
     } catch (error) {
         console.error(error);
         throw error;

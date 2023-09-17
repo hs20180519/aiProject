@@ -82,7 +82,10 @@ export const editUser = async (
     /**
      * #swagger.tags = ['Auth']
      * #swagger.summary = '유저 업데이트'
-     * #swagger.description = '회원 정보 수정. JWT 토큰 필요. 요청 받은 필드만 수정'
+     * #swagger.description = '회원 정보 수정. 요청 받은 필드만 수정'
+     * #swagger.security = [{
+     *   "bearerAuth": []
+     * }]
      */
     try {
         const userId = (req.user as User).id;
@@ -104,6 +107,9 @@ export const getProfile = async (
      * #swagger.tags = ['Auth']
      * #swagger.summary = '프로필'
      * #swagger.description = '유저 상세 정보'
+     * #swagger.security = [{
+     *   "bearerAuth": []
+     * }]
      */
     try {
         const userId = (req.user as User).id;

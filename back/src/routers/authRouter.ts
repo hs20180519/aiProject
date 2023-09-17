@@ -7,10 +7,12 @@ const authRouter = Router();
 
 authRouter.post("/signup", authController.createUser);
 
-authRouter.post("/login", passportLocal, authController.login);
+authRouter.post("/", passportLocal, authController.login);
 
-authRouter.get("/profile", passportJwt, authController.getProfile);
+authRouter.get("/", passportJwt, authController.getProfile);
 
-authRouter.put("/edit", passportJwt, authController.editUser);
+authRouter.put("/", passportJwt, authController.editUser);
+
+authRouter.delete("/");
 
 export default authRouter;

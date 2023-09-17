@@ -51,7 +51,7 @@
         }
       }
     },
-    "/auth/login": {
+    "/auth/": {
       "post": {
         "tags": [
           "Auth"
@@ -64,6 +64,30 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "프로필",
+        "description": "유저 상세 정보",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "유저 업데이트",
+        "description": "회원 정보 수정. JWT 토큰 필요. 요청 받은 필드만 수정",
+        "responses": {
+          "201": {
+            "description": "Created"
           }
         }
       }
