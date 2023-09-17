@@ -1,4 +1,4 @@
-# Node.js boiler-plate
+# [Node.js] Express.ts + prisma boiler-plate
 
 MVC 아키텍쳐 패턴 기반 타입스크립트 보일러 플레이트
 
