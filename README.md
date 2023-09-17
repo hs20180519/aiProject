@@ -34,13 +34,6 @@ SERVER_PORT=""
 JWT_SECRET_KEY=""
 JWT_TOKEN_EXPIRES=""
 KAKAO_ID=""
-
-GOOGLE_CLIENT_ID="추가 예정"
-GOOGLE_SECRET="추가 예정"
-
-NODE_MAILER_USER="추가 예정"
-NODE_MAILER_PASS="추가 예정"
-
 ```
 
 2. 패키지 설치
@@ -59,8 +52,7 @@ NODE_MAILER_PASS="추가 예정"
 
 	 ```serverURL:serverPort/api-docs```
 
-	 ```추가로 swagger 설정이 변경되었다면 다음 실행 ```
-	 ```npm run swagger-autogen ```
+	 ```서버가 실행되면 자동으로 변경된 swagger 문서를 업데이트합니다.```
 
 
 2. 로그 : 서버 실행시 자동으로 경로 및 파일 생성
@@ -69,10 +61,14 @@ NODE_MAILER_PASS="추가 예정"
 
 	 ```server 에러 로그 = src/logs/except.log```
 
+	 개발 진행 도중에는 [console.log] 사용해주세요. <br>
+	 성공 응답과 에러 응답을 처리하는 미들웨어는 응답을 캡쳐할 뿐 가로채지 않습니다.<br>
+
 
 3. passport 인가 미들웨어
 
-	 ```passportJwt 미들웨어를 인가가 필요한(로그인 상태인지) 라우트핸들러에 추가. 해당 미들웨어는 req.user에 사용자 정보를 담아 넘김```
+	 ```passportJwt 미들웨어를 인가가 필요한 라우트핸들러에 추가. 해당 미들웨어는 다음 핸들러에 req객체에 로그인한 사용자의 데이터를 user프로퍼티(type: User)에 추가하고 전달합니다.```<br>
+	 (예시) userId = (req.user as User).id
 
 ---
 

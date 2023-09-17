@@ -14,8 +14,8 @@ interface User {
 }
 
 /** @description jwt전략
- * 요청의 token 을 디코드하여 분석한 뒤 인가를 결정합니다.
- * 인가가 끝난 다음 미들웨어로 req.user에 로그인한 유저의 정보를 담아서 내보내줌*/
+ * 요청의 token 을 디코드하여 로그인 상태인지 확인합니다.
+ * req 객체의 user프로퍼티를 생성해 user데이터를 담아 넘겨줍니다. */
 const passportJwt = (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate(
         "jwt",

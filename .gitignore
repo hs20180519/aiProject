@@ -8,3 +8,4 @@ logs
 /back/.idea/
 .idea
 /back/node_modules/
+/back/src/config/swagger-output.json

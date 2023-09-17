@@ -2,8 +2,8 @@ import cors from "cors";
 import express from "express";
 import cookieParser from "cookie-parser";
 import path from "path";
-import errorMiddleware from "./middlewares/errorMiddleware";
-import resLogingMiddleware from "./middlewares/resLogingMiddleware";
+import errorLogger from "./middlewares/errorLogger";
+import responseLogger from "./middlewares/responseLogger";
 import swaggerFile from "./config/swagger-output.json";
 import swaggerUi from "swagger-ui-express";
 import passport from "passport";
@@ -31,13 +31,13 @@ passport.use("local", local);
 passport.use("jwt", jwt);
 passport.use("kakao", kakao);
 
-app.use(resLogingMiddleware);
+app.use(responseLogger);
 
 app.use("/auth", authRouter);
 app.use("/upload", uploadRouter);
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
 
-app.use(errorMiddleware);
+app.use(errorLogger);
 
 export default app;
