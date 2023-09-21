@@ -22,7 +22,7 @@ const passportLocal = (
             }
             if (!user) {
                 return res
-                    .status(401)
+                    .status(400)
                     .json({ message: "유효하지 않은 사용자 정보입니다." });
             }
             const secretKey = process.env.JWT_SECRET_KEY!;

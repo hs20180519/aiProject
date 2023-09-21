@@ -92,6 +92,14 @@
           }
         },
         "security": []
+      },
+      "delete": {
+        "description": "",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
       }
     },
     "/upload/profile-image": {
