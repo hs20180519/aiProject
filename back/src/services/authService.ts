@@ -1,4 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
+import path from "path";
+import fs from "fs";
 
 const prisma = new PrismaClient();
 
@@ -68,6 +70,13 @@ export const getUserById = async (userId: number) => {
 
 export const deleteUser = async (userId: number) => {
     try {
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+        });
+        if (user?.profileImage)
+            fs.unlinkSync(
+                path.join(__dirname, "../../", "public", user.profileImage),
+            );
         await prisma.user.delete({
             where: { id: userId },
         });

@@ -1,6 +1,6 @@
 import request from "supertest";
 import express from "express";
-import authRouter from "./authRouter";
+import authRouter from "../routers/authRouter";
 import passport from "passport";
 import { local } from "../passport";
 import { jwt } from "../passport";
