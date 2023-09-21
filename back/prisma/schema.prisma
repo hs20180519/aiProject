@@ -48,6 +48,7 @@ model Comment {
   post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
   parent    Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+	@@index([parentId])
   parentId  Int?
   children  Comment[] @relation("CommentToComment")
 }

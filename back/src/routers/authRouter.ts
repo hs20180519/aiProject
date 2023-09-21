@@ -13,6 +13,6 @@ authRouter.get("/", passportJwt, authController.getProfile);
 
 authRouter.put("/", passportJwt, authController.editUser);
 
-authRouter.delete("/");
+authRouter.delete("/", passportJwt, authController.deleteUser);
 
 export default authRouter;

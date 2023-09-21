@@ -65,3 +65,14 @@ export const getUserById = async (userId: number) => {
         throw error;
     }
 };
+
+export const deleteUser = async (userId: number) => {
+    try {
+        await prisma.user.delete({
+            where: { id: userId },
+        });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};

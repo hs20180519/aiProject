@@ -120,3 +120,14 @@ export const getProfile = async (
         next(error);
     }
 };
+
+export const deleteUser = (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = (req.user as User).id;
+        const deleteUser = authService.deleteUser(userId);
+        res.status(204).json({ message: "회원 탈퇴가 진행됩니다." });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+};
