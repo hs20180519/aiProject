@@ -8,60 +8,40 @@ export const createComment = async (
     parentId: number | undefined,
     content: string,
 ) => {
-    try {
-        const user = await prisma.user.findUnique({
-            where: { id: userId },
-            select: { nickname: true },
-        });
-        const comment = await prisma.comment.create({
-            data: {
-                content,
-                authorId: userId,
-                postId: postId,
-                parentId: parentId,
-            },
-        });
-        return { ...comment, nickname: user!.nickname };
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { nickname: true },
+    });
+    const comment = await prisma.comment.create({
+        data: {
+            content,
+            authorId: userId,
+            postId: postId,
+            parentId: parentId,
+        },
+    });
+    return { ...comment, nickname: user!.nickname };
 };
 
 export const getCommentByCommentId = async (commentId: number) => {
-    try {
-        return await prisma.comment.findUnique({ where: { id: commentId } });
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+    return prisma.comment.findUnique({ where: { id: commentId } });
 };
 
 export const updateComment = async (commentId: number, content: string) => {
-    try {
-        return await prisma.comment.update({
-            where: { id: commentId },
-            data: { content },
-        });
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+    return prisma.comment.update({
+        where: { id: commentId },
+        data: { content },
+    });
 };
 
 export const deleteCommentAndChildren = async (commentId: number) => {
-    try {
-        const childComments = await prisma.comment.findMany({
-            where: { parentId: commentId },
-        });
-        for (const childComment of childComments) {
-            await deleteCommentAndChildren(childComment.id);
-        }
-        await prisma.comment.delete({
-            where: { id: commentId },
-        });
-    } catch (error) {
-        console.error(error);
-        throw error;
+    const childComments = await prisma.comment.findMany({
+        where: { parentId: commentId },
+    });
+    for (const childComment of childComments) {
+        await deleteCommentAndChildren(childComment.id);
     }
+    await prisma.comment.delete({
+        where: { id: commentId },
+    });
 };
