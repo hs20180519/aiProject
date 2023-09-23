@@ -2,8 +2,7 @@ import request from "supertest";
 import express from "express";
 import authRouter from "../routers/authRouter";
 import passport from "passport";
-import { local } from "../passport";
-import { jwt } from "../passport";
+import { jwt, local } from "../passport";
 
 const app = express();
 app.use(passport.initialize());
@@ -34,7 +33,8 @@ export async function loginUser() {
     expect(res.body.user).toEqual("Test User");
     expect(res.body.nickname).toEqual("testuser");
 
-    return res.body.token;
+    const cookie = res.headers["set-cookie"][0];
+    return cookie.split(";")[0].split("=")[1];
 }
 
 export async function deleteUser(userToken: string) {

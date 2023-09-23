@@ -14,7 +14,7 @@ export const createComment = async (
     try {
         const userId = (req.user as User).id;
         const postId = Number(req.query.postId);
-        const parentId = Number(req.query.parentId) || undefined;
+        const parentId = Number(req.query.parentId);
         const content = req.body.content;
 
         const newComment = await commentService.createComment(

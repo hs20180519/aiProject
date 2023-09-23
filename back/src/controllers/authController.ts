@@ -63,11 +63,11 @@ export const login = async (
                 .status(401)
                 .json({ message: "유효하지 않은 사용자 정보입니다." });
         const loginUser = {
-            token: authReq.token,
+            token: authReq.token, // postman 편의성을 위해 추가
             user: authReq.user.name,
             nickname: authReq.user.nickname,
         };
-        return res.status(200).json(loginUser);
+        return res.cookie("token", authReq.token).status(200).json(loginUser);
     } catch (error) {
         console.error(error);
         next(error);
