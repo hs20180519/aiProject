@@ -72,7 +72,8 @@ KAKAO_ID=""
 	 ```passportJwt 미들웨어를 인가가 필요한 라우트핸들러에 추가. 해당 미들웨어는 다음 핸들러에 req객체에 로그인한 사용자의 데이터를 user프로퍼티(type: User)에 추가하고 전달합니다.```<br>
 	 ex) userId = (req.user as User).id <br>
 	 ex) manager = (req.user as User).manager <br>
-<br>
+
+
 4. 통합 테스트
 
 	```ex) yarn test tests/테스트파일명.test.ts```
