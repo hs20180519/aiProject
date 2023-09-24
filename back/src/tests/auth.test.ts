@@ -31,7 +31,7 @@ describe("Authentication API", () => {
     });
 
     // 유저 정보 수정 테스트
-    it("PUT /auth - 유저 정보 수정하고 201 반환", async () => {
+    it("PUT /auth - 유저 정보 수정하고 200 반환", async () => {
         const res = await request(app)
             .put("/auth")
             .set("Authorization", `Bearer ${userToken}`)
@@ -40,7 +40,7 @@ describe("Authentication API", () => {
                 name: "Updated User",
             });
         console.log(res.statusCode);
-        expect(res.statusCode).toEqual(201);
+        expect(res.statusCode).toEqual(200);
 
         // 업데이트 필드 추가하면 여기도 추가
         expect(res.body.name).toEqual("Updated User");

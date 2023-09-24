@@ -71,13 +71,13 @@ describe("post and comment API", () => {
         expect(res.body.content).toEqual("Test Comment");
     });
 
-    it("PUT /comment - 댓글을 수정하고 201과 수정된 댓글 객체 반환", async () => {
+    it("PUT /comment - 댓글을 수정하고 200과 수정된 댓글 객체 반환", async () => {
         const res = await request(app)
             .put(`/comment/${parentId}`)
             .set("Authorization", `bearer ${userToken}`)
             .send({ content: "Updated Comment" });
 
-        expect(res.statusCode).toEqual(201);
+        expect(res.statusCode).toEqual(200);
         expect(res.body.content).toEqual("Updated Comment");
     });
 
@@ -116,14 +116,14 @@ describe("post and comment API", () => {
         expect(res.statusCode).toEqual(200);
     });
 
-    it("PUT /post - 게시글을 수정하고 201과 수정된 게시글 객체 반환", async () => {
+    it("PUT /post - 게시글을 수정하고 200과 수정된 게시글 객체 반환", async () => {
         const res = await request(app)
             .put(`/post/${postId}`)
             .set("Authorization", `Bearer ${userToken}`)
             .send({ title: "Updated Post" });
 
         console.log(res.statusCode);
-        expect(res.statusCode).toEqual(201);
+        expect(res.statusCode).toEqual(200);
         expect(res.body.title).toEqual("Updated Post");
     });
 

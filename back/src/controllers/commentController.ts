@@ -55,7 +55,7 @@ export const updateComment = async (
             commentId,
             content,
         );
-        return res.status(201).json(updatedComment);
+        return res.status(200).json(updatedComment);
     } catch (error) {
         console.error(error);
         next(error);

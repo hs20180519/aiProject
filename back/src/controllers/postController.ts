@@ -90,7 +90,7 @@ export const updatePost = async (
             title,
             content,
         );
-        return res.status(201).json(updatedPost);
+        return res.status(200).json(updatedPost);
     } catch (error) {
         console.error(error);
         next(error);

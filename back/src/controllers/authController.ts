@@ -91,7 +91,7 @@ export const editUser = async (
         const userId = (req.user as User).id;
         const updatedData = req.body;
         const updatedUser = await authService.editUser(userId, updatedData);
-        return res.status(201).json(updatedUser);
+        return res.status(200).json(updatedUser);
     } catch (error) {
         console.error(error);
         next(error);
