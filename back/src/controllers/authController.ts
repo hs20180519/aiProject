@@ -8,6 +8,49 @@ interface AuthenticatedRequest extends Request {
     token?: string;
 }
 
+export const checkEmailOrNickname = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    /**
+     * #swagger.tags = ['Auth']
+     * #swagger.summary = '회원가입 이메일 및 닉네임 중복 체크'
+     */
+    try {
+        const email = req.query.email as string;
+        const nickname = req.query.nickname as string;
+
+        if (email) {
+            const existingUserEmail = await authService.getUserByEmail(email);
+            if (existingUserEmail)
+                return res
+                    .status(409)
+                    .json({ message: "이미 사용중인 이메일 입니다." });
+            else
+                return res
+                    .status(200)
+                    .json({ message: "사용 가능한 이메일 입니다." });
+        }
+
+        if (nickname) {
+            const existingUserNickname =
+                await authService.getUserByNickname(nickname);
+            if (existingUserNickname)
+                return res
+                    .status(409)
+                    .json({ message: "이미 사용중인 닉네임 입니다." });
+            else
+                return res
+                    .status(200)
+                    .json({ message: "사용 가능한 닉네임 입니다." });
+        }
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+};
+
 export const createUser = async (
     req: Request,
     res: Response,
@@ -16,7 +59,6 @@ export const createUser = async (
     /**
      * #swagger.tags = ['Auth']
      * #swagger.summary = '회원가입'
-     * #swagger.description = '이메일과 닉네임 중복 검사 후 회원가입'
      */
     try {
         const { email, password, name, nickname } = req.body;

@@ -4,6 +4,18 @@ import fs from "fs";
 
 const prisma = new PrismaClient();
 
+export const getUserByEmail = async (email: string) => {
+    return prisma.user.findUnique({
+        where: { email: email },
+    });
+};
+
+export const getUserByNickname = async (nickname: string) => {
+    return prisma.user.findUnique({
+        where: { nickname },
+    });
+};
+
 export const signUpDuplicateCheck = async (email: string, nickname: string) => {
     const user = await prisma.user.findFirst({
         where: {

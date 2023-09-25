@@ -11,13 +11,65 @@
     }
   ],
   "paths": {
+    "/auth/check-email": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "회원가입 이메일 중복 체크",
+        "description": "",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
+    },
+    "/auth/check-nickname": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "회원가입 닉네임 중복 체크",
+        "description": "",
+        "parameters": [
+          {
+            "name": "nickname",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      }
+    },
     "/auth/signup": {
       "post": {
         "tags": [
           "Auth"
         ],
         "summary": "회원가입",
-        "description": "이메일과 닉네임 중복 검사 후 회원가입",
+        "description": "",
         "responses": {
           "201": {
             "description": "Created"
@@ -84,8 +136,8 @@
         "summary": "유저 업데이트",
         "description": "회원 정보 수정. 요청 받은 필드만 수정",
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "OK"
           }
         },
         "security": []
@@ -368,8 +420,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           },
           "403": {
             "description": "Forbidden"
