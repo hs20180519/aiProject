@@ -26,6 +26,6 @@ export const uploadProfileImage = async (
         res.status(201).json(uploadImageUrl);
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };

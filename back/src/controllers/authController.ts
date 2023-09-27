@@ -47,7 +47,7 @@ export const checkEmailOrNickname = async (
         }
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };
 
@@ -84,7 +84,7 @@ export const createUser = async (
         });
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };
 
@@ -112,7 +112,7 @@ export const login = async (
         return res.cookie("token", authReq.token).status(200).json(loginUser);
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };
 
@@ -136,7 +136,7 @@ export const editUser = async (
         return res.status(200).json(updatedUser);
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };
 
@@ -170,6 +170,6 @@ export const deleteUser = (req: Request, res: Response, next: NextFunction) => {
         res.status(204).json({ message: "회원 탈퇴가 진행됩니다." });
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };

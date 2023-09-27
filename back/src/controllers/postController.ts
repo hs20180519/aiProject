@@ -19,7 +19,7 @@ export const createPost = async (
         return res.status(201).json(post);
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };
 
@@ -60,7 +60,7 @@ export const getPosts = async (
         }
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };
 
@@ -93,7 +93,7 @@ export const updatePost = async (
         return res.status(200).json(updatedPost);
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };
 
@@ -123,6 +123,6 @@ export const deletePost = async (
         return res.status(204).json({ message: "게시글이 삭제되었습니다." });
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };

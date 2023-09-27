@@ -26,7 +26,7 @@ export const createComment = async (
         return res.status(201).json(newComment);
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };
 
@@ -58,7 +58,7 @@ export const updateComment = async (
         return res.status(200).json(updatedComment);
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };
 
@@ -86,6 +86,6 @@ export const deleteComment = async (
         return res.status(204).json({ message: "댓글이 삭제되었습니다." });
     } catch (error) {
         console.error(error);
-        next(error);
+        return next(error);
     }
 };
