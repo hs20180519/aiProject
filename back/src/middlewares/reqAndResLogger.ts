@@ -40,7 +40,7 @@ const responseLogger = (
             logger.warn(`[응답] ⚠️ ${body} ${duration}ms`);
         } else {
             console.log(`[info][응답] ${body} ${duration}ms`);
-            logger.info(`[resPonse] ${body} ${duration}ms`);
+            logger.info(`[응답] ${body} ${duration}ms`);
         }
 
         oldEnd.apply(res, restArgs);
