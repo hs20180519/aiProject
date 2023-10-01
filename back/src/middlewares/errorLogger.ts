@@ -15,7 +15,7 @@ function errorLogger(
     const truncatedStack = stackLines.slice(0, 5).join("\n");
     const reqBodyString = JSON.stringify(req.body);
     logger.error(
-        `[${req.method}] ${req.path} | ${error.status} | [REQUEST] ${reqBodyString} | ${truncatedStack}`,
+        ` ⁉️ [${req.method}] ${req.path} | ${error.status} | [REQUEST] ${reqBodyString} | ${truncatedStack}`,
     );
     next();
 }

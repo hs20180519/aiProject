@@ -9,12 +9,12 @@ const responseLogger = (
     const start = Date.now();
 
     console.log(
-        `[요청] IP${req.ip} ${req.method} ${req.path}?query=${JSON.stringify(
+        `[요청] 🔜 IP${req.ip} ${req.method} ${req.path}?query=${JSON.stringify(
             req.query,
         )}  DATA${JSON.stringify(req.body)}`,
     );
     logger.info(
-        `[요청] IP${req.ip} ${req.method} ${req.path}?query=${JSON.stringify(
+        `[요청] 🔜 IP${req.ip} ${req.method} ${req.path}?query=${JSON.stringify(
             req.query,
         )}  DATA${JSON.stringify(req.body)}`,
     );
@@ -36,11 +36,11 @@ const responseLogger = (
         const duration = Date.now() - start;
 
         if (res.statusCode >= 400) {
-            console.log(`[응답] ⚠️ ${body} ${duration}ms`);
-            logger.warn(`[응답] ⚠️ ${body} ${duration}ms`);
+            console.log(`⚠️ [응답] ${body} ${duration}ms`);
+            logger.warn(` ⚠️ [응답] ${body} ${duration}ms`);
         } else {
-            console.log(`[info][응답] ${body} ${duration}ms`);
-            logger.info(`[응답] ${body} ${duration}ms`);
+            console.log(`🔙 [info][응답] ${body} ${duration}ms`);
+            logger.info(` 🔙 [응답] ${body} ${duration}ms`);
         }
 
         oldEnd.apply(res, restArgs);
