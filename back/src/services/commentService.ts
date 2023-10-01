@@ -35,13 +35,16 @@ export const updateComment = async (commentId: number, content: string) => {
 };
 
 export const deleteCommentAndChildren = async (commentId: number) => {
+    let childCommentIds = [];
     const childComments = await prisma.comment.findMany({
         where: { parentId: commentId },
     });
     for (const childComment of childComments) {
+        childCommentIds.push(childComment.id);
         await deleteCommentAndChildren(childComment.id);
     }
     await prisma.comment.delete({
         where: { id: commentId },
     });
+    return childCommentIds;
 };

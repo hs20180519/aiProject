@@ -80,7 +80,7 @@ export const createUser = async (
             password: hashedPassword,
         });
         return res.status(201).json({
-            message: `회원가입에 성공했습니다 :: ${newUser.nickname}`,
+            message: `회원가입에 성공했습니다 :: ${newUser.email}`,
         });
     } catch (error) {
         console.error(error);
@@ -163,11 +163,32 @@ export const getProfile = async (
     }
 };
 
-export const deleteUser = (req: Request, res: Response, next: NextFunction) => {
+export const deleteUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    /**
+     * #swagger.tags = ['Auth']
+     * #swagger.summary = '회원탈퇴'
+     * #swagger.description = '관계 데이터 삭제 후 유저 삭제'
+     * #swagger.security = [{
+     *   "bearerAuth": []
+     * }]
+     */
     try {
         const userId = (req.user as User).id;
-        const deleteUser = authService.deleteUser(userId);
-        res.status(204).json({ message: "회원 탈퇴가 진행됩니다." });
+        const deletedUser = await authService.deleteUser(userId);
+        req.session.destroy((error: Error | null) => {
+            if (error) {
+                console.error(error);
+                return next(error);
+            }
+            res.clearCookie("token");
+            return res
+                .status(200)
+                .json({ message: `회원탈퇴 ${deletedUser!.email}` });
+        });
     } catch (error) {
         console.error(error);
         return next(error);

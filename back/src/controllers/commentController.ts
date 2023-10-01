@@ -82,8 +82,11 @@ export const deleteComment = async (
                 .json({ message: "댓글이 존재하지 않습니다." });
         if (comment.authorId !== user.id && !user.manager)
             return res.status(403).json({ message: "삭제 권한이 없습니다." });
-        await commentService.deleteCommentAndChildren(commentId);
-        return res.status(204).json({ message: "댓글이 삭제되었습니다." });
+        const deletedComments =
+            await commentService.deleteCommentAndChildren(commentId);
+        return res
+            .status(200)
+            .json({ message: `${deletedComments}번 댓글이 삭제되었습니다.` });
     } catch (error) {
         console.error(error);
         return next(error);

@@ -3,7 +3,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import path from "path";
 import errorLogger from "./middlewares/errorLogger";
-import responseLogger from "./middlewares/responseLogger";
+import reqAndResLogger from "./middlewares/reqAndResLogger";
 import swaggerFile from "./config/swagger-output.json";
 import swaggerUi from "swagger-ui-express";
 import passport from "passport";
@@ -12,6 +12,7 @@ import authRouter from "./routers/authRouter";
 import uploadRouter from "./routers/uploadRouter";
 import postRouter from "./routers/postRouter";
 import commentRouter from "./routers/commentRouter";
+import session from "express-session";
 
 const app: express.Application = express();
 
@@ -25,13 +26,22 @@ app.use(
     swaggerUi.serve,
     swaggerUi.setup(swaggerFile, { explorer: true }),
 );
-
+app.use(
+    session({
+        secret: `${process.env.SESSION_SECRET_KEY}`,
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
+        },
+    }),
+);
 app.use(passport.initialize());
 passport.use("local", local);
 passport.use("jwt", jwt);
 passport.use("kakao", kakao);
 
-app.use(responseLogger);
+app.use(reqAndResLogger);
 
 app.use("/auth", authRouter);
 app.use("/upload", uploadRouter);

@@ -4,8 +4,16 @@ import authRouter from "../routers/authRouter";
 import passport from "passport";
 import { jwt } from "../passport";
 import { signUpUser, loginUser, deleteUser } from "./testUtils";
+import session from "express-session";
 
 const app = express();
+app.use(
+    session({
+        secret: `${process.env.SESSION_SECRET_KEY}`,
+        resave: false,
+        saveUninitialized: true,
+    }),
+);
 app.use(passport.initialize());
 passport.use("jwt", jwt);
 app.use(express.json());

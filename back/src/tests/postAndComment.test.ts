@@ -6,10 +6,18 @@ import { jwt } from "../passport";
 import { signUpUser, loginUser, deleteUser } from "./testUtils";
 import postRouter from "../routers/postRouter";
 import commentRouter from "../routers/commentRouter";
+import session from "express-session";
 
 const app = express();
 app.use(passport.initialize());
 passport.use("jwt", jwt);
+app.use(
+    session({
+        secret: `${process.env.SESSION_SECRET_KEY}`,
+        resave: false,
+        saveUninitialized: true,
+    }),
+);
 app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/post", postRouter);

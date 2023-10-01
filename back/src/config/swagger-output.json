@@ -11,12 +11,12 @@
     }
   ],
   "paths": {
-    "/auth/check-email": {
+    "/auth/check": {
       "get": {
         "tags": [
           "Auth"
         ],
-        "summary": "회원가입 이메일 중복 체크",
+        "summary": "회원가입 이메일 및 닉네임 중복 체크",
         "description": "",
         "parameters": [
           {
@@ -25,26 +25,7 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           },
-          "409": {
-            "description": "Conflict"
-          }
-        }
-      }
-    },
-    "/auth/check-nickname": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "회원가입 닉네임 중복 체크",
-        "description": "",
-        "parameters": [
           {
             "name": "nickname",
             "in": "query",
@@ -143,12 +124,17 @@
         "security": []
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "회원탈퇴",
+        "description": "관계 데이터 삭제 후 유저 삭제",
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK"
           }
-        }
+        },
+        "security": []
       }
     },
     "/upload/profile-image": {

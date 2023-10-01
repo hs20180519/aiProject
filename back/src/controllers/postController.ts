@@ -119,8 +119,10 @@ export const deletePost = async (
             !(req.user as User).manager
         )
             return res.status(403).json({ message: "권한이 없습니다." });
-        await postService.deletePostAndComments(postId);
-        return res.status(204).json({ message: "게시글이 삭제되었습니다." });
+        const deletedPost = await postService.deletePostAndComments(postId);
+        return res
+            .status(200)
+            .json({ message: `${deletedPost}번 게시글이 삭제되었습니다.` });
     } catch (error) {
         console.error(error);
         return next(error);
