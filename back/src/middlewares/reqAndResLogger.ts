@@ -39,7 +39,7 @@ const responseLogger = (
             console.log(`⚠️ [응답] ${body} ${duration}ms`);
             logger.warn(` ⚠️ [응답] ${body} ${duration}ms`);
         } else {
-            console.log(`🔙 [info][응답] ${body} ${duration}ms`);
+            console.log(`🔙 [응답] ${body} ${duration}ms`);
             logger.info(` 🔙 [응답] ${body} ${duration}ms`);
         }
 

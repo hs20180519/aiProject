@@ -36,8 +36,8 @@ export const getPosts = async (
     try {
         const postId = Number(req.query.postId);
         const userId = Number(req.query.userId);
-        const page = Number(req.query.page);
-        const limit = Number(req.query.limit);
+        const page = req.query.page ? Number(req.query.page) : 1;
+        const limit = req.query.page ? Number(req.query.limit) : 10;
         if (postId) {
             const post = await postService.getPostByPostId(postId);
             if (!post)

@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import getPaginationParams from "../utils/getPaginationParams";
 
 const prisma = new PrismaClient();
 
@@ -31,14 +32,12 @@ export const getPostsByUserId = async (
     page?: number,
     limit?: number,
 ) => {
+    console.log(page);
     const totalPostsCount = await prisma.post.count({
         where: { authorId: userId },
     });
     const totalPages = Math.ceil(totalPostsCount / (limit ?? 10));
-    const offset =
-        page !== undefined && limit !== undefined
-            ? { skip: (page - 1) * limit, take: limit }
-            : {};
+    const offset = getPaginationParams(page, limit);
 
     const posts = await prisma.post.findMany({
         where: { authorId: userId },
@@ -50,20 +49,17 @@ export const getPostsByUserId = async (
     return { posts, currentPage: page, totalPages: totalPages };
 };
 
-export const getAllPosts = async (page?: number, limit?: number) => {
+export const getAllPosts = async (page: number, limit: number) => {
+    console.log(page, limit);
     const totalPostsCount = await prisma.post.count();
-    const totalPages = Math.ceil(totalPostsCount / (limit ?? 10));
-    const offset =
-        page !== undefined && limit !== undefined
-            ? { skip: (page - 1) * limit, take: limit }
-            : {};
+    const totalPages = Math.ceil(totalPostsCount / limit);
+    const offset = getPaginationParams(page, limit);
     const posts = await prisma.post.findMany({
         include: {
             comment: true,
         },
         ...(offset as object),
     });
-
     return { posts, currentPage: page, totalPages: totalPages };
 };
 
