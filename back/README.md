@@ -31,6 +31,7 @@ Service-Oriented MVC 아키텍쳐 패턴 기반 타입스크립트 보일러 플
 DATABASE_URL=""
 SERVER_URL=""
 SERVER_PORT=""
+SESSION_SECRET_KEY=""
 JWT_SECRET_KEY=""
 JWT_TOKEN_EXPIRES=""
 KAKAO_ID=""
