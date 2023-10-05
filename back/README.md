@@ -51,7 +51,9 @@ KAKAO_ID=""
 
 1. swagger를 통해 API 문서 확인
 
-	 ```serverURL:serverPort/api-docs```
+	 ```serverURL:serverPort/api-docs 접속```
+	 또는
+	 ```back/src/config/swagger-output.json 에서 코드 및 에디터로 미리보기 가능```
 
 	 ```서버가 실행되면 자동으로 변경된 swagger 문서를 업데이트합니다.```
 
