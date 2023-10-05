@@ -17,8 +17,6 @@ logs
 /back/npm-debug.log*
 /back/yarn-debug.log*
 /back/yarn-error.log*
-/back/lerna-debug.log*
-/back/.pnpm-debug.log*
 
 ### macOS ###
 # General
