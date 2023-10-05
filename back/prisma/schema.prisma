@@ -2,53 +2,96 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+	provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+	provider = "mysql"
+	url      = env("DATABASE_URL")
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  email        String?   @unique
-  name         String?
-  nickname     String?   @unique
-  password     String?
-  snsId        String?   @unique
-  snsProvider  String?
-  profileImage String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  post         Post[]
-  comment      Comment[]
-  manager      Boolean   @default(false)
+	id           Int            @id @default(autoincrement())
+	email        String?        @unique
+	name         String?
+	nickname     String?        @unique
+	password     String?
+	snsId        String?        @unique
+	snsProvider  String?
+	profileImage String?
+	createdAt    DateTime       @default(now())
+	updatedAt    DateTime       @updatedAt
+	post         Post[]
+	comment      Comment[]
+	manager      Boolean        @default(false)
+	UserWord     WordProgress[]
+	Wordbook     Wordbook[]
 }
 
+model Word {
+	id            Int             @id @default(autoincrement())
+	word          String          @unique
+	meaning       String
+	category      String
+	level         Int
+	UserWord      WordProgress[]
+	WordbookEntry WordbookEntry[]
+}
+
+model WordProgress {
+	id        Int       @id @default(autoincrement())
+	user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+	userId    Int
+	word      Word      @relation(fields: [wordId], references: [id])
+	wordId    Int
+	correct   Boolean
+	studiedAt DateTime?
+}
+
+model Wordbook {
+	id        Int             @id @default(autoincrement())
+	title     String
+	user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+	userId    Int
+	createdAt DateTime        @default(now())
+	updatedAt DateTime        @updatedAt
+	entries   WordbookEntry[]
+}
+
+model WordbookEntry {
+	id         Int      @id @default(autoincrement())
+	word       Word     @relation(fields: [wordId], references: [id])
+	wordId     Int
+	wordbook   Wordbook @relation(fields: [wordbookId], references: [id], onDelete: Cascade)
+	wordbookId Int
+	createdAt  DateTime @default(now())
+}
+
+// 미사용
 model Post {
-  id        Int       @id @default(autoincrement())
-  title     String?
-  content   String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  author    User?     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  Int?
-  viewCount Int       @default(0)
-  comment   Comment[]
+	id        Int       @id @default(autoincrement())
+	title     String?
+	content   String?
+	createdAt DateTime  @default(now())
+	updatedAt DateTime  @updatedAt
+	author    User?     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+	authorId  Int?
+	viewCount Int       @default(0)
+	comment   Comment[]
 }
 
 model Comment {
-  id        Int       @id @default(autoincrement())
-  content   String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  author    User?     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  Int?
-  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId    Int
-  parent    Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+	id        Int       @id @default(autoincrement())
+	content   String
+	createdAt DateTime  @default(now())
+	updatedAt DateTime  @updatedAt
+	author    User?     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+	authorId  Int?
+	post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+	postId    Int
+	parent    Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+	parentId  Int?
+	children  Comment[] @relation("CommentToComment")
+
 	@@index([parentId])
-  parentId  Int?
-  children  Comment[] @relation("CommentToComment")
 }
