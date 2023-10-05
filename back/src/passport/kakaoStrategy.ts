@@ -4,53 +4,53 @@ import { PrismaClient, User } from "@prisma/client";
 const prisma = new PrismaClient();
 
 interface KakaoProfile {
-    id: string | undefined;
-    displayName: string;
+  id: string | undefined;
+  displayName: string;
 }
 
 const kakaoOptions = {
-    clientID: process.env.KAKAO_ID!,
-    callbackURL: "/auth/kakao/callback",
+  clientID: process.env.KAKAO_ID!,
+  callbackURL: "/auth/kakao/callback",
 };
 
 const kakao = new KakaoStrategy(
-    kakaoOptions,
-    async (
-        accessToken: string,
-        refreshToken: string,
-        profile: KakaoProfile,
-        done: (error?: Error | null, user?: User | undefined) => void,
-    ) => {
-        try {
-            const exUser = await prisma.user.findUnique({
-                where: {
-                    snsId: profile.id,
-                },
-            });
-            if (exUser) {
-                done(null, exUser);
-            } else {
-                const newUser = await prisma.user.create({
-                    data: {
-                        nickname: profile.displayName,
-                        // 만약 만들고자 하는 서비스가 전반적으로 유저의 닉네임 노출도가 높고 필수적이라면
-                        // 그리고 sns로그인에서 닉네임 추출이 어렵다면 리다이렉트 주소에서 닉네임을 새로 받아서 저장해야 할 수도..
-                        // 하단에 예시 라우터핸들러 주석처리 참고
-                        snsId: profile.id,
-                        snsProvider: "kakao",
-                    },
-                });
-                done(null, newUser);
-            }
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error(error);
-                done(error);
-            } else {
-                done(new Error("error"));
-            }
-        }
-    },
+  kakaoOptions,
+  async (
+    accessToken: string,
+    refreshToken: string,
+    profile: KakaoProfile,
+    done: (error?: Error | null, user?: User | undefined) => void,
+  ) => {
+    try {
+      const exUser = await prisma.user.findUnique({
+        where: {
+          snsId: profile.id,
+        },
+      });
+      if (exUser) {
+        done(null, exUser);
+      } else {
+        const newUser = await prisma.user.create({
+          data: {
+            nickname: profile.displayName,
+            // 만약 만들고자 하는 서비스가 전반적으로 유저의 닉네임 노출도가 높고 필수적이라면
+            // 그리고 sns로그인에서 닉네임 추출이 어렵다면 리다이렉트 주소에서 닉네임을 새로 받아서 저장해야 할 수도..
+            // 하단에 예시 라우터핸들러 주석처리 참고
+            snsId: profile.id,
+            snsProvider: "kakao",
+          },
+        });
+        done(null, newUser);
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error);
+        done(error);
+      } else {
+        done(new Error("error"));
+      }
+    }
+  },
 );
 
 export default kakao;

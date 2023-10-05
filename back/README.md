@@ -2,7 +2,7 @@
 
 Service-Oriented MVC 아키텍쳐 패턴 기반 타입스크립트 보일러 플레이트
 
-> __기술 스택__
+> **기술 스택**
 
 ![Node.js](https://img.shields.io/badge/-Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/-Express-000000?style=for-the-badge&logo=express&logoColor=white)
@@ -17,14 +17,13 @@ Service-Oriented MVC 아키텍쳐 패턴 기반 타입스크립트 보일러 플
 
 ---
 
-> __ERD__
+> **ERD**
 
 ![boilerplate_erd](https://github.com/daechan-jo/express.ts-prisma-boilerplate/assets/103374153/12a3b1a5-5878-4875-b0c9-3d6ca84e1e8f)
 
-
 ---
 
-> __실행하기__
+> **실행하기**
 
 1. 서버 루트 경로에 dotenv 파일 생성 및 설정
 
@@ -39,57 +38,54 @@ KAKAO_ID=""
 
 2. 패키지 설치
 
-```npm install```
+`npm install`
 
 3. 서버 실행
 
-```yarn start```
+`yarn start`
+
+4. 프리티어 재설정 후 적용하기
+   `npx prettier . --write`
 
 ---
 
-> __사용법__
+> **사용법**
 
 1. swagger를 통해 API 문서 확인
 
-	 ```serverURL:serverPort/api-docs 접속```
-	 또는
-	 ```back/src/config/swagger-output.json 에서 코드 및 에디터로 미리보기 가능```
+   `serverURL:serverPort/api-docs 접속`
+   또는
+   `back/src/config/swagger-output.json 에서 코드 및 에디터로 미리보기 가능`
 
-	 ```서버가 실행되면 자동으로 변경된 swagger 문서를 업데이트합니다.```
-
+   `서버가 실행되면 자동으로 변경된 swagger 문서를 업데이트합니다.`
 
 2. 로그 : 서버 실행시 자동으로 경로 및 파일 생성
 
-	 ```http 통신 전체 로그 = src/logs/debug.log```
+   `http 통신 전체 로그 = src/logs/debug.log`
 
-	 ```server 에러 로그 = src/logs/except.log```
+   `server 에러 로그 = src/logs/except.log`
 
-	 개발 진행 도중에는 [console.log] 를 적극적으로 활용해주세요. <br>
-	 현재 요청, 응답(성공, 실패 로깅 및 콘솔 출력), 에러를 각각의 미들웨어에서 캡쳐해 로깅할 뿐 가로채지 않습니다.<br>
-	 따라서, 로직 내 상세한 디버깅을 위해선 [console.log]를 원하는 위치에서 사용해주세요.
-
+   개발 진행 도중에는 [console.log] 를 적극적으로 활용해주세요. <br>
+   현재 요청, 응답(성공, 실패 로깅 및 콘솔 출력), 에러를 각각의 미들웨어에서 캡쳐해 로깅할 뿐 가로채지 않습니다.<br>
+   따라서, 로직 내 상세한 디버깅을 위해선 [console.log]를 원하는 위치에서 사용해주세요.
 
 3. passport 인가 미들웨어
 
-	 ```passportJwt 미들웨어를 인가가 필요한 라우트핸들러에 추가. 해당 미들웨어는 다음 핸들러에 req객체에 로그인한 사용자의 데이터를 user프로퍼티(type: User)에 추가하고 전달합니다.```<br>
-	 ex) userId = (req.user as User).id <br>
-	 ex) manager = (req.user as User).manager <br>
-
+   `passportJwt 미들웨어를 인가가 필요한 라우트핸들러에 추가. 해당 미들웨어는 다음 핸들러에 req객체에 로그인한 사용자의 데이터를 user프로퍼티(type: User)에 추가하고 전달합니다.`<br>
+   ex) userId = (req.user as User).id <br>
+   ex) manager = (req.user as User).manager <br>
 
 4. 통합 테스트
 
-	```ex) yarn test tests/테스트파일명.test.ts```
+   `ex) yarn test tests/테스트파일명.test.ts`
 
-	작성에 소요되는 코스트에 비해 수정 또는 추가 사항이 있을 경우 테스트 시간이 비약적으로 단축됩니다.
-
+   작성에 소요되는 코스트에 비해 수정 또는 추가 사항이 있을 경우 테스트 시간이 비약적으로 단축됩니다.
 
 ---
 
-> __기타 사항__
+> **기타 사항**
 
-+ kakao 로그인은 프론트와 연결 후 테스트 필요한 상태
-+ 로그인 성공 응답 시 토큰을 쿠키에 저장하고 있습니다. (현재 임시로 "token"이라는 이름으로 저장)
-+ 유틸에 응답 객체 구조를 통일시키기 위한 유틸 함수가 있습니다.
-+ 서버사이드 페이지네이션 기본값은 page=1, limit=10 입니다.
-
-
+- kakao 로그인은 프론트와 연결 후 테스트 필요한 상태
+- 로그인 성공 응답 시 토큰을 쿠키에 저장하고 있습니다. (현재 임시로 "token"이라는 이름으로 저장)
+- 유틸에 응답 객체 구조를 통일시키기 위한 유틸 함수가 있습니다.
+- 서버사이드 페이지네이션 기본값은 page=1, limit=10 입니다.

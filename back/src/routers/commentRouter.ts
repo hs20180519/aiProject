@@ -8,10 +8,6 @@ commentRouter.post("/", passportJwt, commentController.createComment);
 
 commentRouter.put("/:commentId", passportJwt, commentController.updateComment);
 
-commentRouter.delete(
-    "/:commentId",
-    passportJwt,
-    commentController.deleteComment,
-);
+commentRouter.delete("/:commentId", passportJwt, commentController.deleteComment);
 
 export default commentRouter;

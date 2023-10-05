@@ -21,20 +21,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../public")));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile, { explorer: true }));
 app.use(
-    "/api-docs",
-    swaggerUi.serve,
-    swaggerUi.setup(swaggerFile, { explorer: true }),
-);
-app.use(
-    session({
-        secret: `${process.env.SESSION_SECRET_KEY}`,
-        resave: false,
-        saveUninitialized: true,
-        cookie: {
-            maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
-        },
-    }),
+  session({
+    secret: `${process.env.SESSION_SECRET_KEY}`,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
+    },
+  }),
 );
 app.use(passport.initialize());
 passport.use("local", local);

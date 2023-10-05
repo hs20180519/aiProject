@@ -8,10 +8,10 @@ const upload = multer({ storage });
 const uploadRouter = Router();
 
 uploadRouter.post(
-    "/profile-image",
-    passportJwt,
-    upload.single("profileImage"),
-    uploadController.uploadProfileImage,
+  "/profile-image",
+  passportJwt,
+  upload.single("profileImage"),
+  uploadController.uploadProfileImage,
 );
 
 export default uploadRouter;

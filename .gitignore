@@ -1,11 +1,31 @@
 node_modules
 *.env
 dist
-logs
-/back/src/logs/
 /back/public/images/
 /back/prisma/migrations/
 /back/.idea/
 .idea
 /back/node_modules/
 /back/src/config/swagger-output.json
+/back/package-lock.json
+
+### Node ###
+# Logs
+logs
+/back/src/logs/
+/back/*.log
+/back/npm-debug.log*
+/back/yarn-debug.log*
+/back/yarn-error.log*
+/back/lerna-debug.log*
+/back/.pnpm-debug.log*
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### macOS Patch ###
+# iCloud generated files
+*.icloud
