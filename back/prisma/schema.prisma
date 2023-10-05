@@ -26,6 +26,8 @@ model User {
 	manager      Boolean        @default(false)
 	UserWord     WordProgress[]
 	Wordbook     Wordbook[]
+	Ranking      Ranking[]
+	lastRank     Int?           @default(0)
 }
 
 model Word {
@@ -67,7 +69,15 @@ model WordbookEntry {
 	createdAt  DateTime @default(now())
 }
 
-// 미사용
+model Ranking {
+	id       Int       @id @default(autoincrement())
+	user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+	userId   Int
+	score    Int
+	rankDate DateTime?
+}
+
+// 미사용 테이블 (언젠간 쓰것지..)
 model Post {
 	id        Int       @id @default(autoincrement())
 	title     String?
