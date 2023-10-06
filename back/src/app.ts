@@ -9,6 +9,7 @@ import swaggerUi from "swagger-ui-express";
 import passport from "passport";
 import { local, jwt, kakao } from "./passport";
 import authRouter from "./routers/authRouter";
+import userRouter from "./routers/userRouter";
 import uploadRouter from "./routers/uploadRouter";
 import postRouter from "./routers/postRouter";
 import commentRouter from "./routers/commentRouter";
@@ -40,6 +41,7 @@ passport.use("kakao", kakao);
 app.use(reqAndResLogger);
 
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
 app.use("/upload", uploadRouter);
 
 // 미사용 라우터

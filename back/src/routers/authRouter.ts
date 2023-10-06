@@ -12,8 +12,6 @@ authRouter.post("/signup", authController.createUser);
 
 authRouter.post("/", passportLocal, authController.login);
 
-authRouter.get("/", passportJwt, authController.getProfile);
-
 authRouter.put("/", passportJwt, authController.editUser);
 
 authRouter.delete("/", passportJwt, authController.deleteUser);

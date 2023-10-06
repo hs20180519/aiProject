@@ -44,8 +44,10 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
   try {
     const { email, password, name, nickname } = req.body;
     const { emailExists, nicknameExists } = await authService.signUpDuplicateCheck(email, nickname);
+
     if (emailExists) return res.status(409).json({ message: "이미 존재하는 이메일입니다." });
     if (nicknameExists) return res.status(409).json({ message: "이미 존재하는 닉네임입니다." });
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await authService.createUser({
       email,
@@ -53,6 +55,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
       nickname,
       password: hashedPassword,
     });
+
     return res.status(201).json({
       message: `회원가입에 성공했습니다 :: ${newUser.email}`,
     });
@@ -100,25 +103,6 @@ export const editUser = async (req: Request, res: Response, next: NextFunction) 
   } catch (error) {
     console.error(error);
     return next(error);
-  }
-};
-
-export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
-  /**
-   * #swagger.tags = ['Auth']
-   * #swagger.summary = '프로필'
-   * #swagger.description = '유저 상세 정보'
-   * #swagger.security = [{
-   *   "bearerAuth": []
-   * }]
-   */
-  try {
-    const userId = (req.user as User).id;
-    const user = await authService.getUserById(userId);
-    return res.status(200).json(user);
-  } catch (error) {
-    console.error(error);
-    next(error);
   }
 };
 

@@ -97,19 +97,6 @@
           }
         }
       },
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "프로필",
-        "description": "유저 상세 정보",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "security": []
-      },
       "put": {
         "tags": [
           "Auth"
@@ -129,6 +116,21 @@
         ],
         "summary": "회원탈퇴",
         "description": "관계 데이터 삭제 후 유저 삭제",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      }
+    },
+    "/user/": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "프로필",
+        "description": "유저 상세 정보",
         "responses": {
           "200": {
             "description": "OK"

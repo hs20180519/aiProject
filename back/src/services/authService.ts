@@ -50,16 +50,6 @@ export const editUser = async (userId: number, updatedData: Partial<User>) => {
   }
 };
 
-export const getUserById = async (userId: number) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-  });
-  if (user) {
-    const { password, ...userWithoutPassword } = user;
-    return userWithoutPassword;
-  }
-};
-
 export const deleteUser = async (userId: number) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },

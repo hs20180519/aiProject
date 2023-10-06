@@ -28,8 +28,8 @@ describe("Authentication API", () => {
   });
 
   // 유저 상세보기 테스트
-  it("GET /auth - 유저 정보 가져오고 200 반환", async () => {
-    const res = await request(app).get("/auth").set("Authorization", `Bearer ${userToken}`);
+  it("GET /user - 유저 정보 가져오고 200 반환", async () => {
+    const res = await request(app).get("/user").set("Authorization", `Bearer ${userToken}`);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.name).toEqual("Test User");
