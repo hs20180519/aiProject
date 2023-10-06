@@ -41,6 +41,8 @@ app.use(reqAndResLogger);
 
 app.use("/auth", authRouter);
 app.use("/upload", uploadRouter);
+
+// 미사용 라우터
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
 

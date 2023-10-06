@@ -19,15 +19,15 @@ model User {
 	snsId        String?        @unique
 	snsProvider  String?
 	profileImage String?
-	createdAt    DateTime       @default(now())
-	updatedAt    DateTime       @updatedAt
 	post         Post[]
 	comment      Comment[]
-	manager      Boolean        @default(false)
 	UserWord     WordProgress[]
 	Wordbook     Wordbook[]
 	Ranking      Ranking[]
 	lastRank     Int?           @default(0)
+	createdAt    DateTime       @default(now())
+	updatedAt    DateTime       @updatedAt
+	manager      Boolean        @default(false)
 }
 
 model Word {
