@@ -1,6 +1,7 @@
 import request from "supertest";
 import express from "express";
 import authRouter from "../routers/authRouter";
+import userRouter from "../routers/userRouter";
 import passport from "passport";
 import { jwt } from "../passport";
 import { signUpUser, loginUser, deleteUser } from "./testUtils";
@@ -18,6 +19,7 @@ app.use(passport.initialize());
 passport.use("jwt", jwt);
 app.use(express.json());
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
 
 describe("Authentication API", () => {
   let userToken: any;
