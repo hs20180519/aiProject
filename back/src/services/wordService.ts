@@ -20,7 +20,6 @@ export const getWords = async (userId: number) => {
     },
   });
 
-  // Randomly select 10 words
   const unlearnedWords: Word[] = [];
 
   while (unlearnedWords.length < Math.min(10, allWords.length)) {
