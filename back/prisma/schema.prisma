@@ -21,6 +21,7 @@ model User {
 	profileImage String?
 	post         Post[]
 	comment      Comment[]
+	Level        Int
 	UserWord     WordProgress[]
 	Wordbook     Wordbook[]
 	Ranking      Ranking[]
