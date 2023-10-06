@@ -2,12 +2,13 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { shuffleAnswer } from "../utils/shuffleAnswer";
 
+interface Word {
+  id: number;
+  meaning: string;
+}
+
 export const getWords = async (userId: number) => {
-  const wordsCount = await prisma.word.count();
-  const randomIndex = Math.floor(Math.random() * wordsCount);
-  const unlearnedWords = await prisma.word.findMany({
-    skip: randomIndex,
-    take: 10,
+  const allWords = await prisma.word.findMany({
     where: {
       NOT: {
         WordProgress: {
@@ -18,13 +19,24 @@ export const getWords = async (userId: number) => {
       },
     },
   });
+
+  // Randomly select 10 words
+  const unlearnedWords: Word[] = [];
+
+  while (unlearnedWords.length < Math.min(10, allWords.length)) {
+    const randomIndex = Math.floor(Math.random() * allWords.length);
+    if (!unlearnedWords.includes(allWords[randomIndex])) {
+      unlearnedWords.push(allWords[randomIndex]);
+    }
+  }
+
   let unlearnedWordsWithChoices = [];
 
   for (let word of unlearnedWords) {
     let choices = [word.meaning];
 
     while (choices.length < 4) {
-      const randomMeaningIndex = Math.floor(Math.random() * wordsCount);
+      const randomMeaningIndex = Math.floor(Math.random() * allWords.length);
       const randomWord = await prisma.word.findFirst({
         skip: randomMeaningIndex,
       });
