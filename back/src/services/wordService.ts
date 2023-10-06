@@ -1,58 +1,83 @@
 import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
 import { shuffleAnswer } from "../utils/shuffleAnswer";
+const prisma = new PrismaClient();
 
 interface Word {
   id: number;
   meaning: string;
 }
+interface WordsPerLevel {
+  [level: number]: { [subLevel: number]: number };
+}
 
-export const getWords = async (userId: number) => {
-  const allWords = await prisma.word.findMany({
-    where: {
-      NOT: {
-        WordProgress: {
-          some: {
-            userId,
-          },
-        },
-      },
-    },
+export const getWords = async (userId: number): Promise<Word[]> => {
+  const userLevel = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { level: true },
   });
 
-  const unlearnedWords: Word[] = [];
-
-  while (unlearnedWords.length < Math.min(10, allWords.length)) {
-    const randomIndex = Math.floor(Math.random() * allWords.length);
-    if (!unlearnedWords.includes(allWords[randomIndex])) {
-      unlearnedWords.push(allWords[randomIndex]);
-    }
+  if (!userLevel) {
+    throw new Error(`사용자 ID: ${userId} 를 찾을 수 없습니다.`);
   }
+
+  const wordsPerLevel: WordsPerLevel = {
+    "0": { "0": 7, "1": 3 },
+    "1": { "0": 2, "1": 6, "2": 2 },
+    "2": { "1": 3, "2": 7 },
+  };
 
   let unlearnedWordsWithChoices = [];
 
-  for (let word of unlearnedWords) {
-    let choices = [word.meaning];
+  const allUnfilteredWords = await prisma.word.findMany();
 
-    while (choices.length < 4) {
-      const randomMeaningIndex = Math.floor(Math.random() * allWords.length);
-      const randomWord = await prisma.word.findFirst({
-        skip: randomMeaningIndex,
-      });
+  if (userLevel.level !== null) {
+    for (const wordLevel in wordsPerLevel[userLevel.level]) {
+      let unlearnedWords: Word[] = [];
 
-      if (randomWord && !choices.includes(randomWord.meaning)) {
-        choices.push(randomWord.meaning);
+      while (unlearnedWords.length < wordsPerLevel[userLevel.level][+wordLevel]) {
+        const allWordsAtCurrentWordLevel = await prisma.word.findMany({
+          where: {
+            AND: [
+              { level: +wordLevel },
+              {
+                NOT: {
+                  WordProgress: { some: { userId } },
+                },
+              },
+            ],
+          },
+        });
+
+        if (!allWordsAtCurrentWordLevel.length) break;
+
+        const randomIndex = Math.floor(Math.random() * allWordsAtCurrentWordLevel.length);
+
+        if (!unlearnedWords.includes(allWordsAtCurrentWordLevel[randomIndex]))
+          unlearnedWords.push(allWordsAtCurrentWordLevel[randomIndex]);
+      }
+
+      for (const word of unlearnedWords) {
+        let choices = [word.meaning];
+
+        while (choices.length < 4) {
+          const randomMeaningIndex = Math.floor(Math.random() * allUnfilteredWords.length);
+          const randomWordMeaning = allUnfilteredWords[randomMeaningIndex].meaning;
+
+          if (!choices.includes(randomWordMeaning)) choices.push(randomWordMeaning);
+        }
+
+        for (let i = choices.length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [choices[i], choices[j]] = [choices[j], choices[i]];
+        }
+
+        const wordWithChoices = { ...word, choices };
+
+        unlearnedWordsWithChoices.push(wordWithChoices);
       }
     }
-
-    for (let i = choices.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      [choices[i], choices[j]] = [choices[j], choices[i]];
-    }
-
-    let wordWithChoices = { ...word, choices };
-    unlearnedWordsWithChoices.push(wordWithChoices);
   }
+
   return unlearnedWordsWithChoices;
 };
 

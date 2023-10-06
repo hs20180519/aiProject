@@ -76,6 +76,9 @@
                   },
                   "nickname": {
                     "example": "any"
+                  },
+                  "score": {
+                    "example": "any"
                   }
                 }
               }
