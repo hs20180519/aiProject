@@ -1,75 +1,72 @@
-import { useReducer, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useState, useEffect, useReducer, createContext } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Container, Col, Row } from "react-bootstrap";
 
-import * as Api from "./apis/api";
+import * as Api from "./api";
+import { loginReducer } from "./reducer";
 
-import "./index.css";
+import Header from "./pages/Header";
+import LoginForm from "./components/user/LoginForm";
+import RegisterForm from "./components/user/RegisterForm";
+import Mainpage from "./components/Mainpage";
 
-import LayoutPage from "./pages/LayoutPage";
-import PoiPage from "./pages/PoiPage";
-import WeatherPage from "./pages/WeatherPage";
-import InfographicPage from "./pages/InfographicPage";
-import MyPage from "./pages/MyPage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import UnregisterPage from "./pages/UnregisterPage";
-
-import userReducer from "./hooks/userReducer";
-
-import UserStateContext from "./contexts/UserStateContext";
-import DispatchContext from "./contexts/DispatchContext";
+export const UserStateContext = createContext(null);
+export const DispatchContext = createContext(null);
 
 function App() {
-  const [userState, dispatch] = useReducer(userReducer, {
+  // useReducer 훅을 통해 userState 상태와 dispatch함수를 생성함.
+  const [userState, dispatch] = useReducer(loginReducer, {
     user: null,
   });
 
-  /** 유저 정보를 받아오는 목업 API입니다.*/
-  const fetchUserInfo = async () => {
+  // 아래의 fetchCurrentUser 함수가 실행된 다음에 컴포넌트가 구현되도록 함.
+  // 아래 코드를 보면 isFetchCompleted 가 true여야 컴포넌트가 구현됨.
+  const [isFetchCompleted, setIsFetchCompleted] = useState(false);
+
+  const fetchCurrentUser = async () => {
     try {
-      // 프론트엔드에서 보내주는 헤더에 있는 JWT 값으로 사용자를 판별합니다.
-      const endpoint = "/user/mypage";
-      const res = await Api.getData(endpoint);
-      if (res.status === 200) {
-        // dispatch 함수를 이용해 로그인 성공 신호와 사용자 정보를 상태값으로 저장합니다.
-        dispatch({
-          type: "LOGIN_SUCCESS",
-          payload: res.data
-        });
-      }
-    } catch (e) {
-      console.log(e.response.data);
+      // 이전에 발급받은 토큰이 있다면, 이를 가지고 유저 정보를 받아옴.
+      const res = await Api.get("user/current");
+      const currentUser = res.data;
+
+      // dispatch 함수를 통해 로그인 성공 상태로 만듦.
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: currentUser,
+      });
+
+      console.log("%c sessionStorage에 토큰 있음.", "color: #d93d1a;");
+    } catch {
+      console.log("%c SessionStorage에 토큰 없음.", "color: #d93d1a;");
     }
+    // fetchCurrentUser 과정이 끝났으므로, isFetchCompleted 상태를 true로 바꿔줌
+    setIsFetchCompleted(true);
   };
 
+  // useEffect함수를 통해 fetchCurrentUser 함수를 실행함.
   useEffect(() => {
-    console.log("--app mount--");
-    const token = sessionStorage.getItem("userToken");
-    if (token) {
-      fetchUserInfo();
-    }
+    fetchCurrentUser();
   }, []);
+
+  if (!isFetchCompleted) {
+    return "loading...";
+  }
+
   return (
-    <div>
-      <DispatchContext.Provider value={dispatch}>
-        <UserStateContext.Provider value={userState}>
-          <Routes>
-            {/* 먼저 웹앱의 전체 레이아웃을 표시해야 하므로 루트 경로에다가 LayoutPage를 지정해주고, */}
-            <Route path="/" element={<LayoutPage />}>
-              {/* 접속 후 첫 화면에서 메인 기능을 Outlet 영역에 표시해 주기 위해서, Subroute로써 루트 경로에다가 PoiPage를 다시 한번 지정해줍니다. */}
-              {/* 이렇게 해주면 사용자가 루트 경로로 접속을 할 때, LayoutPage와 함께 Outlet 영역에다가 메인 기능인 PoiPage를 한번에 같이 불러올 수 있습니다.*/}
-              <Route path="/poi" element={<PoiPage />}></Route>
-              <Route path="/weather" element={<WeatherPage />}></Route>
-              <Route path="/infographic" element={<InfographicPage />}></Route>
-              <Route path="/mypage" element={<MyPage />}></Route>
-              <Route path="/login" element={<LoginPage />}></Route>
-              <Route path="/register" element={<RegisterPage />}></Route>
-              <Route path="/unregister" element={<UnregisterPage />}></Route>
-            </Route>
-          </Routes>
-        </UserStateContext.Provider>
-      </DispatchContext.Provider>
-    </div>
+    <DispatchContext.Provider value={dispatch}>
+      <UserStateContext.Provider value={userState}>
+        <Router>
+          <Header />
+            <Routes>
+              <Route path="/" exact element={<Mainpage />} />
+              <Route path="/login" element={<LoginForm />} />
+              <Route path="/register" element={<RegisterForm />} />
+              <Route path="/users/:userId" element={<Mainpage />} />
+              <Route path="*" element={<Mainpage />} />
+            </Routes>
+        </Router>
+      </UserStateContext.Provider>
+    </DispatchContext.Provider>
   );
 }
 
