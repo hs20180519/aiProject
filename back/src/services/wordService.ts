@@ -52,7 +52,7 @@ export const getWords = async (userId: number): Promise<Word[]> => {
 
         const randomIndex = Math.floor(Math.random() * allWordsAtCurrentWordLevel.length);
 
-        if (!unlearnedWords.includes(allWordsAtCurrentWordLevel[randomIndex]))
+        if (!unlearnedWords.some((word) => word.id === allWordsAtCurrentWordLevel[randomIndex].id))
           unlearnedWords.push(allWordsAtCurrentWordLevel[randomIndex]);
       }
 
