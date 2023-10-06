@@ -1,17 +1,5 @@
-import React, { useState, useEffect, useReducer, createContext } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Container, Col, Row } from "react-bootstrap";
-
-import * as Api from "./api";
-import { loginReducer } from "./reducer";
-
-import Header from "./pages/Header";
-import LoginForm from "./components/user/LoginForm";
-import RegisterForm from "./components/user/RegisterForm";
-import Mainpage from "./components/Mainpage";
-
-export const UserStateContext = createContext(null);
-export const DispatchContext = createContext(null);
+import { useEffect, useReducer, useState } from "react";
+import "./App.css";
 
 function App() {
   // useReducer 훅을 통해 userState 상태와 dispatch함수를 생성함.
@@ -51,22 +39,12 @@ function App() {
   if (!isFetchCompleted) {
     return "loading...";
   }
-
   return (
-    <DispatchContext.Provider value={dispatch}>
-      <UserStateContext.Provider value={userState}>
-        <Router>
-          <Header />
-            <Routes>
-              <Route path="/" exact element={<Mainpage />} />
-              <Route path="/login" element={<LoginForm />} />
-              <Route path="/register" element={<RegisterForm />} />
-              <Route path="/users/:userId" element={<Mainpage />} />
-              <Route path="*" element={<Mainpage />} />
-            </Routes>
-        </Router>
-      </UserStateContext.Provider>
-    </DispatchContext.Provider>
+    <div className="App">
+      <header className="App-header">
+        <h1>개발바닥!</h1>
+      </header>
+    </div>
   );
 }
 
