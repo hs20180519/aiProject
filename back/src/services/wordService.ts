@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { shuffleAnswer } from "../utils/shuffleAnswer";
+import { createChoices } from "../utils/createChoices";
+import { yatesShuffle } from "../utils/yatesShuffle";
 const prisma = new PrismaClient();
 
 interface Word {
@@ -57,19 +59,8 @@ export const getWords = async (userId: number): Promise<Word[]> => {
       }
 
       for (const word of unlearnedWords) {
-        let choices = [word.meaning];
-
-        while (choices.length < 4) {
-          const randomMeaningIndex = Math.floor(Math.random() * allUnfilteredWords.length);
-          const randomWordMeaning = allUnfilteredWords[randomMeaningIndex].meaning;
-
-          if (!choices.includes(randomWordMeaning)) choices.push(randomWordMeaning);
-        }
-
-        for (let i = choices.length - 1; i > 0; i--) {
-          let j = Math.floor(Math.random() * (i + 1));
-          [choices[i], choices[j]] = [choices[j], choices[i]];
-        }
+        let choices: string[] = createChoices(word, allUnfilteredWords);
+        choices = yatesShuffle(choices);
 
         const wordWithChoices = { ...word, choices };
 

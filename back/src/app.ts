@@ -14,6 +14,7 @@ import uploadRouter from "./routers/uploadRouter";
 import postRouter from "./routers/postRouter";
 import commentRouter from "./routers/commentRouter";
 import wordRouter from "./routers/wordRouter";
+import levelRouter from "./routers/levelRouter";
 import session from "express-session";
 
 const app: express.Application = express();
@@ -45,6 +46,7 @@ app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/upload", uploadRouter);
 app.use("/word", wordRouter);
+app.use("/level", levelRouter);
 
 // 미사용 라우터
 app.use("/post", postRouter);

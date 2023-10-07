@@ -194,6 +194,16 @@
         "security": []
       }
     },
+    "/level/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/post/": {
       "post": {
         "tags": [
