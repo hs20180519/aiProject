@@ -8,8 +8,18 @@ dist
 /back/node_modules/
 /back/src/config/swagger-output.json
 /back/package-lock.json
+
+# front-dependencies
 /front/node_modules
 /front/package-lock.json
+/front/.pnp
+/front/.pnp.js
+
+# testing
+/front/coverage
+
+# production
+/front/build
 
 ### Node ###
 # Logs
