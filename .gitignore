@@ -8,24 +8,36 @@ dist
 /back/node_modules/
 /back/src/config/swagger-output.json
 /back/package-lock.json
+
+# front-dependencies
 /front/node_modules
 /front/package-lock.json
+/front/.pnp
+/front/.pnp.js
+
+# testing
+/front/coverage
+
+# production
+/front/build
 
 ### Node ###
 # Logs
 logs
 /back/src/logs/
-/back/*.log
-/back/npm-debug.log*
-/back/yarn-debug.log*
-/back/yarn-error.log*
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 ### macOS ###
 # General
-.DS_Store
+*.DS_Store
 .AppleDouble
 .LSOverride
 
 ### macOS Patch ###
 # iCloud generated files
 *.icloud
+
+.vscode
