@@ -3,9 +3,18 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["standard-with-typescript", "plugin:react/recommended", "airbnb"],
+  "extends": [
+    "standard-with-typescript",
+    "plugin:react/recommended",
+    "airbnb",
+    "react-app",
+    "react-app/jest"
+  ],
   "parserOptions": {
-    "ecmaVersion": "latest"
+    "ecmaVersion": "latest",
+    "babelOptions": {
+      "presets": [["babel-preset-react-app", false], "babel-preset-react-app/prod"]
+    }
   },
   "plugins": ["react"],
   "rules": {}
