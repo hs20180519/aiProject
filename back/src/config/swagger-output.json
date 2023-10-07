@@ -44,6 +44,54 @@
         }
       }
     },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "이메일 인증",
+        "description": "사용자 이메일로 인증코드 전송",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/auth/verify": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "이메일 인증 코드 확인",
+        "description": "사용자가 입력한 인증코드가 일치하는지 확인. 일치하면 저장된 인증코드 삭제하고 true 반환",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "code": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/signup": {
       "post": {
         "tags": [
@@ -196,7 +244,11 @@
     },
     "/level/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Level"
+        ],
+        "summary": "레벨 테스트 단어",
+        "description": "[0레벨]3개, [1레벨]4개, [2레벨]3개",
         "responses": {
           "200": {
             "description": "OK"

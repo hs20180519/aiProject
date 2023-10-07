@@ -1,4 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
+import { sendMail } from "../utils/sendMail";
 import path from "path";
 import fs from "fs";
 
@@ -8,6 +9,31 @@ export const getUserByEmail = async (email: string) => {
   return prisma.user.findUnique({
     where: { email: email },
   });
+};
+
+export const sendVerificationCode = async (email: string) => {
+  const verificationCode = Math.floor(Math.random() * 1000000).toString();
+  await sendMail(email, verificationCode);
+  await prisma.verifiCode.create({
+    data: {
+      email,
+      code: verificationCode,
+    },
+  });
+  return;
+};
+
+export const verifyEmail = async (email: string, code: string) => {
+  const verificationCode = await prisma.verifiCode.findUnique({
+    where: { email },
+  });
+  if (!verificationCode) return false;
+  if (verificationCode.code === code) {
+    await prisma.verifiCode.delete({
+      where: { email },
+    });
+    return true;
+  } else return false;
 };
 
 export const getUserByNickname = async (nickname: string) => {
