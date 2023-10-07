@@ -26,7 +26,7 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
     } else if (customBookId) {
       words = await wordService.getWordsByCustomBookId(customBookId);
     } else {
-      words = await wordService.getWords(userId);
+      words = await wordService.getWord(userId);
     }
 
     return res.status(200).json(words);

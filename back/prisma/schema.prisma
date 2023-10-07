@@ -11,24 +11,25 @@ datasource db {
 }
 
 model User {
-  id           Int            @id @default(autoincrement())
-  email        String?        @unique
-  name         String?
-  nickname     String?        @unique
-  password     String?
-  snsId        String?        @unique
-  snsProvider  String?
-  profileImage String?
-  post         Post[]
-  comment      Comment[]
-  level        Int?
-  UserWord     WordProgress[]
-  Wordbook     Wordbook[]
-  Ranking      Rank[]
-  lastRank     Int?           @default(0)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  manager      Boolean        @default(false)
+  id            Int             @id @default(autoincrement())
+  email         String?         @unique
+  name          String?
+  nickname      String?         @unique
+  password      String?
+  snsId         String?         @unique
+  snsProvider   String?
+  profileImage  String?
+  post          Post[]
+  comment       Comment[]
+  level         Int?
+  UserWord      WordProgress[]
+  Wordbook      Wordbook[]
+  Ranking       Rank[]
+  lastRank      Int?            @default(0)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  manager       Boolean         @default(false)
+  LearnProgress LearnProgress[]
 }
 
 model VerifiCode {
@@ -47,6 +48,17 @@ model Word {
   level         Int
   WordProgress  WordProgress[]
   WordbookEntry WordbookEntry[]
+  LearnProgress LearnProgress[]
+}
+
+model LearnProgress {
+  id     Int     @id @default(autoincrement())
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?
+  ip     String?
+  word   Word    @relation(fields: [wordId], references: [id])
+  wordId Int
+  answer Boolean
 }
 
 model WordProgress {
