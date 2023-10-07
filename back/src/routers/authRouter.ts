@@ -8,11 +8,13 @@ const authRouter = Router();
 
 authRouter.get("/check", authController.checkEmailOrNickname);
 
+authRouter.post("/register", authController.register);
+
+authRouter.post("/verify", authController.verify);
+
 authRouter.post("/signup", authController.createUser);
 
 authRouter.post("/", passportLocal, authController.login);
-
-authRouter.get("/", passportJwt, authController.getProfile);
 
 authRouter.put("/", passportJwt, authController.editUser);
 

@@ -47,5 +47,5 @@ export async function loginUser() {
 export async function deleteUser(userToken: string) {
   const res = await request(app).delete("/auth").set("Authorization", `Bearer ${userToken}`);
 
-  expect(res.statusCode).toEqual(204);
+  expect(res.statusCode).toEqual(200);
 }

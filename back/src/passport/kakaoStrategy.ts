@@ -38,6 +38,7 @@ const kakao = new KakaoStrategy(
             // 하단에 예시 라우터핸들러 주석처리 참고
             snsId: profile.id,
             snsProvider: "kakao",
+            // level: 0,
           },
         });
         done(null, newUser);

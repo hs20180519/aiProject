@@ -44,6 +44,68 @@
         }
       }
     },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "이메일 인증",
+        "description": "사용자 이메일로 인증코드 전송",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "이메일 인증 코드 확인",
+        "description": "사용자가 입력한 인증코드가 일치하는지 확인. 일치하면 저장된 인증코드 삭제하고 true 반환",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "code": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/signup": {
       "post": {
         "tags": [
@@ -76,6 +138,9 @@
                   },
                   "nickname": {
                     "example": "any"
+                  },
+                  "score": {
+                    "example": "any"
                   }
                 }
               }
@@ -96,19 +161,6 @@
             "description": "Unauthorized"
           }
         }
-      },
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "프로필",
-        "description": "유저 상세 정보",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "security": []
       },
       "put": {
         "tags": [
@@ -137,6 +189,21 @@
         "security": []
       }
     },
+    "/user/": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "프로필",
+        "description": "유저 상세 정보",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      }
+    },
     "/upload/profile-image": {
       "post": {
         "tags": [
@@ -147,6 +214,58 @@
         "responses": {
           "201": {
             "description": "Created"
+          }
+        }
+      }
+    },
+    "/word/": {
+      "get": {
+        "tags": [
+          "Word"
+        ],
+        "summary": "단어 학습",
+        "description": "쿼리별 단어 학습. 틀린 단어, 학습한 단어, 개인 단어장 단어, 쿼리가 없다면 전체 데이터셋 중 학습한적 없는 단어",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isWrongAnswerBook",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isStudiedBook",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      }
+    },
+    "/level/": {
+      "get": {
+        "tags": [
+          "Level"
+        ],
+        "summary": "레벨 테스트 단어",
+        "description": "[0레벨]3개, [1레벨]4개, [2레벨]3개",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

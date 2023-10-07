@@ -36,23 +36,67 @@ export const checkEmailOrNickname = async (req: Request, res: Response, next: Ne
   }
 };
 
+export const register = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Auth']
+   * #swagger.summary = '이메일 인증'
+   * #swagger.description = '사용자 이메일로 인증코드 전송'
+   */
+  try {
+    const email = req.body.email;
+    await authService.sendVerificationCode(email);
+    return res.status(200).json({ message: "인증코드가 전송되었습니다." });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
+export const verify = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Auth']
+   * #swagger.summary = '이메일 인증 코드 확인'
+   * #swagger.description = '사용자가 입력한 인증코드가 일치하는지 확인. 일치하면 저장된 인증코드 삭제하고 true 반환'
+   */
+  try {
+    const { email, code } = req.body;
+    const isVerified = await authService.verifyEmail(email, code);
+
+    if (!isVerified) return res.status(400).json({ message: "인증코드가 일치하지 않습니다." });
+
+    return res.status(200).json({ message: "인증되었습니다." });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Auth']
    * #swagger.summary = '회원가입'
    */
   try {
-    const { email, password, name, nickname } = req.body;
+    const { email, password, name, nickname, score } = req.body;
     const { emailExists, nicknameExists } = await authService.signUpDuplicateCheck(email, nickname);
+
     if (emailExists) return res.status(409).json({ message: "이미 존재하는 이메일입니다." });
     if (nicknameExists) return res.status(409).json({ message: "이미 존재하는 닉네임입니다." });
+    let level: number = 0;
+    if (score >= 71) {
+      level = 2;
+    } else if (score >= 41) {
+      level = 1;
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await authService.createUser({
       email,
       name,
       nickname,
       password: hashedPassword,
+      level: level,
     });
+
     return res.status(201).json({
       message: `회원가입에 성공했습니다 :: ${newUser.email}`,
     });
@@ -100,25 +144,6 @@ export const editUser = async (req: Request, res: Response, next: NextFunction) 
   } catch (error) {
     console.error(error);
     return next(error);
-  }
-};
-
-export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
-  /**
-   * #swagger.tags = ['Auth']
-   * #swagger.summary = '프로필'
-   * #swagger.description = '유저 상세 정보'
-   * #swagger.security = [{
-   *   "bearerAuth": []
-   * }]
-   */
-  try {
-    const userId = (req.user as User).id;
-    const user = await authService.getUserById(userId);
-    return res.status(200).json(user);
-  } catch (error) {
-    console.error(error);
-    next(error);
   }
 };
 

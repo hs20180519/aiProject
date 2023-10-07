@@ -9,9 +9,12 @@ import swaggerUi from "swagger-ui-express";
 import passport from "passport";
 import { local, jwt, kakao } from "./passport";
 import authRouter from "./routers/authRouter";
+import userRouter from "./routers/userRouter";
 import uploadRouter from "./routers/uploadRouter";
 import postRouter from "./routers/postRouter";
 import commentRouter from "./routers/commentRouter";
+import wordRouter from "./routers/wordRouter";
+import levelRouter from "./routers/levelRouter";
 import session from "express-session";
 
 const app: express.Application = express();
@@ -40,7 +43,10 @@ passport.use("kakao", kakao);
 app.use(reqAndResLogger);
 
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
 app.use("/upload", uploadRouter);
+app.use("/word", wordRouter);
+app.use("/level", levelRouter);
 
 // 미사용 라우터
 app.use("/post", postRouter);
