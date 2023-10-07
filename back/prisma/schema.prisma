@@ -53,8 +53,9 @@ model Word {
 
 model LearnProgress {
   id     Int     @id @default(autoincrement())
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?
+  ip     String?
   word   Word    @relation(fields: [wordId], references: [id])
   wordId Int
   answer Boolean

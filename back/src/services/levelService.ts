@@ -18,24 +18,22 @@ export const getTestWords = async () => {
 
   let unlearnedWordsWithChoices = [];
 
-  const allUnfilteredWords = await prisma.word.findMany();
-
   for (const wordLevel in wordsPerLevel) {
     let unlearnedWords: Word[] = [];
 
     const level = wordLevel as "0" | "1" | "2";
 
     while (unlearnedWords.length < wordsPerLevel[level]) {
-      const allWordsAtCurrentWordLevel = await prisma.word.findMany({
-        where: { level: +wordLevel },
-      });
+      const selectedWordArray: Word[] = await prisma.$queryRaw`SELECT * FROM Word WHERE 
+        Word.level=${+wordLevel} 
+        ORDER BY RAND() LIMIT 1`;
 
-      if (!allWordsAtCurrentWordLevel.length) break;
+      if (selectedWordArray.length === 0) break;
 
-      const randomIndex = Math.floor(Math.random() * allWordsAtCurrentWordLevel.length);
+      const selectedWord = selectedWordArray[0];
 
-      if (!unlearnedWords.some((word) => word.id === allWordsAtCurrentWordLevel[randomIndex].id))
-        unlearnedWords.push(allWordsAtCurrentWordLevel[randomIndex]);
+      if (!unlearnedWords.some((word) => word.id === selectedWord.id))
+        unlearnedWords.push(selectedWord);
     }
 
     for (const word of unlearnedWords) {
@@ -47,6 +45,5 @@ export const getTestWords = async () => {
       unlearnedWordsWithChoices.push(wordWithChoices);
     }
   }
-
   return unlearnedWordsWithChoices;
 };
