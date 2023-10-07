@@ -39,7 +39,7 @@ export const getTestWords = async () => {
     }
 
     for (const word of unlearnedWords) {
-      let choices: string[] = createChoices(word, allUnfilteredWords);
+      let choices: string[] = await createChoices(word);
       choices = yatesShuffle(choices);
 
       const wordWithChoices = { ...word, choices };
