@@ -1,4 +1,6 @@
+import { Route, Routes } from "react-router-dom";
 import { useEffect, useReducer, useState } from "react";
+import MainPage from "./pages/MainPage";
 
 function App() {
   // // useReducer 훅을 통해 userState 상태와 dispatch함수를 생성함.
@@ -40,9 +42,8 @@ function App() {
   // }
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>개발바닥!</h1>
-      </header>
+      <h1>개발바닥!</h1>
+      <Route path="/" element={<MainPage />} />
     </div>
   );
 }
