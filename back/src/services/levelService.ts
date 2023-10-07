@@ -8,9 +8,6 @@ interface Word {
   id: number;
   meaning: string;
 }
-interface WordsPerLevel {
-  [level: number]: { [subLevel: number]: number };
-}
 
 export const getTestWords = async () => {
   const wordsPerLevel = {
