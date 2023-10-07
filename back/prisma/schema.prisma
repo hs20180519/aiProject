@@ -24,7 +24,7 @@ model User {
   level        Int?
   UserWord     WordProgress[]
   Wordbook     Wordbook[]
-  Ranking      Ranking[]
+  Ranking      Rank[]
   lastRank     Int?           @default(0)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
@@ -37,7 +37,7 @@ model Word {
   meaning       String
   category      String
   level         Int
-  UserWord      WordProgress[]
+  WordProgress  WordProgress[]
   WordbookEntry WordbookEntry[]
 }
 
@@ -70,11 +70,11 @@ model WordbookEntry {
   createdAt  DateTime @default(now())
 }
 
-model Ranking {
+model Rank {
   id       Int       @id @default(autoincrement())
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   Int
-  score    Int
+  score    Int       @default(0)
   rankDate DateTime?
 }
 

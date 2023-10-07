@@ -29,10 +29,11 @@ export const signUpDuplicateCheck = async (email: string, nickname: string) => {
 };
 
 export const createUser = async (userData: {
-  email: string;
-  name: string;
-  nickname: string;
   password: string;
+  level: number;
+  name: any;
+  nickname: any;
+  email: any;
 }) => {
   return prisma.user.create({
     data: userData,

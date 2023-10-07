@@ -76,6 +76,9 @@
                   },
                   "nickname": {
                     "example": "any"
+                  },
+                  "score": {
+                    "example": "any"
                   }
                 }
               }
@@ -149,6 +152,54 @@
         "responses": {
           "201": {
             "description": "Created"
+          }
+        }
+      }
+    },
+    "/word/": {
+      "get": {
+        "tags": [
+          "Word"
+        ],
+        "summary": "단어 학습",
+        "description": "쿼리별 단어 학습. 틀린 단어, 학습한 단어, 개인 단어장 단어, 쿼리가 없다면 전체 데이터셋 중 학습한적 없는 단어",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isWrongAnswerBook",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isStudiedBook",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      }
+    },
+    "/level/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
