@@ -1,5 +1,4 @@
 import { useEffect, useReducer, useState } from "react";
-import "./App.css";
 
 function App() {
   // // useReducer 훅을 통해 userState 상태와 dispatch함수를 생성함.
