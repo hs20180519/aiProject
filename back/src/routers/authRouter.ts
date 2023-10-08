@@ -3,6 +3,7 @@ import passportLocal from "../middlewares/passportLocal";
 import passportJwt from "../middlewares/passportJwt";
 import * as authController from "../controllers/authController";
 import { checkEmailOrNickname } from "../controllers/authController";
+import passport from "passport";
 
 const authRouter = Router();
 
@@ -19,5 +20,13 @@ authRouter.post("/", passportLocal, authController.login);
 authRouter.put("/", passportJwt, authController.editUser);
 
 authRouter.delete("/", passportJwt, authController.deleteUser);
+
+authRouter.get(
+  "/kakao",
+  passport.authenticate("kakao", { failureRedirect: "/?error=카카오로그인 실패" }),
+  (req, res) => {
+    res.redirect("/");
+  },
+);
 
 export default authRouter;
