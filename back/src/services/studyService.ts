@@ -87,3 +87,42 @@ export const getWordsByCustomBookId = async (customBookId: number): Promise<Word
 
   return plainToInstance(WordWithChoicesDto, { ...word, choices });
 };
+
+export const saveLearn = async (
+  userId: number,
+  wordId: number,
+  correct: boolean,
+): Promise<void> => {
+  await prisma.wordProgress.create({
+    data: {
+      userId,
+      wordId,
+      correct,
+    },
+  });
+  return;
+};
+
+export const updateScore = async (userId: number, level: number): Promise<void> => {
+  const rank = await prisma.rank.findFirst({
+    where: { userId },
+  });
+
+  if (!rank) {
+    await prisma.rank.create({
+      data: {
+        userId,
+        score: level * 5,
+      },
+    });
+  } else {
+    await prisma.rank.update({
+      where: { id: rank.id },
+      data: {
+        score: {
+          increment: level * 5,
+        },
+      },
+    });
+  }
+};

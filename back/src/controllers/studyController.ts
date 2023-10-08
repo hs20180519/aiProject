@@ -35,3 +35,26 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
     return next(error);
   }
 };
+
+export const saveLearn = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Study']
+   * #swagger.summary = '학습 중간 저장'
+   * #swagger.description = '학습 단어 정답 유무 및 점수 저장, 학습 사이클(총 10개)에서 단어마다 1번씩 호출'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
+  try {
+    const userId: number = (req.user as User).id;
+    const { wordId, level, correct } = req.body;
+
+    if (correct === true) await studyService.updateScore(userId, level);
+
+    await studyService.saveLearn(userId, wordId, correct);
+    return res.status(201).json({ message: "저장되었습니다." });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
