@@ -3,6 +3,7 @@ import { createChoices } from "../utils/createChoices";
 import { getRandomLevel } from "../utils/getRandomLevel";
 import * as wordInterface from "../interfaces/wordInterface";
 import { WordWithChoicesDto } from "../dtos/wordDto";
+import { WordProgressDto } from "../dtos/wordDto";
 import { plainToInstance } from "class-transformer";
 
 const prisma = new PrismaClient();
@@ -125,4 +126,14 @@ export const updateScore = async (userId: number, level: number): Promise<void> 
       },
     });
   }
+};
+
+export const getLearnResult = async (userId: number): Promise<WordProgressDto[]> => {
+  const result = await prisma.wordProgress.findMany({
+    where: { userId },
+    orderBy: { studiedAt: "desc" },
+    take: 10,
+    include: { word: true },
+  });
+  return plainToInstance(WordProgressDto, result);
 };

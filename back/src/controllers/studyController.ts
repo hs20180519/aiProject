@@ -58,3 +58,22 @@ export const saveLearn = async (req: Request, res: Response, next: NextFunction)
     return next(error);
   }
 };
+
+export const getLearnResult = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Study']
+   * #swagger.summary = '학습 종료 결과'
+   * #swagger.description = '학습 종료시 학습 단어 결과 반환'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
+  try {
+    const userId: number = (req.user as User).id;
+    const result = await studyService.getLearnResult(userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
