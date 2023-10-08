@@ -1,12 +1,8 @@
 import bcrypt from "bcrypt";
 import { Request, Response, NextFunction } from "express";
 import * as authService from "../services/authService";
+import * as authInterface from "../interfaces/authInterface";
 import { User } from "@prisma/client";
-
-interface AuthenticatedRequest extends Request {
-  user?: User;
-  token?: string;
-}
 
 export const checkEmailOrNickname = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -113,7 +109,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
      * #swagger.summary = '로그인'
      * #swagger.description = '로컬 로그인. 로그인 성공 시 JWT 발급'
      */
-    const authReq = req as AuthenticatedRequest;
+    const authReq = req as authInterface.AuthenticatedRequest;
     if (!authReq.user) return res.status(401).json({ message: "유효하지 않은 사용자 정보입니다." });
     const loginUser = {
       token: authReq.token, // postman 편의성을 위해 추가

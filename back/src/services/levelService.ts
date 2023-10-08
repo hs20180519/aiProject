@@ -1,15 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { yatesShuffle } from "../utils/yatesShuffle";
 import { createChoices } from "../utils/createChoices";
+import * as wordInterface from "../interfaces/wordInterface";
 
 const prisma = new PrismaClient();
-
-interface Word {
-  id: number;
-  meaning: string;
-}
-
-export const getTestWords = async () => {
+export const getTestWords = async (): Promise<wordInterface.WordWithChoices[]> => {
   const wordsPerLevel = {
     "0": 3,
     "1": 4,
@@ -19,12 +14,13 @@ export const getTestWords = async () => {
   let unlearnedWordsWithChoices = [];
 
   for (const wordLevel in wordsPerLevel) {
-    let unlearnedWords: Word[] = [];
+    let unlearnedWords: wordInterface.Word[] = [];
 
     const level = wordLevel as "0" | "1" | "2";
 
     while (unlearnedWords.length < wordsPerLevel[level]) {
-      const selectedWordArray: Word[] = await prisma.$queryRaw`SELECT * FROM Word WHERE 
+      const selectedWordArray: wordInterface.Word[] =
+        await prisma.$queryRaw`SELECT * FROM Word WHERE 
         Word.level=${+wordLevel} 
         ORDER BY RAND() LIMIT 1`;
 
@@ -32,7 +28,7 @@ export const getTestWords = async () => {
 
       const selectedWord = selectedWordArray[0];
 
-      if (!unlearnedWords.some((word) => word.id === selectedWord.id))
+      if (!unlearnedWords.some((word: wordInterface.Word) => word.id === selectedWord.id))
         unlearnedWords.push(selectedWord);
     }
 

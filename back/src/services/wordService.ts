@@ -3,33 +3,26 @@ import { shuffleAnswer } from "../utils/shuffleAnswer";
 import { createChoices } from "../utils/createChoices";
 import { yatesShuffle } from "../utils/yatesShuffle";
 import { getRandomLevel } from "../utils/getRandomLevel";
+import * as wordInterface from "../interfaces/wordInterface";
 
 const prisma = new PrismaClient();
 
-interface Word {
-  id: number;
-  meaning: string;
-}
-interface WordWithChoices extends Word {
-  choices: string[];
-}
-
-export const getWord = async (userId: number): Promise<WordWithChoices | null> => {
-  const userLevel = await prisma.user.findUnique({
+export const getWord = async (userId: number): Promise<wordInterface.WordWithChoices | null> => {
+  const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { level: true },
   });
 
-  if (!userLevel) {
+  if (!user) {
     throw new Error(`사용자 ID: ${userId} 를 찾을 수 없습니다.`);
   }
 
   let selectedWordWithChoices = null;
 
-  if (userLevel.level !== null) {
+  if (user.level !== null) {
     // 사용자의 레벨에 따라 단어 레벨 확률 정의
     let levelProbabilities;
-    switch (userLevel.level) {
+    switch (user.level) {
       case 0:
         levelProbabilities = [0.7, 0.2, 0.1];
         break;
@@ -43,16 +36,16 @@ export const getWord = async (userId: number): Promise<WordWithChoices | null> =
         throw new Error("유효하지 않은 레벨입니다.");
     }
 
-    const randomLevel = getRandomLevel(levelProbabilities);
+    const randomLevel: number = getRandomLevel(levelProbabilities);
 
-    const selectedWordArray: Word[] = await prisma.$queryRaw`SELECT * FROM Word WHERE 
+    const selectedWordArray: wordInterface.Word[] = await prisma.$queryRaw`SELECT * FROM Word WHERE 
        Word.level=${randomLevel} AND 
        NOT EXISTS(SELECT * FROM WordProgress WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId}) 
        ORDER BY RAND() LIMIT 1`;
 
     if (selectedWordArray.length === 0) throw new Error("No words found at this Level");
 
-    const selectedWord = selectedWordArray[0];
+    const selectedWord: wordInterface.Word = selectedWordArray[0];
 
     let choices: string[] = await createChoices(selectedWord);
 
@@ -63,7 +56,10 @@ export const getWord = async (userId: number): Promise<WordWithChoices | null> =
   return selectedWordWithChoices;
 };
 
-export const getWordsByUserId = async (userId: number, isCorrect: boolean | null) => {
+export const getWordsByUserId = async (
+  userId: number,
+  isCorrect: boolean | null,
+): Promise<wordInterface.WordWithChoices[]> => {
   let words;
 
   if (isCorrect === null) {
@@ -90,7 +86,7 @@ export const getWordsByUserId = async (userId: number, isCorrect: boolean | null
   let wordsWithChoices = [];
 
   for (let wordObj of words) {
-    let choices = [wordObj.word.meaning];
+    let choices: string[] = [wordObj.word.meaning];
 
     await shuffleAnswer(choices);
 
@@ -101,7 +97,9 @@ export const getWordsByUserId = async (userId: number, isCorrect: boolean | null
   return wordsWithChoices;
 };
 
-export const getWordsByCustomBookId = async (customBookId: number) => {
+export const getWordsByCustomBookId = async (
+  customBookId: number,
+): Promise<wordInterface.WordWithChoices[]> => {
   const customBookWords = await prisma.wordbookEntry.findMany({
     where: {
       wordbookId: customBookId,
@@ -114,7 +112,7 @@ export const getWordsByCustomBookId = async (customBookId: number) => {
   let wordsWithChoices = [];
 
   for (let customBookWord of customBookWords) {
-    let choices = [customBookWord.word.meaning];
+    let choices: string[] = [customBookWord.word.meaning];
 
     await shuffleAnswer(choices);
 
