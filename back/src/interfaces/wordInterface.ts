@@ -3,6 +3,7 @@ export interface Word {
   meaning: string;
   level: number;
   category: string;
+  correct: boolean | null;
 }
 
 export interface WordWithChoices extends Word {

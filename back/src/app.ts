@@ -13,7 +13,7 @@ import userRouter from "./routers/userRouter";
 import uploadRouter from "./routers/uploadRouter";
 import postRouter from "./routers/postRouter";
 import commentRouter from "./routers/commentRouter";
-import wordRouter from "./routers/wordRouter";
+import studyRouter from "./routers/studyRouter";
 import levelRouter from "./routers/levelRouter";
 import session from "express-session";
 
@@ -45,7 +45,7 @@ app.use(reqAndResLogger);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/upload", uploadRouter);
-app.use("/word", wordRouter);
+app.use("/study", studyRouter);
 app.use("/level", levelRouter);
 
 // 미사용 라우터

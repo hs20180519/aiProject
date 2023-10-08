@@ -1,6 +1,8 @@
 import { PrismaClient, User } from "@prisma/client";
 import { sendMail } from "../utils/sendMail";
 import * as authInterface from "../interfaces/authInterface";
+import { plainToClass } from "class-transformer";
+import { UserDto } from "../dtos/userDto";
 import path from "path";
 import fs from "fs";
 
@@ -58,27 +60,24 @@ export const signUpDuplicateCheck = async (
   };
 };
 
-export const createUser = async (userData: authInterface.UserCreationData): Promise<User> => {
-  return prisma.user.create({
+export const createUser = async (userData: authInterface.UserCreationData): Promise<UserDto> => {
+  const createdUser = prisma.user.create({
     data: userData,
   });
+  return plainToClass(UserDto, createdUser);
 };
 
-export const editUser = async (
-  userId: number,
-  updatedData: Partial<User>,
-): Promise<Partial<User>> => {
+export const editUser = async (userId: number, updatedData: Partial<User>): Promise<UserDto> => {
   const updatedUser = await prisma.user.update({
     where: { id: userId },
     data: updatedData,
   });
   if (!updatedUser) throw new Error("유저 정보를 찾을 수 없습니다.");
 
-  const { password, ...userWithoutPassword } = updatedUser;
-  return userWithoutPassword;
+  return plainToClass(UserDto, updatedUser);
 };
 
-export const deleteUser = async (userId: number): Promise<null | User> => {
+export const deleteUser = async (userId: number): Promise<null | UserDto> => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
   });
@@ -87,5 +86,5 @@ export const deleteUser = async (userId: number): Promise<null | User> => {
   await prisma.user.delete({
     where: { id: userId },
   });
-  return user;
+  return plainToClass(UserDto, user);
 };
