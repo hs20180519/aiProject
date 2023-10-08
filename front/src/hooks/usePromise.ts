@@ -14,8 +14,9 @@ export default function usePromise(promiseCreator: any, deps: any) {
         setResolved(resolved);
       } catch (e) {
         // setError(e);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     process();
   }, deps);
