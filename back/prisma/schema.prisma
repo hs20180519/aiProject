@@ -49,6 +49,8 @@ model Word {
   WordProgress  WordProgress[]
   WordbookEntry WordbookEntry[]
   LearnProgress LearnProgress[]
+
+  @@index([level])
 }
 
 model LearnProgress {
@@ -69,6 +71,8 @@ model WordProgress {
   wordId    Int
   correct   Boolean
   studiedAt DateTime?
+
+  @@index([userId])
 }
 
 model Wordbook {
