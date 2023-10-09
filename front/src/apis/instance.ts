@@ -1,6 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-const baseURL = `http://localhost:${process.env.PORT || 3000}`;
+const baseURL = process.env.URL || "http://localhost:3000";
 const serverURL = `http://localhost:${process.env.SERVER_PORT || 5000}`;
 
 const customAxiosInstance = () => {
