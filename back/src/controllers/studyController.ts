@@ -6,7 +6,7 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
   /**
    * #swagger.tags = ['Study']
    * #swagger.summary = '단어 학습'
-   * #swagger.description = '쿼리별 단어 학습. 틀린 단어, 학습한 단어, 개인 단어장 단어, 쿼리가 없다면 전체 데이터셋 중 학습한적 없는 단어'
+   * #swagger.description = '쿼리별 단어 학습. 틀린 단어, 학습한(맞춘) 단어, 개인 단어장 단어, 수능 토익 토플 IELTS 등. 쿼리가 없다면 전체 데이터셋 중 학습한적 없는 단어. 원하는 항목을 쿼리스트링으로 true'
    * #swagger.security = [{
    *   "bearerAuth": []
    * }]
@@ -14,19 +14,31 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
   try {
     const userId = (req.user as User).id;
     const customBookId = Number(req.query.customBookId);
-    const isWrongAnswerBook = req.query.isWrongAnswerBook === "true";
-    const isStudiedBook = req.query.isStudiedBook === "true";
+
+    const queryServiceMap = {
+      incorrectWord: () => studyService.getWordsByUserId(userId, true),
+      correctWord: () => studyService.getWordsByUserId(userId, false),
+      csat: () => studyService.getWordsByCategory(userId, "csat"),
+      toeic: () => studyService.getWordsByCategory(userId, "toeic"),
+      toefl: () => studyService.getWordsByCategory(userId, "toefl"),
+      ielts: () => studyService.getWordsByCategory(userId, "ielts"),
+    };
 
     let words;
 
-    if (isStudiedBook) {
-      words = await studyService.getWordsByUserId(userId, true);
-    } else if (isWrongAnswerBook) {
-      words = await studyService.getWordsByUserId(userId, false);
-    } else if (customBookId) {
-      words = await studyService.getWordsByCustomBookId(customBookId);
-    } else {
-      words = await studyService.getWord(userId);
+    for (const [queryParamKey, serviceFunc] of Object.entries(queryServiceMap)) {
+      if (req.query[queryParamKey] === "true") {
+        words = await serviceFunc();
+        break;
+      }
+    }
+
+    if (!words) {
+      if (customBookId) {
+        words = await studyService.getWordsByCustomBookId(customBookId);
+      } else {
+        words = await studyService.getWord(userId);
+      }
     }
 
     return res.status(200).json(words);

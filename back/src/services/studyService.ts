@@ -48,6 +48,29 @@ export const getWordsByUserId = async (
   return plainToInstance(WordWithChoicesDto, { ...word, choices });
 };
 
+export const getWordsByCategory = async (
+  userId: number,
+  category: string,
+): Promise<WordWithChoicesDto> => {
+  const wordResult: wordInterface.Word[] = await prisma.$queryRaw`
+    SELECT * FROM Word 
+    WHERE category = ${category} AND NOT EXISTS (
+      SELECT * FROM WordProgress 
+      WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId} AND WordProgress.correct=true
+    ) 
+    ORDER BY RAND() LIMIT 1`;
+
+  if (wordResult.length === 0) {
+    throw new Error("단어가 없습니다.");
+  }
+
+  let word: wordInterface.Word = wordResult[0];
+
+  let choices: string[] = await createChoices(word);
+
+  return plainToInstance(WordWithChoicesDto, { ...word, choices });
+};
+
 export const getWordsByCustomBookId = async (customBookId: number): Promise<WordWithChoicesDto> => {
   const wordResult: wordInterface.Word[] = await prisma.$queryRaw`
     SELECT Word.* FROM WordbookEntry

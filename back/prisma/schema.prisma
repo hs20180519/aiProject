@@ -45,6 +45,8 @@ model Word {
 	category      String
 	WordProgress  WordProgress[]
 	WordbookEntry WordbookEntry[]
+
+	@@index([category])
 }
 
 model WordProgress {
