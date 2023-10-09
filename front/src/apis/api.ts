@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, AxiosRequestHeaders } from "axios";
+/* eslint-disable */
+import { AxiosInstance, AxiosRequestHeaders } from "axios";
 import customAxiosInstance from "./instance";
 
 export const instance = customAxiosInstance();
@@ -28,6 +29,7 @@ export const API = async (props: IRequestProps) => {
         return await instance.patch(url, data, { headers });
       case "delete":
         return await instance.delete(url, { headers });
+      default:
     }
   } catch (e: any) {
     return e;
