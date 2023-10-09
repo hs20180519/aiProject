@@ -8,7 +8,6 @@ export interface AuthenticatedRequest extends Request {
 
 export interface UserCreationData {
   password: string;
-  level: number;
   name: string;
   nickname: string;
   email: string;

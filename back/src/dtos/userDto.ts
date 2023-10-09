@@ -10,6 +10,5 @@ export class UserDto {
   snsId?: string;
   snsProvider?: string;
   profileImage?: string;
-  level?: number;
   manager?: boolean;
 }

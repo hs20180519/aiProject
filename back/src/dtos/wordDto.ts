@@ -3,7 +3,6 @@ import { yatesShuffle } from "../utils/yatesShuffle";
 import { Exclude } from "class-transformer";
 export class WordDto {
   id!: number;
-  level!: number;
   word!: string;
   meaning!: string;
   category!: string;
@@ -11,7 +10,6 @@ export class WordDto {
 
 export class WordWithChoicesDto {
   id!: number;
-  level!: number;
   word!: string;
   meaning!: string;
   category!: string;
