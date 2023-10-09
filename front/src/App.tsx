@@ -1,6 +1,5 @@
-import { Route, Routes } from "react-router-dom";
-import { useEffect, useReducer, useState } from "react";
-import MainPage from "./pages/MainPage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import InrtoPage from "./pages/IntroPage";
 
 function App() {
   // // useReducer 훅을 통해 userState 상태와 dispatch함수를 생성함.
@@ -41,9 +40,12 @@ function App() {
   //   return "loading...";
   // }
   return (
-    <div className="App">
-      <h1>개발바닥!</h1>
-      <Route path="/" element={<MainPage />} />
+    <div className={"App"}>
+      <BrowserRouter>
+        <Routes>
+          <Route path={"/"} element={<InrtoPage />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
