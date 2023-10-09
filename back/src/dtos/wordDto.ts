@@ -6,6 +6,8 @@ export class WordDto {
   word!: string;
   meaning!: string;
   category!: string;
+  custom!: boolean;
+  customId?: number;
 }
 
 export class WordWithChoicesDto {
@@ -13,6 +15,8 @@ export class WordWithChoicesDto {
   word!: string;
   meaning!: string;
   category!: string;
+  custom!: boolean;
+  customId?: number;
   @Transform(({ value }) => yatesShuffle(value))
   choices!: string[];
 }
