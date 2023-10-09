@@ -47,9 +47,9 @@ export const saveLearn = async (req: Request, res: Response, next: NextFunction)
    */
   try {
     const userId: number = (req.user as User).id;
-    const { wordId, level, correct } = req.body;
+    const { wordId, correct } = req.body;
 
-    if (correct === true) await studyService.updateScore(userId, level);
+    if (correct === true) await studyService.updateScore(userId);
 
     await studyService.saveLearn(userId, wordId, correct);
     return res.status(201).json({ message: "저장되었습니다." });

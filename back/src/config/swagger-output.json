@@ -189,6 +189,16 @@
         "security": []
       }
     },
+    "/auth/kakao": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/user/": {
       "get": {
         "tags": [
@@ -276,9 +286,6 @@
                   "wordId": {
                     "example": "any"
                   },
-                  "level": {
-                    "example": "any"
-                  },
                   "correct": {
                     "example": "any"
                   }
@@ -302,20 +309,6 @@
           }
         },
         "security": []
-      }
-    },
-    "/level/": {
-      "get": {
-        "tags": [
-          "Level"
-        ],
-        "summary": "레벨 테스트 단어",
-        "description": "[0레벨]3개, [1레벨]4개, [2레벨]3개",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
       }
     },
     "/post/": {

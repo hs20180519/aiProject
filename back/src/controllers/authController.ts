@@ -90,7 +90,6 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
       name,
       nickname,
       password: hashedPassword,
-      level: level,
     });
 
     return res.status(201).json({
