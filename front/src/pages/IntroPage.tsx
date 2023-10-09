@@ -6,8 +6,7 @@ export default function IntroPage() {
   return (
     <>
       <div className={"user-join"}>
-        <p>{"회원가입"}</p>
-        <p>{"로그인"}</p>
+        <p>{"네비게이션바"}</p>
         <KakaoButton />
       </div>
       <div className={"info"}>{"서비스 소개"}</div>
