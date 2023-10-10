@@ -4,6 +4,13 @@ import * as bookService from "../services/bookService";
 import { BookDto, BooksDto } from "../dtos/bookDto";
 
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Book']
+   * #swagger.summary = '커스텀 단어장 생성'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
   try {
     const userId: number = (req.user as User).id;
     const title: string = req.body.title;
@@ -15,6 +22,13 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
   }
 };
 export const getBookList = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Book']
+   * #swagger.summary = '커스텀 단어장 리스트 조회'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
   try {
     const userId: number = (req.user as User).id;
     const books: BooksDto[] = await bookService.getBooks(userId);
@@ -27,6 +41,14 @@ export const getBookList = async (req: Request, res: Response, next: NextFunctio
 };
 
 export const getBook = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Book']
+   * #swagger.summary = '커스텀 단어장 단어 조회'
+   * #swagger.description = '쿼리별 단어 조회. 서버사이드 페이징'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
   try {
     const userId: number = (req.user as User).id;
     const customBookId: number = Number(req.query.customBookId);
