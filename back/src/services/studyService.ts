@@ -51,14 +51,14 @@ export const getWordsByUserId = async (
 export const getWordsByCategory = async (
   userId: number,
   category: string,
-  customId?: number,
+  customBookId?: number,
 ): Promise<WordWithChoicesDto> => {
   let wordResult: wordInterface.Word[];
 
-  if (customId) {
+  if (customBookId) {
     wordResult = await prisma.$queryRaw`
       SELECT * FROM Word 
-      WHERE customId = ${customId} AND NOT EXISTS (
+      WHERE customBookId = ${customBookId} AND NOT EXISTS (
         SELECT * FROM WordProgress 
         WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId} AND WordProgress.correct=true
       ) 

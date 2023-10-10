@@ -13,7 +13,7 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
    */
   try {
     const userId = (req.user as User).id;
-    const customId = Number(req.query.customId);
+    const customBookId = Number(req.query.customId);
 
     const queryServiceMap = {
       incorrectWord: () => studyService.getWordsByUserId(userId, true),
@@ -22,7 +22,7 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
       toeic: () => studyService.getWordsByCategory(userId, "toeic"),
       toefl: () => studyService.getWordsByCategory(userId, "toefl"),
       ielts: () => studyService.getWordsByCategory(userId, "ielts"),
-      custom: () => studyService.getWordsByCategory(userId, "custom", customId),
+      custom: () => studyService.getWordsByCategory(userId, "custom", customBookId),
     };
 
     let words;

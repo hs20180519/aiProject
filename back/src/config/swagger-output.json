@@ -234,7 +234,7 @@
         "description": "쿼리별 단어 학습. 틀린 단어, 학습한(맞춘) 단어, 개인 단어장 단어, 수능 토익 토플 IELTS 등. 쿼리가 없다면 전체 데이터셋 중 학습한적 없는 단어. 원하는 항목을 쿼리스트링으로 true",
         "parameters": [
           {
-            "name": "customBookId",
+            "name": "customId",
             "in": "query",
             "schema": {
               "type": "string"
