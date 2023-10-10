@@ -8,7 +8,7 @@ export class UserDto {
   @Exclude()
   password?: string;
   snsId?: string;
-  snsProvider?: string;
+  provider?: string;
   profileImage?: string;
-  manager?: boolean;
+  manager!: boolean;
 }

@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { UserDto } from "../dtos/userDto";
 import { plainToInstance } from "class-transformer";
 

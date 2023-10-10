@@ -48,15 +48,34 @@ export const getWordsByUserId = async (
   return plainToInstance(WordWithChoicesDto, { ...word, choices });
 };
 
-export const getWordsByCustomBookId = async (customBookId: number): Promise<WordWithChoicesDto> => {
-  const wordResult: wordInterface.Word[] = await prisma.$queryRaw`
-    SELECT Word.* FROM WordbookEntry
-    INNER JOIN Word ON Word.id = WordbookEntry.wordId
-    WHERE WordbookEntry.wordbookId = ${customBookId}
-    ORDER BY RAND() LIMIT 1`;
+export const getWordsByCategory = async (
+  userId: number,
+  category: string,
+  customBookId?: number,
+): Promise<WordWithChoicesDto> => {
+  let wordResult: wordInterface.Word[];
 
-  if (!wordResult)
-    throw new Error(`커스텀 단어장 ID ${customBookId}에 대한 단어를 찾을 수 없습니다.`);
+  if (customBookId) {
+    wordResult = await prisma.$queryRaw`
+      SELECT * FROM Word 
+      WHERE customBookId = ${customBookId} AND NOT EXISTS (
+        SELECT * FROM WordProgress 
+        WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId} AND WordProgress.correct=true
+      ) 
+      ORDER BY RAND() LIMIT 1`;
+  } else {
+    wordResult = await prisma.$queryRaw`
+      SELECT * FROM Word 
+      WHERE category = ${category} AND NOT EXISTS (
+        SELECT * FROM WordProgress 
+        WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId} AND WordProgress.correct=true
+      ) 
+      ORDER BY RAND() LIMIT 1`;
+  }
+
+  if (wordResult.length === 0) {
+    throw new Error("단어가 없습니다.");
+  }
 
   let word: wordInterface.Word = wordResult[0];
 
