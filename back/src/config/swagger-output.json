@@ -189,6 +189,16 @@
         "security": []
       }
     },
+    "/auth/kakao": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/user/": {
       "get": {
         "tags": [

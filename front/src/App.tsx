@@ -1,5 +1,6 @@
-import { Route, Routes } from "react-router-dom";
-import { useEffect, useReducer, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ChakraProvider } from "@chakra-ui/react";
+import InrtoPage from "./pages/IntroPage";
 import MainPage from "./pages/MainPage";
 
 function App() {
@@ -41,9 +42,15 @@ function App() {
   //   return "loading...";
   // }
   return (
-    <div className="App">
-      <h1>개발바닥!</h1>
-      <Route path="/" element={<MainPage />} />
+    <div className={"App"}>
+      <ChakraProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path={"/"} element={<InrtoPage />} />
+            <Route path={"/main"} element={<MainPage />} />
+          </Routes>
+        </BrowserRouter>
+      </ChakraProvider>
     </div>
   );
 }
