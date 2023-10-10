@@ -1,7 +1,7 @@
 import { instance } from "./api";
 
-export const KaKaoLogin = async () => {
-  const url = `/kakao`;
+export const OAuthKakaoLogin = async () => {
+  const url = `/auth/kakao`;
   const res = await instance.get(url);
   return res;
 };
