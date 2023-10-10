@@ -22,11 +22,11 @@ const kakao = new KakaoStrategy(
     done: (error?: Error | null, user?: User | undefined) => void,
   ) => {
     try {
-      console.log('------kakao profile------')
+      console.log("------kakao profile------");
       console.log(profile);
       const exUser = await prisma.user.findUnique({
         where: {
-          snsId: profile.id?.toString()
+          snsId: profile.id?.toString(),
         },
       });
       if (exUser) {
@@ -39,7 +39,7 @@ const kakao = new KakaoStrategy(
             // 그리고 sns로그인에서 닉네임 추출이 어렵다면 리다이렉트 주소에서 닉네임을 새로 받아서 저장해야 할 수도..
             // 하단에 예시 라우터핸들러 주석처리 참고
             snsId: profile.id?.toString(),
-            snsProvider: "kakao",
+            provider: "kakao",
             // level: 0,
           },
         });

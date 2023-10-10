@@ -57,14 +57,14 @@ export const getWordByCategory = async (
   if (customBookId) {
     const customBook = await prisma.customBook.findUnique({
       where: { id: customBookId, userId: userId },
-      include: { Word: true },
+      include: { word: true },
     });
-    const totalWordCount: number = customBook!.Word.length;
+    const totalWordCount: number = customBook!.word.length;
     const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
     const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
-    customBook!.Word.sort((a, b) => a.word.localeCompare(b.word));
-    const words = customBook!.Word.slice(offset.skip, offset.skip + offset.take);
+    customBook!.word.sort((a, b) => a.word.localeCompare(b.word));
+    const words = customBook!.word.slice(offset.skip, offset.skip + offset.take);
 
     return { words: plainToInstance(WordDto, words), totalPages };
   } else {
