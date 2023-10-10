@@ -232,7 +232,8 @@
           "201": {
             "description": "Created"
           }
-        }
+        },
+        "security": []
       }
     },
     "/study/": {
@@ -243,6 +244,55 @@
         "summary": "단어 학습",
         "description": "쿼리별 단어 학습. 틀린 단어, 학습한(맞춘) 단어, 개인 단어장 단어, 수능 토익 토플 IELTS 등. 쿼리가 없다면 전체 데이터셋 중 학습한적 없는 단어. 원하는 항목을 쿼리?key=true",
         "parameters": [
+          {
+            "name": "correct",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "incorrect",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "csat",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "toeic",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "toefl",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "ielts",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "custom",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
           {
             "name": "customBookId",
             "in": "query",
@@ -306,12 +356,17 @@
     },
     "/book/": {
       "post": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 생성",
         "description": "",
         "responses": {
           "201": {
             "description": "Created"
           }
         },
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -328,6 +383,10 @@
         }
       },
       "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 리스트 조회",
         "description": "",
         "responses": {
           "200": {
@@ -336,12 +395,17 @@
           "204": {
             "description": "No Content"
           }
-        }
+        },
+        "security": []
       }
     },
     "/book/word": {
       "get": {
-        "description": "",
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 단어 조회",
+        "description": "쿼리별 단어 조회. 서버사이드 페이징",
         "parameters": [
           {
             "name": "customBookId",
@@ -369,7 +433,8 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": []
       }
     },
     "/post/": {
@@ -384,6 +449,7 @@
             "description": "Created"
           }
         },
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -476,6 +542,7 @@
             "description": "Not Found"
           }
         },
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -520,7 +587,8 @@
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "security": []
       }
     },
     "/comment/": {
@@ -551,6 +619,7 @@
             "description": "Created"
           }
         },
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -595,6 +664,7 @@
             "description": "Not Found"
           }
         },
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -636,7 +706,8 @@
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "security": []
       }
     }
   },

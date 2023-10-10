@@ -6,10 +6,17 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
   /**
    * #swagger.tags = ['Study']
    * #swagger.summary = '단어 학습'
-   * #swagger.description = '쿼리별 단어 학습. 틀린 단어, 학습한(맞춘) 단어, 개인 단어장 단어, 수능 토익 토플 IELTS 등. 쿼리가 없다면 전체 데이터셋 중 학습한적 없는 단어. 원하는 항목을 쿼리?key=true'
+   * #swagger.description = '쿼리별 단어 학습 / ?key=true / 커스텀단어 학습만 ?custom=true?customBookId=id'
    * #swagger.security = [{
    *   "bearerAuth": []
    * }]
+   * * #swagger.parameters['correct'] = {  type: 'boolean' }
+   *  * #swagger.parameters['incorrect'] = {  type: 'boolean' }
+   *  * #swagger.parameters['csat'] = {  type: 'boolean' }
+   *  * #swagger.parameters['toeic'] = {  type: 'boolean' }
+   *  * #swagger.parameters['toefl'] = { type: 'boolean' }
+   *  * #swagger.parameters['ielts'] = {  type: 'boolean' }
+   *  * #swagger.parameters['custom'] = {  type: 'boolean' }
    */
   try {
     const userId = (req.user as User).id;

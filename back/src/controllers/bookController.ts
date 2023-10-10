@@ -43,11 +43,18 @@ export const getBookList = async (req: Request, res: Response, next: NextFunctio
 export const getBook = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Book']
-   * #swagger.summary = '커스텀 단어장 단어 조회'
-   * #swagger.description = '쿼리별 단어 조회. 서버사이드 페이징'
+   * #swagger.summary = '단어장 단어 조회'
+   * #swagger.description = '쿼리별 단어장 조회 / ?key=true / 커스텀단어 조회만 ?custom=true?customBookId=id'
    * #swagger.security = [{
    *   "bearerAuth": []
    * }]
+   * * #swagger.parameters['correct'] = {  type: 'boolean' }
+   *  * #swagger.parameters['incorrect'] = {  type: 'boolean' }
+   *  * #swagger.parameters['csat'] = {  type: 'boolean' }
+   *  * #swagger.parameters['toeic'] = {  type: 'boolean' }
+   *  * #swagger.parameters['toefl'] = { type: 'boolean' }
+   *  * #swagger.parameters['ielts'] = {  type: 'boolean' }
+   *  * #swagger.parameters['custom'] = {  type: 'boolean' }
    */
   try {
     const userId: number = (req.user as User).id;
