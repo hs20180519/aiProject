@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import * as Api from "../Api";
@@ -100,6 +101,7 @@ const Login: React.FC<LoginProps> = () => {
                   className={"form-control"}
                   placeholder={"이메일을 입력하세요."}
                   value={email}
+                  // eslint-disable-next-line prettier/prettier
                   onChange={e => setEmail(e.target.value)}
                 />
                 {!isEmailValid && email.length > 0 && (
@@ -113,7 +115,7 @@ const Login: React.FC<LoginProps> = () => {
                   className={"form-control"}
                   placeholder={"비밀번호를 입력하세요."}
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 {!isPasswordValid && password.length > 0 && (
                   <div className={"text-danger"} style={{ color: "#FF6347" }}>
