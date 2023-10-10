@@ -99,3 +99,48 @@ export const getAllWords = async (
 
   return { words: plainToInstance(WordDto, words), totalPages };
 };
+
+export const deleteCustomBook = async (userId: number, customBookId: number): Promise<void> => {
+  await prisma.customBook.delete({
+    where: { id: customBookId, userId: userId },
+  });
+  return;
+};
+
+export const createCustomBookInWord = async (
+  customBookId: number,
+  word: string,
+  meaning: string,
+): Promise<WordDto> => {
+  const createdWord = await prisma.word.create({
+    data: {
+      customBookId: customBookId,
+      word: word,
+      meaning: meaning,
+      category: "custom",
+    },
+  });
+  return plainToInstance(WordDto, createdWord);
+};
+
+export const updateCustomBookInWord = async (
+  customBookId: number,
+  wordId: number,
+  updatedData: Partial<WordDto>,
+): Promise<WordDto> => {
+  const updatedWord = await prisma.word.update({
+    where: { id: wordId, customBookId: customBookId },
+    data: updatedData,
+  });
+  return plainToInstance(WordDto, updatedWord);
+};
+
+export const deleteCustomBookInWord = async (
+  customBookId: number,
+  wordId: number,
+): Promise<void> => {
+  await prisma.word.delete({
+    where: { id: wordId, customBookId: customBookId },
+  });
+  return;
+};

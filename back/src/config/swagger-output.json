@@ -242,7 +242,7 @@
           "Study"
         ],
         "summary": "단어 학습",
-        "description": "쿼리별 단어 학습. 틀린 단어, 학습한(맞춘) 단어, 개인 단어장 단어, 수능 토익 토플 IELTS 등. 쿼리가 없다면 전체 데이터셋 중 학습한적 없는 단어. 원하는 항목을 쿼리?key=true",
+        "description": "쿼리별 단어 학습 / ?key=true / 커스텀단어 학습만 ?custom=true?customBookId=id",
         "parameters": [
           {
             "name": "correct",
@@ -404,9 +404,58 @@
         "tags": [
           "Book"
         ],
-        "summary": "커스텀 단어장 단어 조회",
-        "description": "쿼리별 단어 조회. 서버사이드 페이징",
+        "summary": "단어장 단어 조회",
+        "description": "쿼리별 단어장 조회 / ?key=true / 커스텀단어 조회만 ?custom=true?customBookId=id",
         "parameters": [
+          {
+            "name": "correct",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "incorrect",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "csat",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "toeic",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "toefl",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "ielts",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "custom",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
           {
             "name": "customBookId",
             "in": "query",
