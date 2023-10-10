@@ -6,7 +6,6 @@ export class WordDto {
   word!: string;
   meaning!: string;
   category!: string;
-  custom!: boolean;
   customBookId?: number;
 }
 
@@ -15,7 +14,6 @@ export class WordWithChoicesDto {
   word!: string;
   meaning!: string;
   category!: string;
-  custom!: boolean;
   customBookId?: number;
   @Transform(({ value }) => yatesShuffle(value))
   choices!: string[];
@@ -31,6 +29,6 @@ export class WordProgressDto {
   @Exclude()
   studiedAt!: Date;
 
-  word?: WordDto;
+  word!: WordDto;
   correct!: boolean;
 }

@@ -17,7 +17,7 @@ model User {
   nickname     String?        @unique
   password     String?
   snsId        String?        @unique
-  snsProvider  String?
+  provider     String?
   profileImage String?
   post         Post[]
   comment      Comment[]

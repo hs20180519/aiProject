@@ -6,7 +6,7 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
   /**
    * #swagger.tags = ['Study']
    * #swagger.summary = '단어 학습'
-   * #swagger.description = '쿼리별 단어 학습. 틀린 단어, 학습한(맞춘) 단어, 개인 단어장 단어, 수능 토익 토플 IELTS 등. 쿼리가 없다면 전체 데이터셋 중 학습한적 없는 단어. 원하는 항목을 쿼리스트링으로 true'
+   * #swagger.description = '쿼리별 단어 학습. 틀린 단어, 학습한(맞춘) 단어, 개인 단어장 단어, 수능 토익 토플 IELTS 등. 쿼리가 없다면 전체 데이터셋 중 학습한적 없는 단어. 원하는 항목을 쿼리?key=true'
    * #swagger.security = [{
    *   "bearerAuth": []
    * }]
@@ -16,8 +16,8 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
     const customBookId = Number(req.query.customId);
 
     const queryServiceMap = {
-      incorrectWord: () => studyService.getWordsByUserId(userId, true),
-      correctWord: () => studyService.getWordsByUserId(userId, false),
+      correct: () => studyService.getWordsByUserId(userId, true),
+      incorrect: () => studyService.getWordsByUserId(userId, false),
       csat: () => studyService.getWordsByCategory(userId, "csat"),
       toeic: () => studyService.getWordsByCategory(userId, "toeic"),
       toefl: () => studyService.getWordsByCategory(userId, "toefl"),
