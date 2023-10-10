@@ -46,7 +46,7 @@ model Word {
   WordProgress WordProgress[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  CustomBook   CustomBook?    @relation(fields: [customBookId], references: [id])
+  CustomBook   CustomBook?    @relation(fields: [customBookId], references: [id], onDelete: Cascade)
   customBookId Int?
 
   @@index([category, customBookId])
