@@ -90,6 +90,28 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
+export const updateCustomBook = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Book']
+   * #swagger.summary = '커스텀 단어장 업데이트'
+   * #swagger.description = '요청받은 필드만 업데이트'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
+  try {
+    const userId = (req.user as User).id;
+    const customBookId = Number(req.query.customBookId);
+    const updatedData = req.body;
+
+    const updatedCustomBook = await bookService.updateCustomBook(userId, customBookId, updatedData);
+    return res.status(200).json(updatedCustomBook);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
 export const deleteCustomBook = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Book']
@@ -101,7 +123,7 @@ export const deleteCustomBook = async (req: Request, res: Response, next: NextFu
    */
   try {
     const userId = (req.user as User).id;
-    const customBookId = Number(req.params.id);
+    const customBookId = Number(req.query.customBookId);
 
     await bookService.deleteCustomBook(userId, customBookId);
 
@@ -140,7 +162,7 @@ export const updateCustomBookInWord = async (req: Request, res: Response, next: 
   /**
    * #swagger.tags = ['Book']
    * #swagger.summary = '커스텀 단어장 단어 수정'
-   * #swagger.description = '포함된 단어 전부 삭제'
+   * #swagger.description = '요청받은 필드만 업데이트'
    * #swagger.security = [{
    *   "bearerAuth": []
    * }]

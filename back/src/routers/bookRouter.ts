@@ -8,9 +8,11 @@ bookRouter.post("/", passportJwt, bookController.createBook);
 
 bookRouter.get("/", passportJwt, bookController.getBookList);
 
-bookRouter.get("/word", passportJwt, bookController.getBook);
+bookRouter.put("/", passportJwt, bookController.updateCustomBook);
 
-bookRouter.delete("/:id", passportJwt, bookController.deleteCustomBook);
+bookRouter.delete("/", passportJwt, bookController.deleteCustomBook);
+
+bookRouter.get("/word", passportJwt, bookController.getBook);
 
 bookRouter.post("/word", passportJwt, bookController.createCustomBookInWord);
 
