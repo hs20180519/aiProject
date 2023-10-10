@@ -14,6 +14,7 @@ import uploadRouter from "./routers/uploadRouter";
 import postRouter from "./routers/postRouter";
 import commentRouter from "./routers/commentRouter";
 import studyRouter from "./routers/studyRouter";
+import bookRouter from "./routers/bookRouter";
 import session from "express-session";
 
 const app: express.Application = express();
