@@ -24,7 +24,6 @@ export const getPostByPostId = async (postId: number) => {
 };
 
 export const getPostsByUserId = async (userId: number, page?: number, limit?: number) => {
-  console.log(page);
   const totalPostsCount = await prisma.post.count({
     where: { authorId: userId },
   });

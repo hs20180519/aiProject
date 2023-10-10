@@ -46,6 +46,7 @@ app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/upload", uploadRouter);
 app.use("/study", studyRouter);
+app.use("/book", bookRouter);
 
 // 미사용 라우터
 app.use("/post", postRouter);

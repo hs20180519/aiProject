@@ -14,12 +14,47 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
     return next(error);
   }
 };
-export const getBooks = async (req: Request, res: Response, next: NextFunction) => {
+export const getBookList = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId: number = (req.user as User).id;
     const books: BooksDto[] = await bookService.getBooks(userId);
     if (!books) return res.status(204);
     return res.status(200).json(books);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
+export const getBook = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId: number = (req.user as User).id;
+    const customBookId: number = Number(req.query.customBookId);
+    const page = req.query.page ? Number(req.query.page) : 1;
+    const limit = req.query.page ? Number(req.query.limit) : 10;
+
+    const queryServiceMap = {
+      correct: () => bookService.getWordByUserId(page, limit, userId, true),
+      incorrect: () => bookService.getWordByUserId(page, limit, userId, false),
+      csat: () => bookService.getWordByCategory(page, limit, userId, "csat"),
+      toeic: () => bookService.getWordByCategory(page, limit, userId, "toeic"),
+      toefl: () => bookService.getWordByCategory(page, limit, userId, "toefl"),
+      ielts: () => bookService.getWordByCategory(page, limit, userId, "ielts"),
+      custom: () => bookService.getWordByCategory(page, limit, userId, "custom", customBookId),
+    };
+
+    let book;
+
+    for (const [queryParamKey, serviceFunc] of Object.entries(queryServiceMap)) {
+      if (req.query[queryParamKey] === "true") {
+        book = await serviceFunc();
+        break;
+      }
+    }
+
+    if (!book) book = await bookService.getAllWords(page, limit);
+
+    return res.status(200).json(book);
   } catch (error) {
     console.error(error);
     return next(error);

@@ -13,7 +13,7 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
    */
   try {
     const userId = (req.user as User).id;
-    const customBookId = Number(req.query.customId);
+    const customBookId = Number(req.query.customBookId);
 
     const queryServiceMap = {
       correct: () => studyService.getWordsByUserId(userId, true),
