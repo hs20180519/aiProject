@@ -2,6 +2,21 @@ import { Request, Response, NextFunction } from "express";
 import * as studyService from "../services/studyService";
 import { User } from "@prisma/client";
 
+export const experience = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Study']
+   * #swagger.summary = '학습 체험'
+   * #swagger.description = '비회원 학습 체험으로 한번에 10개의 단어와 사지선다 제공 (클라에서 관리하고 결과 반환해주셔야함)'
+   */
+  try {
+    const words = await studyService.getExperienceWord();
+    return res.status(200).json(words);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
 export const getWords = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Study']

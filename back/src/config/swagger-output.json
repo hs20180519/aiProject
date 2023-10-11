@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "swagger-example",
-    "description": "스웨거 자동 문서화",
+    "title": "Wordy API",
+    "description": "API 자동 문서화 및 테스트",
     "version": "1.0.0"
   },
   "servers": [
@@ -236,6 +236,20 @@
         "security": []
       }
     },
+    "/study/experience": {
+      "get": {
+        "tags": [
+          "Study"
+        ],
+        "summary": "학습 체험",
+        "description": "비회원 학습 체험으로 한번에 10개의 단어와 사지선다 제공 (클라에서 관리하고 결과 반환해주셔야함)",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/study/": {
       "get": {
         "tags": [
@@ -397,6 +411,50 @@
           }
         },
         "security": []
+      },
+      "put": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 업데이트",
+        "description": "요청받은 필드만 업데이트",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      },
+      "delete": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 삭제",
+        "description": "포함된 단어 전부 삭제",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
       }
     },
     "/book/word": {
@@ -472,6 +530,103 @@
           },
           {
             "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 단어 추가",
+        "description": "",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "word": {
+                    "example": "any"
+                  },
+                  "meaning": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 단어 수정",
+        "description": "요청받은 필드만 업데이트",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wordId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      },
+      "delete": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 단어 삭제",
+        "description": "",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wordId",
             "in": "query",
             "schema": {
               "type": "string"
