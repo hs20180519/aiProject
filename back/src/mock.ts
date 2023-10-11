@@ -49,8 +49,8 @@ const mockData = generateMockData(10000); // mock data 개수
 
 insertMockData(mockData)
   .then(() => {
-    console.log("Successfully inserted all the records");
+    console.log("모든 레코드를 성공적으로 삽입했습니다.");
   })
   .catch((err) => {
-    console.error("Error inserting records:", err);
+    console.error("레코드 삽입 오류:", err);
   });

@@ -7,7 +7,7 @@ import { plainToInstance } from "class-transformer";
 
 const prisma = new PrismaClient();
 
-export const getExperienceWord = async () => {
+export const getExperienceWord = async (): Promise<WordWithChoicesDto[]> => {
   let wordsWithChoices: WordWithChoicesDto[] = [];
 
   const words: wordInterface.Word[] = await prisma.$queryRaw`

@@ -15,6 +15,10 @@ export class WordWithChoicesDto {
   meaning!: string;
   category!: string;
   customBookId?: number;
+  @Exclude()
+  createdAt?: Date;
+  @Exclude()
+  updatedAt?: Date;
   @Transform(({ value }) => yatesShuffle(value))
   choices!: string[];
 }
