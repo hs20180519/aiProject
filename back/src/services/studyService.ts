@@ -13,11 +13,13 @@ export const getExperienceWord = async () => {
   const words: wordInterface.Word[] = await prisma.$queryRaw`
     SELECT * FROM Word ORDER BY RAND() LIMIT 10
   `;
-  console.log(words);
   for (const word of words) {
     let choices: string[] = await createChoices(word);
 
-    const wordWithChoices = plainToInstance(WordWithChoicesDto, { ...word, choices });
+    const wordWithChoices: WordWithChoicesDto = plainToInstance(WordWithChoicesDto, {
+      ...word,
+      choices,
+    });
 
     wordsWithChoices.push(wordWithChoices);
   }
