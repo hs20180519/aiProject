@@ -82,15 +82,15 @@ const Login: React.FC<LoginProps> = () => {
               padding: "16px",
             }}
           >
-            <h2 style={{ textAlign: "center" }}>{"로그인"}</h2>
+            <h2 style={{ textAlign: "center" }}>{"워디 로그인"}</h2>
             <form
               // onSubmit={handleSubmit}
               style={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                alignItems: "center",
                 height: "100%",
+                width: "100%",
                 gap: "16px",
               }}
             >
@@ -126,13 +126,16 @@ const Login: React.FC<LoginProps> = () => {
               <button type={"submit"} className={"btn btn-primary"} disabled={!isFormValid}>
                 {"로그인\r"}
               </button>
-              <button
-                type={"button"}
-                className={"btn btn-link"}
-                onClick={() => navigate("/SignUp")}
-              >
-                {"회원가입\r"}
-              </button>
+              <p style={{ fontSize: "14px" }}>
+                {"아직 회원이 아니시라면?"}{" "}
+                <button
+                  type={"button"}
+                  className={"btn btn-link"}
+                  onClick={() => navigate("/SignUp")}
+                >
+                  {"회원가입\r"}
+                </button>
+              </p>
             </form>
           </div>
         </div>

@@ -2,7 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import InrtoPage from "./pages/IntroPage";
 import MainPage from "./pages/MainPage";
-import LoginPage from "./pages/IntroPage";
+import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SignUpPage";
 
 function App() {
   // // useReducer 훅을 통해 userState 상태와 dispatch함수를 생성함.
@@ -50,6 +51,7 @@ function App() {
             <Route path={"/"} element={<InrtoPage />} />
             <Route path={"/main"} element={<MainPage />} />
             <Route path={"/login"} element={<LoginPage />} />
+            <Route path={"/signup"} element={<SignUpPage />} />
           </Routes>
         </BrowserRouter>
       </ChakraProvider>

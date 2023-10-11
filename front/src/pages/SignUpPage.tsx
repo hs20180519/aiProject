@@ -61,6 +61,7 @@ const SignUp = () => {
       {/* {showToast && <ToastWrapper toastData={toastData} />} */}
       <div
         style={{
+          paddingTop: "134px",
           height: "100vh",
           display: "flex",
           justifyContent: "center",
@@ -69,7 +70,7 @@ const SignUp = () => {
       >
         <div
           style={{
-            width: "350px",
+            width: "300px",
             boxShadow: "0px 4px 12px #00000026",
           }}
         >
@@ -85,7 +86,7 @@ const SignUp = () => {
               padding: "16px",
             }}
           >
-            <h2 style={{ textAlign: "center" }}>{"회원가입"}</h2>
+            <h2 style={{ textAlign: "center" }}>{"워디 회원가입"}</h2>
             <form
               //   onSubmit={handleSubmit}
               style={{
