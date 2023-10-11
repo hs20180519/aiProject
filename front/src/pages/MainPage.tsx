@@ -35,7 +35,7 @@ import {
 } from "react-icons/fi";
 
 import { IconType } from "react-icons";
-import WordCard from "../components/WordCard";
+import InnerPage from "./InnerPage";
 
 interface LinkItemProps {
   name: string;
@@ -217,7 +217,7 @@ const SidebarWithHeader = () => {
       </Drawer>
       <MobileNav onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
-        <WordCard />
+        <InnerPage />
       </Box>
     </Box>
   );
