@@ -36,11 +36,12 @@ async def generate_dialog_process(input_data):
 async def generate_grammar_explain_process(dialog):
     grammar_human_template = \
         """
-        In each sentence, pick 3 grammatical structures at a B2 level or higher and explain them concisely.
-        Skip the basic level of grammar:
+        In each sentence, pick three grammatical structures at the B2 level or higher and explain them concisely in Korean.
+        Exclude very simple grammar explanations.
+        Grammar descriptions must be written in Korean.
         {dialog}
         {{
-            "grammar": [{{"message": "{{message}}", "explain":  "Provide a grammatical explanation here"}}]
+            "grammar": [{{"message": "{{message}}", "explain":  "Provide a grammatical explanation here in Korean"}}]
         }}
         """
     grammar_human_message_prompt = HumanMessagePromptTemplate.from_template(template=grammar_human_template)
