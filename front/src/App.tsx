@@ -1,8 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
-import InrtoPage from "./pages/IntroPage";
+import styled from "@emotion/styled";
+import IntroPage from "./pages/IntroPage";
 import MainPage from "./pages/MainPage";
-import LoginPage from "./pages/IntroPage";
+import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SignUpPage";
+import TypingSentencePage from "./pages/TypingSentencePage";
 
 function App() {
   // // useReducer 훅을 통해 userState 상태와 dispatch함수를 생성함.
@@ -43,18 +46,25 @@ function App() {
   //   return "loading...";
   // }
   return (
-    <div className={"App"}>
+    <StyledApp className={"App"}>
       <ChakraProvider>
         <BrowserRouter>
           <Routes>
-            <Route path={"/"} element={<InrtoPage />} />
+            <Route path={"/"} element={<IntroPage />} />
             <Route path={"/main"} element={<MainPage />} />
             <Route path={"/login"} element={<LoginPage />} />
+            <Route path={"/signup"} element={<SignUpPage />} />
+            <Route path={"/grammar/:word"} element={<TypingSentencePage />} />
           </Routes>
         </BrowserRouter>
       </ChakraProvider>
-    </div>
+    </StyledApp>
   );
 }
+
+const StyledApp = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 export default App;

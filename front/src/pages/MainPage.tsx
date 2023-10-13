@@ -22,6 +22,7 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
+
 import {
   FiHome,
   FiTrendingUp,
@@ -32,7 +33,9 @@ import {
   FiBell,
   FiChevronDown,
 } from "react-icons/fi";
+
 import { IconType } from "react-icons";
+import InnerPage from "./InnerPage";
 
 interface LinkItemProps {
   name: string;
@@ -53,11 +56,11 @@ interface SidebarProps extends BoxProps {
 }
 
 const LinkItems: Array<LinkItemProps> = [
-  { name: "Home", icon: FiHome },
-  { name: "Trending", icon: FiTrendingUp },
+  { name: "홈", icon: FiHome },
+  { name: "단어학습", icon: FiTrendingUp },
   { name: "Explore", icon: FiCompass },
-  { name: "Favourites", icon: FiStar },
-  { name: "Settings", icon: FiSettings },
+  { name: "단어장", icon: FiStar },
+  { name: "설정", icon: FiSettings },
 ];
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
@@ -74,7 +77,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <Flex h={"20"} alignItems={"center"} mx={"8"} justifyContent={"space-between"}>
         <Text fontSize={"2xl"} fontFamily={"monospace"} fontWeight={"bold"}>
-          {"Logo\r"}
+          {"🐔Wordy\r"}
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
@@ -146,7 +149,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         fontFamily={"monospace"}
         fontWeight={"bold"}
       >
-        {"Logo\r"}
+        {"🐔Wordy\r"}
       </Text>
 
       <HStack spacing={{ base: "0", md: "6" }}>
@@ -158,7 +161,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                 <Avatar
                   size={"sm"}
                   src={
-                    "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                    "https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256"
                   }
                 />
                 <VStack
@@ -167,9 +170,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing={"1px"}
                   ml={"2"}
                 >
-                  <Text fontSize={"sm"}>{"Justina Clark"}</Text>
+                  <Text fontSize={"sm"}>{"Elice"}</Text>
                   <Text fontSize={"xs"} color={"gray.600"}>
-                    {"Admin\r"}
+                    {"1팀\r"}
                   </Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
@@ -181,11 +184,11 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               bg={useColorModeValue("white", "gray.900")}
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
-              <MenuItem>{"Profile"}</MenuItem>
-              <MenuItem>{"Settings"}</MenuItem>
+              <MenuItem>{"프로필"}</MenuItem>
+              <MenuItem>{"설정"}</MenuItem>
               <MenuItem>{"Billing"}</MenuItem>
               <MenuDivider />
-              <MenuItem>{"Sign out"}</MenuItem>
+              <MenuItem>{"로그아웃"}</MenuItem>
             </MenuList>
           </Menu>
         </Flex>
@@ -213,7 +216,9 @@ const SidebarWithHeader = () => {
         </DrawerContent>
       </Drawer>
       <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p={"4"} />
+      <Box ml={{ base: 0, md: 60 }} p={"4"}>
+        <InnerPage />
+      </Box>
     </Box>
   );
 };
