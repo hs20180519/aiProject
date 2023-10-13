@@ -16,7 +16,7 @@
 
 
 ## 설치 및 실행
-
+- `.env` 파일 생성 후 OpenAI api 토큰 발급받아서 `OPENAI_API_KEY=토큰` 형식으로 설정
 - `pip3 install -r requirements.txt`
 - `pip3 install gunicorn`
 - `gunicorn -k uvicorn.workers.UvicornWorker --access-logfile ./gunicorn-access.log main:app --bind 0.0.0.0:8777 --workers 2 --timeout 100`
