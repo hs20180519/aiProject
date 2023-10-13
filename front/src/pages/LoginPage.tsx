@@ -1,22 +1,20 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import * as Api from "../Api";
+import * as Api from "../apis/api";
 // import { DispatchContext } from "../App";
 // import useToast from "../hooks/useToast";
 // import ToastWrapper from "../components/common/popup/ToastWrapper";
 // import { TOAST_POPUP_STATUS } from "../constants";
 
-interface LoginProps {}
-
-const Login: React.FC<LoginProps> = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
   // const dispatch = useContext(DispatchContext);
   // const { showToast, toastData, setShowToast } = useToast();
 
-  const validateEmail = (email: string): boolean => {
+  const validateEmail = (email: string) => {
     return (
       email
         .toLowerCase()
@@ -26,31 +24,31 @@ const Login: React.FC<LoginProps> = () => {
     );
   };
 
-  const isEmailValid: boolean = validateEmail(email);
-  const isPasswordValid: boolean = password.length >= 4;
-  const isFormValid: boolean = isEmailValid && isPasswordValid;
+  const isEmailValid = validateEmail(email);
+  const isPasswordValid = password.length >= 4;
+  const isFormValid = isEmailValid && isPasswordValid;
 
-  // const handleSubmit = async (e: SyntheticEvent) => {
-  //   e.preventDefault();
+  const handleSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault();
 
-  //   try {
-  //     const res = await Api.post("auth/login", {
-  //       email,
-  //       password,
-  //     });
-  //     const user = res.data;
-  //     if (!user) throw new Error("유저 정보 없음");
-  //     const jwtToken = user.token;
-  //     sessionStorage.setItem("userToken", jwtToken);
-  //     dispatch({
-  //       type: "LOGIN_SUCCESS",
-  //       payload: user,
-  //     });
-  //     navigate("/", { replace: true });
-  //   } catch (err) {
-  //     window.alert(err.response.data);
-  //   }
-  // };
+    try {
+      const res = await Api.post("auth/", {
+        email,
+        password,
+      });
+      const user = res.data;
+      if (!user) throw new Error("유저 정보 없음");
+      const jwtToken = user.token;
+      sessionStorage.setItem("userToken", jwtToken);
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: user,
+      });
+      navigate("/", { replace: true });
+    } catch (err) {
+      window.alert(err.response.data);
+    }
+  };
 
   return (
     <>
@@ -84,7 +82,7 @@ const Login: React.FC<LoginProps> = () => {
           >
             <h2 style={{ textAlign: "center" }}>{"워디 로그인"}</h2>
             <form
-              // onSubmit={handleSubmit}
+              onSubmit={handleSubmit}
               style={{
                 display: "flex",
                 flexDirection: "column",

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import * as Api from "../Api";
+import { useNavigate } from "react-router-dom";
+import * as Api from "../apis/api";
 // import ToastWrapper from "../components/common/popup/ToastWrapper";
 // import useToast from "../hooks/useToast";
 // import {
@@ -9,13 +9,27 @@ import React, { useState } from "react";
 //   TOAST_POPUP_STATUS,
 // } from "../constants";
 
+interface NewUserInfoType {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 const SignUp = () => {
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  //   const navigate = useNavigate();
-  //   const { showToast, toastData, setShowToast } = useToast();
+  const [newUserInfo, setNewUserInfo] = useState<NewUserInfoType>({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  // const [name, setName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
+  // const { showToast, toastData, setShowToast } = useToast();
 
   // 이메일이 abc@example.com 형태인지 regex를 이용해 확인함.
   const validateEmail = (email: string): boolean => {
@@ -29,32 +43,32 @@ const SignUp = () => {
   };
 
   // 이름이 2글자 이상인지 여부를 확인함.
-  const isNameValid: boolean = name.length >= 2;
+  const isNameValid = name.length >= 2;
   // 위 validateEmail 함수를 통해 이메일 형태 적합 여부를 확인함.
-  const isEmailValid: boolean = validateEmail(email);
+  const isEmailValid = validateEmail(email);
   // 비밀번호가 4글자 이상인지 여부를 확인함.
-  const isPasswordValid: boolean = password.length >= 4;
+  const isPasswordValid = password.length >= 4;
   // 비밀번호와 확인용 비밀번호가 일치하는지 여부를 확인함.
-  const isPasswordSame: boolean = password === confirmPassword;
+  const isPasswordSame = password === confirmPassword;
 
   // 위 4개 조건이 모두 동시에 만족되는지 여부를 확인함.
-  const isFormValid: boolean = isNameValid && isEmailValid && isPasswordValid && isPasswordSame;
+  const isFormValid = isNameValid && isEmailValid && isPasswordValid && isPasswordSame;
 
-  //   const handleSubmit = async (e: SyntheticEvent) => {
-  //     e.preventDefault();
-  //     // 여기에서 실제 회원가입 로직을 구현하고 서버와 통신하면 됩니다.
-  //     try {
-  //       if (isFormValid)
-  //         await Api.post("users/register", {
-  //           name,
-  //           email,
-  //           password,
-  //         });
-  //       navigate("/login");
-  //     } catch (err) {
-  //       window.alert(err.response.data);
-  //     }
-  //   };
+  const handleSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    // 여기에서 실제 회원가입 로직을 구현하고 서버와 통신하면 됩니다.
+    try {
+      if (isFormValid)
+        await Api.post("auth/register", {
+          name,
+          email,
+          password,
+        });
+      navigate("/login");
+    } catch (err) {
+      window.alert(err.response.data);
+    }
+  };
 
   return (
     <>
@@ -88,7 +102,7 @@ const SignUp = () => {
           >
             <h2 style={{ textAlign: "center" }}>{"워디 회원가입"}</h2>
             <form
-              //   onSubmit={handleSubmit}
+              onSubmit={handleSubmit}
               style={{
                 display: "flex",
                 flexDirection: "column",
