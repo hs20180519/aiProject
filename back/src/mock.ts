@@ -45,7 +45,7 @@ async function insertMockData(dataArr: any[]) {
   }
 }
 
-const mockData = generateMockData(10000); // mock data 개수
+const mockData = generateMockData(50000); // mock data 개수
 
 insertMockData(mockData)
   .then(() => {
@@ -54,3 +54,6 @@ insertMockData(mockData)
   .catch((err) => {
     console.error("레코드 삽입 오류:", err);
   });
+
+// 파일 실행하기 (생성할 레코드 수 설정 후)
+// npx ts-node src/mock.ts
