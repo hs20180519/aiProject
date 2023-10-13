@@ -4,9 +4,12 @@
 
 
 ## API URL
-
-- http://34.64.215.129/python/api/gpt/explain-grammar
-- http://34.64.215.129/python/api/gpt/generate-dialog
+- 로컬 환경인 경우
+  - http://localhost:8777/api/gpt/explain-grammar
+  - http://localhost:8777/api/gpt/generate-dialog
+- 운영 환경인 경우
+  - http://34.64.215.129/python/api/gpt/explain-grammar
+  - http://34.64.215.129/python/api/gpt/generate-dialog
 
 
 ## 필요 토큰(헤더)
@@ -19,4 +22,8 @@
 - `.env` 파일 생성 후 OpenAI api 토큰 발급받아서 `OPENAI_API_KEY=토큰` 형식으로 설정
 - `pip3 install -r requirements.txt`
 - `pip3 install gunicorn`
+- `python3 main.py`
+
+
+## vm 에서 실행
 - `gunicorn -k uvicorn.workers.UvicornWorker --access-logfile ./gunicorn-access.log main:app --bind 0.0.0.0:8777 --workers 2 --timeout 100`
