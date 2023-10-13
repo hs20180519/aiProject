@@ -1,7 +1,7 @@
 // 이거 안씀
 import { Strategy as KakaoStrategy } from "passport-kakao";
 import { PrismaClient, User } from "@prisma/client";
-import axios from 'axios';
+import axios from "axios";
 
 const prisma = new PrismaClient();
 
@@ -27,11 +27,11 @@ const kakao = new KakaoStrategy(
       console.log("------kakao profile------");
       console.log(profile);
 
-     const url =`https://kauth.kakao.com/oauth/authorize?client_id=${kakaoOptions.clientID}&redirect_uri=${kakaoOptions.callbackURL}&response_type=code&scope=account_email,gender`
+      const url = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoOptions.clientID}&redirect_uri=${kakaoOptions.callbackURL}&response_type=code&scope=account_email,gender`;
 
-     const res = await axios.post(url);
-     console.log('------응답--------');
-     console.log(res);
+      const res = await axios.post(url);
+      console.log("------응답--------");
+      console.log(res);
       const exUser = await prisma.user.findUnique({
         where: {
           snsId: profile.id?.toString(),

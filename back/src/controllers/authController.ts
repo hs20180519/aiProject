@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import * as authService from "../services/authService";
 import * as authInterface from "../interfaces/authInterface";
 import { User } from "@prisma/client";
+import { getVerifyCodeByEmail } from "../services/authService";
 
 export const checkEmailOrNickname = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -40,7 +41,9 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
    */
   try {
     const email = req.body.email;
-    await authService.sendVerificationCode(email);
+    const existingCode = await authService.getVerifyCodeByEmail(email);
+    if (!existingCode) await authService.sendVerificationCode(email);
+    else await authService.resendVerificationCode(email);
     return res.status(200).json({ message: "인증코드가 전송되었습니다." });
   } catch (error) {
     console.error(error);
@@ -163,7 +166,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const oAuthKakaLogin =async (req: Request, res: Response, next: NextFunction) => {
+export const oAuthKakaLogin = async (req: Request, res: Response, next: NextFunction) => {
   // 카카오 로그인 처리
-  await authService.oAuthKakaLogin()
-}
+  await authService.oAuthKakaLogin();
+};
