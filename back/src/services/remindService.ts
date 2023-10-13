@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const logo: string | undefined = process.env.LOGO;
+
 let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -14,7 +15,7 @@ let transporter = nodemailer.createTransport({
 });
 
 export const startScheduler = () =>
-  cron.schedule("* * * * * *", async (): Promise<void> => {
+  cron.schedule("0 23 * * *", async (): Promise<void> => {
     console.log("⏰ :: 스케줄링 작업 실행...");
 
     const today: Date = new Date();
