@@ -10,7 +10,9 @@ export default function IntroPage() {
         <StyledLoginHeader>{"로그인"}</StyledLoginHeader>
       </Link>
       <StyledWrapper>
-        <StyledLogoWrapper>{"사이트 로고"}</StyledLogoWrapper>
+        <StyledLogoWrapper>
+          <StyledLogoImage src={`${process.env.PUBLIC_URL}/images/logo.png`} alt={"wordy"} />
+        </StyledLogoWrapper>
         <StyledContent>
           {"단어 학습이 어려운 분들을 위해 준비했습니다. AI튜터와 함께 단어 학습을 해보세요."}
         </StyledContent>
@@ -30,6 +32,13 @@ const StyledLoginHeader = styled(Button)`
 const StyledContainer = styled.div`
   width: 100%;
   height: 100%;
+`;
+const StyledLogoImage = styled.img`
+  width: 100%;
+  height: 100%;
+  max-width: 244px;
+  max-height: 88px;
+  object-fit: fill;
 `;
 
 const StyledWrapper = styled.div`
