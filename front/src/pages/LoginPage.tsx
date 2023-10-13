@@ -1,17 +1,24 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Api from "../apis/api";
-// import { DispatchContext } from "../App";
+import { DispatchContext } from "../App";
 // import useToast from "../hooks/useToast";
 // import ToastWrapper from "../components/common/popup/ToastWrapper";
 // import { TOAST_POPUP_STATUS } from "../constants";
 
+// interface LoginProps {
+//   email: string,
+//   password: string
+// }
+
 const Login = () => {
+  // const [email, password] = props;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  // const dispatch = useContext(DispatchContext);
+  const dispatch = useContext(DispatchContext);
   // const { showToast, toastData, setShowToast } = useToast();
 
   const validateEmail = (email: string) => {
@@ -46,7 +53,8 @@ const Login = () => {
       });
       navigate("/", { replace: true });
     } catch (err) {
-      window.alert(err.response.data);
+      const objectErr = err as any;
+      window.alert(objectErr.response.data);
     }
   };
 

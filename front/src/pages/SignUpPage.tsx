@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Api from "../apis/api";
 // import ToastWrapper from "../components/common/popup/ToastWrapper";
@@ -9,20 +9,25 @@ import * as Api from "../apis/api";
 //   TOAST_POPUP_STATUS,
 // } from "../constants";
 
-interface NewUserInfoType {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+// interface NewUserInfoType {
+//   name: string;
+//   email: string;
+//   password: string;
+//   confirmPassword: string;
+// }
 
 const SignUp = () => {
-  const [newUserInfo, setNewUserInfo] = useState<NewUserInfoType>({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  // const [newUserInfo, setNewUserInfo] = useState<NewUserInfoType>({
+  //   name: "",
+  //   email: "",
+  //   password: "",
+  //   confirmPassword: "",
+  // });
 
   // const [name, setName] = useState("");
   // const [email, setEmail] = useState("");
@@ -65,7 +70,7 @@ const SignUp = () => {
           password,
         });
       navigate("/login");
-    } catch (err) {
+    } catch (err: any) {
       window.alert(err.response.data);
     }
   };

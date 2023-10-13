@@ -199,6 +199,16 @@
         }
       }
     },
+    "/auth/kakao/callback": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/user/": {
       "get": {
         "tags": [
