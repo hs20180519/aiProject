@@ -21,8 +21,8 @@ model User {
   profileImage String?
   post         Post[]
   comment      Comment[]
-  UserWord     WordProgress[]
-  Rank         Rank[]
+  wordProgress WordProgress[]
+  rank         Rank[]
   lastRank     Int?           @default(0)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt

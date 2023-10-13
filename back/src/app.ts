@@ -16,6 +16,7 @@ import commentRouter from "./routers/commentRouter";
 import studyRouter from "./routers/studyRouter";
 import bookRouter from "./routers/bookRouter";
 import session from "express-session";
+import { startScheduler } from "./services/remindService";
 
 const app: express.Application = express();
 
@@ -39,12 +40,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // 카카오에서 넘어오는 데이터 서버에서 쓰기 쉽게 변환해줌
-passport.serializeUser(function(user:any,done){
-  done(null,user);
-})
-passport.deserializeUser(function(user:any,done){
-  done(null,user);
-})
+passport.serializeUser(function (user: any, done) {
+  done(null, user);
+});
+passport.deserializeUser(function (user: any, done) {
+  done(null, user);
+});
 passport.use("local", local);
 passport.use("jwt", jwt);
 passport.use("kakao", kakao);
@@ -63,5 +64,6 @@ app.use("/comment", commentRouter);
 
 app.use(errorLogger);
 
+startScheduler();
 
 export default app;
