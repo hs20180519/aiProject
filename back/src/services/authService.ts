@@ -3,8 +3,10 @@ import { sendMail } from "../utils/sendMail";
 import * as authInterface from "../interfaces/authInterface";
 import { plainToClass } from "class-transformer";
 import { UserDto } from "../dtos/userDto";
+import { KakaoClient } from "../passport/kakao";
 import path from "path";
 import fs from "fs";
+import axios from 'axios';
 
 const prisma = new PrismaClient();
 
@@ -88,3 +90,11 @@ export const deleteUser = async (userId: number): Promise<null | UserDto> => {
   });
   return plainToClass(UserDto, user);
 };
+
+export const oAuthKakaLogin = async() =>{
+  
+ const url = KakaoClient.getAuthCodeURL();
+ const res = await axios.get(url);
+ console.log('---------응답 테스트---------');
+ console.log(res);
+}

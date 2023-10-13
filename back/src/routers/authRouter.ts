@@ -20,7 +20,7 @@ authRouter.put("/", passportJwt, authController.editUser);
 
 authRouter.delete("/", passportJwt, authController.deleteUser);
 
-authRouter.get('/kakao', passport.authenticate("kakao"))
+authRouter.get('/kakao',authController.oAuthKakaLogin)
 
 authRouter.get(
   "/kakao/callback",
