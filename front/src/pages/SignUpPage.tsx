@@ -2,6 +2,7 @@
 import React, { SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Api from "../apis/api";
+import { AxiosError } from "axios";
 // import ToastWrapper from "../components/common/popup/ToastWrapper";
 // import useToast from "../hooks/useToast";
 // import {
@@ -17,17 +18,19 @@ import * as Api from "../apis/api";
 // }
 
 const SignUp = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // const [name, setName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
 
-  // const [newUserInfo, setNewUserInfo] = useState<NewUserInfoType>({
-  //   name: "",
-  //   email: "",
-  //   password: "",
-  //   confirmPassword: "",
-  // });
+  const [newUserInfo, setNewUserInfo] = useState<({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const {name, email, password}
 
   // const [name, setName] = useState("");
   // const [email, setEmail] = useState("");
@@ -71,6 +74,9 @@ const SignUp = () => {
         });
       navigate("/login");
     } catch (err: any) {
+      if (err instanceof AxiosError) {
+        /* empty */
+      }
       window.alert(err.response.data);
     }
   };
