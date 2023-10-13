@@ -11,7 +11,9 @@ export default function IntroPage() {
       </Link>
       <StyledWrapper>
         <StyledLogoWrapper>{"사이트 로고"}</StyledLogoWrapper>
-        <StyledContent>{"사이트 설명"}</StyledContent>
+        <StyledContent>
+          {"단어 학습이 어려운 분들을 위해 준비했습니다. AI튜터와 함께 단어 학습을 해보세요."}
+        </StyledContent>
         <StyledContent>
           <Button>{"학습 체험하러 가기"}</Button>
         </StyledContent>
