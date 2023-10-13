@@ -70,12 +70,17 @@ export const startScheduler = () =>
             }
           }
         }
-
+        let subject;
+        if (daysSinceLastStudy === 1) {
+          subject = "[Wordy] 오늘이 끝나기 전에 보러 와주실거죠..?🥺";
+        } else {
+          subject = `[Wordy] ${daysSinceLastStudy}일 동안 못봤네요🥺`;
+        }
         if (!hasStudiedToday) {
           let mailOptions = {
             from: process.env.EMAIL_USERNAME,
             to: user.email,
-            subject: `[Wordy] ${daysSinceLastStudy}일 동안 못봤네요🥲`,
+            subject: subject,
             html: `<div style="text-align:center;">
 <img src=${logo} alt="Wordy Logo" />
             <h1>안녕하세요, ${user.name}님!</h1>
