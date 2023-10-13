@@ -1,4 +1,4 @@
-import { instance } from "./api2";
+import * as instance from "./api";
 
 export const OAuthKakaoLogin = async () => {
   const url = `/auth/kakao`;
