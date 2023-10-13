@@ -14,7 +14,9 @@ import uploadRouter from "./routers/uploadRouter";
 import postRouter from "./routers/postRouter";
 import commentRouter from "./routers/commentRouter";
 import studyRouter from "./routers/studyRouter";
+import bookRouter from "./routers/bookRouter";
 import session from "express-session";
+import { startScheduler } from "./services/remindService";
 
 const app: express.Application = express();
 
@@ -38,12 +40,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // 카카오에서 넘어오는 데이터 서버에서 쓰기 쉽게 변환해줌
-passport.serializeUser(function(user:any,done){
-  done(null,user);
-})
-passport.deserializeUser(function(user:any,done){
-  done(null,user);
-})
+passport.serializeUser(function (user: any, done) {
+  done(null, user);
+});
+passport.deserializeUser(function (user: any, done) {
+  done(null, user);
+});
 passport.use("local", local);
 passport.use("jwt", jwt);
 passport.use("kakao", kakao);
@@ -54,6 +56,7 @@ app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/upload", uploadRouter);
 app.use("/study", studyRouter);
+app.use("/book", bookRouter);
 
 // 미사용 라우터
 app.use("/post", postRouter);
@@ -61,5 +64,6 @@ app.use("/comment", commentRouter);
 
 app.use(errorLogger);
 
+startScheduler();
 
 export default app;

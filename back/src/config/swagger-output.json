@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "swagger-example",
-    "description": "스웨거 자동 문서화",
+    "title": "Wordy API",
+    "description": "API 자동 문서화 및 테스트",
     "version": "1.0.0"
   },
   "servers": [
@@ -232,6 +232,21 @@
           "201": {
             "description": "Created"
           }
+        },
+        "security": []
+      }
+    },
+    "/study/experience": {
+      "get": {
+        "tags": [
+          "Study"
+        ],
+        "summary": "학습 체험",
+        "description": "비회원 학습 체험으로 한번에 10개의 단어와 사지선다 제공 (클라에서 관리하고 결과 반환해주셔야함)",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
         }
       }
     },
@@ -241,10 +256,59 @@
           "Study"
         ],
         "summary": "단어 학습",
-        "description": "쿼리별 단어 학습. 틀린 단어, 학습한(맞춘) 단어, 개인 단어장 단어, 수능 토익 토플 IELTS 등. 쿼리가 없다면 전체 데이터셋 중 학습한적 없는 단어. 원하는 항목을 쿼리스트링으로 true",
+        "description": "쿼리별 단어 학습 / ?key=true / 커스텀단어 학습만 ?custom=true?customBookId=id",
         "parameters": [
           {
-            "name": "customId",
+            "name": "correct",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "incorrect",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "csat",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "toeic",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "toefl",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "ielts",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "custom",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "customBookId",
             "in": "query",
             "schema": {
               "type": "string"
@@ -304,6 +368,279 @@
         "security": []
       }
     },
+    "/book/": {
+      "post": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 생성",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 리스트 조회",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": []
+      },
+      "put": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 업데이트",
+        "description": "요청받은 필드만 업데이트",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      },
+      "delete": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 삭제",
+        "description": "포함된 단어 전부 삭제",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      }
+    },
+    "/book/word": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "단어장 단어 조회",
+        "description": "쿼리별 단어장 조회 / ?key=true / 커스텀단어 조회만 ?custom=true?customBookId=id",
+        "parameters": [
+          {
+            "name": "correct",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "incorrect",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "csat",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "toeic",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "toefl",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "ielts",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "custom",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 단어 추가",
+        "description": "",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "word": {
+                    "example": "any"
+                  },
+                  "meaning": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 단어 수정",
+        "description": "요청받은 필드만 업데이트",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wordId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      },
+      "delete": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 단어 삭제",
+        "description": "",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wordId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      }
+    },
     "/post/": {
       "post": {
         "tags": [
@@ -316,6 +653,7 @@
             "description": "Created"
           }
         },
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -408,6 +746,7 @@
             "description": "Not Found"
           }
         },
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -452,7 +791,8 @@
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "security": []
       }
     },
     "/comment/": {
@@ -483,6 +823,7 @@
             "description": "Created"
           }
         },
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -527,6 +868,7 @@
             "description": "Not Found"
           }
         },
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -568,7 +910,8 @@
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "security": []
       }
     }
   },

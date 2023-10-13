@@ -20,13 +20,12 @@ authRouter.put("/", passportJwt, authController.editUser);
 
 authRouter.delete("/", passportJwt, authController.deleteUser);
 
-authRouter.get('/kakao', passport.authenticate("kakao"))
+authRouter.get('/kakao',authController.oAuthKakaLogin)
 
 authRouter.get(
   "/kakao/callback",
   passport.authenticate("kakao", { failureRedirect: "/?error=카카오로그인 실패" }),
   (req, res) =>  {
-    console.log(req.user);
     res.redirect("/");
     // 유저 나옴 -> 로그인 됨
     // 소셜 로그인일 경우 카카오톡 전용 passport를 만들어야할 듯? -> 임시 비밀번호를 유저에게 발급 후 따로 내 정보에서 변경하도록 하게 함(?)  

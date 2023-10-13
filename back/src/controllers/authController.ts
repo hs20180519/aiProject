@@ -162,3 +162,8 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
     return next(error);
   }
 };
+
+export const oAuthKakaLogin =async (req: Request, res: Response, next: NextFunction) => {
+  // 카카오 로그인 처리
+  await authService.oAuthKakaLogin()
+}
