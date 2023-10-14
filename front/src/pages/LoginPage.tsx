@@ -1,8 +1,9 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable */
 import React, { SyntheticEvent, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Api from "../apis/api";
 import { DispatchContext } from "../App";
+import { UserProps } from "../reducer";
 // import useToast from "../hooks/useToast";
 // import ToastWrapper from "../components/common/popup/ToastWrapper";
 // import { TOAST_POPUP_STATUS } from "../constants";
@@ -35,6 +36,11 @@ const Login = () => {
   const isPasswordValid = password.length >= 4;
   const isFormValid = isEmailValid && isPasswordValid;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function userTypeGuard(arg: any): arg is UserProps {
+    return "nickname" in arg && "name" in arg && "email" in arg;
+  }
+
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
@@ -44,14 +50,16 @@ const Login = () => {
         password,
       });
       const user = res.data;
-      if (!user) throw new Error("유저 정보 없음");
-      const jwtToken = user.token;
-      sessionStorage.setItem("userToken", jwtToken);
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: user,
-      });
-      navigate("/", { replace: true });
+      if (!user) {
+        throw new Error("유저 정보 없음");
+      }
+      if (userTypeGuard(user)) {
+        const jwtToken = user.token;
+        sessionStorage.setItem("userToken", jwtToken);
+
+        // dispatch({ type: "LOGOUT" });
+        navigate("/", { replace: true });
+      }
     } catch (err) {
       const objectErr = err as any;
       window.alert(objectErr.response.data);
@@ -108,7 +116,7 @@ const Login = () => {
                   placeholder={"이메일을 입력하세요."}
                   value={email}
                   // eslint-disable-next-line prettier/prettier
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 {!isEmailValid && email.length > 0 && (
                   <div className={"text-danger"}>{`이메일 형식이 올바르지 않습니다.`}</div>

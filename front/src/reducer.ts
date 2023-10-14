@@ -1,12 +1,22 @@
 import { Dispatch } from "react";
-import { Props } from "react-kakao-login/lib/types";
+
+export interface UserProps {
+  id: number;
+  name: string;
+  email: string;
+  nickname?: string;
+  profile: string;
+  snsId?: string;
+  provider?: string;
+  token: string;
+}
 
 export type UserState = {
-  user: Props | null; // Props 타입을 사용자 정보로 사용하며 null인 경우 로그아웃 상태
+  user: UserProps | null; // Props 타입을 사용자 정보로 사용하며 null인 경우 로그아웃 상태
 };
 
 export type Event =
-  | { type: "LOGIN_SUCCESS"; payload: Props } // 로그인 성공
+  | { type: "LOGIN_SUCCESS"; payload: UserProps } // 로그인 성공
   | { type: "LOGOUT" }; // 로그아웃
 
 export type DispatchEvent = Dispatch<Event>;
