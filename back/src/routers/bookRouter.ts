@@ -4,20 +4,16 @@ import * as bookController from "../controllers/bookController";
 
 const bookRouter = Router();
 
-bookRouter.post("/", passportJwt, bookController.createBook);
+bookRouter
+  .post("/", passportJwt, bookController.createBook)
+  .get("/", passportJwt, bookController.getBookList)
+  .put("/", passportJwt, bookController.updateCustomBook)
+  .delete("/", passportJwt, bookController.deleteCustomBook);
 
-bookRouter.get("/", passportJwt, bookController.getBookList);
-
-bookRouter.put("/", passportJwt, bookController.updateCustomBook);
-
-bookRouter.delete("/", passportJwt, bookController.deleteCustomBook);
-
-bookRouter.get("/word", passportJwt, bookController.getBook);
-
-bookRouter.post("/word", passportJwt, bookController.createCustomBookInWord);
-
-bookRouter.put("/word", passportJwt, bookController.updateCustomBookInWord);
-
-bookRouter.delete("/word", passportJwt, bookController.deleteCustomBookInWord);
+bookRouter
+  .post("/word", passportJwt, bookController.createCustomBookInWord)
+  .get("/word", passportJwt, bookController.getBook)
+  .put("/word", passportJwt, bookController.updateCustomBookInWord)
+  .delete("/word", passportJwt, bookController.deleteCustomBookInWord);
 
 export default bookRouter;

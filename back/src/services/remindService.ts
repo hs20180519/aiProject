@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const logo: string | undefined = process.env.LOGO;
+const logo: string | undefined = process.env.WORDY_ICON;
 
 let transporter = nodemailer.createTransport({
   service: "gmail",

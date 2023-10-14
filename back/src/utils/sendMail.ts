@@ -11,13 +11,13 @@ export const sendMail = async (email: string, verificationCode: string) => {
       pass: process.env.NODE_MAILER_PASS,
     },
   });
-  const logo: string | undefined = process.env.LOGO;
+  const icon: string | undefined = process.env.WORDY_ICON;
   let mailOptions = {
     from: process.env.NODE_MAILER_USER,
     to: email,
     subject: "[Wordy] 이메일 확인 안내",
     html: `<div style="text-align:center;">
-<img src=${logo} alt="Wordy Logo" />
+<img src=${icon} alt="Wordy Icon" />
             <h1>안녕하세요, Wordy 에요!</h1>
             <hr />
             <h3>회원가입을 진행하시려면 Wordy 웹사이트에 다음 인증 코드를 입력해주세요🥳</h3><br />
