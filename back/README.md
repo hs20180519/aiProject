@@ -78,7 +78,7 @@ KAKAO_ID=""
 
 4. 통합 테스트
 
-   `ex) yarn test tests/테스트파일명.remind.ts`
+   `ex) yarn test tests/테스트파일명.test.ts`
 
    작성에 소요되는 코스트에 비해 수정 또는 추가 사항이 있을 경우 테스트 시간이 비약적으로 단축됩니다.
 

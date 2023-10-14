@@ -1,17 +1,13 @@
-import { PrismaClient } from "@prisma/client";
-import { UserDto } from "../dtos/userDto";
-import { plainToInstance } from "class-transformer";
+import { PrismaClient, User } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const getUserById = async (userId: number): Promise<UserDto> => {
+export const getUserById = async (userId: number) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
   });
-
-  if (!user) {
-    throw new Error("유저를 찾을 수 없습니다.");
+  if (user) {
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
-
-  return plainToInstance(UserDto, user);
 };

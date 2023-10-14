@@ -3,8 +3,8 @@ const swaggerAutogen = swaggerAutogenInit({ openapi: "3.0.0" });
 
 const options = {
   info: {
-    title: "Wordy API",
-    description: "API 자동 문서화 및 테스트",
+    title: "swagger-example",
+    description: "스웨거 자동 문서화",
   },
   servers: [
     {
