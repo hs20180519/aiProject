@@ -458,6 +458,45 @@
       }
     },
     "/book/word": {
+      "post": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "커스텀 단어장 단어 추가",
+        "description": "",
+        "parameters": [
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "word": {
+                    "example": "any"
+                  },
+                  "meaning": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "get": {
         "tags": [
           "Book"
@@ -542,45 +581,6 @@
           }
         },
         "security": []
-      },
-      "post": {
-        "tags": [
-          "Book"
-        ],
-        "summary": "커스텀 단어장 단어 추가",
-        "description": "",
-        "parameters": [
-          {
-            "name": "customBookId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          }
-        },
-        "security": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "word": {
-                    "example": "any"
-                  },
-                  "meaning": {
-                    "example": "any"
-                  }
-                }
-              }
-            }
-          }
-        }
       },
       "put": {
         "tags": [

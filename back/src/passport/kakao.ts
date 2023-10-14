@@ -8,7 +8,7 @@ class Kakao {
   redirectUri: string;
   constructor() {
     this.key = process.env.KAKAO_ID!;
-    this.redirectUri = process.env.REDIRECT_URI!;
+    this.redirectUri = "/auth/kakao/callback";
   }
 
   /**
@@ -17,7 +17,6 @@ class Kakao {
   getAuthCodeURL() {
     return `https://kauth.kakao.com/oauth/authorize?client_id=${this.key}&redirect_uri=${this.redirectUri}&response_type=code`;
   }
-  // https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=account_email
 
   /**
    * @description 토큰 발급하기

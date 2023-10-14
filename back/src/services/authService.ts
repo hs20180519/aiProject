@@ -111,5 +111,5 @@ export const oAuthKakaLogin = async () => {
   const url = KakaoClient.getAuthCodeURL();
   const res = await axios.get(url);
   console.log("---------응답 테스트---------");
-  console.log(res);
+  // console.log(res);
 };

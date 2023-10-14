@@ -4,6 +4,7 @@ import * as authService from "../services/authService";
 import * as authInterface from "../interfaces/authInterface";
 import { User } from "@prisma/client";
 import { getVerifyCodeByEmail } from "../services/authService";
+import { KakaoClient } from "../passport/kakao";
 
 export const checkEmailOrNickname = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -168,5 +169,6 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 
 export const oAuthKakaLogin = async (req: Request, res: Response, next: NextFunction) => {
   // 카카오 로그인 처리
-  await authService.oAuthKakaLogin();
+  const url = KakaoClient.getAuthCodeURL();
+  res.status(302).redirect(url);
 };
