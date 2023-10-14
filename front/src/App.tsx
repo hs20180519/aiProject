@@ -5,9 +5,11 @@ import InrtoPage from "./pages/IntroPage";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
+import * as Api from "./apis/api";
+import { loginReducer, DispatchEvent, UserState } from "./reducer";
 
-export const DispatchContext = createContext(null);
-export const UserStateContext = createContext(null);
+export const DispatchContext = createContext<DispatchEvent | null>(null);
+export const UserStateContext = createContext<UserState | null>(null);
 
 function App() {
   // useReducer 훅을 통해 userState 상태와 dispatch함수를 생성함.
@@ -45,7 +47,7 @@ function App() {
   }, []);
 
   if (!isFetchCompleted) {
-    return "loading...";
+    return <>{"loading..."}</>;
   }
   return (
     <DispatchContext.Provider value={dispatch}>
@@ -66,10 +68,5 @@ function App() {
     </DispatchContext.Provider>
   );
 }
-
-const StyledApp = styled.div`
-  width: 100%;
-  height: 100%;
-`;
 
 export default App;
