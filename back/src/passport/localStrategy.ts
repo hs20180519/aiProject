@@ -26,7 +26,7 @@ const local = new LocalStrategy(
           message: "이메일 또는 비밀번호가 일치하지 않습니다.",
         });
       }
-      const result = await bcrypt.compare(password, user.password);
+      const result: boolean = await bcrypt.compare(password, user.password);
       if (!result) {
         return done(null, false, {
           message: "이메일 또는 비밀번호가 일치하지 않습니다.",

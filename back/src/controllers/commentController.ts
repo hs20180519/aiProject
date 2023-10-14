@@ -6,6 +6,9 @@ export const createComment = async (req: Request, res: Response, next: NextFunct
   /**
    * #swagger.tags = ['Comment']
    * #swagger.summary = '댓글 작성'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
    */
   try {
     const userId = (req.user as User).id;
@@ -26,6 +29,9 @@ export const updateComment = async (req: Request, res: Response, next: NextFunct
    * #swagger.tags = ['Comment']
    * #swagger.summary = '댓글 수정'
    * #swagger.description = '댓글 작성자 또는 관리자만 수정 가능'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
    */
   try {
     const user = req.user as User;
@@ -48,6 +54,9 @@ export const deleteComment = async (req: Request, res: Response, next: NextFunct
    * #swagger.tags = ['Comment']
    * #swagger.summary = '댓글 삭제'
    * #swagger.description = '댓글 작성자 또는 관리자만 삭제 가능'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
    */
   try {
     const user = req.user as User;

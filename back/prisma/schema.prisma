@@ -11,25 +11,23 @@ datasource db {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  email         String?         @unique
-  name          String?
-  nickname      String?         @unique
-  password      String?
-  snsId         String?         @unique
-  snsProvider   String?
-  profileImage  String?
-  post          Post[]
-  comment       Comment[]
-  level         Int?
-  UserWord      WordProgress[]
-  Wordbook      Wordbook[]
-  Ranking       Rank[]
-  lastRank      Int?            @default(0)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  manager       Boolean         @default(false)
-  LearnProgress LearnProgress[]
+  id           Int            @id @default(autoincrement())
+  email        String?        @unique
+  name         String?
+  nickname     String?        @unique
+  password     String?
+  snsId        String?        @unique
+  provider     String?
+  profileImage String?
+  post         Post[]
+  comment      Comment[]
+  wordProgress WordProgress[]
+  rank         Rank[]
+  lastRank     Int?           @default(0)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  manager      Boolean        @default(false)
+  customBook   CustomBook[]
 }
 
 model VerifiCode {
@@ -41,61 +39,47 @@ model VerifiCode {
 }
 
 model Word {
-  id            Int             @id @default(autoincrement())
-  word          String          @unique
-  meaning       String
-  category      String
-  level         Int
-  WordProgress  WordProgress[]
-  WordbookEntry WordbookEntry[]
-  LearnProgress LearnProgress[]
-}
+  id           Int            @id @default(autoincrement())
+  word         String         @unique
+  meaning      String
+  category     String
+  wordProgress WordProgress[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  customBook   CustomBook?    @relation(fields: [customBookId], references: [id], onDelete: Cascade)
+  customBookId Int?
 
-model LearnProgress {
-  id     Int     @id @default(autoincrement())
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int?
-  ip     String?
-  word   Word    @relation(fields: [wordId], references: [id])
-  wordId Int
-  answer Boolean
+  @@index([category, customBookId])
 }
 
 model WordProgress {
-  id        Int       @id @default(autoincrement())
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  word      Word      @relation(fields: [wordId], references: [id])
+  word      Word     @relation(fields: [wordId], references: [id])
   wordId    Int
   correct   Boolean
-  studiedAt DateTime?
+  studiedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, wordId, correct])
 }
 
-model Wordbook {
-  id        Int             @id @default(autoincrement())
-  title     String
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-  entries   WordbookEntry[]
-}
-
-model WordbookEntry {
-  id         Int      @id @default(autoincrement())
-  word       Word     @relation(fields: [wordId], references: [id])
-  wordId     Int
-  wordbook   Wordbook @relation(fields: [wordbookId], references: [id], onDelete: Cascade)
-  wordbookId Int
-  createdAt  DateTime @default(now())
+model CustomBook {
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  title  String
+  word   Word[]
 }
 
 model Rank {
-  id       Int       @id @default(autoincrement())
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   Int
-  score    Int       @default(0)
-  rankDate DateTime?
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  score     Int      @default(0)
+  rankDate  DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // 미사용 테이블 (언젠간 쓰것지..)

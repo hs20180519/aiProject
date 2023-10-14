@@ -7,6 +7,9 @@ export const createPost = async (req: Request, res: Response, next: NextFunction
    * #swagger.tags = ['Post']
    * #swagger.summary = '게시글 작성'
    * #swagger.description = '게시글 작성 후 게시글 반환'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
    */
   try {
     const userId = (req.user as User).id;
@@ -53,6 +56,9 @@ export const updatePost = async (req: Request, res: Response, next: NextFunction
    * #swagger.tags = ['Post']
    * #swagger.summary = '게시글 수정'
    * #swagger.description = '게시글 작성자 또는 관리자만 수정 가능'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
    */
   try {
     const user = req.user as User;
@@ -75,6 +81,9 @@ export const deletePost = async (req: Request, res: Response, next: NextFunction
    * #swagger.tags = ['Post']
    * #swagger.summary = '게시글 삭제'
    * #swagger.description = '게시글 작성자 또는 관리자만 삭제 가능. 게시글 삭제 시 해당 게시글의 댓글도 함께 삭제'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
    */
   try {
     const postId = Number(req.params.postId);

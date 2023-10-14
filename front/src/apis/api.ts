@@ -1,35 +1,67 @@
-import axios, { AxiosInstance, AxiosRequestHeaders } from "axios";
-import customAxiosInstance from "./instance";
+import axios from "axios";
 
-export const instance = customAxiosInstance();
+export const backendPortNumber = "8000";
+export const serverUrl = `http://${backendPortNumber}/`;
 
-export interface IRequestProps {
-  instance?: AxiosInstance;
-  url: string;
-  headers: AxiosRequestHeaders;
-  method: "get" | "post" | "put" | "patch" | "delete";
-  query?: Record<string, unknown>;
-  data?: unknown;
+async function get(endpoint: unknown, params = "") {
+  console.log(`%cGET 요청 ${params}`, "color: #a25cd1;");
+  const token = sessionStorage.getItem("userToken");
+  return axios.get(`${serverUrl + endpoint}/${params}`, {
+    // JWT 토큰을 헤더에 담아 백엔드 서버에 보냄.
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
-// 잘 쓸 수 있을 지 의문..
-export const API = async (props: IRequestProps) => {
-  const { method, url, data, headers } = props;
+async function post(endpoint: unknown, data: unknown) {
+  // JSON.stringify 함수: Javascript 객체를 JSON 형태로 변환함.
+  const bodyData = JSON.stringify(data);
+  console.log(`%cPOST 요청: ${serverUrl + endpoint}`, "color: #296aba;");
+  console.log(`%cPOST 요청 데이터: ${bodyData}`, "color: #296aba;");
 
-  try {
-    switch (method) {
-      case "get":
-        return await instance.get(url, { headers });
-      case "post":
-        return await instance.post(url, data, { headers });
-      case "put":
-        return await instance.put(url, data, { headers });
-      case "patch":
-        return await instance.patch(url, data, { headers });
-      case "delete":
-        return await instance.delete(url, { headers });
-    }
-  } catch (e: any) {
-    return e;
-  }
-};
+  return axios.post(serverUrl + endpoint, bodyData, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
+    },
+  });
+}
+
+async function put(endpoint: unknown, data: unknown) {
+  // JSON.stringify 함수: Javascript 객체를 JSON 형태로 변환함.
+  const bodyData = JSON.stringify(data);
+  console.log(`%cPUT 요청: ${serverUrl + endpoint}`, "color: #059c4b;");
+  console.log(`%cPUT 요청 데이터: ${bodyData}`, "color: #059c4b;");
+
+  return axios.put(serverUrl + endpoint, bodyData, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
+    },
+  });
+}
+
+async function putImage(endpoint: unknown, formData: unknown) {
+  return axios.put(serverUrl + endpoint, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
+    },
+  });
+}
+
+// 아래 함수명에 관해, delete 단어는 자바스크립트의 reserved 단어이기에,
+// 여기서는 우선 delete 대신 del로 쓰고 아래 export 시에 delete로 alias 함.
+async function del(endpoint: unknown, params = "") {
+  console.log(`DELETE 요청 ${`${serverUrl + endpoint}/${params}`}`);
+  return axios.delete(`${serverUrl + endpoint}/${params}`, {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
+    },
+  });
+}
+
+// 아래처럼 export한 후, import * as A 방식으로 가져오면,
+// A.get, A.post 로 쓸 수 있음.
+export { get, post, put, del as delete, putImage };
