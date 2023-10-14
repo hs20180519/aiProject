@@ -23,7 +23,7 @@ class Kakao {
    * @description 토큰 발급하기
    * @param code 인가코드
    */
-  async getToken(code: CodecState) {
+  async getToken(code: string) {
     const params = {
       client_id: this.key,
       code,
