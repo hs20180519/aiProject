@@ -1,7 +1,0 @@
-.env
-.idea
-venv
-log
-
-words.txt
-*.json

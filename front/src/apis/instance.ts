@@ -1,12 +1,11 @@
-/* eslint-disable */
-
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-const baseURL = process.env.SERVER_URL;
+const baseURL = `http://localhost:${process.env.PORT || 3000}`;
+const serverURL = `http://localhost:${process.env.SERVER_PORT || 5000}`;
 
 const customAxiosInstance = () => {
   const axiosInstance = axios.create({
-    baseURL,
+    baseURL: baseURL,
     headers: { "Content-Type": "application/json" },
   });
   // HTTP 상태코드가 2xx대일 때 처리하고 싶은 로직
@@ -16,17 +15,17 @@ const customAxiosInstance = () => {
 
   // response 에러가 있을 시
   const onRejected = async (e: AxiosError) => {
-    const { config } = e;
-    // const originalRequset = config;
+    const { config, response } = e;
+    const originalRequset = config;
     return Promise.reject(e);
   };
 
   // request 전 수행할 일
   // 로컬스토리지에 넣을지 세션스토리지에 넣을지 정해야함. -> 아마 세션 스토리지에 넣지 않을까요?
   const requestPrev = async (config: InternalAxiosRequestConfig) => {
-    const accessToken = localStorage.getItem("access_token");
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    const access_token = localStorage.getItem("access_token");
+    if (access_token) {
+      config.headers.Authorization = `Bearer ${access_token}`;
     }
     return config;
   };

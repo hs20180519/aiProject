@@ -1,13 +1,21 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-import * as wordInterface from "../interfaces/wordInterface";
+interface Word {
+  id: number;
+  meaning: string;
+}
+interface RawWord {
+  id: number;
+  level: number;
+  meaning: string;
+}
 
-export const createChoices = async (word: wordInterface.Word) => {
+export const createChoices = async (word: Word) => {
   let choices = [word.meaning];
 
   while (choices.length < 4) {
     const randomWord = await prisma.$queryRaw<
-      wordInterface.Word[]
+      RawWord[]
     >`SELECT * FROM Word ORDER BY RAND() LIMIT 1`;
     const randomWordMeaning = randomWord[0].meaning;
 

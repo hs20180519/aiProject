@@ -59,9 +59,8 @@ export const sendMail = async (email: string, verificationCode: string) => {
 
                 감사합니다!
                 </br></br></br>
-                <hr />
-                <hr />
-               <div style="font-size:12px;color:#888;margin-top:30px;">🐾TEAM Wordy🐾</div>
+                
+                🐾The Wordy Team🐾
             </div>
           </div> 
       </body>
