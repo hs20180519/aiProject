@@ -1,5 +1,5 @@
 import axios from "axios";
-// import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 // const prisma = new PrismaClient();
 
@@ -23,7 +23,7 @@ class Kakao {
    * @description 토큰 발급하기
    * @param code 인가코드
    */
-  async getToken(code: string) {
+  async getToken(code: CodecState) {
     const params = {
       client_id: this.key,
       code,
