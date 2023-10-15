@@ -1,14 +1,23 @@
 import axios from "axios";
-import { PrismaClient } from "@prisma/client";
 
-// const prisma = new PrismaClient();
+export interface KakaoAuthToken {
+  access_token: string;
+  refresh_token: string;
+}
+
+export interface KakaoProfile {
+  snsId: string;
+  nickname: string;
+  picture?: string | undefined;
+  email?: string | undefined;
+}
 
 class Kakao {
   key: string;
   redirectUri: string;
   constructor() {
     this.key = process.env.KAKAO_ID!;
-    this.redirectUri = "/auth/kakao/callback";
+    this.redirectUri = "http://localhost:8000/auth/kakao/callback";
   }
 
   /**
@@ -22,7 +31,7 @@ class Kakao {
    * @description 토큰 발급하기
    * @param code 인가코드
    */
-  async getToken(code: CodecState) {
+  async getToken(code: string): Promise<KakaoAuthToken> {
     const params = {
       client_id: this.key,
       code,
@@ -30,70 +39,49 @@ class Kakao {
       redirect_uri: this.redirectUri,
     };
 
-    const { data } = await axios.post("https://kauth.kakao.com/oauth/token", params, {
+    const configs = {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-    });
+    };
 
-    const tokenData = {
+    const { data } = await axios.post("https://kauth.kakao.com/oauth/token", params, configs);
+
+    const kakaoToken: KakaoAuthToken = {
       access_token: data.access_token,
       refresh_token: data.refresh_token,
     };
 
-    return tokenData;
-  }
-
-  async getLogout() {}
-
-  async getLogin(token: JSON) {
-    const { data } = await axios.post(
-      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${this.key}&redirect_uri=${this.redirectUri}&prompt=login`,
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      },
-    );
+    return kakaoToken;
   }
 
   /**
    * @description 유저 정보 가져오기
-   * @param token 액세스 토큰
+   * @param access_token 액세스 토큰
    */
-  async getUserData(token: JSON) {
-    const { data } = await axios.get("https://kapi.kakao.com/v2/user/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        ContentType: `application/x-www-form-urlencoded;charset=utf-8`,
-      },
-    });
-    // const url = `https://kauth.kakao.com/oauth/authorize?client_id=${this.key}&redirect_uri=${this.redirectUri}&response_type=code&scope=account_email,gender`;
-    const userData = {
-      nickname: data.kakao_account.profile.nickname,
-      name: data.kakao_account.name,
-      email: data.kakao_account.profile.email,
-      picture: data.kakao_account.profile.profile_image,
-    };
+  async getUserProfile(access_token: string): Promise<any> {
+    try {
+      const url = "https://kapi.kakao.com/v2/user/me";
+      const configs = {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          ContentType: `application/x-www-form-urlencoded;charset=utf-8`,
+        },
+      };
+      const { data } = await axios.get(url, configs);
+      console.log(data);
 
-    return userData;
-  }
+      const kakaoProfile: KakaoProfile = {
+        snsId: data.id.toString(),
+        nickname: data.kakao_account.profile.nickname,
+        email: data.kakao_account.email,
+        picture: data.kakao_account.profile.profile_image_url,
+      };
 
-  /** 유저 정보 조회 */
-  async getUserInfo(token: JSON) {
-    const { data } = await axios.get("https://kapi.kakao.com/v1/oidc/userinfo", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        ContentType: `application/x-www-form-urlencoded;charset=utf-8`,
-      },
-    });
-    const userInfo = {
-      userNumber: data.sub,
-      nickname: data.nickname,
-      name: data.name,
-      email: data.email,
-      email_verified: data.email_verified,
-    };
+      return kakaoProfile;
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 

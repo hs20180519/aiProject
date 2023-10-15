@@ -41,9 +41,12 @@ app.use(passport.session());
 
 // 카카오에서 넘어오는 데이터 서버에서 쓰기 쉽게 변환해줌
 passport.serializeUser(function (user: any, done) {
+  console.log("serialize User");
   done(null, user);
 });
 passport.deserializeUser(function (user: any, done) {
+  console.log("deserialize User");
+
   done(null, user);
 });
 passport.use("local", local);
