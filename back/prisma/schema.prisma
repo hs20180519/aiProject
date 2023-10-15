@@ -12,10 +12,10 @@ datasource db {
 
 model User {
   id           Int            @id @default(autoincrement())
-  email        String?        @unique
-  name         String?
-  nickname     String?        @unique
-  password     String?
+  email        String?        @unique @db.VarChar(50)
+  name         String?        @db.VarChar(30)
+  nickname     String?        @unique @db.VarChar(15)
+  password     String?        @db.VarChar(70)
   snsId        String?        @unique
   provider     String?
   profileImage String?
@@ -33,15 +33,15 @@ model User {
 model VerifiCode {
   id        Int      @id @default(autoincrement())
   email     String   @unique
-  code      String
+  code      String   @db.VarChar(6)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Word {
   id           Int            @id @default(autoincrement())
-  word         String         @unique
-  meaning      String
+  word         String         @unique @db.VarChar(30)
+  meaning      String         @db.VarChar(100)
   category     String
   wordProgress WordProgress[]
   createdAt    DateTime       @default(now())
@@ -69,7 +69,7 @@ model CustomBook {
   id     Int    @id @default(autoincrement())
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
-  title  String
+  title  String @db.VarChar(20)
   word   Word[]
 }
 

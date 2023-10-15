@@ -53,8 +53,8 @@ export const validateCreateWordInBook = (req: Request, res: Response, next: Next
       customBookId: Joi.string().required(),
     }),
     body: Joi.object({
-      word: Joi.string().min(1).max(20).required(),
-      meaning: Joi.string().min(1).max(50).required(),
+      word: Joi.string().min(1).max(30).required(),
+      meaning: Joi.string().min(1).max(100).required(),
     }),
   });
   const { error } = schema.validate({ query: req.query, body: req.body });

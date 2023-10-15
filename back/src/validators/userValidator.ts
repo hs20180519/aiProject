@@ -40,7 +40,7 @@ export const validateVerify = (req: Request, res: Response, next: NextFunction) 
 export const validateCreateUser = (req: Request, res: Response, next: NextFunction) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    name: Joi.string().min(2).max(15).required(),
+    name: Joi.string().min(2).max(30).required(),
     nickname: Joi.string().min(2).max(15).required(),
     password: Joi.string().min(4).max(50).required(),
   });
