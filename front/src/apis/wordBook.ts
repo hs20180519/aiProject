@@ -60,7 +60,7 @@ export class FetchWordBook {
    * query?customBookId=id
    * body { word: string, meaning: string }
    */
-  static async createCustomBookInWord(
+  static async createCustomWordInBook(
     queryParams: string,
     data: { word: string; meaning: string },
   ) {
@@ -75,7 +75,7 @@ export class FetchWordBook {
    * query?customBookId=id?wordId=id
    * body { word: string, meaning: string }
    */
-  static async updateCustomBookInWord(
+  static async updateCustomWordInBook(
     queryParams: string,
     data: { word?: string; meaning?: string },
   ) {
@@ -89,7 +89,7 @@ export class FetchWordBook {
    * 커스텀 단어 삭제
    * query?customBookId=id?wordId=id
    */
-  static async deleteCustomBookInWord(queryParams: string) {
+  static async deleteCustomWordInBook(queryParams: string) {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
