@@ -14,7 +14,7 @@
   "author": "daechanJo",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.2.0",
+    "@prisma/client": "^5.4.2",
     "@types/express-serve-static-core": "^4.17.36",
     "app-root-path": "^3.1.0",
     "axios": "^1.5.1",

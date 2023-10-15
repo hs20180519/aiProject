@@ -205,8 +205,8 @@
       "get": {
         "description": "",
         "responses": {
-          "default": {
-            "description": ""
+          "302": {
+            "description": "Found"
           }
         }
       }
@@ -214,9 +214,18 @@
     "/auth/kakao/callback": {
       "get": {
         "description": "",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "default": {
-            "description": ""
+          "302": {
+            "description": "Found"
           }
         }
       }

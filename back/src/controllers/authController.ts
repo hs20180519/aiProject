@@ -106,6 +106,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
      * #swagger.description = '로컬 로그인. 로그인 성공 시 JWT 발급'
      */
     const authReq = req as authInterface.AuthenticatedRequest;
+    console.log("-----------로그인 성공----------");
     if (!authReq.user) return res.status(401).json({ message: "유효하지 않은 사용자 정보입니다." });
     const loginUser = {
       token: authReq.token, // postman 편의성을 위해 추가
@@ -163,9 +164,4 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
     console.error(error);
     return next(error);
   }
-};
-
-export const oAuthKakaLogin = async (req: Request, res: Response, next: NextFunction) => {
-  // 카카오 로그인 처리
-  await authService.oAuthKakaLogin();
 };
