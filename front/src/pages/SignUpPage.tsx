@@ -3,19 +3,13 @@ import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AxiosError } from "axios";
 import * as Api from "../apis/api";
-// import ToastWrapper from "../components/common/popup/ToastWrapper";
-// import useToast from "../hooks/useToast";
-// import {
-//   TOAST_POPUP_POSITION,
-//   TOAST_POPUP_STATUS,
-// } from "../constants";
 
-interface NewUserInfoType {
+type NewUserInfoType = {
   name: string;
   email: string;
   password: string;
   confirmPassword: string;
-}
+};
 
 const SignUp = () => {
   const location = useLocation();
@@ -29,7 +23,6 @@ const SignUp = () => {
   const { name, email, password, confirmPassword } = newUserInfo;
 
   const navigate = useNavigate();
-  // const { showToast, toastData, setShowToast } = useToast();
 
   /** 이메일이 "abc@example.com" 형태인지 regex를 이용해 확인함. */
   const validateEmail = (email: string): boolean => {
@@ -56,21 +49,22 @@ const SignUp = () => {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    // 여기에서 실제 회원가입 로직을 구현하고 서버와 통신하면 됩니다.
     try {
-      if (isFormValid)
+      if (isFormValid) {
         await Api.post("auth/register", {
           name,
           email,
           password,
         });
-      navigate("/login");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      if (err instanceof AxiosError) {
-        /* empty */
+        navigate("/login");
       }
-      console.error(err.response.data);
+    } catch (err) {
+      if (err.isAxiosError) {
+        const axiosError = err as AxiosError;
+        console.error(axiosError.response?.data);
+      } else {
+        console.error(err);
+      }
     }
   };
 
@@ -80,7 +74,6 @@ const SignUp = () => {
    */
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    // newUserInfo["name"] = value;
     setNewUserInfo({
       ...newUserInfo,
       [name]: value,
@@ -93,7 +86,6 @@ const SignUp = () => {
 
   return (
     <>
-      {/* {showToast && <ToastWrapper toastData={toastData} />} */}
       <div
         style={{
           paddingTop: "134px",

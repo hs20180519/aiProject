@@ -7,14 +7,14 @@ class FetchStudyWords {
    */
   static async getStudyWord() {
     const url = `/study`;
-    const word = await instance.get(url);
+    const word = await instance.get(url, {});
     return word;
   }
 
   /** 단어 목록 조회 */
   static async getExperienceEdu() {
     const url = `/study/experience`;
-    const wordList = await instance.get(url);
+    const wordList = await instance.get(url, {});
     return wordList;
   }
 }
