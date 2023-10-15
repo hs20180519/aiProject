@@ -76,11 +76,11 @@ export const startScheduler = () =>
         }
         if (!hasStudiedToday) {
           let mailOptions = {
-            from: process.env.EMAIL_USERNAME,
+            from: process.env.NODE_MAILER_USER,
             to: user.email,
             subject: subject,
             html: `<div style="text-align:center;">
-<img src=${logo} alt="Wordy Logo" />
+            <img src=${logo} alt="Wordy Logo" />
             <h1>안녕하세요, ${user.name}님!</h1>
             <hr />
             <h3>학습 진행 상황을 알려드립니다</h3><br />

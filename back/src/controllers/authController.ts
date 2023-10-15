@@ -58,7 +58,7 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
    */
   try {
     const { email, code } = req.body;
-    const isVerified = await authService.verifyEmail(email, code);
+    const isVerified: boolean = await authService.verifyEmail(email, code);
 
     if (!isVerified) return res.status(400).json({ message: "인증코드가 일치하지 않습니다." });
 
@@ -123,7 +123,7 @@ export const editUser = async (req: Request, res: Response, next: NextFunction) 
   /**
    * #swagger.tags = ['Auth']
    * #swagger.summary = '유저 업데이트'
-   * #swagger.description = '회원 정보 수정. 요청 받은 필드만 수정'
+   * #swagger.description = '회원 정보 수정. 요청 받은 필드만 수정. 이메일은 변경하려면 인증을 추가해야할듯. 지금은 이름, 별명, 프로필 이미지정도. 비밀번호 변경도 따로해야하나? 일단 빼둡니다'
    * #swagger.security = [{
    *   "bearerAuth": []
    * }]
