@@ -1,17 +1,23 @@
 import axios from "axios";
 
 export const backendPortNumber = "8000";
-export const serverUrl = `http://${backendPortNumber}/`;
+export const serverUrl = `http://localhost:${backendPortNumber}/`;
 
 async function get(endpoint: unknown, params = "") {
   console.log(`%cGET 요청 ${params}`, "color: #a25cd1;");
   const token = sessionStorage.getItem("userToken");
-  return axios.get(`${serverUrl + endpoint}/${params}`, {
+  console.log(token);
+  const url = `${serverUrl + endpoint}/${params}`;
+  console.log(url);
+  const res = await axios.get(url, {
     // JWT 토큰을 헤더에 담아 백엔드 서버에 보냄.
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  console.log("--------gogo-----");
+  console.log(res);
+  return res;
 }
 
 async function post(endpoint: unknown, data: unknown) {

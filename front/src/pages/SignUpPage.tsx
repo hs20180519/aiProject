@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { ChangeEvent, SyntheticEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AxiosError } from "axios";
 import * as Api from "../apis/api";
 // import ToastWrapper from "../components/common/popup/ToastWrapper";
@@ -18,6 +18,7 @@ interface NewUserInfoType {
 }
 
 const SignUp = () => {
+  const location = useLocation();
   const [newUserInfo, setNewUserInfo] = useState<NewUserInfoType>({
     name: "",
     email: "",
@@ -85,6 +86,10 @@ const SignUp = () => {
       [name]: value,
     });
   };
+
+  useEffect(() => {
+    console.log(location);
+  }, [location]);
 
   return (
     <>
