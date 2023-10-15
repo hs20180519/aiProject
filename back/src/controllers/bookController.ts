@@ -143,7 +143,7 @@ export const createCustomWordInBook = async (req: Request, res: Response, next: 
    * }]
    */
   try {
-    const customBookId = Number(req.query.customBookId);
+    const customBookId: number = Number(req.query.customBookId);
     const { word, meaning } = req.body;
 
     const createdCustomWordInBook = await bookService.createCustomWordInBook(
