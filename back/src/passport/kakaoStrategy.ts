@@ -1,6 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
 import { Strategy as KakaoStrategy } from "passport-local";
-import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 

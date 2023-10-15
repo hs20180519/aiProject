@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// todo interface 경로 수정
 export interface KakaoAuthToken {
   access_token: string;
   refresh_token: string;

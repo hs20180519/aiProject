@@ -1,6 +1,8 @@
+// 부활할수도..?
+
 export const getRandomLevel = (probabilities: number[]): number => {
-  let sum = 0;
-  const r = Math.random();
+  let sum: number = 0;
+  const r: number = Math.random();
 
   for (let i = 0; i < probabilities.length; i++) {
     sum += probabilities[i];
