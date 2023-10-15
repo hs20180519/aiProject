@@ -5,7 +5,3 @@ export interface Word {
   correct: boolean | null;
   customBookId: number | null;
 }
-
-export interface WordWithChoices extends Word {
-  choices: string[];
-}

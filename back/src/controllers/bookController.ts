@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { User } from "@prisma/client";
 import * as bookService from "../services/bookService";
 import { BookDto, BooksDto } from "../dtos/bookDto";
+import { WordDto } from "../dtos/wordDto";
 
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -59,8 +60,8 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
   try {
     const userId: number = (req.user as User).id;
     const customBookId: number = Number(req.query.customBookId);
-    const page = req.query.page ? Number(req.query.page) : 1;
-    const limit = req.query.page ? Number(req.query.limit) : 10;
+    const page: number = req.query.page ? Number(req.query.page) : 1;
+    const limit: number = req.query.page ? Number(req.query.limit) : 10;
 
     const queryServiceMap = {
       correct: () => bookService.getWordByUserId(page, limit, userId, true),
@@ -100,11 +101,15 @@ export const updateCustomBook = async (req: Request, res: Response, next: NextFu
    * }]
    */
   try {
-    const userId = (req.user as User).id;
-    const customBookId = Number(req.query.customBookId);
+    const userId: number = (req.user as User).id;
+    const customBookId: number = Number(req.query.customBookId);
     const updatedData = req.body;
 
-    const updatedCustomBook = await bookService.updateCustomBook(userId, customBookId, updatedData);
+    const updatedCustomBook: BookDto = await bookService.updateCustomBook(
+      userId,
+      customBookId,
+      updatedData,
+    );
     return res.status(200).json(updatedCustomBook);
   } catch (error) {
     console.error(error);
@@ -122,8 +127,8 @@ export const deleteCustomBook = async (req: Request, res: Response, next: NextFu
    * }]
    */
   try {
-    const userId = (req.user as User).id;
-    const customBookId = Number(req.query.customBookId);
+    const userId: number = (req.user as User).id;
+    const customBookId: number = Number(req.query.customBookId);
 
     await bookService.deleteCustomBook(userId, customBookId);
 
@@ -146,7 +151,7 @@ export const createCustomWordInBook = async (req: Request, res: Response, next: 
     const customBookId: number = Number(req.query.customBookId);
     const { word, meaning } = req.body;
 
-    const createdCustomWordInBook = await bookService.createCustomWordInBook(
+    const createdCustomWordInBook: WordDto = await bookService.createCustomWordInBook(
       customBookId,
       word,
       meaning,
@@ -168,11 +173,15 @@ export const updateCustomWordInBook = async (req: Request, res: Response, next: 
    * }]
    */
   try {
-    const customBookId = Number(req.query.customBookId);
-    const wordId = Number(req.query.wordId);
+    const customBookId: number = Number(req.query.customBookId);
+    const wordId: number = Number(req.query.wordId);
     const updatedData = req.body;
 
-    const updatedWord = await bookService.updateCustomWordInBook(customBookId, wordId, updatedData);
+    const updatedWord: WordDto = await bookService.updateCustomWordInBook(
+      customBookId,
+      wordId,
+      updatedData,
+    );
     return res.status(200).json(updatedWord);
   } catch (error) {
     console.error(error);
@@ -189,8 +198,8 @@ export const deleteCustomWordInBook = async (req: Request, res: Response, next: 
    * }]
    */
   try {
-    const customBookId = Number(req.query.customBookId);
-    const wordId = Number(req.query.wordId);
+    const customBookId: number = Number(req.query.customBookId);
+    const wordId: number = Number(req.query.wordId);
 
     await bookService.deleteCustomWordInBook(customBookId, wordId);
 

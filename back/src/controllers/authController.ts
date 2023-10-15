@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import * as authService from "../services/authService";
 import * as authInterface from "../interfaces/authInterface";
 import { User } from "@prisma/client";
+import { UserDto } from "../dtos/userDto";
 
 export const checkEmailOrNickname = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -81,8 +82,8 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
     if (emailExists) return res.status(409).json({ message: "이미 존재하는 이메일입니다." });
     if (nicknameExists) return res.status(409).json({ message: "이미 존재하는 닉네임입니다." });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await authService.createUser({
+    const hashedPassword: string = await bcrypt.hash(password, 10);
+    const newUser: UserDto = await authService.createUser({
       email,
       name,
       nickname,
@@ -106,10 +107,10 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
      * #swagger.description = '로컬 로그인. 로그인 성공 시 JWT 발급'
      */
     const authReq = req as authInterface.AuthenticatedRequest;
-    console.log("-----------로그인 성공----------");
+    console.log("-----------로그인 성공----------"); // todo ...? ㅋㅋㅋ 나중에 삭제
     if (!authReq.user) return res.status(401).json({ message: "유효하지 않은 사용자 정보입니다." });
     const loginUser = {
-      token: authReq.token, // postman 편의성을 위해 추가
+      token: authReq.token, // todo postman 편의성을 위해 추가. 개발 종료시점에서 삭제
       user: authReq.user.name,
       nickname: authReq.user.nickname,
     };
@@ -130,7 +131,7 @@ export const editUser = async (req: Request, res: Response, next: NextFunction) 
    * }]
    */
   try {
-    const userId = (req.user as User).id;
+    const userId: number = (req.user as User).id;
     const updatedData = req.body;
     const updatedUser = await authService.editUser(userId, updatedData);
     return res.status(200).json(updatedUser);
@@ -150,8 +151,8 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
    * }]
    */
   try {
-    const userId = (req.user as User).id;
-    const deletedUser = await authService.deleteUser(userId);
+    const userId: number = (req.user as User).id;
+    const deletedUser: UserDto | null = await authService.deleteUser(userId);
     req.session.destroy((error: Error | null) => {
       if (error) {
         console.error(error);
