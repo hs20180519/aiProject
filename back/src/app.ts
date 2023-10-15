@@ -16,12 +16,14 @@ import commentRouter from "./routers/commentRouter";
 import studyRouter from "./routers/studyRouter";
 import bookRouter from "./routers/bookRouter";
 import session from "express-session";
+import compression from "compression";
 import { startScheduler } from "./services/remindService";
 
 const app: express.Application = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(compression());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "../public")));
