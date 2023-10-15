@@ -3,20 +3,21 @@ import passportLocal from "../middlewares/passportLocal";
 import passportJwt from "../middlewares/passportJwt";
 import * as authController from "../controllers/authController";
 import passport from "passport";
+import * as joi from "../validators/userValidator";
 
 const authRouter = Router();
 
-authRouter.get("/check", authController.checkEmailOrNickname);
+authRouter.get("/check", joi.validateCheckEmailOrNickname, authController.checkEmailOrNickname);
 
-authRouter.post("/register", authController.register);
+authRouter.post("/register", joi.validateRegister, authController.register);
 
-authRouter.post("/verify", authController.verify);
+authRouter.post("/verify", joi.validateVerify, authController.verify);
 
-authRouter.post("/signup", authController.createUser);
+authRouter.post("/signup", joi.validateCreateUser, authController.createUser);
 
 authRouter
-  .post("/", passportLocal, authController.login)
-  .put("/", passportJwt, authController.editUser)
+  .post("/", joi.validateLogin, passportLocal, authController.login)
+  .put("/", joi.validateEditUser, passportJwt, authController.editUser)
   .delete("/", passportJwt, authController.deleteUser);
 
 authRouter.get("/kakao", authController.oAuthKakaLogin);
