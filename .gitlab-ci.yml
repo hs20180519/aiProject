@@ -1,0 +1,17 @@
+stages:
+  - autoPush
+
+variables:
+  BACK: back
+  DAECHAN: feature/daechan
+
+autoPush:
+  stage: autoPush
+  only:
+    - $DAECHAN
+  script:
+    - git config user.name "[AI8/1반] 조대찬"
+    - git config user.email "daechan476@gmail.com"
+    - git checkout $BACK
+    - git merge $DAECHAN
+    - git push origin $BACK
