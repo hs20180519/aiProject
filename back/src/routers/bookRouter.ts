@@ -11,9 +11,9 @@ bookRouter
   .delete("/", passportJwt, bookController.deleteCustomBook);
 
 bookRouter
-  .post("/word", passportJwt, bookController.createCustomBookInWord)
+  .post("/word", passportJwt, bookController.createCustomWordInBook)
   .get("/word", passportJwt, bookController.getBook)
-  .put("/word", passportJwt, bookController.updateCustomBookInWord)
-  .delete("/word", passportJwt, bookController.deleteCustomBookInWord);
+  .put("/word", passportJwt, bookController.updateCustomWordInBook)
+  .delete("/word", passportJwt, bookController.deleteCustomWordInBook);
 
 export default bookRouter;

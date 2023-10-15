@@ -119,7 +119,7 @@ export const deleteCustomBook = async (userId: number, customBookId: number): Pr
   return;
 };
 
-export const createCustomBookInWord = async (
+export const createCustomWordInBook = async (
   customBookId: number,
   word: string,
   meaning: string,
@@ -135,7 +135,7 @@ export const createCustomBookInWord = async (
   return plainToInstance(WordDto, createdWord);
 };
 
-export const updateCustomBookInWord = async (
+export const updateCustomWordInBook = async (
   customBookId: number,
   wordId: number,
   updatedData: Partial<WordDto>,
@@ -147,7 +147,7 @@ export const updateCustomBookInWord = async (
   return plainToInstance(WordDto, updatedWord);
 };
 
-export const deleteCustomBookInWord = async (
+export const deleteCustomWordInBook = async (
   customBookId: number,
   wordId: number,
 ): Promise<void> => {

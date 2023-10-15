@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from "express";
 import * as authService from "../services/authService";
 import * as authInterface from "../interfaces/authInterface";
 import { User } from "@prisma/client";
-import { getVerifyCodeByEmail } from "../services/authService";
 
 export const checkEmailOrNickname = async (req: Request, res: Response, next: NextFunction) => {
   /**

@@ -134,7 +134,7 @@ export const deleteCustomBook = async (req: Request, res: Response, next: NextFu
   }
 };
 
-export const createCustomBookInWord = async (req: Request, res: Response, next: NextFunction) => {
+export const createCustomWordInBook = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Book']
    * #swagger.summary = '커스텀 단어장 단어 추가'
@@ -146,19 +146,19 @@ export const createCustomBookInWord = async (req: Request, res: Response, next: 
     const customBookId = Number(req.query.customBookId);
     const { word, meaning } = req.body;
 
-    const createdCustomBookInWord = await bookService.createCustomBookInWord(
+    const createdCustomWordInBook = await bookService.createCustomWordInBook(
       customBookId,
       word,
       meaning,
     );
-    return res.status(201).json(createdCustomBookInWord);
+    return res.status(201).json(createdCustomWordInBook);
   } catch (error) {
     console.error(error);
     next(error);
   }
 };
 
-export const updateCustomBookInWord = async (req: Request, res: Response, next: NextFunction) => {
+export const updateCustomWordInBook = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Book']
    * #swagger.summary = '커스텀 단어장 단어 수정'
@@ -172,7 +172,7 @@ export const updateCustomBookInWord = async (req: Request, res: Response, next: 
     const wordId = Number(req.query.wordId);
     const updatedData = req.body;
 
-    const updatedWord = await bookService.updateCustomBookInWord(customBookId, wordId, updatedData);
+    const updatedWord = await bookService.updateCustomWordInBook(customBookId, wordId, updatedData);
     return res.status(200).json(updatedWord);
   } catch (error) {
     console.error(error);
@@ -180,7 +180,7 @@ export const updateCustomBookInWord = async (req: Request, res: Response, next: 
   }
 };
 
-export const deleteCustomBookInWord = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteCustomWordInBook = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Book']
    * #swagger.summary = '커스텀 단어장 단어 삭제'
@@ -192,7 +192,7 @@ export const deleteCustomBookInWord = async (req: Request, res: Response, next: 
     const customBookId = Number(req.query.customBookId);
     const wordId = Number(req.query.wordId);
 
-    await bookService.deleteCustomBookInWord(customBookId, wordId);
+    await bookService.deleteCustomWordInBook(customBookId, wordId);
 
     return res.status(200).json({ message: "단어가 삭제되었습니다." });
   } catch (error) {
