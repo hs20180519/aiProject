@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as studyService from "../services/studyService";
 import { User } from "@prisma/client";
-import { WordWithChoicesDto } from "../dtos/wordDto";
+import { WordProgressDto, WordWithChoicesDto } from "../dtos/wordDto";
 
 export const experience = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -100,7 +100,7 @@ export const getLearnResult = async (req: Request, res: Response, next: NextFunc
    */
   try {
     const userId: number = (req.user as User).id;
-    const result = await studyService.getLearnResult(userId);
+    const result: WordProgressDto[] = await studyService.getLearnResult(userId);
     return res.status(200).json(result);
   } catch (error) {
     console.error(error);

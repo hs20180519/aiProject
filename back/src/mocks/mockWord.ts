@@ -56,4 +56,4 @@ insertMockData(mockData)
   });
 
 // 파일 실행하기 (생성할 레코드 수 설정 후)
-// npx ts-node src/mock.ts
+// npx ts-node src/mocks/mockWord.ts
