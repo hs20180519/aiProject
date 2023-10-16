@@ -5,9 +5,13 @@ import InrtoPage from "./pages/IntroPage";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
+import KakaoTestPage from "./pages/KakaoTestPage";
+import OAuthPage from "./pages/OAuthPage";
+import * as Api from "./apis/api";
+import { loginReducer, DispatchEvent, UserState } from "./reducer";
 
-export const DispatchContext = createContext(null);
-export const UserStateContext = createContext(null);
+export const DispatchContext = createContext<DispatchEvent | null>(null);
+export const UserStateContext = createContext<UserState | null>(null);
 
 function App() {
   // useReducer 훅을 통해 userState 상태와 dispatch함수를 생성함.
@@ -22,7 +26,7 @@ function App() {
   const fetchCurrentUser = async () => {
     try {
       // 이전에 발급받은 토큰이 있다면, 이를 가지고 유저 정보를 받아옴.
-      const res = await Api.get("user/current");
+      const res = await Api.get("user", {});
       const currentUser = res.data;
 
       // dispatch 함수를 통해 로그인 성공 상태로 만듦.
@@ -45,7 +49,7 @@ function App() {
   }, []);
 
   if (!isFetchCompleted) {
-    return "loading...";
+    return <>{"loading..."}</>;
   }
   return (
     <DispatchContext.Provider value={dispatch}>
@@ -58,6 +62,8 @@ function App() {
                 <Route path={"/main"} element={<MainPage />} />
                 <Route path={"/login"} element={<LoginPage />} />
                 <Route path={"/signup"} element={<SignUpPage />} />
+                <Route path={"/kakao"} element={<KakaoTestPage />} />
+                <Route path={"/oAuth"} element={<OAuthPage />} />
               </Routes>
             </BrowserRouter>
           </ChakraProvider>
@@ -66,10 +72,5 @@ function App() {
     </DispatchContext.Provider>
   );
 }
-
-const StyledApp = styled.div`
-  width: 100%;
-  height: 100%;
-`;
 
 export default App;
