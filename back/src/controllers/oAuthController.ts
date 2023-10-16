@@ -34,14 +34,18 @@ export const kakaoLogin = async (req: Request, res: Response, next: NextFunction
   });
 
   // 유저를 찾지 못했을 시 카카오톡 기본 정보로 회원가입 후 나머지 입력정보 받을 수 있게 프론트 회원가입 페이지로 리다이렉션.
+  // -> 라고 야심차게 했지만 리다이렉션 안됨.. 그냥 내정보에서 추가정보 입력
   if (!findUser) {
     const { nickname, email, picture } = kakaoUserProfile;
     await OAuthService.createKakaoUser(kakaoUserProfile);
-    let queryString = `nickname=${nickname}`;
-    queryString += email ? `&email=${email}` : "";
-    queryString += picture ? `&picture=${picture}` : "";
-    // 여기 처리해야됨
+
+    // let queryString = `nickname=${nickname}`;
+    // queryString += email ? `&email=${email}` : "";
+    // queryString += picture ? `&picture=${picture}` : "";
+    // console.log("-------리다이렉션 시켜버리기!!!!!!!!!!!----------");
+    // res.status(302).redirect(`http://localhost:3000/signup?${queryString}`);
   }
+
   // 유저를 찾았을 시 액세스 토큰 발급
   else {
     const access_token = generateJwt(
