@@ -1,8 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { createChoices } from "../utils/createChoices";
 import * as wordInterface from "../interfaces/wordInterface";
-import { WordWithChoicesDto } from "../dtos/wordDto";
-import { WordProgressDto } from "../dtos/wordDto";
+import { WordProgressDto, WordWithChoicesDto } from "../dtos/wordDto";
 import { plainToInstance } from "class-transformer";
 
 const prisma = new PrismaClient();
@@ -13,20 +12,33 @@ export const getExperienceWord = async (): Promise<WordWithChoicesDto[]> => {
   const words: wordInterface.Word[] = await prisma.$queryRaw`
     SELECT * FROM Word ORDER BY RAND() LIMIT 10
   `;
-  for (const word of words) {
-    let choices: string[] = await createChoices(word);
+
+  const wordMeanings = words.map((word) => word.meaning);
+
+  const additionalMeanings: any[] = await prisma.$queryRaw`
+     SELECT meaning FROM Word WHERE meaning NOT IN (${wordMeanings.join(
+       ",",
+     )}) ORDER BY RAND() LIMIT 30
+   `;
+
+  for (let i = 0; i < words.length; i++) {
+    let choices: string[] = [
+      ...additionalMeanings.slice(i * 3, (i + 1) * 3).map((obj) => obj.meaning),
+      wordMeanings[i],
+    ];
 
     const wordWithChoices: WordWithChoicesDto = plainToInstance(WordWithChoicesDto, {
-      ...word,
+      ...words[i],
       choices,
     });
 
     wordsWithChoices.push(wordWithChoices);
   }
+
   return wordsWithChoices;
 };
 
-export const getWord = async (userId: number): Promise<WordWithChoicesDto | null> => {
+export const getWord = async (userId: number): Promise<WordWithChoicesDto[]> => {
   const wordResult: wordInterface.Word[] = await prisma.$queryRaw`
       SELECT * FROM Word 
       WHERE NOT EXISTS(
@@ -35,15 +47,7 @@ export const getWord = async (userId: number): Promise<WordWithChoicesDto | null
             ) 
       ORDER BY RAND() LIMIT 1`;
 
-  if (wordResult.length === 0) {
-    throw new Error("단어가 없습니다.");
-  }
-
-  let word: wordInterface.Word = wordResult[0];
-
-  let choices: string[] = await createChoices(word);
-
-  return plainToInstance(WordWithChoicesDto, { ...word, choices });
+  return await createChoices(wordResult);
 };
 
 export const getWordsByUserId = async (
@@ -62,7 +66,12 @@ export const getWordsByUserId = async (
     );
 
   let word: wordInterface.Word = wordResult[0];
-  let choices: string[] = await createChoices(word);
+
+  const additionalMeanings: any[] = await prisma.$queryRaw`
+     SELECT meaning FROM Word WHERE meaning != '${word.meaning}' ORDER BY RAND() LIMIT 3
+   `;
+
+  let choices: string[] = [...additionalMeanings.map((obj) => obj.meaning), word.meaning];
 
   return plainToInstance(WordWithChoicesDto, { ...word, choices });
 };
@@ -70,37 +79,43 @@ export const getWordsByUserId = async (
 export const getWordsByCategory = async (
   userId: number,
   category: string,
-  customBookId?: number,
-): Promise<WordWithChoicesDto> => {
+  customBookId?: string,
+): Promise<WordWithChoicesDto[]> => {
   let wordResult: wordInterface.Word[];
+
+  const bookId: number = Number(customBookId);
 
   if (customBookId) {
     wordResult = await prisma.$queryRaw`
-      SELECT * FROM Word 
-      WHERE customBookId = ${customBookId} AND NOT EXISTS (
-        SELECT * FROM WordProgress 
-        WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId} AND WordProgress.correct=true
-      ) 
-      ORDER BY RAND() LIMIT 1`;
+     SELECT * FROM Word 
+WHERE customBookId = ${bookId} AND (
+  NOT EXISTS (
+    SELECT * FROM WordProgress 
+    WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId}
+  ) OR
+  EXISTS (
+    SELECT * FROM WordProgress 
+    WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId} AND WordProgress.correct=false
+  )
+) 
+ORDER BY RAND() LIMIT 1`;
   } else {
     wordResult = await prisma.$queryRaw`
       SELECT * FROM Word 
-      WHERE category = ${category} AND NOT EXISTS (
-        SELECT * FROM WordProgress 
-        WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId} AND WordProgress.correct=true
+      WHERE category = ${category} AND (
+        NOT EXISTS (
+          SELECT * FROM WordProgress 
+          WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId}
+        ) OR
+        NOT EXISTS (
+          SELECT * FROM WordProgress 
+          WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId} AND WordProgress.correct=true
+        )
       ) 
       ORDER BY RAND() LIMIT 1`;
   }
 
-  if (wordResult.length === 0) {
-    throw new Error("단어가 없습니다.");
-  }
-
-  let word: wordInterface.Word = wordResult[0];
-
-  let choices: string[] = await createChoices(word);
-
-  return plainToInstance(WordWithChoicesDto, { ...word, choices });
+  return await createChoices(wordResult);
 };
 
 export const saveLearn = async (

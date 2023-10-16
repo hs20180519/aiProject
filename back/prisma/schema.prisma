@@ -52,6 +52,12 @@ model Word {
   @@index([category, customBookId])
 }
 
+model MeaningGroup {
+  id       Int      @id @default(autoincrement())
+  meanings Json
+  createAt DateTime @default(now())
+}
+
 model WordProgress {
   id        Int      @id @default(autoincrement())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
