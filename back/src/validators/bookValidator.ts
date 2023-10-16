@@ -8,7 +8,7 @@ export const validateCreateBook = (req: Request, res: Response, next: NextFuncti
   });
 
   const { error } = schema.validate(req.body);
-  if (error) return res.status(400).json({ message: "validator: 잘못된 요청입니다." });
+  if (error) return res.status(400).json({ validator: "잘못된 요청입니다." });
 
   next();
 };
