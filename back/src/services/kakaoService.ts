@@ -13,12 +13,12 @@ export interface KakaoProfile {
   email?: string | undefined;
 }
 
-class Kakao {
+class KakaoService {
   key: string;
   redirectUri: string;
   constructor() {
     this.key = process.env.KAKAO_ID!;
-    this.redirectUri = "http://localhost:8000/auth/kakao/callback";
+    this.redirectUri = "http://localhost:3000/oauth/kakao";
   }
 
   /**
@@ -29,7 +29,7 @@ class Kakao {
   }
 
   /**
-   * @description 토큰 발급하기
+   * @description 프론트에서 쿼리로 받은 코드를가지고 액세스토큰, 리프레쉬토큰을 발급합니다.
    * @param code 인가코드
    */
   async getToken(code: string): Promise<KakaoAuthToken> {
@@ -57,7 +57,7 @@ class Kakao {
   }
 
   /**
-   * @description 유저 정보 가져오기
+   * @description 발급 받은 액세스 토큰으로 유저 정보를 가져옵니다.
    * @param access_token 액세스 토큰
    */
   async getUserProfile(access_token: string): Promise<any> {
@@ -86,4 +86,4 @@ class Kakao {
   }
 }
 
-export const KakaoClient = new Kakao();
+export const kakaoService = new KakaoService();

@@ -3,10 +3,8 @@ import { sendMail } from "../utils/sendMail";
 import * as authInterface from "../interfaces/authInterface";
 import { plainToClass } from "class-transformer";
 import { UserDto } from "../dtos/userDto";
-import { KakaoClient } from "../passport/kakao";
 import path from "path";
 import fs from "fs";
-import axios from "axios";
 
 const prisma = new PrismaClient();
 
