@@ -53,7 +53,7 @@ export const getWordByCategory = async (
   userId: number,
   category: string,
   customBookId?: number,
-): Promise<{ words: WordDto[]; totalPages: number }> => {
+): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
   if (customBookId) {
     const customBook = await prisma.customBook.findUnique({
       where: { id: customBookId, userId: userId },
@@ -66,7 +66,7 @@ export const getWordByCategory = async (
     customBook!.word.sort((a, b) => a.word.localeCompare(b.word));
     const words = customBook!.word.slice(offset.skip, offset.skip + offset.take);
 
-    return { words: plainToInstance(WordDto, words), totalPages };
+    return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
   } else {
     const totalWordCount: number = await prisma.word.count({
       where: { category: category },
@@ -80,14 +80,14 @@ export const getWordByCategory = async (
       ...offset,
     });
 
-    return { words: plainToInstance(WordDto, words), totalPages };
+    return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
   }
 };
 
 export const getAllWords = async (
   page: number,
   limit: number,
-): Promise<{ words: WordDto[]; totalPages: number }> => {
+): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
   const totalWordCount: number = await prisma.word.count({});
   const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
   const offset: { take: number; skip: number } = getPaginationParams(page, limit);
@@ -97,7 +97,7 @@ export const getAllWords = async (
     ...offset,
   });
 
-  return { words: plainToInstance(WordDto, words), totalPages };
+  return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
 };
 
 export const updateCustomBook = async (
@@ -119,7 +119,7 @@ export const deleteCustomBook = async (userId: number, customBookId: number): Pr
   return;
 };
 
-export const createCustomBookInWord = async (
+export const createCustomWordInBook = async (
   customBookId: number,
   word: string,
   meaning: string,
@@ -135,7 +135,7 @@ export const createCustomBookInWord = async (
   return plainToInstance(WordDto, createdWord);
 };
 
-export const updateCustomBookInWord = async (
+export const updateCustomWordInBook = async (
   customBookId: number,
   wordId: number,
   updatedData: Partial<WordDto>,
@@ -147,7 +147,7 @@ export const updateCustomBookInWord = async (
   return plainToInstance(WordDto, updatedWord);
 };
 
-export const deleteCustomBookInWord = async (
+export const deleteCustomWordInBook = async (
   customBookId: number,
   wordId: number,
 ): Promise<void> => {

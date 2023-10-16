@@ -6,7 +6,7 @@ import { UserDto } from "../dtos/userDto";
 import { KakaoClient } from "../passport/kakao";
 import path from "path";
 import fs from "fs";
-import axios from 'axios';
+import axios from "axios";
 
 const prisma = new PrismaClient();
 
@@ -16,14 +16,30 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
   });
 };
 
+export const getVerifyCodeByEmail = async (email: string) => {
+  return prisma.verifiCode.findUnique({
+    where: { email },
+  });
+};
+
 export const sendVerificationCode = async (email: string): Promise<void> => {
-  const verificationCode = Math.floor(Math.random() * 1000000).toString();
+  const verificationCode: string = Math.floor(Math.random() * 1000000).toString();
   await sendMail(email, verificationCode);
   await prisma.verifiCode.create({
     data: {
       email,
       code: verificationCode,
     },
+  });
+  return;
+};
+
+export const resendVerificationCode = async (email: string): Promise<void> => {
+  const verificationCode: string = Math.floor(Math.random() * 1000000).toString();
+  await sendMail(email, verificationCode);
+  await prisma.verifiCode.update({
+    where: { email },
+    data: { code: verificationCode },
   });
   return;
 };
@@ -90,11 +106,3 @@ export const deleteUser = async (userId: number): Promise<null | UserDto> => {
   });
   return plainToClass(UserDto, user);
 };
-
-export const oAuthKakaLogin = async() =>{
-  
- const url = KakaoClient.getAuthCodeURL();
- const res = await axios.get(url);
- console.log('---------응답 테스트---------');
- console.log(res);
-}

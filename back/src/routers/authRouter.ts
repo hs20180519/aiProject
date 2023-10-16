@@ -2,50 +2,30 @@ import Router from "express";
 import passportLocal from "../middlewares/passportLocal";
 import passportJwt from "../middlewares/passportJwt";
 import * as authController from "../controllers/authController";
-import passport from "passport";
+import * as joi from "../validators/userValidator";
+import * as OAuthController from "../controllers/oAuthController";
+import passportKakao from "../middlewares/passportKakao";
+
 
 const authRouter = Router();
 
-authRouter.get("/check", authController.checkEmailOrNickname);
+authRouter.get("/check", joi.validateCheckEmailOrNickname, authController.checkEmailOrNickname);
 
-authRouter.post("/register", authController.register);
+authRouter.post("/register", joi.validateRegister, authController.register);
 
-authRouter.post("/verify", authController.verify);
+authRouter.post("/verify", joi.validateVerify, authController.verify);
 
-authRouter.post("/signup", authController.createUser);
+authRouter.post("/signup", joi.validateCreateUser, authController.createUser);
 
-authRouter.post("/", passportLocal, authController.login);
+authRouter
+  .post("/", joi.validateLogin, passportLocal, authController.login)
+  .put("/", joi.validateEditUser, passportJwt, authController.editUser)
+  .delete("/", passportJwt, authController.deleteUser);
 
-authRouter.put("/", passportJwt, authController.editUser);
+authRouter.get("/kakao", OAuthController.kakaoLogin);
+authRouter.post("/kakao", passportKakao, authController.login);
 
-authRouter.delete("/", passportJwt, authController.deleteUser);
+authRouter.get("/kakao/callback", OAuthController.kakaoCallback);
 
-authRouter.get('/kakao',authController.oAuthKakaLogin)
-
-authRouter.get(
-  "/kakao/callback",
-  passport.authenticate("kakao", { failureRedirect: "/?error=카카오로그인 실패" }),
-  (req, res) =>  {
-    res.redirect("/");
-    // 유저 나옴 -> 로그인 됨
-    // 소셜 로그인일 경우 카카오톡 전용 passport를 만들어야할 듯? -> 임시 비밀번호를 유저에게 발급 후 따로 내 정보에서 변경하도록 하게 함(?)  
-    // 토큰 발급 -> 이메일이 왜 없지?
-    // sns전용 access_token 발급받는 로직을 따로 만들어 줘야함(?)
-
-  /* 닉네임 없을 경우 등록 페이지로 이동되게..?
-    if(req.user && 'nickname' in req.user){
-      if(!req.user.nickname){
-      res.redirect("/settings/nickname");
-      }
-      else{
-      res.redirect("/");
-      }
-
-    }
-   else {
-      res.redirect("/settings/nickname");
-  } */
-}
-);
 
 export default authRouter;

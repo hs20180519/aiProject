@@ -1,20 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
 export const backendPortNumber = "8000";
-export const serverUrl = `http://${backendPortNumber}/`;
+export const serverUrl = `http://localhost:${backendPortNumber}/`;
 
-async function get(endpoint: unknown, params = "") {
-  console.log(`%cGET 요청 ${params}`, "color: #a25cd1;");
+async function get(endpoint: string) {
+  console.log(`%cGET 요청`, "color: #a25cd1;");
   const token = sessionStorage.getItem("userToken");
-  return axios.get(`${serverUrl + endpoint}/${params}`, {
+  console.log(token);
+  const url = `${serverUrl + endpoint}/`;
+  console.log(url);
+  const res = await axios.get(url, {
     // JWT 토큰을 헤더에 담아 백엔드 서버에 보냄.
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  console.log("--------gogo-----");
+  console.log(res);
+  return res;
 }
 
-async function post(endpoint: unknown, data: unknown) {
+async function post<T>(endpoint: string, data: T) {
   // JSON.stringify 함수: Javascript 객체를 JSON 형태로 변환함.
   const bodyData = JSON.stringify(data);
   console.log(`%cPOST 요청: ${serverUrl + endpoint}`, "color: #296aba;");
@@ -28,7 +35,7 @@ async function post(endpoint: unknown, data: unknown) {
   });
 }
 
-async function put(endpoint: unknown, data: unknown) {
+async function put<T>(endpoint: string, data: T) {
   // JSON.stringify 함수: Javascript 객체를 JSON 형태로 변환함.
   const bodyData = JSON.stringify(data);
   console.log(`%cPUT 요청: ${serverUrl + endpoint}`, "color: #059c4b;");
@@ -42,7 +49,7 @@ async function put(endpoint: unknown, data: unknown) {
   });
 }
 
-async function putImage(endpoint: unknown, formData: unknown) {
+async function putImage(endpoint: string, formData: FormData) {
   return axios.put(serverUrl + endpoint, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -53,9 +60,9 @@ async function putImage(endpoint: unknown, formData: unknown) {
 
 // 아래 함수명에 관해, delete 단어는 자바스크립트의 reserved 단어이기에,
 // 여기서는 우선 delete 대신 del로 쓰고 아래 export 시에 delete로 alias 함.
-async function del(endpoint: unknown, params = "") {
-  console.log(`DELETE 요청 ${`${serverUrl + endpoint}/${params}`}`);
-  return axios.delete(`${serverUrl + endpoint}/${params}`, {
+async function del(endpoint: string) {
+  console.log(`DELETE 요청 ${`${serverUrl + endpoint}`}`);
+  return axios.delete(`${serverUrl + endpoint}`, {
     headers: {
       Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
     },

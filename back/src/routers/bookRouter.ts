@@ -1,23 +1,25 @@
 import Router from "express";
 import passportJwt from "../middlewares/passportJwt";
 import * as bookController from "../controllers/bookController";
+import * as joi from "../validators/bookValidator";
 
 const bookRouter = Router();
 
-bookRouter.post("/", passportJwt, bookController.createBook);
+bookRouter
+  .post("/", joi.validateCreateBook, passportJwt, bookController.createBook)
+  .get("/", passportJwt, bookController.getBookList)
+  .put("/", joi.validateUpdateBook, passportJwt, bookController.updateCustomBook)
+  .delete("/", joi.validateDeleteBook, passportJwt, bookController.deleteCustomBook);
 
-bookRouter.get("/", passportJwt, bookController.getBookList);
-
-bookRouter.put("/", passportJwt, bookController.updateCustomBook);
-
-bookRouter.delete("/", passportJwt, bookController.deleteCustomBook);
-
-bookRouter.get("/word", passportJwt, bookController.getBook);
-
-bookRouter.post("/word", passportJwt, bookController.createCustomBookInWord);
-
-bookRouter.put("/word", passportJwt, bookController.updateCustomBookInWord);
-
-bookRouter.delete("/word", passportJwt, bookController.deleteCustomBookInWord);
+bookRouter
+  .post("/word", joi.validateCreateWordInBook, passportJwt, bookController.createCustomWordInBook)
+  .get("/word", joi.validateGetBook, passportJwt, bookController.getBook)
+  .put("/word", joi.validateUpdateWordInBook, passportJwt, bookController.updateCustomWordInBook)
+  .delete(
+    "/word",
+    joi.validateDeleteWordInBook,
+    passportJwt,
+    bookController.deleteCustomWordInBook,
+  );
 
 export default bookRouter;

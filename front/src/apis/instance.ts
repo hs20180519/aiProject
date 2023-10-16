@@ -1,7 +1,7 @@
 /* eslint-disable */
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-const baseURL = process.env.GPT_SERVER_URL;
+const baseURL = process.env.REACT_APP_SERVER_URL;
 
 /** api 파일 연결 테스트 후 해당 파일 삭제 예정 */
 const customAxiosInstance = () => {

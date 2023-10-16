@@ -13,9 +13,9 @@ export const uploadProfileImage = async (req: Request, res: Response, next: Next
    * }]
    */
   try {
-    const userId = (req.user as User).id;
-    const imageUrl = path.join("images", (req.file as Express.Multer.File).filename);
-    const uploadImageUrl = await uploadService.uploadProfileImage(userId, imageUrl);
+    const userId: number = (req.user as User).id;
+    const imageUrl: string = path.join("images", (req.file as Express.Multer.File).filename);
+    const uploadImageUrl: string = await uploadService.uploadProfileImage(userId, imageUrl);
     res.status(201).json(uploadImageUrl);
   } catch (error) {
     console.error(error);
