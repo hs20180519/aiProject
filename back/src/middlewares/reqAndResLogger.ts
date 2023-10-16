@@ -32,8 +32,8 @@ const responseLogger = (
     if (restArgs[0]) {
       chunks.push(Buffer.from(restArgs[0]));
     }
-    const body = Buffer.concat(chunks).toString("utf8");
-    const duration = Date.now() - start;
+    const body: string = Buffer.concat(chunks).toString("utf8");
+    const duration: number = Date.now() - start;
 
     if (res.statusCode >= 400) {
       console.log(`⚠️ [응답] ${body} ${duration}ms`);

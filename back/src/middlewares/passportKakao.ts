@@ -13,7 +13,7 @@ const passportLocal = (
   res: Response,
   next: NextFunction,
 ) => {
-  passport.authenticate("local", { session: true }, (error: Error, user: User, info: any) => {
+  passport.authenticate("kakao", { session: true }, (error: Error, user: User, info: any) => {
     if (error) {
       console.error(error);
       return next(error);

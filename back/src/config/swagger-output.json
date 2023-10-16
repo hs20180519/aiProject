@@ -205,8 +205,20 @@
       "get": {
         "description": "",
         "responses": {
-          "default": {
-            "description": ""
+          "302": {
+            "description": "Found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "로그인",
+        "description": "로컬 로그인. 로그인 성공 시 JWT 발급",
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -214,9 +226,18 @@
     "/auth/kakao/callback": {
       "get": {
         "description": "",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
-          "default": {
-            "description": ""
+          "302": {
+            "description": "Found"
           }
         }
       }

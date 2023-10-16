@@ -23,7 +23,7 @@ export const getVerifyCodeByEmail = async (email: string) => {
 };
 
 export const sendVerificationCode = async (email: string): Promise<void> => {
-  const verificationCode = Math.floor(Math.random() * 1000000).toString();
+  const verificationCode: string = Math.floor(Math.random() * 1000000).toString();
   await sendMail(email, verificationCode);
   await prisma.verifiCode.create({
     data: {
@@ -35,7 +35,7 @@ export const sendVerificationCode = async (email: string): Promise<void> => {
 };
 
 export const resendVerificationCode = async (email: string): Promise<void> => {
-  const verificationCode = Math.floor(Math.random() * 1000000).toString();
+  const verificationCode: string = Math.floor(Math.random() * 1000000).toString();
   await sendMail(email, verificationCode);
   await prisma.verifiCode.update({
     where: { email },
@@ -105,11 +105,4 @@ export const deleteUser = async (userId: number): Promise<null | UserDto> => {
     where: { id: userId },
   });
   return plainToClass(UserDto, user);
-};
-
-export const oAuthKakaLogin = async () => {
-  const url = KakaoClient.getAuthCodeURL();
-  const res = await axios.get(url);
-  console.log("---------응답 테스트---------");
-  console.log(res);
 };
