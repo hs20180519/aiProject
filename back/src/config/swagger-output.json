@@ -201,7 +201,7 @@
         "security": []
       }
     },
-    "/auth/kakao": {
+    "/oauth/kakao": {
       "get": {
         "description": "",
         "responses": {
@@ -211,33 +211,48 @@
         }
       },
       "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "로그인",
-        "description": "로컬 로그인. 로그인 성공 시 JWT 발급",
+        "description": "",
         "responses": {
-          "401": {
-            "description": "Unauthorized"
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/auth/kakao/callback": {
-      "get": {
+    "/oauth/kakao/callback": {
+      "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "code",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
-          "302": {
-            "description": "Found"
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }

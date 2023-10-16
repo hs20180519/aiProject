@@ -18,7 +18,7 @@ class FetchDBWord {
    */
   static async getWords() {
     const url = `/book`;
-    const Words = await instance.get(url, {});
+    const Words = await instance.get(url);
     return Words;
   }
 
@@ -43,7 +43,7 @@ class FetchDBWord {
     // const params = {
     //   customBookId,
     // };
-    const customWords = await instance.delete(url, {});
+    const customWords = await instance.delete(url);
     return customWords;
   }
 
@@ -66,7 +66,7 @@ class FetchDBWord {
    */
   static async getWord() {
     const url = `/book/word`;
-    const customWord = await instance.get(url, {});
+    const customWord = await instance.get(url);
     return customWord;
   }
 
@@ -88,7 +88,7 @@ class FetchDBWord {
    */
   static async delWord() {
     const url = `/book/word`;
-    const customWord = await instance.delete(url, {});
+    const customWord = await instance.delete(url);
     return customWord;
   }
 }

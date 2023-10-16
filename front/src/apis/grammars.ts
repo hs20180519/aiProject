@@ -19,7 +19,7 @@ class FetchGrammars {
    */
   static async getResult() {
     const url = `/ai/correct`;
-    const FixedSentence = await instance.get(url, {});
+    const FixedSentence = await instance.get(url);
     return FixedSentence;
   }
 }
