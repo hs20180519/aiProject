@@ -9,6 +9,7 @@ import KakaoTestPage from "./pages/KakaoTestPage";
 import OAuthPage from "./pages/OAuthPage";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
+import TestGptPage from "./pages/TestGptPage";
 
 export const DispatchContext = createContext<DispatchEvent | null>(null);
 export const UserStateContext = createContext<UserState | null>(null);
@@ -64,6 +65,7 @@ function App() {
                 <Route path={"/signup"} element={<SignUpPage />} />
                 <Route path={"/kakao"} element={<KakaoTestPage />} />
                 <Route path={"/oAuth"} element={<OAuthPage />} />
+                <Route path={"/test"} element={<TestGptPage />} />
               </Routes>
             </BrowserRouter>
           </ChakraProvider>
