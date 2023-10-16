@@ -10,19 +10,35 @@ const prisma = new PrismaClient();
 export const getExperienceWord = async (): Promise<WordWithChoicesDto[]> => {
   let wordsWithChoices: WordWithChoicesDto[] = [];
 
+  // Fetch random words from the database.
   const words: wordInterface.Word[] = await prisma.$queryRaw`
     SELECT * FROM Word ORDER BY RAND() LIMIT 10
   `;
-  for (const word of words) {
-    let choices: string[] = await createChoices(word);
+
+  // Extract meanings of the selected words.
+  const wordMeanings = words.map((word) => word.meaning);
+
+  // Fetch additional meanings excluding the ones of selected words.
+  const additionalMeanings: any[] = await prisma.$queryRaw`
+     SELECT meaning FROM Word WHERE meaning NOT IN (${wordMeanings.join(
+       ",",
+     )}) ORDER BY RAND() LIMIT 30
+   `;
+
+  for (let i = 0; i < words.length; i++) {
+    let choices: string[] = [
+      ...additionalMeanings.slice(i * 3, (i + 1) * 3).map((obj) => obj.meaning),
+      wordMeanings[i],
+    ];
 
     const wordWithChoices: WordWithChoicesDto = plainToInstance(WordWithChoicesDto, {
-      ...word,
+      ...words[i],
       choices,
     });
 
     wordsWithChoices.push(wordWithChoices);
   }
+
   return wordsWithChoices;
 };
 
