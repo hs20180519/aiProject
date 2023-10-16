@@ -7,11 +7,11 @@ import {
   HTTPValidationError,
 } from "./new_gpt_schema";
 
-const baseURL = "http://34.64.215.129/python/api/gpt"
-const token = "elice-ai-8-1-team"
+const baseURL = "http://34.64.215.129/python/api/gpt";
+const token = "elice-ai-8-1-team";
 
 const instance = axios.create({
-  baseURL: baseURL,
+  baseURL,
   headers: {
     "x-token": token,
     "Content-Type": "application/json",

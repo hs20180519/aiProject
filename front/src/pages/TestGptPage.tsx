@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
+import { Box, Button, Flex, Text, Textarea, Spinner, VStack, Input } from "@chakra-ui/react";
+import { ListItem, OrderedList } from "@chakra-ui/react";
 import {
-  Box,
-  Button,
-  Flex,
-  Text,
-  Textarea,
-  Spinner,
-  VStack,
-  Input,
-} from "@chakra-ui/react";
-import { UnorderedList, ListItem, OrderedList } from '@chakra-ui/react';
-import { InputDialogData, InputGrammarData } from "../apis/new_gpt_schema"; // Adjust the import path
+  DialogEntry,
+  DialogResponse,
+  GrammarExplanation,
+  GrammarResponse,
+  InputDialogData,
+  InputGrammarData,
+} from "../apis/new_gpt_schema"; // Adjust the import path
 import { FetchGpt } from "../apis/new_gpt"; // Adjust the import path
 
 interface TestGptPageProps {}
@@ -22,23 +20,34 @@ const TestGptPage: React.FC<TestGptPageProps> = () => {
   const [scriptResult, setScriptResult] = useState<string | null>(null);
 
   const [lineCount, setLineCount] = useState<number>(7);
-  const [wordPairs, setWordPairs] = useState<string>(JSON.stringify({
-    aboard: "배로",
-    abort: "중단하다",
-    about: "-에 대하여",
-  }, null, 2));
+  const [wordPairs, setWordPairs] = useState<string>(
+    JSON.stringify(
+      {
+        aboard: "배로",
+        abort: "중단하다",
+        about: "-에 대하여",
+      },
+      null,
+      2,
+    ),
+  );
 
-
-  const [dialogContent, setDialogContent] = useState<string>(JSON.stringify([
-    {
-      message: "Hey, have you heard about the new cruise ship that's setting sail next month?",
-      speaker: "Person A",
-    },
-    {
-      message: "Yes, I have! I'm actually planning to go aboard it.",
-      speaker: "Person B",
-    }
-  ], null, 2));
+  const [dialogContent, setDialogContent] = useState<string>(
+    JSON.stringify(
+      [
+        {
+          message: "Hey, have you heard about the new cruise ship that's setting sail next month?",
+          speaker: "Person A",
+        },
+        {
+          message: "Yes, I have! I'm actually planning to go aboard it.",
+          speaker: "Person B",
+        },
+      ],
+      null,
+      2,
+    ),
+  );
 
   async function handleGetGrammar() {
     setGrammarLoading(true);
@@ -71,42 +80,57 @@ const TestGptPage: React.FC<TestGptPageProps> = () => {
     }
   }
 
-  function renderGrammarDialog(grammarResult: any) {
+  const handleGetGrammarCallback = useCallback(() => {
+    handleGetGrammar(); // Your original handleGetGrammar function
+  }, []); // Add dependencies if there are any
+
+  const handleGetScriptCallback = useCallback(() => {
+    handleGetScript(); // Your original handleGetScript function
+  }, []); // Add dependencies if there are any
+
+  function renderGrammarDialog(grammarResult: GrammarResponse) {
     if (!grammarResult || !grammarResult.grammar) {
       return null;
     }
 
     return (
       <VStack align="start" spacing={4}>
-        {grammarResult.grammar.map((entry: any, index: number) => (
-          <Box key={index} p={2} borderWidth={1} borderRadius="md">
-            <Text fontWeight="bold">{`Message ${index + 1}:`}</Text>
-            <Text>{entry.message}</Text>
-            <OrderedList mt={2} fontStyle="italic">
-              {entry.explain.split('\n').map((point: string, i: number) => {
-                const cleanedPoint = point.replace(/^\d+\.\s*/, ''); // Remove numbering like "1. "
-                return <ListItem key={i}>{cleanedPoint}</ListItem>;
-              })}
-            </OrderedList>
-          </Box>
-        ))}
+        {grammarResult.grammar.map((entry: GrammarExplanation) => {
+          const messageKey = entry.message.substring(0, 10); // Create a simple unique key from the message
+          return (
+            <Box key={messageKey} p={2} borderWidth={1} borderRadius="md">
+              <Text fontWeight="bold">{`Message:`}</Text>
+              <Text>{entry.message}</Text>
+              <OrderedList mt={2} fontStyle="italic">
+                {entry.explain.split("\n").map((point: string) => {
+                  const pointKey = point.substring(0, 10); // Create a simple unique key from the point
+                  const cleanedPoint = point.replace(/^\d+\.\s*/, ""); // Remove numbering like "1. "
+                  return <ListItem key={pointKey}>{cleanedPoint}</ListItem>;
+                })}
+              </OrderedList>
+            </Box>
+          );
+        })}
       </VStack>
     );
   }
 
-  function renderScriptDialog(dialogResult: any) {
+  function renderScriptDialog(dialogResult: DialogResponse) {
     if (!dialogResult || !dialogResult.dialog) {
       return null;
     }
 
     return (
       <VStack align="start" spacing={4}>
-        {dialogResult.dialog.map((entry: any, index: number) => (
-          <Box key={index} p={2} borderWidth={1} borderRadius="md">
-            <Text fontWeight="bold">{entry.speaker}:</Text>
-            <Text>{entry.message}</Text>
-          </Box>
-        ))}
+        {dialogResult.dialog.map((entry: DialogEntry) => {
+          const dialogKey = `${entry.speaker}_${entry.message.substring(0, 10)}`; // Create a unique key
+          return (
+            <Box key={dialogKey} p={2} borderWidth={1} borderRadius="md">
+              <Text fontWeight="bold">{entry.speaker}:</Text>
+              <Text>{entry.message}</Text>
+            </Box>
+          );
+        })}
       </VStack>
     );
   }
@@ -120,7 +144,9 @@ const TestGptPage: React.FC<TestGptPageProps> = () => {
           onChange={(e) => setDialogContent(e.target.value)}
           placeholder='[{"message": "Message here", "speaker": "Speaker name"}]'
         />
-        <Button mt={4} onClick={handleGetGrammar}>Test Grammar</Button>
+        <Button mt={4} onClick={handleGetGrammarCallback}>
+          Test Grammar
+        </Button>
         {/* Grammar Result */}
         <Box mt={4} maxW={"sm"}>
           {isGrammarLoading ? <Spinner /> : renderGrammarDialog(JSON.parse(grammarResult))}
@@ -132,12 +158,10 @@ const TestGptPage: React.FC<TestGptPageProps> = () => {
           onChange={(e) => setLineCount(Number(e.target.value))}
           placeholder="Line Count"
         />
-        <Textarea
-          mt={4}
-          value={wordPairs}
-          onChange={(e) => setWordPairs(e.target.value)}
-        />
-        <Button mt={4} onClick={handleGetScript}>Test Script</Button>
+        <Textarea mt={4} value={wordPairs} onChange={(e) => setWordPairs(e.target.value)} />
+        <Button mt={4} onClick={handleGetScriptCallback}>
+          Test Script
+        </Button>
         {/* Script Result */}
         <Box mt={4} maxW={"sm"}>
           {isScriptLoading ? <Spinner /> : renderScriptDialog(JSON.parse(scriptResult))}
