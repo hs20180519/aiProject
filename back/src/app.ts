@@ -8,6 +8,7 @@ import swaggerFile from "./config/swagger-output.json";
 import swaggerUi from "swagger-ui-express";
 import passport from "passport";
 import authRouter from "./routers/authRouter";
+import oAuthRouter from "./routers/oAuthRouter";
 import userRouter from "./routers/userRouter";
 import uploadRouter from "./routers/uploadRouter";
 import postRouter from "./routers/postRouter";
@@ -17,7 +18,7 @@ import bookRouter from "./routers/bookRouter";
 import session from "express-session";
 import compression from "compression";
 import helmet from "helmet";
-import { local, jwt, kakao } from "./passport";
+import { local, jwt } from "./passport";
 import { limiter } from "./utils/limiter";
 import { startScheduler } from "./services/remindService";
 
@@ -58,11 +59,11 @@ passport.deserializeUser(function (user: any, done) {
 });
 passport.use("local", local);
 passport.use("jwt", jwt);
-passport.use("kakao", kakao);
 
 app.use(reqAndResLogger);
 
 app.use("/auth", authRouter);
+app.use("/oauth", oAuthRouter);
 app.use("/user", userRouter);
 app.use("/upload", uploadRouter);
 app.use("/study", studyRouter);

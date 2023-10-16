@@ -1,12 +1,11 @@
-import { KakaoAuthToken, KakaoClient } from "../passport/kakao";
-import { KakaoProfile } from "../passport/kakao";
+import { KakaoAuthToken, kakaoService, KakaoProfile } from "../services/kakaoService";
 import { PrismaClient, User } from "@prisma/client";
 import generateJwt from "../utils/generateJwt";
 
 const prisma = new PrismaClient();
 
 export const getKakaoToken = async (code: string): Promise<KakaoAuthToken> => {
-  const kakaoAuthToken = await KakaoClient.getToken(code);
+  const kakaoAuthToken = await kakaoService.getToken(code);
   if (!kakaoAuthToken) {
     throw new Error("카카오 토큰을 받아오는 중 오류가 발생했습니다.");
   }
@@ -14,7 +13,7 @@ export const getKakaoToken = async (code: string): Promise<KakaoAuthToken> => {
 };
 
 export const getKakaoProfile = async (access_token: string) => {
-  const kakaoUserProfile = await KakaoClient.getUserProfile(access_token);
+  const kakaoUserProfile = await kakaoService.getUserProfile(access_token);
   if (!kakaoUserProfile.snsId) {
     throw new Error("카카오 프로필을 불러오는 도중 에러가 발생했습니다.");
   }

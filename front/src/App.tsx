@@ -63,7 +63,7 @@ function App() {
                 <Route path={"/login"} element={<LoginPage />} />
                 <Route path={"/signup"} element={<SignUpPage />} />
                 <Route path={"/kakao"} element={<KakaoTestPage />} />
-                <Route path={"/oAuth"} element={<OAuthPage />} />
+                <Route path={"/oauth/kakao"} element={<OAuthPage />} />
               </Routes>
             </BrowserRouter>
           </ChakraProvider>
