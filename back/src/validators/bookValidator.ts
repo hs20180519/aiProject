@@ -8,14 +8,14 @@ export const validateCreateBook = (req: Request, res: Response, next: NextFuncti
   });
 
   const { error } = schema.validate(req.body);
-  if (error) return res.status(400).json({ message: "validator: 잘못된 요청입니다." });
+  if (error) return res.status(400).json({ validator: "잘못된 요청입니다." });
 
   next();
 };
 
 export const validateGetBook = async (req: Request, res: Response, next: NextFunction) => {
   const { error } = validatorQuerySchema.validate(req.query);
-  if (error) return res.status(400).json({ message: "validator : 잘못된 쿼리." });
+  if (error) return res.status(400).json({ validator: "잘못된 요청입니다." });
 
   next();
 };
@@ -31,7 +31,7 @@ export const validateUpdateBook = (req: Request, res: Response, next: NextFuncti
   });
 
   const { error } = schema.validate({ query: req.query, body: req.body });
-  if (error) return res.status(400).json({ message: "validator: 잘못된 요청입니다." });
+  if (error) return res.status(400).json({ validator: "잘못된 요청입니다." });
 
   next();
 };
@@ -42,7 +42,7 @@ export const validateDeleteBook = (req: Request, res: Response, next: NextFuncti
   });
 
   const { error } = schema.validate(req.query);
-  if (error) return res.status(400).json({ message: "validator: 잘못된 요청입니다." });
+  if (error) return res.status(400).json({ validator: "잘못된 요청입니다." });
 
   next();
 };
@@ -58,7 +58,7 @@ export const validateCreateWordInBook = (req: Request, res: Response, next: Next
     }),
   });
   const { error } = schema.validate({ query: req.query, body: req.body });
-  if (error) return res.status(400).json({ message: "validator: 잘못된 요청입니다." });
+  if (error) return res.status(400).json({ validator: "잘못된 요청입니다." });
 
   next();
 };
@@ -76,7 +76,7 @@ export const validateUpdateWordInBook = (req: Request, res: Response, next: Next
   });
 
   const { error } = schema.validate({ query: req.query, body: req.body });
-  if (error) return res.status(400).json({ message: "validator: 잘못된 요청입니다." });
+  if (error) return res.status(400).json({ validator: "잘못된 요청입니다." });
 
   next();
 };
@@ -87,7 +87,7 @@ export const validateDeleteWordInBook = (req: Request, res: Response, next: Next
     wordId: Joi.string().required(),
   });
   const { error } = schema.validate(req.query);
-  if (error) return res.status(400).json({ message: "validator: 잘못된 요청입니다." });
+  if (error) return res.status(400).json({ validator: "잘못된 요청입니다." });
 
   next();
 };

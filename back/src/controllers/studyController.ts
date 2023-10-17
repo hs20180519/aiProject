@@ -22,23 +22,17 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
   /**
    * #swagger.tags = ['Study']
    * #swagger.summary = '단어 학습'
-   * #swagger.description = '쿼리별 단어 학습 / ?key=true / 커스텀단어 학습만 ?custom=true?customBookId=id'
+   * #swagger.description = '쿼리별 단어 학습
+   * ?book={correct, incorrect, csat, toeic, toefl, ielts, custom}&customBookId="" '
    * #swagger.security = [{
    *   "bearerAuth": []
    * }]
-   * * #swagger.parameters['correct'] = {  type: 'boolean' }
-   *  * #swagger.parameters['incorrect'] = {  type: 'boolean' }
-   *  * #swagger.parameters['csat'] = {  type: 'boolean' }
-   *  * #swagger.parameters['toeic'] = {  type: 'boolean' }
-   *  * #swagger.parameters['toefl'] = { type: 'boolean' }
-   *  * #swagger.parameters['ielts'] = {  type: 'boolean' }
-   *  * #swagger.parameters['custom'] = {  type: 'boolean' }
    */
   try {
     const userId: number = (req.user as User).id;
-    const customBookId: number = Number(req.query.customBookId);
+    const customBookId: string = String(req.query.customBookId);
 
-    const queryServiceMap = {
+    const queryServiceMap: { [key: string]: () => Promise<any> } = {
       correct: () => studyService.getWordsByUserId(userId, true),
       incorrect: () => studyService.getWordsByUserId(userId, false),
       csat: () => studyService.getWordsByCategory(userId, "csat"),
@@ -50,14 +44,14 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
 
     let words;
 
-    for (const [queryParamKey, serviceFunc] of Object.entries(queryServiceMap)) {
-      if (req.query[queryParamKey] === "true") {
-        words = await serviceFunc();
-        break;
-      }
+    let bookParamKey: string = String(req.query.book);
+
+    if (bookParamKey && queryServiceMap[bookParamKey]) {
+      words = await queryServiceMap[bookParamKey]();
+      return res.status(200).json(words);
     }
 
-    if (!words) words = await studyService.getWord(userId);
+    words = await studyService.getWord(userId);
 
     return res.status(200).json(words);
   } catch (error) {

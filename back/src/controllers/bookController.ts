@@ -45,46 +45,45 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
   /**
    * #swagger.tags = ['Book']
    * #swagger.summary = '단어장 단어 조회'
-   * #swagger.description = '쿼리별 단어장 조회 / ?key=true / 커스텀단어 조회만 ?custom=true?customBookId=id'
+   * #swagger.description = '쿼리별 단어장 조회
+   * ?book={correct, incorrect, csat, toeic, toefl, ielts, custom}&customBookId="" ''
    * #swagger.security = [{
    *   "bearerAuth": []
    * }]
-   * * #swagger.parameters['correct'] = {  type: 'boolean' }
-   *  * #swagger.parameters['incorrect'] = {  type: 'boolean' }
-   *  * #swagger.parameters['csat'] = {  type: 'boolean' }
-   *  * #swagger.parameters['toeic'] = {  type: 'boolean' }
-   *  * #swagger.parameters['toefl'] = { type: 'boolean' }
-   *  * #swagger.parameters['ielts'] = {  type: 'boolean' }
-   *  * #swagger.parameters['custom'] = {  type: 'boolean' }
    */
   try {
-    const userId: number = (req.user as User).id;
-    const customBookId: number = Number(req.query.customBookId);
     const page: number = req.query.page ? Number(req.query.page) : 1;
     const limit: number = req.query.page ? Number(req.query.limit) : 10;
+    const userId: number = (req.user as User).id;
+    const category: string = String(req.query.book);
+    const customBookId: string = String(req.query.customBookId);
 
-    const queryServiceMap = {
-      correct: () => bookService.getWordByUserId(page, limit, userId, true),
-      incorrect: () => bookService.getWordByUserId(page, limit, userId, false),
-      csat: () => bookService.getWordByCategory(page, limit, userId, "csat"),
-      toeic: () => bookService.getWordByCategory(page, limit, userId, "toeic"),
-      toefl: () => bookService.getWordByCategory(page, limit, userId, "toefl"),
-      ielts: () => bookService.getWordByCategory(page, limit, userId, "ielts"),
-      custom: () => bookService.getWordByCategory(page, limit, userId, "custom", customBookId),
+    // page: number,
+    // limit: number,
+    // userId: number,
+    // category: string,
+    // customBookId?: number,
+    const queryServiceMap: {
+      [key: string]: (userId: number, customBookId?: string) => Promise<any>;
+    } = {
+      csat: (userId) => bookService.getWordByCategory(page, limit, userId, "csat"),
+      toeic: (userId) => bookService.getWordByCategory(page, limit, userId, "toeic"),
+      toefl: (userId) => bookService.getWordByCategory(page, limit, userId, "toefl"),
+      ielts: (userId) => bookService.getWordByCategory(page, limit, userId, "ielts"),
+      custom: (userId, customBookId) =>
+        bookService.getWordByCategory(page, limit, userId, "custom", customBookId),
     };
 
-    let book;
+    let words;
 
-    for (const [queryParamKey, serviceFunc] of Object.entries(queryServiceMap)) {
-      if (req.query[queryParamKey] === "true") {
-        book = await serviceFunc();
-        break;
-      }
+    if (category && queryServiceMap[category]) {
+      words = await queryServiceMap[category](userId, customBookId);
+      return res.status(200).json(words);
     }
 
-    if (!book) book = await bookService.getAllWords(page, limit);
+    words = await bookService.getAllWords(page, limit);
 
-    return res.status(200).json(book);
+    return res.status(200).json(words);
   } catch (error) {
     console.error(error);
     return next(error);

@@ -8,7 +8,7 @@ const studyRouter = express.Router();
 studyRouter.get("/experience", studyController.experience);
 
 studyRouter
-  .get("/", joi.validateGetWords, passportJwt, studyController.getWords)
+  .get("/", passportJwt, studyController.getWords)
   .post("/", joi.validateSaveLearn, passportJwt, studyController.saveLearn);
 
 studyRouter.get("/result", passportJwt, studyController.getLearnResult);

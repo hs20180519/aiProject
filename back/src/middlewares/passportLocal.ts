@@ -27,8 +27,8 @@ const passportLocal = (
       {
         id: user.id,
         name: user.name,
-        nickname: user.nickname,
         email: user.email,
+        createdAt: user.createdAt,
       },
       secretKey,
       tokenExpires,
