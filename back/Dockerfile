@@ -3,7 +3,8 @@
 #
 #ENTRYPOINT ["top", "-b"]
 
-FROM node:18.16-alpine
+FROM node:16-buster
+
 LABEL authors="daechanjo"
 
 WORKDIR /app
@@ -13,6 +14,10 @@ COPY . .
 
 RUN npm install
 
-EXPOSE 8000
+ENV DATABASE_URL=mysql://root:1234@db:3306/dogSole?connection_limit=151
+
+RUN npx prisma migratview-feature
+
+EXPOSE 5001
 
 CMD ["yarn", "start"]
