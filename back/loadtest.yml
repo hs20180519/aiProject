@@ -2,10 +2,10 @@ config:
   target: 'http://localhost:8000'
   phases:
     - duration: 10 # 몇 초간
-      arrivalRate: 10 # 초당 몇번
+      arrivalRate: 15 # 초당 몇번 ({duration}초 동안 {(duration)*(arrivalRate)}번 요청)
 scenarios:
   - flow:
       - get:
-          url: '/study/experience' # 학습 체험 요청
+          url: '/study/experience' # 부하테스트 해볼 API 앤드포인트
 
 # back 경로에서 artillery run loadtest.yml
