@@ -13,7 +13,7 @@ export const getExperienceWord = async (): Promise<WordWithChoicesDto[]> => {
     SELECT * FROM Word ORDER BY RAND() LIMIT 10
   `;
 
-  const wordMeanings = words.map((word) => word.meaning);
+  const wordMeanings: string[] = words.map((word: wordInterface.Word) => word.meaning);
 
   const additionalMeanings: any[] = await prisma.$queryRaw`
      SELECT meaning FROM Word WHERE meaning NOT IN (${wordMeanings.join(

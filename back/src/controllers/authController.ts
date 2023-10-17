@@ -8,11 +8,11 @@ import { UserDto } from "../dtos/userDto";
 export const checkEmailOrNickname = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Auth']
-   * #swagger.summary = '회원가입 이메일 및 닉네임 중복 체크'
+   * #swagger.summary = '회원가입 이메일 및 닉네임 중복 체크 ?email=...&nickname=...'
    */
   try {
     const email = req.query.email as string;
-    const nickname = req.query.nickname as string;
+    // const nickname = req.query.nickname as string;
 
     if (email) {
       const existingUserEmail = await authService.getUserByEmail(email);
@@ -21,12 +21,12 @@ export const checkEmailOrNickname = async (req: Request, res: Response, next: Ne
       else return res.status(200).json({ message: "사용 가능한 이메일 입니다." });
     }
 
-    if (nickname) {
-      const existingUserNickname = await authService.getUserByNickname(nickname);
-      if (existingUserNickname)
-        return res.status(409).json({ message: "이미 사용중인 닉네임 입니다." });
-      else return res.status(200).json({ message: "사용 가능한 닉네임 입니다." });
-    }
+    // if (nickname) {
+    //   const existingUserNickname = await authService.getUserByNickname(nickname);
+    //   if (existingUserNickname)
+    //     return res.status(409).json({ message: "이미 사용중인 닉네임 입니다." });
+    //   else return res.status(200).json({ message: "사용 가능한 닉네임 입니다." });
+    // }
   } catch (error) {
     console.error(error);
     return next(error);
@@ -80,7 +80,8 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
     const { emailExists, nicknameExists } = await authService.signUpDuplicateCheck(email, nickname);
 
     if (emailExists) return res.status(409).json({ message: "이미 존재하는 이메일입니다." });
-    if (nicknameExists) return res.status(409).json({ message: "이미 존재하는 닉네임입니다." });
+    // if (nicknameExists) return res.status(409).json({ message: "이미 존재하는 닉네임입니다." });
+    // todo 미사용 임시 주석처리
 
     const hashedPassword: string = await bcrypt.hash(password, 10);
     const newUser: UserDto = await authService.createUser({
@@ -107,7 +108,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
      * #swagger.description = '로컬 로그인. 로그인 성공 시 JWT 발급'
      */
     const authReq = req as authInterface.AuthenticatedRequest;
-    console.log("-----------로그인 성공----------"); // todo ...? ㅋㅋㅋ 나중에 삭제
     if (!authReq.user) return res.status(401).json({ message: "유효하지 않은 사용자 정보입니다." });
     const loginUser = {
       token: authReq.token, // todo postman 편의성을 위해 추가. 개발 종료시점에서 삭제

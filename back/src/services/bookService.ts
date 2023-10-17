@@ -52,11 +52,12 @@ export const getWordByCategory = async (
   limit: number,
   userId: number,
   category: string,
-  customBookId?: number,
+  customBookId?: string | undefined,
 ): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
   if (customBookId) {
+    const bookId = Number(customBookId);
     const customBook = await prisma.customBook.findUnique({
-      where: { id: customBookId, userId: userId },
+      where: { id: bookId, userId: userId },
       include: { word: true },
     });
     const totalWordCount: number = customBook!.word.length;

@@ -16,18 +16,11 @@
         "tags": [
           "Auth"
         ],
-        "summary": "회원가입 이메일 및 닉네임 중복 체크",
+        "summary": "회원가입 이메일 및 닉네임 중복 체크 ?email=...&nickname=...",
         "description": "",
         "parameters": [
           {
             "name": "email",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "nickname",
             "in": "query",
             "schema": {
               "type": "string"
@@ -307,7 +300,7 @@
           "Study"
         ],
         "summary": "단어 학습",
-        "description": "쿼리별 단어 학습 /?book=correct 등 / 커스텀단어 학습만 ?custom=true?customBookId=id",
+        "description": "쿼리별 단어 학습  * ?book={correct, incorrect, csat, toeic, toefl, ielts, custom}&customBookId=\"\" ",
         "parameters": [
           {
             "name": "customBookId",
@@ -526,83 +519,8 @@
           "Book"
         ],
         "summary": "단어장 단어 조회",
-        "description": "쿼리별 단어장 조회 / ?key=true / 커스텀단어 조회만 ?custom=true?customBookId=id",
-        "parameters": [
-          {
-            "name": "correct",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "incorrect",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "csat",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "toeic",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "toefl",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "ielts",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "custom",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "customBookId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "description": "쿼리별 단어장 조회  * ?book={correct, incorrect, csat, toeic, toefl, ielts, custom}&customBookId=\"\" ",
         "responses": {
-          "200": {
-            "description": "OK"
-          },
           "400": {
             "description": "Bad Request"
           }
