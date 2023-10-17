@@ -12,7 +12,7 @@ export const checkEmailOrNickname = async (req: Request, res: Response, next: Ne
    */
   try {
     const email = req.query.email as string;
-    const nickname = req.query.nickname as string;
+    // const nickname = req.query.nickname as string;
 
     if (email) {
       const existingUserEmail = await authService.getUserByEmail(email);
@@ -21,12 +21,12 @@ export const checkEmailOrNickname = async (req: Request, res: Response, next: Ne
       else return res.status(200).json({ message: "사용 가능한 이메일 입니다." });
     }
 
-    if (nickname) {
-      const existingUserNickname = await authService.getUserByNickname(nickname);
-      if (existingUserNickname)
-        return res.status(409).json({ message: "이미 사용중인 닉네임 입니다." });
-      else return res.status(200).json({ message: "사용 가능한 닉네임 입니다." });
-    }
+    // if (nickname) {
+    //   const existingUserNickname = await authService.getUserByNickname(nickname);
+    //   if (existingUserNickname)
+    //     return res.status(409).json({ message: "이미 사용중인 닉네임 입니다." });
+    //   else return res.status(200).json({ message: "사용 가능한 닉네임 입니다." });
+    // }
   } catch (error) {
     console.error(error);
     return next(error);

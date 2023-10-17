@@ -55,11 +55,11 @@ export const verifyEmail = async (email: string, code: string): Promise<boolean>
   } else return false;
 };
 
-export const getUserByNickname = async (nickname: string): Promise<User | null> => {
-  return prisma.user.findUnique({
-    where: { nickname },
-  });
-};
+// export const getUserByNickname = async (nickname: string): Promise<User | null> => {
+// //   return prisma.user.findUnique({
+// //     where: { nickname },
+// //   });
+// // };
 
 export const signUpDuplicateCheck = async (
   email: string,

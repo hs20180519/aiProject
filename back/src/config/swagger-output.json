@@ -16,18 +16,11 @@
         "tags": [
           "Auth"
         ],
-        "summary": "회원가입 이메일 및 닉네임 중복 체크",
+        "summary": "회원가입 이메일 및 닉네임 중복 체크 ?email=...&nickname=...",
         "description": "",
         "parameters": [
           {
             "name": "email",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "nickname",
             "in": "query",
             "schema": {
               "type": "string"
@@ -201,41 +194,6 @@
         "security": []
       }
     },
-    "/auth/kakao": {
-      "get": {
-        "description": "",
-        "responses": {
-          "302": {
-            "description": "Found"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "로그인",
-        "description": "로컬 로그인. 로그인 성공 시 JWT 발급",
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
-    "/auth/kakao/callback": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "302": {
-            "description": "Found"
-          }
-        }
-      }
-    },
     "/oauth/kakao": {
       "get": {
         "description": "",
@@ -250,9 +208,30 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "302": {
-            "description": "Found"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth/kakao/callback": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         },
         "requestBody": {

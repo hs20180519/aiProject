@@ -1,0 +1,8 @@
+node_modules
+.eslintrc.json
+.gitignore
+.env
+.prettierrc.json
+.jest.config.js
+loadtest.yml
+docker-compose.yml
