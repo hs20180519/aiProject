@@ -1,5 +1,6 @@
 config:
   target: 'http://localhost:8000'
+#  target: 'http://34.64.215.129:5002'
   phases:
     - duration: 10 # 몇 초간
       arrivalRate: 15 # 초당 몇번 ({duration}초 동안 {(duration)*(arrivalRate)}번 요청)
