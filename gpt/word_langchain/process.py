@@ -44,8 +44,22 @@ async def generate_grammar_explain_process(dialog):
 
         Please answer only in the following format.
         {{
-            "grammar": [{{"message": "phrases to explain", 
-            "explain":  "Provide a grammatical explanation here in Korean"}}]
+            "grammar": [
+                {{
+                    "message": "phrases to explain", 
+                    "explain":  "Provide a grammatical explanation here in Korean"
+                }}
+            ]
+        }}
+        
+        ex)
+        {{
+            "grammar": [
+                {{
+                    "message": "No, thanks.",
+                    "explain": "이 문장은 'No, thanks'라는 표현을 사용하여 거절하는 의미를 가지고 있습니다. 'No'는 부정적인 의미를 나타내며, 'thanks'는 감사의 표현입니다. 이러한 표현은 일상 대화에서 자주 사용되는 표현입니다."
+                }}
+            ]
         }}
         """
     grammar_human_message_prompt = HumanMessagePromptTemplate.from_template(template=grammar_human_template)
