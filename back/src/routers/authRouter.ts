@@ -3,10 +3,11 @@ import passportLocal from "../middlewares/passportLocal";
 import passportJwt from "../middlewares/passportJwt";
 import * as authController from "../controllers/authController";
 import * as joi from "../validators/userValidator";
+import { checkEmail } from "../controllers/authController";
 
 const authRouter = Router();
 
-authRouter.get("/check", joi.validateCheckEmailOrNickname, authController.checkEmailOrNickname);
+authRouter.get("/check", joi.validateCheckEmailOrNickname, authController.checkEmail);
 
 authRouter.post("/register", joi.validateRegister, authController.register);
 

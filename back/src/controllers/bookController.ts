@@ -46,7 +46,7 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
    * #swagger.tags = ['Book']
    * #swagger.summary = '단어장 단어 조회'
    * #swagger.description = '쿼리별 단어장 조회 (서버사이드 페이징)
-   * ?book={correct, incorrect, csat, toeic, toefl, ielts, custom}&customBookId="" '
+   * ?book={correct, incorrect, csat, toeic, toefl, custom}&customBookId="" '
    * #swagger.security = [{
    *   "bearerAuth": []
    * }]
@@ -66,7 +66,6 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
       csat: (userId: number) => bookService.getWordByCategory(page, limit, userId, "csat"),
       toeic: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toeic"),
       toefl: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toefl"),
-      ielts: (userId: number) => bookService.getWordByCategory(page, limit, userId, "ielts"),
       custom: (userId: number, customBookId: string | undefined) =>
         bookService.getWordByCategory(page, limit, userId, "custom", customBookId),
     };

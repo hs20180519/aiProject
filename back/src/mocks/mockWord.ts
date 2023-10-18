@@ -12,7 +12,7 @@ function generateRandomString(length: number): string {
 }
 
 function generateMockData(num: number) {
-  const categories = ["csat", "toeic", "toefl", "ielts"];
+  const categories = ["csat", "toeic", "toefl"];
 
   let data = [];
 
