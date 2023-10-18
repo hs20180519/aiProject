@@ -56,8 +56,16 @@ async def generate_grammar_explain_process(dialog):
         {{
             "grammar": [
                 {{
-                    "message": "No, thanks.",
-                    "explain": "이 문장은 'No, thanks'라는 표현을 사용하여 거절하는 의미를 가지고 있습니다. 'No'는 부정적인 의미를 나타내며, 'thanks'는 감사의 표현입니다. 이러한 표현은 일상 대화에서 자주 사용되는 표현입니다."
+                    "message": "Oh, really? I thought you liked bananas.",
+                    "explain": "'Oh, really?'는 의문문을 나타내는 표현으로, 상대방의 말에 대한 놀라움이나 의문을 나타냅니다. 이는 감탄사와 동일한 역할을 하며, 문장의 뜻을 강조하거나 상황에 따라서는 놀라움을 표현하기도 합니다."
+                }},
+                {{
+                    "message": "I thought",
+                    "explain": "'I thought'는 과거에 대한 추측이나 가정을 나타내는 표현입니다. 이는 자신의 생각이나 믿음을 나타내며, 주로 과거 시제와 함께 사용됩니다."
+                }},
+                {{
+                    "message": "liked",
+                    "explain": "'liked'는 과거 시제의 동사로, 'like'의 과거형입니다. 이는 과거에 일어났던 행동이나 상태를 나타내며, 'bananas'와 함께 사용되어 '바나나를 좋아했다'라는 뜻을 가집니다."
                 }}
             ]
         }}
