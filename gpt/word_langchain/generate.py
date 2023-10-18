@@ -4,8 +4,8 @@ import re
 from langchain.chains import LLMChain
 from langchain.output_parsers import PydanticOutputParser
 
-from gpt.models.dialog_schema import DialogResponse
-from gpt.word_langchain.utils import check_words_in_dialog
+from models.dialog_schema import DialogResponse
+from word_langchain.utils import check_words_in_dialog
 
 DEFAULT_RETRIES = 10
 

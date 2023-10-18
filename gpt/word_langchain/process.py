@@ -3,9 +3,9 @@ import logging
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import HumanMessagePromptTemplate, ChatPromptTemplate
 
-from gpt.models.grammar_schema import GrammarResponse
-from gpt.word_langchain import system_message_prompt, llm
-from gpt.word_langchain.generate import create_llm_chain, generate_dialog
+from models.grammar_schema import GrammarResponse
+from word_langchain import system_message_prompt, llm
+from word_langchain.generate import create_llm_chain, generate_dialog
 
 
 async def generate_dialog_process(input_data):
