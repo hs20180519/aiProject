@@ -1,10 +1,11 @@
+import logging
+
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import HumanMessagePromptTemplate, ChatPromptTemplate
 
-from config.logging_setup import logging
-from models.grammar_schema import GrammarResponse
-from word_langchain import system_message_prompt, llm
-from word_langchain.generate import create_llm_chain, generate_dialog
+from gpt.models.grammar_schema import GrammarResponse
+from gpt.word_langchain import system_message_prompt, llm
+from gpt.word_langchain.generate import create_llm_chain, generate_dialog
 
 
 async def generate_dialog_process(input_data):
@@ -13,11 +14,12 @@ async def generate_dialog_process(input_data):
     english_words = ', '.join(selected_word_dict.keys())
     korean_meanings = ', '.join(selected_word_dict.values())
     dialog_human_template = \
-        """
-        Create a dialog with at least {line_count} lines so that the following words are used at least once:
-        {english_words} ({korean_meanings}).
-        Each word must be used at least once in the dialog. Ensure that the conversation, although may sound unnatural, incorporates all the specified words.
-        After writing the dialog, verify that each word from the list is used by checking them off one by one:
+        """Create a dialog with at least {line_count} lines so that the following words are used at least once:
+         {english_words} ({korean_meanings}). Each word must be used at least once in the dialog. Ensure that the 
+        conversation, although may sound unnatural, incorporates all the specified words. After writing the dialog, 
+        verify that each word from the list is used by checking them off one by one:
+        
+        Please answer only in the following format.
         {{
             "dialog": [{{"speaker": "Person A", "message": "{{message}}"}},
              {{"speaker": "Person B", "message": "{{message}}"}}]
@@ -37,11 +39,13 @@ async def generate_grammar_explain_process(dialog):
     grammar_human_template = \
         """
         In each sentence, pick three grammatical structures at the B2 level or higher and explain them concisely in Korean.
-        Exclude very simple grammar explanations.
-        Grammar descriptions must be written in Korean.
-        {dialog}
+                
+        Dialog to explain: {dialog}
+
+        Please answer only in the following format.
         {{
-            "grammar": [{{"message": "{{message}}", "explain":  "Provide a grammatical explanation here in Korean"}}]
+            "grammar": [{{"message": "phrases to explain", 
+            "explain":  "Provide a grammatical explanation here in Korean"}}]
         }}
         """
     grammar_human_message_prompt = HumanMessagePromptTemplate.from_template(template=grammar_human_template)

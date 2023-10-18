@@ -1,14 +1,14 @@
+import logging
 from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Header, Depends, Request, status
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-from config.logging_setup import logging
-from models.dialog_schema import DialogResponse
-from models.gpt_request_scema import InputDialogData, InputGrammarData
-from models.grammar_schema import GrammarResponse
-from word_langchain.process import generate_grammar_explain_process, generate_dialog_process
+from gpt.models.dialog_schema import DialogResponse
+from gpt.models.gpt_request_scema import InputDialogData, InputGrammarData
+from gpt.models.grammar_schema import GrammarResponse
+from gpt.word_langchain.process import generate_dialog_process, generate_grammar_explain_process
 
 router = APIRouter(
     prefix="/api/gpt"

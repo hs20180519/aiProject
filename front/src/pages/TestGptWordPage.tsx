@@ -23,6 +23,16 @@ import { FetchGpt } from "../apis/new_gpt";
 
 interface TestGptWordPageProps {}
 
+const simpleHash = (str: string): string => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i += 1) {
+    const char = str.charCodeAt(i);
+    // eslint-disable-next-line no-bitwise
+    hash = (hash << 5) - hash + char;
+  }
+  return hash.toString();
+};
+
 const TestGptWordPage: React.FC<TestGptWordPageProps> = () => {
   const [selectedWords, setSelectedWords] = useState([]);
   const [isScriptLoading, setScriptLoading] = useState(false);
@@ -40,6 +50,9 @@ const TestGptWordPage: React.FC<TestGptWordPageProps> = () => {
   };
 
   const handleTagClick = (word: string) => {
+    if (selectedWords.length >= 3 && !selectedWords.includes(word)) {
+      return;
+    }
     const isSelected = selectedWords.includes(word);
     const newSelectedWords = isSelected
       ? selectedWords.filter((w) => w !== word)
@@ -103,14 +116,14 @@ const TestGptWordPage: React.FC<TestGptWordPageProps> = () => {
 
     return (
       <VStack align="start" spacing={4}>
-        {grammarResult.grammar.map((entry: GrammarExplanation) => {
-          const messageKey = entry.message.substring(0, 10); // Create a simple unique key from the message
+        {grammarResult.grammar.map((entry: GrammarExplanation, index: number) => {
+          const messageKey = `${simpleHash(entry.message)}_${index}`;
           return (
             <Box key={messageKey} p={2} borderWidth={1} borderRadius="md">
               <Text fontWeight="bold">{entry.message}</Text>
               <UnorderedList mt={2} fontStyle="italic">
-                {entry.explain.split("\n").map((point: string) => {
-                  const pointKey = point.substring(0, 10); // Create a simple unique key from the point
+                {entry.explain.split("\n").map((point: string, pointIndex: number) => {
+                  const pointKey = `${simpleHash(point)}_${pointIndex}`;
                   const cleanedPoint = point.replace(/^\d+\.\s*/, ""); // Remove numbering like "1. "
                   return <ListItem key={pointKey}>{cleanedPoint}</ListItem>;
                 })}
@@ -129,8 +142,8 @@ const TestGptWordPage: React.FC<TestGptWordPageProps> = () => {
 
     return (
       <VStack align="start" spacing={4}>
-        {dialogResult.dialog.map((entry: DialogEntry) => {
-          const dialogKey = `${entry.speaker}_${entry.message.substring(0, 10)}`;
+        {dialogResult.dialog.map((entry: DialogEntry, index: number) => {
+          const dialogKey = `${simpleHash(`${entry.speaker}_${entry.message}`)}_${index}`;
           const currentGrammarResult = grammarResult[dialogKey]
             ? JSON.parse(grammarResult[dialogKey])
             : null;
