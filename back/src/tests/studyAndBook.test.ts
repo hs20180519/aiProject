@@ -24,9 +24,9 @@ app.use("/study", studyRouter);
 app.use("/book", bookRouter);
 
 describe("Book and Study API", () => {
-  let userToken: any;
-  let customBookId: number;
-  let wordId: number;
+  let userToken: string;
+  let customBookId: string;
+  let wordId: string;
 
   beforeAll(async () => {
     await signUpUser();
