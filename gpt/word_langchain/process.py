@@ -27,10 +27,12 @@ async def generate_dialog_process(input_data):
         """
     dialog_human_message_prompt = HumanMessagePromptTemplate.from_template(template=dialog_human_template)
     dialog_chat_prompt = ChatPromptTemplate.from_messages(messages=[system_message_prompt, dialog_human_message_prompt])
+
     dialog_llm_chain = create_llm_chain(dialog_chat_prompt, llm)
     dialog_input_variables = [line_count, english_words, korean_meanings]
     dialog_names = ['line_count', 'english_words', 'korean_meanings']
     dialog_variable_dict = {name: value for name, value in zip(dialog_names, dialog_input_variables)}
+
     dialog_result = generate_dialog(dialog_llm_chain, dialog_variable_dict, selected_word_dict)
     return dialog_result, selected_word_dict
 
@@ -73,14 +75,17 @@ async def generate_grammar_explain_process(dialog):
     grammar_human_message_prompt = HumanMessagePromptTemplate.from_template(template=grammar_human_template)
     grammar_chat_prompt = ChatPromptTemplate.from_messages(
         messages=[system_message_prompt, grammar_human_message_prompt])
+
     # 연결된 체인(Chain)객체 생성
     grammar_llm_chain = create_llm_chain(grammar_chat_prompt, llm)
     grammar_input_variables = [dialog.model_dump_json()]
     grammar_names = ['dialog']
     grammar_variable_dict = {name: value for name, value in zip(grammar_names, grammar_input_variables)}
+
     grammar_generated_result = grammar_llm_chain.generate(input_list=[grammar_variable_dict])
     logging.info(f'{grammar_generated_result.generations}')
     logging.info(f'{grammar_generated_result.llm_output}')
+
     grammar_parser = PydanticOutputParser(pydantic_object=GrammarResponse)
     grammar_response_content = grammar_parser.parse(grammar_generated_result.generations[0][0].text)
     return grammar_response_content
