@@ -10,6 +10,7 @@ import {
   Spacer,
   UnorderedList,
   Tag,
+  useToast,
 } from "@chakra-ui/react";
 import {
   DialogEntry,
@@ -40,6 +41,7 @@ const TestGptWordPage: React.FC<TestGptWordPageProps> = () => {
   const [isGrammarLoading, setGrammarLoading] = useState(false);
   const [grammarResult, setGrammarResult] = useState({});
   const [loadingEntryKey, setLoadingEntryKey] = useState(null);
+  const toast = useToast();
 
   const wordList = {
     aboard: "배로",
@@ -49,42 +51,60 @@ const TestGptWordPage: React.FC<TestGptWordPageProps> = () => {
     banana: "바나나",
   };
 
-  const handleTagClick = (word: string) => {
-    if (selectedWords.length >= 3 && !selectedWords.includes(word)) {
-      return;
-    }
-    const isSelected = selectedWords.includes(word);
-    const newSelectedWords = isSelected
-      ? selectedWords.filter((w) => w !== word)
-      : [...selectedWords, word];
-    setSelectedWords(newSelectedWords);
-  };
+  const handleTagClick = useCallback(
+    (word) => {
+      const newSelectedWords = selectedWords.includes(word)
+        ? selectedWords.filter((w) => w !== word)
+        : [...selectedWords, word];
+      setSelectedWords(newSelectedWords);
+    },
+    [selectedWords],
+  );
 
-  const handleGetGrammar = useCallback(async (dialog: DialogEntry[], dialogKey: string) => {
-    console.log("handleGetGrammar 실행, 현재 dialog:", dialog, "현재 dialogKey:", dialogKey);
-    setLoadingEntryKey(dialogKey);
-    setGrammarLoading(true);
-    try {
-      const updatedGrammarParams: InputGrammarData = {
-        dialog,
-      };
-      const apiResult = await FetchGpt.getGrammar(updatedGrammarParams);
-      console.log("API 호출 결과:", apiResult);
-      setGrammarResult((prevResults) => ({
-        ...prevResults,
-        [dialogKey]: JSON.stringify(apiResult),
-      }));
-    } catch (error) {
-      console.log("API 호출 실패:", error);
-      setGrammarResult((prevResults) => ({
-        ...prevResults,
-        [dialogKey]: `Failed to fetch grammar: ${error}`,
-      }));
-    } finally {
-      setLoadingEntryKey(null);
-      setGrammarLoading(false);
-    }
-  }, []);
+  const handleGetGrammar = useCallback(
+    async (dialog: DialogEntry[], dialogKey: string) => {
+      console.log("handleGetGrammar 실행, 현재 dialog:", dialog, "현재 dialogKey:", dialogKey);
+      setLoadingEntryKey(dialogKey);
+      setGrammarLoading(true);
+      try {
+        const updatedGrammarParams: InputGrammarData = {
+          dialog,
+        };
+        const apiResult = await FetchGpt.getGrammar(updatedGrammarParams);
+
+        toast({
+          title: "Grammar fetch successful.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+
+        console.log("API 호출 결과:", apiResult);
+        setGrammarResult((prevResults) => ({
+          ...prevResults,
+          [dialogKey]: JSON.stringify(apiResult),
+        }));
+      } catch (error) {
+        toast({
+          title: "Grammar fetch failed.",
+          description: `${error}`,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+
+        console.log("API 호출 실패:", error);
+        setGrammarResult((prevResults) => ({
+          ...prevResults,
+          [dialogKey]: `Failed to fetch grammar: ${error}`,
+        }));
+      } finally {
+        setLoadingEntryKey(null);
+        setGrammarLoading(false);
+      }
+    },
+    [toast],
+  );
 
   const handleGetScript = useCallback(async () => {
     console.log("handleGetScript 실행, 현재 selectedWords:", selectedWords);
@@ -99,15 +119,31 @@ const TestGptWordPage: React.FC<TestGptWordPageProps> = () => {
 
       console.log("API 호출 전, updatedDialogParams:", updatedDialogParams);
       const apiResult = await FetchGpt.getScript(updatedDialogParams);
+
+      toast({
+        title: "Script fetch successful.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
       console.log("API 호출 결과:", apiResult);
       setScriptResult(JSON.stringify(apiResult));
     } catch (error) {
+      toast({
+        title: "Script fetch failed.",
+        description: `${error}`,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+
       console.log("API 호출 실패:", error);
       setScriptResult(`Failed to fetch script: ${error}`);
     } finally {
       setScriptLoading(false);
     }
-  }, [selectedWords, wordList]);
+  }, [selectedWords, wordList, toast]);
 
   function renderGrammarDialog(grammarResult: GrammarResponse) {
     if (!grammarResult || !grammarResult.grammar) {
