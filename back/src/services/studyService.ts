@@ -38,7 +38,7 @@ export const getExperienceWord = async (): Promise<WordWithChoicesDto[]> => {
   return wordsWithChoices;
 };
 
-export const getWord = async (userId: number): Promise<WordWithChoicesDto[]> => {
+export const getWord = async (userId: number): Promise<WordWithChoicesDto> => {
   const wordResult: wordInterface.Word[] = await prisma.$queryRaw`
       SELECT * FROM Word 
       WHERE NOT EXISTS(
@@ -46,8 +46,8 @@ export const getWord = async (userId: number): Promise<WordWithChoicesDto[]> => 
               WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId}
             ) 
       ORDER BY RAND() LIMIT 1`;
-
-  return await createChoices(wordResult);
+  const word: wordInterface.Word = wordResult[0];
+  return await createChoices(word);
 };
 
 export const getWordsByUserId = async (
@@ -80,7 +80,7 @@ export const getWordsByCategory = async (
   userId: number,
   category: string,
   customBookId?: string,
-): Promise<WordWithChoicesDto[]> => {
+): Promise<WordWithChoicesDto> => {
   let wordResult: wordInterface.Word[];
 
   const bookId: number = Number(customBookId);
@@ -114,8 +114,9 @@ ORDER BY RAND() LIMIT 1`;
       ) 
       ORDER BY RAND() LIMIT 1`;
   }
+  const word: wordInterface.Word = wordResult[0];
 
-  return await createChoices(wordResult);
+  return await createChoices(word);
 };
 
 export const saveLearn = async (

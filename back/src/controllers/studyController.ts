@@ -38,7 +38,6 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
       csat: () => studyService.getWordsByCategory(userId, "csat"),
       toeic: () => studyService.getWordsByCategory(userId, "toeic"),
       toefl: () => studyService.getWordsByCategory(userId, "toefl"),
-      ielts: () => studyService.getWordsByCategory(userId, "ielts"),
       custom: () => studyService.getWordsByCategory(userId, "custom", customBookId),
     };
 

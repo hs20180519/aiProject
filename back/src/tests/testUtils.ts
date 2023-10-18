@@ -24,7 +24,7 @@ export async function signUpUser() {
     email: "tests@example.com",
     password: "password",
     name: "Test User",
-    nickname: "testuser",
+    nickname: "tester",
   });
   expect(res.statusCode).toEqual(201);
   expect(res.body.message).toContain("회원가입에 성공했습니다");
@@ -38,7 +38,7 @@ export async function loginUser() {
 
   expect(res.statusCode).toEqual(200);
   expect(res.body.user).toEqual("Test User");
-  expect(res.body.nickname).toEqual("testuser");
+  expect(res.body.nickname).toEqual("tester");
 
   const cookie = res.headers["set-cookie"][0];
   return cookie.split(";")[0].split("=")[1];
