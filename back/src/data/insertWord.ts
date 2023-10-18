@@ -10,7 +10,7 @@ interface RowType {
   category: string;
 }
 
-async function main() {
+async function main(): Promise<void> {
   try {
     // CSV 파일 경로
     const filePath = "./output2.csv";
@@ -18,7 +18,7 @@ async function main() {
     // CSV 파일을 읽어서 데이터베이스에 넣기
     fs.createReadStream(filePath)
       .pipe(csv())
-      .on("data", async (row: RowType) => {
+      .on("data", async (row: RowType): Promise<void> => {
         const { word, meaning, category } = row;
 
         // Word 모델에 데이터 넣기
@@ -30,7 +30,7 @@ async function main() {
           },
         });
       })
-      .on("end", () => {
+      .on("end", (): void => {
         console.log("데이터 적재 완료");
       });
   } catch (error) {
