@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-async function groupWords() {
+async function groupWords(): Promise<void> {
   const words: { meaning: string }[] = await prisma.word.findMany({
     select: { meaning: true },
   });

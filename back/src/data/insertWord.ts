@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import csv from "csv-parser";
 import * as fs from "fs";
+import path from "path";
+import * as readline from "readline";
 
 const prisma = new PrismaClient();
 
@@ -12,27 +14,29 @@ interface RowType {
 
 async function main(): Promise<void> {
   try {
-    // CSV 파일 경로
-    const filePath = "./output2.csv";
+    const filePath: string = path.join(__dirname, "output2.csv");
+    const fileStream: fs.ReadStream = fs.createReadStream(filePath);
+    const rl: readline.Interface = readline.createInterface({
+      input: fileStream,
+      crlfDelay: Infinity,
+    });
 
-    // CSV 파일을 읽어서 데이터베이스에 넣기
-    fs.createReadStream(filePath)
-      .pipe(csv())
-      .on("data", async (row: RowType): Promise<void> => {
-        const { word, meaning, category } = row;
+    let dataArr: RowType[] = [];
 
-        // Word 모델에 데이터 넣기
-        await prisma.word.create({
-          data: {
-            word,
-            meaning,
-            category,
-          },
-        });
-      })
-      .on("end", (): void => {
-        console.log("데이터 적재 완료");
-      });
+    for await (const line of rl) {
+      const [word, meaning, category] = line.split(",");
+
+      dataArr.push({ word, meaning, category });
+
+      if (dataArr.length >= 500) {
+        await insertData(dataArr);
+        dataArr = [];
+      }
+    }
+
+    if (dataArr.length > 0) await insertData(dataArr);
+
+    console.log("데이터 적재 완료");
   } catch (error) {
     console.error("오류 발생:", error);
   } finally {
@@ -40,6 +44,11 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((e) => {
-  throw e;
-});
+async function insertData(dataArray: RowType[]): Promise<void> {
+  await prisma.word.createMany({
+    data: dataArray,
+    skipDuplicates: true,
+  });
+}
+
+// npx ts-node src/data/insertWord.ts
