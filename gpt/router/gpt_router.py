@@ -32,7 +32,7 @@ async def generate_dialog_endpoint(request: Request, input_data: InputDialogData
         dialog_result, selected_word_dict = await generate_dialog_process(input_data)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            detail=f"OpenApi Fail in generate_dialog_endpoint {e}")
+                            detail=f"Fail in generate_dialog_endpoint {e}")
 
     logging.info(f'{dialog_result}')
 
@@ -45,6 +45,12 @@ async def generate_dialog_endpoint(request: Request, input_data: InputDialogData
              dependencies=[Depends(get_token_header)])
 @limiter.limit("3/second")
 async def explain_grammar_endpoint(request: Request, dialog: InputGrammarData):
-    grammar_response_content = await generate_grammar_explain_process(dialog)
+    try:
+        grammar_response_content = await generate_grammar_explain_process(dialog)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail=f"Fail in explain_grammar_endpoint {e}")
+
+    logging.info(f'{grammar_response_content}')
 
     return {"grammar": grammar_response_content.grammar}
