@@ -15,6 +15,7 @@ import postRouter from "./routers/postRouter";
 import commentRouter from "./routers/commentRouter";
 import studyRouter from "./routers/studyRouter";
 import bookRouter from "./routers/bookRouter";
+import progressRouter from "./routers/progressRouter";
 import session from "express-session";
 import compression from "compression";
 import helmet from "helmet";
@@ -68,6 +69,7 @@ app.use("/user", userRouter);
 app.use("/upload", uploadRouter);
 app.use("/study", studyRouter);
 app.use("/book", bookRouter);
+app.use("/progress", progressRouter);
 
 // 미사용 라우터
 app.use("/post", postRouter);

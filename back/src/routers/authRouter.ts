@@ -1,10 +1,10 @@
-import Router from "express";
+import Router, { Express } from "express";
 import passportLocal from "../middlewares/passportLocal";
 import passportJwt from "../middlewares/passportJwt";
 import * as authController from "../controllers/authController";
 import * as joi from "../validators/userValidator";
 
-const authRouter = Router();
+const authRouter: Express = Router();
 
 authRouter.get("/check", joi.validateCheckEmail, authController.checkEmail);
 

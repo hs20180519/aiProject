@@ -1,8 +1,8 @@
-import Router from "express";
+import Router, { Express } from "express";
 import passportJwt from "../middlewares/passportJwt";
 import * as postController from "../controllers/postController";
 
-const postRouter = Router();
+const postRouter: Express = Router();
 
 postRouter
   .post("/", passportJwt, postController.createPost)

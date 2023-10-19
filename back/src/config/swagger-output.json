@@ -16,7 +16,7 @@
         "tags": [
           "Auth"
         ],
-        "summary": "회원가입 이메일 및 닉네임 중복 체크 ?email=...&nickname=...",
+        "summary": "[회원가입 요청 전] 이메일 중복 체크 ?email=...",
         "description": "",
         "parameters": [
           {
@@ -46,7 +46,7 @@
           "Auth"
         ],
         "summary": "이메일 인증",
-        "description": "사용자 이메일로 인증코드 전송",
+        "description": "[회원가입 요청 전] 사용자 이메일로 인증코드 전송",
         "responses": {
           "200": {
             "description": "OK"
@@ -77,7 +77,7 @@
           "Auth"
         ],
         "summary": "이메일 인증 코드 확인",
-        "description": "사용자가 입력한 인증코드가 일치하는지 확인. 일치하면 저장된 인증코드 삭제하고 true 반환",
+        "description": "[회원가입 요청 전] 사용자가 입력한 인증코드가 일치하는지 확인.",
         "responses": {
           "200": {
             "description": "OK"
@@ -519,8 +519,41 @@
           "Book"
         ],
         "summary": "단어장 단어 조회",
-        "description": "쿼리별 단어장 조회 (서버사이드 페이징)  * ?book={correct, incorrect, csat, toeic, toefl, ielts, custom}&customBookId=\"\" ",
+        "description": "쿼리별 단어장 조회 (서버사이드 페이징)  * ?book={correct, incorrect, csat, toeic, toefl, custom}&customBookId=\"\" ",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "book",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "400": {
             "description": "Bad Request"
           }
