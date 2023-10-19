@@ -51,4 +51,8 @@ async function insertData(dataArray: RowType[]): Promise<void> {
   });
 }
 
+main().catch((e) => {
+  throw e;
+});
+
 // npx ts-node src/data/insertWord.ts
