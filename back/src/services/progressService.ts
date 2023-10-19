@@ -3,10 +3,8 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const getProgress = async (userId: number) => {
-  // 총 단어
   const totalWordsCount: number = await prisma.word.count();
 
-  // 총 단어 중 맞춘 단어
   const correctAnswersCount: number = await prisma.wordProgress.count({
     where: {
       userId,
@@ -14,9 +12,9 @@ export const getProgress = async (userId: number) => {
     },
   });
 
-  // 전체 학습 백분율
-  const overallPercentage: number | null =
-    totalWordsCount > 0 ? Math.round((correctAnswersCount / totalWordsCount) * 100) : null;
+  // 전체 백분율
+  const overallPercentage: string | null =
+    totalWordsCount > 0 ? ((correctAnswersCount / totalWordsCount) * 100).toFixed(2) : null;
 
   // 카테고리별 백분율
   let categoriesPercentages: any = {};
@@ -41,7 +39,7 @@ export const getProgress = async (userId: number) => {
     });
 
     categoriesPercentages[categories[i]] =
-      categoryWordCount > 0 ? Math.round((categoryCorrectAnswer / categoryWordCount) * 100) : null;
+      categoryWordCount > 0 ? ((categoryCorrectAnswer / categoryWordCount) * 100).toFixed(2) : null;
   }
 
   return {
