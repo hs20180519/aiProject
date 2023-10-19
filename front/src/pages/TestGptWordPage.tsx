@@ -87,7 +87,7 @@ const TestGptWordPage: React.FC<TestGptWordPageProps> = () => {
       } catch (error) {
         toast({
           title: "Grammar fetch failed.",
-          description: `${error}`,
+          description: `Error: ${error.message || error}`,
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -96,7 +96,7 @@ const TestGptWordPage: React.FC<TestGptWordPageProps> = () => {
         console.log("API 호출 실패:", error);
         setGrammarResult((prevResults) => ({
           ...prevResults,
-          [dialogKey]: `Failed to fetch grammar: ${error}`,
+          [dialogKey]: `Failed to fetch grammar: ${error.message || error}`,
         }));
       } finally {
         setLoadingEntryKey(null);
@@ -132,14 +132,14 @@ const TestGptWordPage: React.FC<TestGptWordPageProps> = () => {
     } catch (error) {
       toast({
         title: "Script fetch failed.",
-        description: `${error}`,
+        description: `Error: ${error.message || error}`,
         status: "error",
         duration: 5000,
         isClosable: true,
       });
 
       console.log("API 호출 실패:", error);
-      setScriptResult(`Failed to fetch script: ${error}`);
+      setScriptResult(`Failed to fetch script: ${error.message || error}`);
     } finally {
       setScriptLoading(false);
     }
