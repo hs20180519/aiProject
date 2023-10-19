@@ -12,9 +12,9 @@ function generateRandomString(length: number): string {
 }
 
 function generateMockData(num: number) {
-  const categories = ["csat", "toeic", "toefl"];
+  const categories: string[] = ["csat", "toeic", "toefl"];
 
-  let data = [];
+  let data: any[] = [];
 
   for (let i = 0; i < num; i++) {
     let wordObj: { word: string; meaning: string; category: string } = {
@@ -33,11 +33,11 @@ function generateMockData(num: number) {
   return data;
 }
 
-async function insertMockData(dataArr: any[]) {
+async function insertMockData(dataArr: any[]): Promise<void> {
   // 500개씩 청크
   const chunkSize = 500;
   for (let i = 0; i < dataArr.length; i += chunkSize) {
-    const chunk = dataArr.slice(i, i + chunkSize);
+    const chunk: any[] = dataArr.slice(i, i + chunkSize);
     await prisma.word.createMany({
       data: chunk,
       skipDuplicates: true,
@@ -48,10 +48,10 @@ async function insertMockData(dataArr: any[]) {
 const mockData = generateMockData(50000); // mock data 개수
 
 insertMockData(mockData)
-  .then(() => {
+  .then((): void => {
     console.log("모든 레코드를 성공적으로 삽입했습니다.");
   })
-  .catch((err) => {
+  .catch((err): void => {
     console.error("레코드 삽입 오류:", err);
   });
 

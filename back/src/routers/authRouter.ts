@@ -3,8 +3,6 @@ import passportLocal from "../middlewares/passportLocal";
 import passportJwt from "../middlewares/passportJwt";
 import * as authController from "../controllers/authController";
 import * as joi from "../validators/userValidator";
-import { checkEmail } from "../controllers/authController";
-import { validateCheckEmail } from "../validators/userValidator";
 
 const authRouter = Router();
 

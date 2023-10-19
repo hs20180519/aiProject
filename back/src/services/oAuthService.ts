@@ -1,4 +1,4 @@
-import { KakaoAuthToken, kakaoService, KakaoProfile } from "../services/kakaoService";
+import { KakaoAuthToken, kakaoService, KakaoProfile } from "./kakaoService";
 import { PrismaClient, User } from "@prisma/client";
 import generateJwt from "../utils/generateJwt";
 
