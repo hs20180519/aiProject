@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, Box, ListItem, UnorderedList, VStack } from "@chakra-ui/react";
-import { GrammarExplanation, GrammarResponse } from "../../../apis/new_gpt_schema";
+import { GrammarExplanation, GrammarResponse } from "../../../apis/new_gpt_interface";
 import { simpleHash } from "../utils/gptUtils";
 
 const GrammarDialog = ({ grammar }: GrammarResponse) => {

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Button, Text, Box, Spacer, Spinner, VStack, useToast } from "@chakra-ui/react";
-import { DialogEntry, DialogResponse, InputGrammarData } from "../../../apis/new_gpt_schema";
+import { DialogEntry, DialogResponse, InputGrammarData } from "../../../apis/new_gpt_interface";
 import { simpleHash } from "../utils/gptUtils";
 import { FetchGpt } from "../../../apis/new_gpt";
 import GrammarDialog from "./GrammarDialog";

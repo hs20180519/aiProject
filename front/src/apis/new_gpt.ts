@@ -5,7 +5,7 @@ import {
   InputDialogData,
   DialogResponse,
   HTTPValidationError,
-} from "./new_gpt_schema";
+} from "./new_gpt_interface";
 
 const { REACT_APP_GPT_URL: baseURL, REACT_APP_GPT_TOKEN: token } = process.env;
 

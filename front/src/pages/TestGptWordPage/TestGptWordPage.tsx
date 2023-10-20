@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Box, Button, Flex, Spinner, Tag, useToast } from "@chakra-ui/react";
-import { InputDialogData } from "../../apis/new_gpt_schema";
+import { InputDialogData } from "../../apis/new_gpt_interface";
 import { FetchGpt } from "../../apis/new_gpt";
 import ScriptDialog from "./components/ScriptDialog";
 
