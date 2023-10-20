@@ -1,13 +1,13 @@
-import { PrismaClient } from "@prisma/client";
+import { CustomBook, PrismaClient, User, Word } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 const createMockData = async () => {
-  const users = await prisma.user.findMany();
+  const users: User[] = await prisma.user.findMany();
 
   for (let user of users) {
     // 각 사용자 customBook 생성
-    const customBook = await prisma.customBook.create({
+    const customBook: CustomBook = await prisma.customBook.create({
       data: {
         title: "Custom Book - " + user.id,
         userId: user.id,
@@ -16,7 +16,7 @@ const createMockData = async () => {
 
     // 커스텀 단어 생성
     for (let i = 1; i <= 10; i++) {
-      const word = await prisma.word.create({
+      const word: Word = await prisma.word.create({
         data: {
           word: "Word" + i + "-User" + user.id,
           meaning: "Meaning" + i,
