@@ -1,12 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import React, { useReducer, useEffect, useState, createContext } from "react";
 import InrtoPage from "./pages/IntroPage";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
-import SignUpPage from "./pages/SignUpPage";
+import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import KakaoTestPage from "./pages/KakaoTestPage";
 import OAuthPage from "./pages/OAuthPage";
+import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
 import TestGptWordPage from "./pages/TestGptWordPage";
@@ -52,11 +53,20 @@ function App() {
   if (!isFetchCompleted) {
     return <>{"loading..."}</>;
   }
+  const color = {
+    brand: {
+      900: `#1a365d`,
+      800: `#153e75`,
+      700: `#2a69ac`,
+    },
+  };
+
+  const theme = extendTheme({ color });
   return (
     <DispatchContext.Provider value={dispatch}>
       <UserStateContext.Provider value={userState}>
         <div className={"App"}>
-          <ChakraProvider>
+          <ChakraProvider theme={theme}>
             <BrowserRouter>
               <Routes>
                 <Route path={"/"} element={<InrtoPage />} />
@@ -65,6 +75,7 @@ function App() {
                 <Route path={"/signup"} element={<SignUpPage />} />
                 <Route path={"/kakao"} element={<KakaoTestPage />} />
                 <Route path={"/oauth/kakao"} element={<OAuthPage />} />
+                <Route path={"/signup2"} element={<SignUpPage2 />} />
                 <Route path={"/test_word"} element={<TestGptWordPage />} />
               </Routes>
             </BrowserRouter>

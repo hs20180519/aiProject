@@ -19,7 +19,7 @@
 ## 설치 및 실행
 
 - `.env` 파일 생성 후 OpenAI api 토큰 발급받아서 `OPENAI_API_KEY=토큰` 형식으로 설정
-- mac pip 안될 때 : pip3 install —upgrade pip
+- mac pip 안될 때 : `pip3 install —upgrade pip`
 - `pip3 install -r requirements.txt`
 - 로컬인 경우 : `uvicorn main:app --port=8777` 또는 `python3 main.py`
 
