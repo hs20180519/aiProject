@@ -17,7 +17,7 @@ import {
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link as ReactRouterLink } from "react-router-dom";
-import KakaoLoginButton from "../components/KakaoLoginButton";
+import KakaoLoginButton from "../../components/KakaoLoginButton";
 
 export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false);

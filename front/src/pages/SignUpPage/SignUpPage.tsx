@@ -2,7 +2,7 @@
 import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AxiosError } from "axios";
-import * as Api from "../apis/api";
+import * as Api from "../../apis/api";
 
 type NewUserInfoType = {
   name: string;
