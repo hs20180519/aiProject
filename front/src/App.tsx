@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import React, { useReducer, useEffect, useState, createContext } from "react";
 import InrtoPage from "./pages/IntroPage";
 import MainPage from "./pages/MainPage";
@@ -51,11 +51,20 @@ function App() {
   if (!isFetchCompleted) {
     return <>{"loading..."}</>;
   }
+  const color = {
+    brand: {
+      900: `#1a365d`,
+      800: `#153e75`,
+      700: `#2a69ac`,
+    },
+  };
+
+  const theme = extendTheme({ color });
   return (
     <DispatchContext.Provider value={dispatch}>
       <UserStateContext.Provider value={userState}>
         <div className={"App"}>
-          <ChakraProvider>
+          <ChakraProvider theme={theme}>
             <BrowserRouter>
               <Routes>
                 <Route path={"/"} element={<InrtoPage />} />
