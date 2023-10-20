@@ -1,17 +1,21 @@
 import { Request, Response } from "express";
-import rankService from "../services/rankService";
+import rank from "../services/rankService";
 import { UserDto } from "../dtos/userDto";
 
-async function rankController(req: Request, res: Response) {
-  const userId = req.params.userId : UserDto.id; ????
+export class rankController {
+  async getUsersRankList() {
 
-  try {
-    const rankingChange = await rankService.rankService(userId);
-    res.json(rankingChange);
-  } catch (error) {
-    console.error("랭킹을 불러올 수 없습니다.", error);
-    res.status(500).json({ error: "랭킹 변화 조회 오류" });
+    try {
+      const rankingChange = await rank.(userId);
+      res.json(rankingChange);
+    } catch (error) {
+      console.error("랭킹을 불러올 수 없습니다.", error);
+      res.status(500).json({ error: "랭킹 변화 조회 오류" });
+    }
+  }
+  async getUserGapRank() {
+    return await rank.getUserGapRank
   }
 }
 
-export { rankController };
+export const rank = new rankController();
