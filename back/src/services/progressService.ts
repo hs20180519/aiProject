@@ -1,8 +1,10 @@
 import { PrismaClient } from "@prisma/client";
+import { ProgressDto } from "../dtos/progressDto";
+import { plainToInstance } from "class-transformer";
 
 const prisma = new PrismaClient();
 
-export const getProgress = async (userId: number) => {
+export const getProgress = async (userId: number): Promise<ProgressDto> => {
   const totalWordsCount: number = await prisma.word.count();
 
   const correctAnswersCount: number = await prisma.wordProgress.count({
@@ -12,11 +14,9 @@ export const getProgress = async (userId: number) => {
     },
   });
 
-  // 전체 백분율
   const overallPercentage: string | null =
     totalWordsCount > 0 ? ((correctAnswersCount / totalWordsCount) * 100).toFixed(2) : null;
 
-  // 카테고리별 백분율
   let categoriesPercentages: any = {};
 
   let categories: string[] = ["csat", "toefl", "toeic", "custom"];
@@ -42,8 +42,8 @@ export const getProgress = async (userId: number) => {
       categoryWordCount > 0 ? ((categoryCorrectAnswer / categoryWordCount) * 100).toFixed(2) : null;
   }
 
-  return {
+  return plainToInstance(ProgressDto, {
     OverallPercentage: overallPercentage,
     CategoryPercentage: categoriesPercentages,
-  };
+  });
 };
