@@ -4,9 +4,10 @@ import React, { useReducer, useEffect, useState, createContext } from "react";
 import InrtoPage from "./pages/IntroPage";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
-import SignUpPage from "./pages/SignUpPage";
+import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import KakaoTestPage from "./pages/KakaoTestPage";
 import OAuthPage from "./pages/OAuthPage";
+import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
 
@@ -73,6 +74,7 @@ function App() {
                 <Route path={"/signup"} element={<SignUpPage />} />
                 <Route path={"/kakao"} element={<KakaoTestPage />} />
                 <Route path={"/oauth/kakao"} element={<OAuthPage />} />
+                <Route path={"/signup2"} element={<SignUpPage2 />} />
               </Routes>
             </BrowserRouter>
           </ChakraProvider>
