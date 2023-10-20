@@ -10,7 +10,7 @@ import OAuthPage from "./pages/OAuthPage";
 import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
-import TestGptWordPage from "./pages/TestGptWordPage";
+import TestGptWordPage from "./pages/TestGptWordPage/TestGptWordPage";
 
 export const DispatchContext = createContext<DispatchEvent | null>(null);
 export const UserStateContext = createContext<UserState | null>(null);
