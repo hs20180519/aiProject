@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { UserDto } from "../dtos/userDto";
+import { RankDto } from "../dtos/rankDto";
 import { plainToInstance } from "class-transformer";
 
 // 처음 유저가 접속했을 때는 유저의 점수는 0점
@@ -29,13 +29,15 @@ export interface UsersRank {
   score: number;
 }
 
-class rankService {
+export class rankService {
   /** 유저 학습 점수와 닉네임을 점수 오름차순으로 가져옴 */
-  async getUsersRankList() {
-    const getUsersRankList = await prisma.user.findMany({
+  async getUsersRankList(rank: UsersRank) {
+    const getUsersRankList = await prisma.rank.findMany({
       select: {
         score: true,
-        nickname: true,
+        user: {
+          select: { nickname: true },
+        },
       },
       orderBy: {
         score: "asc",
@@ -43,6 +45,12 @@ class rankService {
     });
 
     return getUsersRankList;
+  }
+
+  async getUserNickname(userId: UsersRank) {
+    const getUserNickname = await prisma.user.findUnique({
+      where: { id: userId },
+    });
   }
 
   /**
