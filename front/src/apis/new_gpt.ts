@@ -7,8 +7,7 @@ import {
   HTTPValidationError,
 } from "./new_gpt_schema";
 
-const baseURL = "http://34.64.215.129/python/api/gpt";
-const token = "elice-ai-8-1-team";
+const { REACT_APP_GPT_URL: baseURL, REACT_APP_GPT_TOKEN: token } = process.env;
 
 const instance = axios.create({
   baseURL,
