@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import KakaoTestPage from "./pages/KakaoTestPage";
 import OAuthPage from "./pages/OAuthPage";
+import SignUpPage2 from "./pages/SignUpPage2";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
 
@@ -64,6 +65,7 @@ function App() {
                 <Route path={"/signup"} element={<SignUpPage />} />
                 <Route path={"/kakao"} element={<KakaoTestPage />} />
                 <Route path={"/oauth/kakao"} element={<OAuthPage />} />
+                <Route path={"/signup2"} element={<SignUpPage2 />} />
               </Routes>
             </BrowserRouter>
           </ChakraProvider>
