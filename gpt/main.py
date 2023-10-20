@@ -6,6 +6,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from config.logging_setup import setup_logging
 from router import gpt_router
+from router import grammar_router
 
 setup_logging()
 
@@ -25,7 +26,7 @@ app.add_middleware(
 )
 
 app.include_router(gpt_router.router)
-
+app.include_router(grammar_router.router)
 
 @app.on_event("startup")
 async def init_app():

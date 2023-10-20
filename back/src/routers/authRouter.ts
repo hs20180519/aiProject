@@ -1,13 +1,12 @@
-import Router from "express";
+import Router, { Express } from "express";
 import passportLocal from "../middlewares/passportLocal";
 import passportJwt from "../middlewares/passportJwt";
 import * as authController from "../controllers/authController";
 import * as joi from "../validators/userValidator";
-import { checkEmail } from "../controllers/authController";
 
-const authRouter = Router();
+const authRouter: Express = Router();
 
-authRouter.get("/check", joi.validateCheckEmailOrNickname, authController.checkEmail);
+authRouter.get("/check", joi.validateCheckEmail, authController.checkEmail);
 
 authRouter.post("/register", joi.validateRegister, authController.register);
 

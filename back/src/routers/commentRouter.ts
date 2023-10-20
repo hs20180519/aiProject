@@ -1,8 +1,8 @@
-import Router from "express";
+import Router, { Express } from "express";
 import passportJwt from "../middlewares/passportJwt";
 import * as commentController from "../controllers/commentController";
 
-const commentRouter = Router();
+const commentRouter: Express = Router();
 
 commentRouter
   .post("/", passportJwt, commentController.createComment)

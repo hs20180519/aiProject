@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const logo: string | undefined = process.env.WORDY_ICON;
+const icon: string | undefined = process.env.WORDY_ICON;
 
 let transporter = nodemailer.createTransport({
   service: "gmail",
@@ -80,7 +80,7 @@ export const startScheduler = () =>
             to: user.email,
             subject: subject,
             html: `<div style="text-align:center;">
-            <img src=${logo} alt="Wordy Logo" />
+            <img src=${icon} alt="Wordy icon" />
             <h1>안녕하세요, ${user.name}님!</h1>
             <hr />
             <h3>학습 진행 상황을 알려드립니다</h3><br />

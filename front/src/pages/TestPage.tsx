@@ -11,6 +11,11 @@ interface WordData {
   koreanMeaning: string;
 }
 
+interface Answer {
+  userAnswer: string;
+  correctAnswer: string;
+}
+
 interface TestPageProps {}
 
 const shuffleArray = (array: string[]) => {
@@ -28,6 +33,9 @@ const TestPage: React.FC<TestPageProps> = () => {
   const [options, setOptions] = useState<string[]>([]);
   const [currentWordIndex, setCurrentWordIndex] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<Answer[]>([]);
+  const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
+
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -57,36 +65,60 @@ const TestPage: React.FC<TestPageProps> = () => {
     fetchWords();
   }, []);
 
+  useEffect(() => {
+    const shuffledOptions = shuffleArray(options);
+    setShuffledOptions(shuffledOptions);
+  }, [currentWordIndex, options]);
+
   const handleNextWord = () => {
     setCurrentWordIndex(prevIndex => prevIndex + 1);
     setSelectedOption(null);
+
+    const shuffledOptions = shuffleArray(options);
+    setShuffledOptions(shuffledOptions);
   };
 
   const handlePrevWord = () => {
     setCurrentWordIndex(prevIndex => Math.max(0, prevIndex - 1));
-    setSelectedOption(null);
   };
 
   const handleOptionClick = (option: string) => {
+    const userAnswer = option;
+    const correctAnswer = wordData[currentWordIndex]?.koreanMeaning;
+
+    const newAnswer: Answer = { userAnswer, correctAnswer };
+    setAnswers(prevAnswers => [...prevAnswers, newAnswer]);
+
     setSelectedOption(option);
   };
   
   const handleComplete = () => {
-    const results = wordData.map((word, index) => ({
-      englishWord: word.englishWord,
-      userAnswer: options[currentWordIndex * 5 + index],
-      correctAnswer: word.koreanMeaning,
-      isCorrect: options[currentWordIndex * 5 + index] === word.koreanMeaning,
-    }));
+    const results = wordData.map((word, index) => {
+      const userAnswer = answers[index]?.userAnswer;
+      const correctAnswer = word.koreanMeaning;
+      const isCorrect = userAnswer === correctAnswer;
+
+      return {
+        englishWord: word.englishWord,
+        userAnswer,
+        correctAnswer,
+        isCorrect,
+      };
+    });
+
     console.log('Results:', results);
-  
-    const correctCount = results.filter(result => result.isCorrect).length;
+
+    const correctCount = results.reduce(
+      (count, result) => (result.isCorrect ? count + 1 : count),
+      0
+    );
+
     alert(`You got ${correctCount} out of 10 correct!`);
   };
 
+
   const currentWord = wordData[currentWordIndex];
   const currentWordKoreanMeaning = currentWord?.koreanMeaning;
-  const shuffledOptions = shuffleArray(options);
   
 
   return (
@@ -98,7 +130,7 @@ const TestPage: React.FC<TestPageProps> = () => {
         <Text fontSize={"2xl"} mb={4}>
           {currentWord?.englishWord}
         </Text>
-        {shuffledOptions.slice(currentWordIndex * 4, currentWordIndex * 4 + 4).concat(currentWordKoreanMeaning).map(option => (
+        {shuffledOptions.slice(currentWordIndex * 3, currentWordIndex * 3 + 3).concat(currentWordKoreanMeaning).map(option => (
           <Button
             key={option}
             variant={selectedOption === option ? "solid" : "outline"}

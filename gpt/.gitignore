@@ -5,3 +5,4 @@ log
 
 words.txt
 *.json
+__pycache__

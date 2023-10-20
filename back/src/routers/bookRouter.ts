@@ -1,9 +1,9 @@
-import Router from "express";
+import Router, { Express } from "express";
 import passportJwt from "../middlewares/passportJwt";
 import * as bookController from "../controllers/bookController";
 import * as joi from "../validators/bookValidator";
 
-const bookRouter = Router();
+const bookRouter: Express = Router();
 
 bookRouter
   .post("/", joi.validateCreateBook, passportJwt, bookController.createBook)

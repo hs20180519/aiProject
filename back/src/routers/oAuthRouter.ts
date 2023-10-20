@@ -1,6 +1,6 @@
 import * as OAuthController from "../controllers/oAuthController";
-import Router from "express";
-const oAuthRouter = Router();
+import Router, { Express } from "express";
+const oAuthRouter: Express = Router();
 
 oAuthRouter.get("/kakao", OAuthController.kakaoCallback);
 oAuthRouter.post("/kakao", OAuthController.kakaoLogin);

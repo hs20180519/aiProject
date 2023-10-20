@@ -23,7 +23,7 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
    * #swagger.tags = ['Study']
    * #swagger.summary = '단어 학습'
    * #swagger.description = '쿼리별 단어 학습
-   * ?book={correct, incorrect, csat, toeic, toefl, ielts, custom}&customBookId="" '
+   * ?book={correct, incorrect, csat, toeic, toefl, custom}&customBookId="" '
    * #swagger.security = [{
    *   "bearerAuth": []
    * }]

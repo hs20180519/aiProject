@@ -1,8 +1,8 @@
-import Router from "express";
+import Router, { Express } from "express";
 import passportJwt from "../middlewares/passportJwt";
 import * as userController from "../controllers/userController";
 
-const userRouter = Router();
+const userRouter: Express = Router();
 
 userRouter.get("/", passportJwt, userController.getProfile);
 
