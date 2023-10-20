@@ -135,7 +135,7 @@ const SignUp = () => {
               }}
             >
               <h2 style={{ textAlign: "center" }}>{"워디 회원가입"}</h2>
-              <form
+              <div
                 onSubmit={handleSubmit}
                 style={{
                   display: "flex",
@@ -213,7 +213,7 @@ const SignUp = () => {
                 <button type={"submit"} className={"btn btn-primary"} disabled={!isFormValid}>
                   {"회원가입\r"}
                 </button>
-              </form>
+              </div>
             </div>
           </div>
         </div>
