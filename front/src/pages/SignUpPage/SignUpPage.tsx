@@ -199,7 +199,7 @@ const SignUp = () => {
                   <button
                     type="submit"
                     className={"btn btn-primary"}
-                    onClick={emailVerification(email)}
+                    onClick={() => emailVerification(email)}
                     disabled={!isFormValid}
                   >
                     {"이메일 인증 요청"}
