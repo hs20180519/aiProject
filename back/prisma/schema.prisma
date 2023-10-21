@@ -23,7 +23,6 @@ model User {
   comment      Comment[]
   wordProgress WordProgress[]
   rank         Rank[]
-  pastRank  PastRank[]
   lastRank     Int?           @default(0)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
@@ -85,14 +84,8 @@ model Rank {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   score     Int      @default(0)
-  rankDate  DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model PastRank {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  score     Int      @default(0)
+  currentRank Int
+  pastRank  Int
   rankDate  DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
