@@ -58,6 +58,7 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
     const category: string = String(req.query.book);
     const customBookId: string = String(req.query.customBookId);
 
+    console.log(category);
     const queryServiceMap: {
       [key: string]: (userId: number, customBookId?: string) => Promise<any>;
     } = {
