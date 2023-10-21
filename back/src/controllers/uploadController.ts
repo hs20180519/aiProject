@@ -10,9 +10,9 @@ export const uploadProfileImage = async (req: Request, res: Response, next: Next
    * #swagger.description = '프로필 이미지 업로드 후 업로드된 이미지 경로 반환. 실제 이미지는 public/images에 저장'
    */
   try {
-    const userId = (req.user as User).id;
-    const imageUrl = path.join("images", (req.file as Express.Multer.File).filename);
-    const uploadImageUrl = await uploadService.uploadProfileImage(userId, imageUrl);
+    const userId: number = (req.user as User).id;
+    const imageUrl: string = path.join("images", (req.file as Express.Multer.File).filename);
+    const uploadImageUrl: string = await uploadService.uploadProfileImage(userId, imageUrl);
     res.status(201).json(uploadImageUrl);
   } catch (error) {
     console.error(error);

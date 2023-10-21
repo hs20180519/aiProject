@@ -1,18 +1,27 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient, User, VerifiCode } from "@prisma/client";
 import { sendMail } from "../utils/sendMail";
+import * as authInterface from "../interfaces/authInterface";
+import { plainToClass } from "class-transformer";
+import { UserDto } from "../dtos/userDto";
 import path from "path";
 import fs from "fs";
 
 const prisma = new PrismaClient();
 
-export const getUserByEmail = async (email: string) => {
+export const getUserByEmail = async (email: string): Promise<User | null> => {
   return prisma.user.findUnique({
     where: { email: email },
   });
 };
 
-export const sendVerificationCode = async (email: string) => {
-  const verificationCode = Math.floor(Math.random() * 1000000).toString();
+export const getVerifyCodeByEmail = async (email: string) => {
+  return prisma.verifiCode.findUnique({
+    where: { email },
+  });
+};
+
+export const sendVerificationCode = async (email: string): Promise<void> => {
+  const verificationCode: string = Math.floor(Math.random() * 1000000).toString();
   await sendMail(email, verificationCode);
   await prisma.verifiCode.create({
     data: {
@@ -23,8 +32,18 @@ export const sendVerificationCode = async (email: string) => {
   return;
 };
 
-export const verifyEmail = async (email: string, code: string) => {
-  const verificationCode = await prisma.verifiCode.findUnique({
+export const resendVerificationCode = async (email: string): Promise<void> => {
+  const verificationCode: string = Math.floor(Math.random() * 1000000).toString();
+  await sendMail(email, verificationCode);
+  await prisma.verifiCode.update({
+    where: { email },
+    data: { code: verificationCode },
+  });
+  return;
+};
+
+export const verifyEmail = async (email: string, code: string): Promise<boolean> => {
+  const verificationCode: VerifiCode | null = await prisma.verifiCode.findUnique({
     where: { email },
   });
   if (!verificationCode) return false;
@@ -36,49 +55,33 @@ export const verifyEmail = async (email: string, code: string) => {
   } else return false;
 };
 
-export const getUserByNickname = async (nickname: string) => {
-  return prisma.user.findUnique({
-    where: { nickname },
-  });
-};
-
-export const signUpDuplicateCheck = async (email: string, nickname: string) => {
-  const user = await prisma.user.findFirst({
+export const signUpDuplicateCheck = async (email: string): Promise<User | null> => {
+  return prisma.user.findFirst({
     where: {
-      OR: [{ email }, { nickname }],
+      email: email,
     },
   });
-  return {
-    emailExists: user?.email === email,
-    nicknameExists: user?.nickname === nickname,
-  };
 };
 
-export const createUser = async (userData: {
-  password: string;
-  level: number;
-  name: any;
-  nickname: any;
-  email: any;
-}) => {
-  return prisma.user.create({
+export const createUser = async (userData: authInterface.UserCreationData): Promise<UserDto> => {
+  const createdUser = prisma.user.create({
     data: userData,
   });
+  return plainToClass(UserDto, createdUser);
 };
 
-export const editUser = async (userId: number, updatedData: Partial<User>) => {
-  const updatedUser = await prisma.user.update({
+export const editUser = async (userId: number, updatedData: Partial<User>): Promise<UserDto> => {
+  const updatedUser: User = await prisma.user.update({
     where: { id: userId },
     data: updatedData,
   });
-  if (updatedUser) {
-    const { password, ...userWithoutPassword } = updatedUser;
-    return userWithoutPassword;
-  }
+  if (!updatedUser) throw new Error("유저 정보를 찾을 수 없습니다.");
+
+  return plainToClass(UserDto, updatedUser);
 };
 
-export const deleteUser = async (userId: number) => {
-  const user = await prisma.user.findUnique({
+export const deleteUser = async (userId: number): Promise<null | UserDto> => {
+  const user: User | null = await prisma.user.findUnique({
     where: { id: userId },
   });
   if (user?.profileImage)
@@ -86,5 +89,5 @@ export const deleteUser = async (userId: number) => {
   await prisma.user.delete({
     where: { id: userId },
   });
-  return user;
+  return plainToClass(UserDto, user);
 };

@@ -1,17 +1,6 @@
 import passport from "passport";
 import { NextFunction, Request, Response } from "express";
-
-interface User {
-  id: string;
-  email: string | null;
-  name: string | null;
-  nickname: string | null;
-  password: string | null;
-  profileImageUrl: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  manager: boolean;
-}
+import { User } from "@prisma/client";
 
 /** @description jwt전략
  * 요청의 token 을 디코드하여 해당 세션을 찾아냅니다.

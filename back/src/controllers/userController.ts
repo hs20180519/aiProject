@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "@prisma/client";
 import * as userService from "../services/userService";
+import { UserDto } from "../dtos/userDto";
 
 export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -12,8 +13,8 @@ export const getProfile = async (req: Request, res: Response, next: NextFunction
    * }]
    */
   try {
-    const userId = (req.user as User).id;
-    const user = await userService.getUserById(userId);
+    const userId: number = (req.user as User).id;
+    const user: UserDto = await userService.getUserById(userId);
     return res.status(200).json(user);
   } catch (error) {
     console.error(error);

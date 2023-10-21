@@ -1,26 +1,24 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-interface Word {
-  id: number;
-  meaning: string;
-}
-interface RawWord {
-  id: number;
-  level: number;
-  meaning: string;
-}
+import * as wordInterface from "../interfaces/wordInterface";
+import { plainToInstance } from "class-transformer";
+import { WordWithChoicesDto } from "../dtos/wordDto";
 
-export const createChoices = async (word: Word) => {
-  let choices = [word.meaning];
-
-  while (choices.length < 4) {
-    const randomWord = await prisma.$queryRaw<
-      RawWord[]
-    >`SELECT * FROM Word ORDER BY RAND() LIMIT 1`;
-    const randomWordMeaning = randomWord[0].meaning;
-
-    if (!choices.includes(randomWordMeaning)) choices.push(randomWordMeaning);
+export const createChoices = async (word: wordInterface.Word): Promise<WordWithChoicesDto> => {
+  if (!word) {
+    throw new Error("단어가 없습니다.");
   }
 
-  return choices;
+  let wordMeaning: string = `'${word.meaning}'`;
+
+  const additionalMeaningsGroup: any = await prisma.$queryRaw`
+     SELECT meanings FROM MeaningGroup WHERE JSON_CONTAINS(meanings, JSON_ARRAY(${wordMeaning}), '$') = false LIMIT 1`;
+
+  let additionalMeanings: string[] = additionalMeaningsGroup.flatMap(
+    (group: { meanings: any }) => group.meanings,
+  );
+
+  let choices: string[] = [...additionalMeanings, word.meaning];
+
+  return plainToInstance(WordWithChoicesDto, { ...word, choices });
 };

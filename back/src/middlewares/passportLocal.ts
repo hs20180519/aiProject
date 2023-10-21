@@ -13,7 +13,7 @@ const passportLocal = (
   res: Response,
   next: NextFunction,
 ) => {
-  passport.authenticate("local", { session: true }, (error: Error, user: User) => {
+  passport.authenticate("local", { session: true }, (error: Error, user: User, info: any) => {
     if (error) {
       console.error(error);
       return next(error);
@@ -27,8 +27,8 @@ const passportLocal = (
       {
         id: user.id,
         name: user.name,
-        nickname: user.nickname,
         email: user.email,
+        createdAt: user.createdAt,
       },
       secretKey,
       tokenExpires,

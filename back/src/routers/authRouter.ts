@@ -1,23 +1,22 @@
-import Router from "express";
+import Router, { Express } from "express";
 import passportLocal from "../middlewares/passportLocal";
 import passportJwt from "../middlewares/passportJwt";
 import * as authController from "../controllers/authController";
-import { checkEmailOrNickname } from "../controllers/authController";
+import * as joi from "../validators/userValidator";
 
-const authRouter = Router();
+const authRouter: Express = Router();
 
-authRouter.get("/check", authController.checkEmailOrNickname);
+authRouter.get("/check", joi.validateCheckEmail, authController.checkEmail);
 
-authRouter.post("/register", authController.register);
+authRouter.post("/register", joi.validateRegister, authController.register);
 
-authRouter.post("/verify", authController.verify);
+authRouter.post("/verify", joi.validateVerify, authController.verify);
 
-authRouter.post("/signup", authController.createUser);
+authRouter.post("/signup", joi.validateCreateUser, authController.createUser);
 
-authRouter.post("/", passportLocal, authController.login);
-
-authRouter.put("/", passportJwt, authController.editUser);
-
-authRouter.delete("/", passportJwt, authController.deleteUser);
+authRouter
+  .post("/", joi.validateLogin, passportLocal, authController.login)
+  .put("/", joi.validateEditUser, passportJwt, authController.editUser)
+  .delete("/", passportJwt, authController.deleteUser);
 
 export default authRouter;

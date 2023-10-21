@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
 
-function generateJwt(payload: string | object | Buffer, secretKey: jwt.Secret, expiresIn: string) {
+function generateJwt(
+  payload: string | object | Buffer,
+  secretKey: jwt.Secret,
+  expiresIn: string,
+): string {
   return jwt.sign(payload, secretKey, {
     expiresIn: expiresIn,
     issuer: "DaechanJo",

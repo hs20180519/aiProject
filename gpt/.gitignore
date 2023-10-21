@@ -1,0 +1,8 @@
+.env
+.idea
+venv
+log
+
+words.txt
+*.json
+__pycache__
