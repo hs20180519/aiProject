@@ -5,6 +5,7 @@ import { plainToInstance } from "class-transformer";
 
 const prisma = new PrismaClient();
 
+// todo 인터페이스 모듈화
 export interface UsersRank {
   userId: number;
   rank: number;
@@ -12,6 +13,7 @@ export interface UsersRank {
 }
 
 export class rankService {
+  //todo 반환객체에 DTO 패턴 적용하기
   /** 유저 학습 점수와 닉네임을 점수 오름차순으로 가져옴 */
   async getUsersRankList(rank: UsersRank) {
     const getUsersRankList = await prisma.rank.findMany({
@@ -38,6 +40,7 @@ export class rankService {
   /**
    * 현재 유저 랭킹을 출력
    */
+  //todo 왠만하면 ORM 쿼리 사용
   async getCurrentUserRank(req: Request, res: Response) {
     const getRankList = await prisma.$queryRaw`
     SELECT userId, score, rankDate From Rank`;
@@ -82,6 +85,7 @@ export class rankService {
   }
 
   /** 모든 유저의 score를 0으로 업데이트 */
+  //todo 이건 아마 주마다 랭킹초기화를 위한거 같은데 클라이언트 요청이 아니라 서버사이드에서 스케쥴러로 만들어줘야합니다.
   async resetUserScores() {
     try {
       const updatedUsers = await prisma.user.updateMany({
