@@ -1,11 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import { UserDto } from "../dtos/userDto";
 import { plainToInstance } from "class-transformer";
 
 const prisma = new PrismaClient();
 
 export const getUserById = async (userId: number): Promise<UserDto> => {
-  const user = await prisma.user.findUnique({
+  const user: User | null = await prisma.user.findUnique({
     where: { id: userId },
   });
 
