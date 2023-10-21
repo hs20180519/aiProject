@@ -13,6 +13,7 @@ const RankRouter = Router();
 RankRouter.get("/", rankController.getUsersRankList);
 
 /** 로그인한 유저의 랭킹 */
+// 접근못함
 RankRouter.get("/:userId", rankController.getUserRank);
 
 /**유저 랭킹 차 가져오기*/

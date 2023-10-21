@@ -13,7 +13,7 @@ bookRouter
 
 bookRouter
   .post("/word", joi.validateCreateWordInBook, passportJwt, bookController.createCustomWordInBook)
-  .get("/word", joi.validateGetBook, passportJwt, bookController.getBook)
+  .get("/word", passportJwt, bookController.getBook)
   .put("/word", joi.validateUpdateWordInBook, passportJwt, bookController.updateCustomWordInBook)
   .delete(
     "/word",

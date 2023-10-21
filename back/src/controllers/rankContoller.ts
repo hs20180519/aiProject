@@ -1,25 +1,32 @@
 import { Request, Response, NextFunction } from "express";
 import * as rankService from "../services/rankService";
-import { User, Rank } from "@prisma/client";
-import { UserDto } from "../dtos/userDto";
+import { User } from "@prisma/client";
+import { RankDto } from "../dtos/rankDto";
 
 export const getUsersRankList = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const rankList = await rankService.getUsersRankList();
-    res.status(200).json(rankList);
+    const page: number = req.query.page ? Number(req.query.page) : 1;
+    const limit: number = req.query.page ? Number(req.query.limit) : 10;
+    const rankList: RankDto[] = await rankService.getUsersRankList(page, limit);
+
+    if (!rankList) res.status(400).json({ message: `유저 순위 목록을 가져올 수 없습니다.` });
+    return res.status(200).json(rankList);
   } catch (e) {
-    res.status(400).json(`${e}\n 유저 순위 목록을 가져올 수 없습니다.`);
-    next(e);
+    console.error(e);
+    return next(e);
   }
 };
 
 export const getUserRank = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = req.user as User;
-    const rank = await rankService.getUserRank(user);
+    const userId: number = (req.user as User).id;
+    const rank: number = await rankService.getUserRank(userId);
+    if (!rank) return res.status(400).json({ message: "유저의 랭킹을 가져올 수 없습니다." });
+
+    return res.status(200).json(rank);
   } catch (e) {
-    res.status(400).json(`${e}\n 유저의 랭킹을 가져올 수 없습니다.`);
-    next(e);
+    console.error(e);
+    return next(e);
   }
 };
 
@@ -37,11 +44,14 @@ export const getUserRank = async (req: Request, res: Response, next: NextFunctio
 /** 유저 랭킹 변화 */
 export const getUserGapRank = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userGapRank = await rankService.userGapRank;
-    res.status(200).json(userGapRank);
-    console.log(userGapRank);
+    const userId: number = (req.user as User).id;
+    const userGapRank = await rankService.userGapRank(userId);
+
+    if (!userGapRank)
+      return res.status(400).json({ message: `유저 랭킹변화를 조회 할 수 없습니다.` });
+    return res.status(200).json(userGapRank);
   } catch (e) {
-    res.status(400).json(`${e}\n 유저 랭킹변화를 조회 할 수 없습니다.`);
-    next(e);
+    console.error(e);
+    return next(e);
   }
 };
