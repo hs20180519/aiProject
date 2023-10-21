@@ -17,14 +17,14 @@
   - elice-ai-8-1-team
 
 ## 설치 및 실행
-- python 버전 3.9 이상 (3.10.13 에서 테스트 완료)
+- python 버전 3.9 이상
 - `.env` 파일 생성 후 OpenAI api 토큰 발급받아서 `OPENAI_API_KEY=토큰` 형식으로 설정
 - mac pip 안될 때 : `pip3 install —upgrade pip`
 - `pip3 install -r requirements.txt`
 - 로컬인 경우 : `uvicorn main:app --port=8777` 또는 `python3 main.py`
 
 ## vm 에서 실행
-- python 버전 3.9 이상 (3.10.13 에서 테스트 완료)
+- python 버전 3.10.13 이상
 - `.env` 파일 생성 후 OpenAI api 토큰 발급받아서 `OPENAI_API_KEY=토큰` 형식으로 설정
 - `pip3 install gunicorn`
 - `gunicorn -k uvicorn.workers.UvicornWorker --access-logfile ./gunicorn-access.log main:app --bind 0.0.0.0:8777 --workers 2 --timeout 100`
