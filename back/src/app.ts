@@ -63,13 +63,13 @@ passport.use("jwt", jwt);
 
 app.use(reqAndResLogger);
 
-app.use("/auth", authRouter);
-app.use("/oauth", oAuthRouter);
-app.use("/user", userRouter);
-app.use("/upload", uploadRouter);
-app.use("/study", studyRouter);
-app.use("/book", bookRouter);
-app.use("/progress", progressRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/oauth", oAuthRouter);
+app.use("/api/user", userRouter);
+app.use("/api/upload", uploadRouter);
+app.use("/api/study", studyRouter);
+app.use("/api/book", bookRouter);
+app.use("/api/progress", progressRouter);
 
 // 미사용 라우터
 app.use("/post", postRouter);
