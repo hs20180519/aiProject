@@ -1,23 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
-export const backendPortNumber = "8000";
-export const serverUrl = `http://localhost:${backendPortNumber}`;
+export const serverUrl = `${process.env.REACT_APP_SERVER_URL_API}`;
 
 async function get(endpoint: string) {
   console.log(`%cGET 요청`, "color: #a25cd1;");
   const token = sessionStorage.getItem("userToken");
-  console.log(token);
   const url = `${serverUrl + endpoint}`;
-  console.log(url);
   const res = await axios.get(url, {
     // JWT 토큰을 헤더에 담아 백엔드 서버에 보냄.
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log("--------gogo-----");
-  console.log(res);
   return res;
 }
 

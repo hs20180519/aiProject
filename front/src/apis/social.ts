@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const fetchKakaoOAuthLogin = async (code: string) => {
-  const url = `http://localhost:8000/oauth/kakao`;
+  const url = `${process.env.REACT_APP_SERVER_URL}/oauth/kakao`;
   const data = {
     code,
   };
