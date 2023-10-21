@@ -11,13 +11,11 @@ const RankRouter = Router();
 
 /**유저 랭킹 목록 */
 RankRouter.get("/", rankController.getUsersRankList);
-//todo
 
-/**유저 랭킹 저장 */
-// RankRouter.post("/:userId", rankController.);
+/** 로그인한 유저의 랭킹 */
+RankRouter.get("/:userId", rankController.getUserRank);
 
-// todo 이게 있으면 userRouter 의 랭킹 변동 조회 api는 필요없지 않을까요?
 /**유저 랭킹 차 가져오기*/
-// RankRouter.get("/:userId", rankController.getUserGapRank);
+RankRouter.get("/gap/:userId", rankController.getUserGapRank);
 
 export default RankRouter;

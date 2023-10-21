@@ -3,9 +3,6 @@ import * as rankService from "../services/rankService";
 import { User, Rank } from "@prisma/client";
 import { UserDto } from "../dtos/userDto";
 
-//todo 코드 스타일을 통일하는게 좋지 않을까요? 함수 표현식으로 통일하거나 클래스를 이용한 정적메서드 방식으로 통일하거나
-// (현재 서버 아키텍쳐가 함수표현식을 사용한다는 전제하에 구현한 상태이고 어차피 정적메서드를 사용한다면 굳이 클래스를 사용할 필요가 있을까요?)
-
 export const getUsersRankList = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const rankList = await rankService.getUsersRankList();
@@ -26,14 +23,25 @@ export const getUserRank = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-/** 유저 랭킹 변화 */
-// export const getUserGapRank = async (req: Request, res: Response, next: NextFunction) => {
+// export const updateUserRank = async (req Request, res: Response, next: NextFunction) => {
 //   try {
-//     const userGapRank = await rankService.getUserGapRank;
-//     res.status(200).json(userGapRank);
-//     console.log(userGapRank);
+//     const updateUserRank6pm = await rankService.updateUserRank6pm;
+//     const updateUserRank8am = await rankService.updateUserRank8am;
+
+//     res.status(200).json(updateUserRank6pm,updateUserRank8am);
+//     console.log(updateUserRank6pm,updateUserRank8am);
 //   } catch (e) {
-//     res.status(400).json(`${e}\n 유저 순위 목록을 가져올 수 없습니다.`);
-//     next(e);
-//   }
-// };
+//     res.status(400).json(`${e}\n 랭킹을 불러올 수 없습니다.`);
+//     next(e);}}
+
+/** 유저 랭킹 변화 */
+export const getUserGapRank = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userGapRank = await rankService.userGapRank;
+    res.status(200).json(userGapRank);
+    console.log(userGapRank);
+  } catch (e) {
+    res.status(400).json(`${e}\n 유저 랭킹변화를 조회 할 수 없습니다.`);
+    next(e);
+  }
+};
