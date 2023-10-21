@@ -1,8 +1,3 @@
-#FROM ubuntu:latest
-#LABEL authors="daechanjo"
-#
-#ENTRYPOINT ["top", "-b"]
-
 FROM node:16-buster
 
 LABEL authors="daechanjo"

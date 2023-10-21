@@ -265,26 +265,6 @@
         "security": []
       }
     },
-    "/api/user/rankingChange/{userId}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/api/upload/profile-image": {
       "post": {
         "tags": [
@@ -661,6 +641,19 @@
           }
         },
         "security": []
+      }
+    },
+    "/api/rank/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
     },
     "/api/post/": {
