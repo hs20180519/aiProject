@@ -5,8 +5,9 @@ import * as rankService from "../services/rankService";
 // (현재 서버 아키텍쳐가 함수표현식을 사용한다는 전제하에 구현한 상태이고 어차피 정적메서드를 사용한다면 굳이 클래스를 사용할 필요가 있을까요?)
 
 export const getUsersRankList = async (req: Request, res: Response, next: NextFunction) => {
-  const rankingChange = await rankService.getUsersRankList;
-  return rankingChange;
+  const rankList = await rankService.getUsersRankList;
+  console.log(rankList);
+  return rankList;
 };
 
 /** 유저 랭킹 변화 */
