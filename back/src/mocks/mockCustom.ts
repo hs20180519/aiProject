@@ -40,3 +40,6 @@ const createMockData = async () => {
 createMockData()
   .then(() => console.log("Mock data 생성 완료"))
   .catch((err) => console.error(err));
+
+// 각 유저 커스텀단어장 생성 및 커스텀 단어 10개씩 생성 (이엿을껄?)
+// npx ts-node src/mocks/mockCustom.ts
