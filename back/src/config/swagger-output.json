@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/auth/check": {
+    "/api/auth/check": {
       "get": {
         "tags": [
           "Auth"
@@ -40,7 +40,7 @@
         }
       }
     },
-    "/auth/register": {
+    "/api/auth/register": {
       "post": {
         "tags": [
           "Auth"
@@ -71,7 +71,7 @@
         }
       }
     },
-    "/auth/verify": {
+    "/api/auth/verify": {
       "post": {
         "tags": [
           "Auth"
@@ -105,7 +105,7 @@
         }
       }
     },
-    "/auth/signup": {
+    "/api/auth/signup": {
       "post": {
         "tags": [
           "Auth"
@@ -148,7 +148,7 @@
         }
       }
     },
-    "/auth/": {
+    "/api/auth/": {
       "post": {
         "tags": [
           "Auth"
@@ -194,7 +194,7 @@
         "security": []
       }
     },
-    "/oauth/kakao": {
+    "/api/oauth/kakao": {
       "get": {
         "description": "",
         "responses": {
@@ -226,7 +226,7 @@
         }
       }
     },
-    "/oauth/kakao/callback": {
+    "/api/oauth/kakao/callback": {
       "post": {
         "description": "",
         "responses": {
@@ -250,7 +250,7 @@
         }
       }
     },
-    "/user/": {
+    "/api/user/": {
       "get": {
         "tags": [
           "User"
@@ -265,7 +265,7 @@
         "security": []
       }
     },
-    "/upload/profile-image": {
+    "/api/upload/profile-image": {
       "post": {
         "tags": [
           "Upload"
@@ -280,7 +280,7 @@
         "security": []
       }
     },
-    "/study/experience": {
+    "/api/study/experience": {
       "get": {
         "tags": [
           "Study"
@@ -294,13 +294,13 @@
         }
       }
     },
-    "/study/": {
+    "/api/study/": {
       "get": {
         "tags": [
           "Study"
         ],
         "summary": "단어 학습",
-        "description": "쿼리별 단어 학습  * ?book={correct, incorrect, csat, toeic, toefl, ielts, custom}&customBookId=\"\" ",
+        "description": "쿼리별 단어 학습  * ?book={correct, incorrect, csat, toeic, toefl, custom}&customBookId=\"\" ",
         "parameters": [
           {
             "name": "customBookId",
@@ -358,7 +358,7 @@
         }
       }
     },
-    "/study/result": {
+    "/api/study/result": {
       "get": {
         "tags": [
           "Study"
@@ -373,7 +373,7 @@
         "security": []
       }
     },
-    "/book/": {
+    "/api/book/": {
       "post": {
         "tags": [
           "Book"
@@ -471,7 +471,7 @@
         "security": []
       }
     },
-    "/book/word": {
+    "/api/book/word": {
       "post": {
         "tags": [
           "Book"
@@ -625,7 +625,38 @@
         "security": []
       }
     },
-    "/post/": {
+    "/api/progress/": {
+      "get": {
+        "tags": [
+          "Progress"
+        ],
+        "summary": "학습진행률 조회",
+        "description": "로그인한 사용자의 전체, 카테고리별 학습진행률 조회",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/rank/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/post/": {
       "post": {
         "tags": [
           "Post"
@@ -702,7 +733,7 @@
         }
       }
     },
-    "/post/{postId}": {
+    "/api/post/{postId}": {
       "put": {
         "tags": [
           "Post"
@@ -779,7 +810,7 @@
         "security": []
       }
     },
-    "/comment/": {
+    "/api/comment/": {
       "post": {
         "tags": [
           "Comment"
@@ -824,7 +855,7 @@
         }
       }
     },
-    "/comment/{commentId}": {
+    "/api/comment/{commentId}": {
       "put": {
         "tags": [
           "Comment"

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import * as Api from "../apis/api";
 import { DispatchContext } from "../App";
 import { UserProps } from "../reducer";
+import KakaoLoginButton from "../components/KakaoLoginButton";
 
 interface LoginProps {
   email: string;
@@ -43,7 +44,7 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      const res = await Api.post("auth/", {
+      const res = await Api.post("/auth", {
         email,
         password,
       });
@@ -147,6 +148,7 @@ const LoginPage = () => {
                 >
                   {"회원가입"}
                 </button>
+                <KakaoLoginButton />
               </p>
             </form>
           </div>
