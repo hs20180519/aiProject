@@ -12,20 +12,6 @@ export const validateCreateBook = (req: Request, res: Response, next: NextFuncti
   next();
 };
 
-export const validateGetBook = async (req: Request, res: Response, next: NextFunction) => {
-  const schema = Joi.object({
-    book: Joi.object({
-      query: Joi.object({
-        book: Joi.string().optional(),
-      }),
-    }),
-  });
-  const { error } = schema.validate(req.query);
-  if (error) return res.status(400).json({ validator: "잘못된 요청입니다." });
-
-  next();
-};
-
 export const validateUpdateBook = (req: Request, res: Response, next: NextFunction) => {
   const schema = Joi.object({
     query: Joi.object({

@@ -1,5 +1,6 @@
 import { Exclude } from "class-transformer";
 import { IsNumber, IsNotEmpty, IsObject } from "class-validator";
+import { User } from "@prisma/client";
 
 export class RankDto {
   @IsNumber()
@@ -7,17 +8,17 @@ export class RankDto {
   @Exclude()
   id!: number;
 
-  @IsObject()
-  @IsNotEmpty()
-  @Exclude()
-  user!: object;
-
   @IsNumber()
   @IsNotEmpty()
   @Exclude()
   userId!: number;
 
   @IsNumber()
-  @Exclude()
   score!: number;
+
+  @Exclude()
+  user!: User;
+
+  currentPages?: number;
+  totalPage?: number;
 }
