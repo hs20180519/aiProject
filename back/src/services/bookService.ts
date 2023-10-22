@@ -30,7 +30,7 @@ export const getWordByUserId = async (
   limit: number,
   userId: number,
   correct: boolean,
-): Promise<{ words: WordProgressDto[]; totalPages: number }> => {
+): Promise<{ words: WordProgressDto[]; totalPages: number; currentPage: number }> => {
   const totalWordCount: number = await prisma.wordProgress.count({
     where: { userId: userId, correct: correct },
   });
@@ -44,7 +44,7 @@ export const getWordByUserId = async (
     ...offset,
   });
 
-  return { words: plainToInstance(WordProgressDto, words), totalPages };
+  return { words: plainToInstance(WordProgressDto, words), totalPages, currentPage: page };
 };
 
 export const getWordByCategory = async (
