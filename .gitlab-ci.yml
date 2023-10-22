@@ -42,6 +42,6 @@ backend_deploy:
   script:
     - scp -P $SSH_PORT -r ./front/build/* $SSH_USER@$SSH_SERVER:$FRONT_TARGET_DIR
     - 'ssh -p $SSH_PORT $SSH_USER@$SSH_SERVER "docker pull daechanjo/wordy:$IMAGE_TAG"'
-    - 'ssh -p $SSH_PORT $SSH_USER@$SSH_SERVER "sed -i \'s|daechanjo/wordy:.*|daechanjo/$IMAGE_TAG|\' docker-compose.yml"'
+    - ssh -p $SSH_PORT $SSH_USER@$SSH_SERVER "sed -i 's|daechanjo/wordy:.*|daechanjo/$IMAGE_TAG|' docker-compose.yml"
     - 'ssh -p $SSH_PORT $SSH_USER@$SSH_SERVER "docker-compose down"'
     - 'ssh -p $SSH_PORT $SSH_USER@$SSH_SERVER "docker-compose up --build --detach"'
