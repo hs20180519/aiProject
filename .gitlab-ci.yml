@@ -25,6 +25,8 @@ frontend_build:
     - cd front
     - yarn install
     - yarn build
+  tags:
+    - front
   artifacts:
     paths:
       - front/build/*
@@ -36,6 +38,8 @@ backend_build:
     - docker buildx build --platform=linux/amd64 --load --tag daechanjo/wordy:$IMAGE_TAG .
     - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - docker push daechanjo/$IMAGE_TAG
+  tags:
+    - back_b
 
 backend_deploy:
   stage: backend_deploy
@@ -45,3 +49,5 @@ backend_deploy:
     - ssh -p $SSH_PORT $SSH_USER@$SSH_SERVER "sed -i 's|daechanjo/wordy:.*|daechanjo/$IMAGE_TAG|' docker-compose.yml"
     - 'ssh -p $SSH_PORT $SSH_USER@$SSH_SERVER "docker-compose down"'
     - 'ssh -p $SSH_PORT $SSH_USER@$SSH_SERVER "docker-compose up --build --detach"'
+  tags:
+    - back_d
