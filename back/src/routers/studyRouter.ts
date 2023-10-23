@@ -10,5 +10,6 @@ studyRouter
   .get("/", passportJwt, studyController.getWords)
   .post("/", joi.validateSaveLearn, passportJwt, studyController.saveLearn);
 
-studyRouter.get("/result", passportJwt, studyController.getLearnResult);
+//todo 프론트요청으로 임시 인가 제거. 추후 다 시 추가해주세요
+studyRouter.get("/result", studyController.getLearnResult);
 export default studyRouter;
