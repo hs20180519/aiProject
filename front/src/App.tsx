@@ -8,6 +8,7 @@ import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import KakaoTestPage from "./pages/KakaoTestPage";
 import OAuthPage from "./pages/OAuthPage";
 import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
+import RankFeild from "./components/rankFeild";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
 
@@ -68,6 +69,7 @@ function App() {
           <ChakraProvider theme={theme}>
             <BrowserRouter>
               <Routes>
+                <Route path={"/rank"} element={<RankFeild />} />
                 <Route path={"/"} element={<InrtoPage />} />
                 <Route path={"/main"} element={<MainPage />} />
                 <Route path={"/login"} element={<LoginPage />} />
