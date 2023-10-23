@@ -25,6 +25,35 @@
 
 ## vm 에서 실행
 - python 버전 3.10.13 이상
+- venv 설정
+  - `python -m venv venv`
+  - `source venv/bin/activate`
 - `.env` 파일 생성 후 OpenAI api 토큰 발급받아서 `OPENAI_API_KEY=토큰` 형식으로 설정
 - `pip3 install gunicorn`
+- `pip3 install -r requirements.txt`
 - `gunicorn -k uvicorn.workers.UvicornWorker --access-logfile ./gunicorn-access.log main:app --bind 0.0.0.0:8777 --workers 2 --timeout 100`
+
+## vm 서비스 등록
+```
+[Unit]
+Description=Gunicorn service for my FastAPI app
+After=network.target
+
+[Service]
+User=elice
+Group=elice
+WorkingDirectory=/home/elice/team1/gpt
+ExecStart=/home/elice/team1/gpt/venv/bin/gunicorn -k uvicorn.workers.UvicornWorker --access-logfile /home/elice/team1/gpt/gunicorn-access.log main:app --bind 0.0.0.0:8777 --workers 2 --timeout 100
+
+[Install]
+WantedBy=multi-user.target
+```
+
+- `sudo vi /etc/systemd/system/myapi.service`
+- `sudo systemctl daemon-reload`
+- `sudo systemctl start myapi.service`
+
+- 시스템이 시작될 때 자동으로 시작되도록 등록
+  - `sudo systemctl enable myapi`
+- 로그확인
+  - `sudo journalctl -u myapi -f`
