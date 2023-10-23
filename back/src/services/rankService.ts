@@ -66,7 +66,8 @@ export const userGapRank = async (userId: number) => {
   }
 };
 
-//todo 스케쥴러
+// todo 스케쥴러
+// 오늘의 총점
 
 /** 매일 오후 6시 유저랭킹 저장 */
 // export const updateUserRank6pm = async (user: User) => {
