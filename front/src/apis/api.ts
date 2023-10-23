@@ -8,7 +8,7 @@ async function get(endpoint: string) {
   console.log(`%cGET 요청`, "color: #a25cd1;");
   const token = sessionStorage.getItem("userToken");
   console.log(token);
-  const url = `${serverUrl + endpoint}/`;
+  const url = `${serverUrl + endpoint}`;
   console.log(url);
   const res = await axios.get(url, {
     // JWT 토큰을 헤더에 담아 백엔드 서버에 보냄.
