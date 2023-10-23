@@ -11,15 +11,16 @@ export interface RankItemProps {
   score: number;
 }
 
-const RankList = ({ rankList }: RankListProps) => {
+const RankItem = ({ rankList }: RankListProps) => {
   return (
     <>
       {rankList.map((rank: RankItemProps, index: number) => (
         <div key={rank.id}>
-          {index + 1}등 {rank.nickname} {rank.score}
+          <p>{index + 1}등</p>
+          <p> {rank.nickname}</p> <p>{rank.score}</p>
         </div>
       ))}
     </>
   );
 };
-export default RankList;
+export default RankItem;

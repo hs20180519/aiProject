@@ -8,7 +8,7 @@ import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import KakaoTestPage from "./pages/KakaoTestPage";
 import OAuthPage from "./pages/OAuthPage";
 import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
-import RankFeild from "./components/rankFeild";
+import RankFeild from "./components/RankFeild";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
 
@@ -65,7 +65,7 @@ function App() {
   return (
     <DispatchContext.Provider value={dispatch}>
       <UserStateContext.Provider value={userState}>
-        <div className={"App"}>
+        <div className="App">
           <ChakraProvider theme={theme}>
             <BrowserRouter>
               <Routes>

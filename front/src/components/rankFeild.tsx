@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { ListItem, OrderedList, Spinner } from "@chakra-ui/react";
-import RankList from "./ListItem";
+import RankList from "./RankItem";
 
 import * as Api from "../apis/api";
 
