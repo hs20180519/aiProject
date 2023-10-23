@@ -11,7 +11,7 @@ from models.grammar_schema import GrammarResponse
 from word_langchain.process import generate_dialog_process, generate_grammar_explain_process
 
 router = APIRouter(
-    prefix="/api/gpt"
+    prefix="/python/api/gpt"
 )
 
 

@@ -25,9 +25,10 @@
 
 ## vm 에서 실행
 - python 버전 3.10.13 이상
-- venv 설정
-  - `python -m venv venv`
-  - `source venv/bin/activate`
+- virtualenv  설정
+  - `pip install virtualenv`
+  - `virtualenv .venv -p python3.10.13`
+  - `source .venv/bin/activate`
 - `.env` 파일 생성 후 OpenAI api 토큰 발급받아서 `OPENAI_API_KEY=토큰` 형식으로 설정
 - `pip3 install gunicorn`
 - `pip3 install -r requirements.txt`
@@ -43,7 +44,7 @@ After=network.target
 User=elice
 Group=elice
 WorkingDirectory=/home/elice/team1/gpt
-ExecStart=/home/elice/team1/gpt/venv/bin/gunicorn -k uvicorn.workers.UvicornWorker --access-logfile /home/elice/team1/gpt/gunicorn-access.log main:app --bind 0.0.0.0:8777 --workers 2 --timeout 100
+ExecStart=/home/elice/team1/gpt/.venv/bin/gunicorn -k uvicorn.workers.UvicornWorker --access-logfile /home/elice/team1/gpt/gunicorn-access.log main:app --bind 0.0.0.0:8777 --workers 2 --timeout 100
 
 [Install]
 WantedBy=multi-user.target

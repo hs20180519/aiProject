@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 router = APIRouter(
-    prefix="/api/test"
+    prefix="/python/api/test"
 )
 
 
