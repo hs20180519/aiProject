@@ -15,6 +15,8 @@ import postRouter from "./routers/postRouter";
 import commentRouter from "./routers/commentRouter";
 import studyRouter from "./routers/studyRouter";
 import bookRouter from "./routers/bookRouter";
+import progressRouter from "./routers/progressRouter";
+import rankRouter from "./routers/rankRouter";
 import session from "express-session";
 import compression from "compression";
 import helmet from "helmet";
@@ -62,16 +64,18 @@ passport.use("jwt", jwt);
 
 app.use(reqAndResLogger);
 
-app.use("/auth", authRouter);
-app.use("/oauth", oAuthRouter);
-app.use("/user", userRouter);
-app.use("/upload", uploadRouter);
-app.use("/study", studyRouter);
-app.use("/book", bookRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/oauth", oAuthRouter);
+app.use("/api/user", userRouter);
+app.use("/api/upload", uploadRouter);
+app.use("/api/study", studyRouter);
+app.use("/api/book", bookRouter);
+app.use("/api/progress", progressRouter);
+app.use("/api/rank", rankRouter);
 
 // 미사용 라우터
-app.use("/post", postRouter);
-app.use("/comment", commentRouter);
+app.use("/api/post", postRouter);
+app.use("/api/comment", commentRouter);
 
 app.use(errorLogger);
 

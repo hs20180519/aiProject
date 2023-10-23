@@ -1,9 +1,9 @@
-import Router from "express";
+import Router, { Express } from "express";
 import passportJwt from "../middlewares/passportJwt";
 import * as bookController from "../controllers/bookController";
 import * as joi from "../validators/bookValidator";
 
-const bookRouter = Router();
+const bookRouter: Express = Router();
 
 bookRouter
   .post("/", joi.validateCreateBook, passportJwt, bookController.createBook)
@@ -13,7 +13,7 @@ bookRouter
 
 bookRouter
   .post("/word", joi.validateCreateWordInBook, passportJwt, bookController.createCustomWordInBook)
-  .get("/word", joi.validateGetBook, passportJwt, bookController.getBook)
+  .get("/word", passportJwt, bookController.getBook)
   .put("/word", joi.validateUpdateWordInBook, passportJwt, bookController.updateCustomWordInBook)
   .delete(
     "/word",

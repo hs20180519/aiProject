@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient, User, VerifiCode } from "@prisma/client";
 import { sendMail } from "../utils/sendMail";
 import * as authInterface from "../interfaces/authInterface";
 import { plainToClass } from "class-transformer";
@@ -43,7 +43,7 @@ export const resendVerificationCode = async (email: string): Promise<void> => {
 };
 
 export const verifyEmail = async (email: string, code: string): Promise<boolean> => {
-  const verificationCode = await prisma.verifiCode.findUnique({
+  const verificationCode: VerifiCode | null = await prisma.verifiCode.findUnique({
     where: { email },
   });
   if (!verificationCode) return false;
@@ -55,25 +55,12 @@ export const verifyEmail = async (email: string, code: string): Promise<boolean>
   } else return false;
 };
 
-export const getUserByNickname = async (nickname: string): Promise<User | null> => {
-  return prisma.user.findUnique({
-    where: { nickname },
-  });
-};
-
-export const signUpDuplicateCheck = async (
-  email: string,
-  nickname: string,
-): Promise<authInterface.DuplicateCheckResult> => {
-  const user = await prisma.user.findFirst({
+export const signUpDuplicateCheck = async (email: string): Promise<User | null> => {
+  return prisma.user.findFirst({
     where: {
-      OR: [{ email }, { nickname }],
+      email: email,
     },
   });
-  return {
-    emailExists: user?.email === email,
-    nicknameExists: user?.nickname === nickname,
-  };
 };
 
 export const createUser = async (userData: authInterface.UserCreationData): Promise<UserDto> => {
@@ -84,7 +71,7 @@ export const createUser = async (userData: authInterface.UserCreationData): Prom
 };
 
 export const editUser = async (userId: number, updatedData: Partial<User>): Promise<UserDto> => {
-  const updatedUser = await prisma.user.update({
+  const updatedUser: User = await prisma.user.update({
     where: { id: userId },
     data: updatedData,
   });
@@ -94,7 +81,7 @@ export const editUser = async (userId: number, updatedData: Partial<User>): Prom
 };
 
 export const deleteUser = async (userId: number): Promise<null | UserDto> => {
-  const user = await prisma.user.findUnique({
+  const user: User | null = await prisma.user.findUnique({
     where: { id: userId },
   });
   if (user?.profileImage)

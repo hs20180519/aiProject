@@ -24,9 +24,9 @@ app.use("/study", studyRouter);
 app.use("/book", bookRouter);
 
 describe("Book and Study API", () => {
-  let userToken: any;
-  let customBookId: number;
-  let wordId: number;
+  let userToken: string;
+  let customBookId: string;
+  let wordId: string;
 
   beforeAll(async () => {
     await signUpUser();
@@ -35,13 +35,13 @@ describe("Book and Study API", () => {
 
   it("POST /book - 커스텀 단어장을 생성하고 201 반환  ", async () => {
     const res = await request(app)
-      .post("/book") // 적절한 경로로 변경하세요.
+      .post("/book")
       .set("Authorization", `Bearer ${userToken}`)
       .send({ title: "Test Book" });
 
     expect(res.status).toBe(201);
 
-    customBookId = res.body.id; // 응답에서 커스텀 단어장 ID를 가져옵니다.
+    customBookId = res.body.id;
   });
 
   it("GET /book - 커스텀 단어장 목록 조회", async () => {
@@ -69,7 +69,7 @@ describe("Book and Study API", () => {
 
     expect(res.status).toBe(201);
 
-    wordId = res.body.id; // 응답에서 단어 ID를 가져옵니다.
+    wordId = res.body.id;
   });
 
   it("GET /book/word - 커스텀 단어장에 커스텀 단어 목록 조회", async () => {

@@ -1,6 +1,17 @@
+# dotenv
+
+- `.env` 파일 설정
+
+```
+REACT_APP_SERVER_URL="REACT_APP_SERVER_URL"
+REACT_APP_SERVER_URL_API="REACT_APP_SERVER_URL_API"
+REACT_APP_GPT_SVR_URL="REACT_APP_GPT_SVR_URL"
+```
+
 # 초기 패키지 설치
 
 `yarn`을 사용하여 패키지 설치하기
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -1,14 +1,13 @@
-import express from "express";
+import Router, { Express } from "express";
 import * as studyController from "../controllers/studyController";
 import passportJwt from "../middlewares/passportJwt";
 import * as joi from "../validators/studyValidator";
-
-const studyRouter = express.Router();
+const studyRouter: Express = Router();
 
 studyRouter.get("/experience", studyController.experience);
 
 studyRouter
-  .get("/", joi.validateGetWords, passportJwt, studyController.getWords)
+  .get("/", passportJwt, studyController.getWords)
   .post("/", joi.validateSaveLearn, passportJwt, studyController.saveLearn);
 
 studyRouter.get("/result", passportJwt, studyController.getLearnResult);

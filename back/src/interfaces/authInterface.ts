@@ -9,11 +9,6 @@ export interface AuthenticatedRequest extends Request {
 export interface UserCreationData {
   password: string;
   name: string;
-  nickname: string;
+  nickname?: string;
   email: string;
-}
-
-export interface DuplicateCheckResult {
-  emailExists: boolean;
-  nicknameExists: boolean;
 }

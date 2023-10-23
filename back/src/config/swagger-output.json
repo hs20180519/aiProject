@@ -11,23 +11,16 @@
     }
   ],
   "paths": {
-    "/auth/check": {
+    "/api/auth/check": {
       "get": {
         "tags": [
           "Auth"
         ],
-        "summary": "회원가입 이메일 및 닉네임 중복 체크",
+        "summary": "[회원가입 요청 전] 이메일 중복 체크 ?email=...",
         "description": "",
         "parameters": [
           {
             "name": "email",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "nickname",
             "in": "query",
             "schema": {
               "type": "string"
@@ -47,13 +40,13 @@
         }
       }
     },
-    "/auth/register": {
+    "/api/auth/register": {
       "post": {
         "tags": [
           "Auth"
         ],
         "summary": "이메일 인증",
-        "description": "사용자 이메일로 인증코드 전송",
+        "description": "[회원가입 요청 전] 사용자 이메일로 인증코드 전송",
         "responses": {
           "200": {
             "description": "OK"
@@ -78,13 +71,13 @@
         }
       }
     },
-    "/auth/verify": {
+    "/api/auth/verify": {
       "post": {
         "tags": [
           "Auth"
         ],
         "summary": "이메일 인증 코드 확인",
-        "description": "사용자가 입력한 인증코드가 일치하는지 확인. 일치하면 저장된 인증코드 삭제하고 true 반환",
+        "description": "[회원가입 요청 전] 사용자가 입력한 인증코드가 일치하는지 확인.",
         "responses": {
           "200": {
             "description": "OK"
@@ -112,7 +105,7 @@
         }
       }
     },
-    "/auth/signup": {
+    "/api/auth/signup": {
       "post": {
         "tags": [
           "Auth"
@@ -155,7 +148,7 @@
         }
       }
     },
-    "/auth/": {
+    "/api/auth/": {
       "post": {
         "tags": [
           "Auth"
@@ -201,7 +194,7 @@
         "security": []
       }
     },
-    "/oauth/kakao": {
+    "/api/oauth/kakao": {
       "get": {
         "description": "",
         "responses": {
@@ -233,7 +226,7 @@
         }
       }
     },
-    "/oauth/kakao/callback": {
+    "/api/oauth/kakao/callback": {
       "post": {
         "description": "",
         "responses": {
@@ -257,7 +250,7 @@
         }
       }
     },
-    "/user/": {
+    "/api/user/": {
       "get": {
         "tags": [
           "User"
@@ -272,7 +265,7 @@
         "security": []
       }
     },
-    "/upload/profile-image": {
+    "/api/upload/profile-image": {
       "post": {
         "tags": [
           "Upload"
@@ -287,7 +280,7 @@
         "security": []
       }
     },
-    "/study/experience": {
+    "/api/study/experience": {
       "get": {
         "tags": [
           "Study"
@@ -301,65 +294,23 @@
         }
       }
     },
-    "/study/": {
+    "/api/study/": {
       "get": {
         "tags": [
           "Study"
         ],
         "summary": "단어 학습",
-        "description": "쿼리별 단어 학습 / ?key=true / 커스텀단어 학습만 ?custom=true?customBookId=id",
+        "description": "쿼리별 단어 학습  * ?book={correct, incorrect, csat, toeic, toefl, custom}&customBookId=\"\" ",
         "parameters": [
           {
-            "name": "correct",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "incorrect",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "csat",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "toeic",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "toefl",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "ielts",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "custom",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
             "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "book",
             "in": "query",
             "schema": {
               "type": "string"
@@ -369,9 +320,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
           }
         },
         "security": []
@@ -410,7 +358,7 @@
         }
       }
     },
-    "/study/result": {
+    "/api/study/result": {
       "get": {
         "tags": [
           "Study"
@@ -425,7 +373,7 @@
         "security": []
       }
     },
-    "/book/": {
+    "/api/book/": {
       "post": {
         "tags": [
           "Book"
@@ -523,7 +471,7 @@
         "security": []
       }
     },
-    "/book/word": {
+    "/api/book/word": {
       "post": {
         "tags": [
           "Book"
@@ -571,64 +519,8 @@
           "Book"
         ],
         "summary": "단어장 단어 조회",
-        "description": "쿼리별 단어장 조회 / ?key=true / 커스텀단어 조회만 ?custom=true?customBookId=id",
+        "description": "쿼리별 단어장 조회 (서버사이드 페이징)  * ?book={correct, incorrect, csat, toeic, toefl, custom}&customBookId=\"\" ",
         "parameters": [
-          {
-            "name": "correct",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "incorrect",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "csat",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "toeic",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "toefl",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "ielts",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "custom",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "customBookId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "page",
             "in": "query",
@@ -642,14 +534,25 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "book",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
           }
         },
         "security": []
@@ -719,7 +622,100 @@
         "security": []
       }
     },
-    "/post/": {
+    "/api/progress/": {
+      "get": {
+        "tags": [
+          "Progress"
+        ],
+        "summary": "학습진행률 조회",
+        "description": "로그인한 사용자의 전체, 카테고리별 학습진행률 조회",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/rank/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/rank/{userId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/rank/gap/{userId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/post/": {
       "post": {
         "tags": [
           "Post"
@@ -796,7 +792,7 @@
         }
       }
     },
-    "/post/{postId}": {
+    "/api/post/{postId}": {
       "put": {
         "tags": [
           "Post"
@@ -873,7 +869,7 @@
         "security": []
       }
     },
-    "/comment/": {
+    "/api/comment/": {
       "post": {
         "tags": [
           "Comment"
@@ -918,7 +914,7 @@
         }
       }
     },
-    "/comment/{commentId}": {
+    "/api/comment/{commentId}": {
       "put": {
         "tags": [
           "Comment"

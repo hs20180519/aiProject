@@ -639,7 +639,7 @@ async function hashAndInsertUsers() {
     }
   }
 
-  prisma.$disconnect();
+  await prisma.$disconnect();
 }
 
 hashAndInsertUsers();

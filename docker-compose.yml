@@ -1,0 +1,10 @@
+react-front:
+  build:
+    dockerfile: Dockerfile
+    context: front
+  env_file:
+    - .env
+  volumes:
+    - /usr/app/node_modules
+    - .team1/front:/usr/app
+  command: ["yarn", "start"]

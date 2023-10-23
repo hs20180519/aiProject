@@ -5,27 +5,18 @@ import * as authInterface from "../interfaces/authInterface";
 import { User } from "@prisma/client";
 import { UserDto } from "../dtos/userDto";
 
-export const checkEmailOrNickname = async (req: Request, res: Response, next: NextFunction) => {
+export const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Auth']
-   * #swagger.summary = '회원가입 이메일 및 닉네임 중복 체크'
+   * #swagger.summary = '[회원가입 요청 전] 이메일 중복 체크 ?email=...'
    */
   try {
     const email = req.query.email as string;
-    const nickname = req.query.nickname as string;
-
     if (email) {
       const existingUserEmail = await authService.getUserByEmail(email);
       if (existingUserEmail)
         return res.status(409).json({ message: "이미 사용중인 이메일 입니다." });
       else return res.status(200).json({ message: "사용 가능한 이메일 입니다." });
-    }
-
-    if (nickname) {
-      const existingUserNickname = await authService.getUserByNickname(nickname);
-      if (existingUserNickname)
-        return res.status(409).json({ message: "이미 사용중인 닉네임 입니다." });
-      else return res.status(200).json({ message: "사용 가능한 닉네임 입니다." });
     }
   } catch (error) {
     console.error(error);
@@ -37,7 +28,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
   /**
    * #swagger.tags = ['Auth']
    * #swagger.summary = '이메일 인증'
-   * #swagger.description = '사용자 이메일로 인증코드 전송'
+   * #swagger.description = '[회원가입 요청 전] 사용자 이메일로 인증코드 전송'
    */
   try {
     const email = req.body.email;
@@ -55,7 +46,7 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
   /**
    * #swagger.tags = ['Auth']
    * #swagger.summary = '이메일 인증 코드 확인'
-   * #swagger.description = '사용자가 입력한 인증코드가 일치하는지 확인. 일치하면 저장된 인증코드 삭제하고 true 반환'
+   * #swagger.description = '[회원가입 요청 전] 사용자가 입력한 인증코드가 일치하는지 확인.'
    */
   try {
     const { email, code } = req.body;
@@ -77,10 +68,9 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
    */
   try {
     const { email, password, name, nickname } = req.body;
-    const { emailExists, nicknameExists } = await authService.signUpDuplicateCheck(email, nickname);
+    const emailExists: User | null = await authService.signUpDuplicateCheck(email);
 
     if (emailExists) return res.status(409).json({ message: "이미 존재하는 이메일입니다." });
-    if (nicknameExists) return res.status(409).json({ message: "이미 존재하는 닉네임입니다." });
 
     const hashedPassword: string = await bcrypt.hash(password, 10);
     const newUser: UserDto = await authService.createUser({
@@ -107,7 +97,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
      * #swagger.description = '로컬 로그인. 로그인 성공 시 JWT 발급'
      */
     const authReq = req as authInterface.AuthenticatedRequest;
-    console.log("-----------로그인 성공----------"); // todo ...? ㅋㅋㅋ 나중에 삭제
     if (!authReq.user) return res.status(401).json({ message: "유효하지 않은 사용자 정보입니다." });
     const loginUser = {
       token: authReq.token, // todo postman 편의성을 위해 추가. 개발 종료시점에서 삭제
@@ -133,7 +122,7 @@ export const editUser = async (req: Request, res: Response, next: NextFunction) 
   try {
     const userId: number = (req.user as User).id;
     const updatedData = req.body;
-    const updatedUser = await authService.editUser(userId, updatedData);
+    const updatedUser: UserDto = await authService.editUser(userId, updatedData);
     return res.status(200).json(updatedUser);
   } catch (error) {
     console.error(error);
