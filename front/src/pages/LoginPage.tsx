@@ -5,7 +5,7 @@ import * as Api from "../apis/api";
 import { DispatchContext } from "../App";
 import { UserProps } from "../reducer";
 import KakaoLoginButton from "../components/KakaoLoginButton";
-
+import validateEmail from "../libs/validateEmail";
 interface LoginProps {
   email: string;
   password: string;
@@ -13,7 +13,7 @@ interface LoginProps {
 
 const LoginPage = () => {
   const [formData, setFormData] = useState<LoginProps>({
-    email: "",
+    email: "sample8@example.com",
     password: "",
   });
 
@@ -21,16 +21,6 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
   const dispatch = useContext(DispatchContext);
-
-  const validateEmail = (email: string) => {
-    return (
-      email
-        .toLowerCase()
-        .match(
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zAZ]{2,}))$/,
-        ) !== null
-    );
-  };
 
   const isEmailValid = validateEmail(email);
   const isPasswordValid = password.length >= 4;
@@ -48,18 +38,20 @@ const LoginPage = () => {
         email,
         password,
       });
-      const user = res.data;
-      if (!user) {
-        throw new Error("유저 정보 없음");
-      }
-      if (userTypeGuard(user)) {
-        const jwtToken = user.token;
-        sessionStorage.setItem("userToken", jwtToken);
 
-        dispatch({ type: "LOGOUT" });
-        navigate("/", { replace: true });
+      if (res.status === 200) {
+        const jwtToken = res.data.token;
+        sessionStorage.setItem("userToken", jwtToken);
+        const userInfo = await Api.get("/user");
+        if (userTypeGuard(userInfo.data)) {
+          dispatch({ type: "LOGIN_SUCCESS", payload: userInfo.data });
+          navigate("/main", { replace: true });
+        } else {
+          window.alert("유저 정보가 잘못되었습니다.");
+        }
       }
     } catch (err) {
+      console.log("catch");
       const objectErr = err as any;
       window.alert(objectErr.response.data);
     }
@@ -116,9 +108,7 @@ const LoginPage = () => {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
                 {!isEmailValid && email.length > 0 && (
-                  <div className={"text-danger"}>
-                    {`이메일 형식이 올바르지 않습니다.`}
-                  </div>
+                  <div className={"text-danger"}>{`이메일 형식이 올바르지 않습니다.`}</div>
                 )}
               </div>
               <div className={"form-group"}>
@@ -128,7 +118,9 @@ const LoginPage = () => {
                   className={"form-control"}
                   placeholder={"비밀번호를 입력하세요."}
                   value={password}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                 />
                 {!isPasswordValid && password.length > 0 && (
                   <div className={"text-danger"} style={{ color: "#FF6347" }}>

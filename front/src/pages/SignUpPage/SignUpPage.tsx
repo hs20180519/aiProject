@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { ChangeEvent, SyntheticEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
@@ -275,7 +274,7 @@ const SignUp = () => {
                       </button>
                     </div>
                   )}
-                  {i.dangerText.condition && (
+                  {i.dangerText?.condition && (
                     <div className={"text-danger"}>{i.dangerText.text}</div>
                   )}
                 </div>
