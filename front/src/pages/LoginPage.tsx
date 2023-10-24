@@ -6,10 +6,7 @@ import { DispatchContext } from "../App";
 import { UserProps } from "../reducer";
 import KakaoLoginButton from "../components/KakaoLoginButton";
 import validateEmail from "../libs/validateEmail";
-<<<<<<< HEAD
 
-=======
->>>>>>> d13233f45cb7366d46efd6a16797f00687882c0d
 interface LoginProps {
   email: string;
   password: string;
@@ -25,10 +22,6 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
   const dispatch = useContext(DispatchContext);
-<<<<<<< HEAD
-=======
-
->>>>>>> d13233f45cb7366d46efd6a16797f00687882c0d
   const isEmailValid = validateEmail(email);
   const isPasswordValid = password.length >= 4;
   const isFormValid = isEmailValid && isPasswordValid;

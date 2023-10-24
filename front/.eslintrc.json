@@ -2,24 +2,11 @@
   "root": true,
   "plugins": ["@typescript-eslint"],
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
-<<<<<<< HEAD
-  "parser": "@typescript-eslint/parser"
-  // "rules": {
-  //   "@typescript-eslint/strict-boolean-expressions": [
-  //     2,
-  //     {
-  //       "allowString": false,
-  //       "allowNumber": false
-  //     }
-  //   ]
-  // }
-=======
   "parser": "@typescript-eslint/parser",
   "rules": {
     "@typescript-eslint/strict-boolean-expressions": 0,
     "@typescript-eslint/no-unused-vars": ["off"]
   }
->>>>>>> d13233f45cb7366d46efd6a16797f00687882c0d
 }
 // {
 //   "env": {
