@@ -1,6 +1,6 @@
-import { InputProps, Text } from "@chakra-ui/react";
+import { Box, InputProps, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import Input from "./InputFeild";
+import Input from "../InputFeild";
 
 interface CustomeWordCard extends InputProps {
   label: string;
@@ -23,9 +23,9 @@ const handleApi = async({
 
 export default function AddCustomeWordCard({ label, ...props }: CustomeWordCard) {
   return (
-    <div>
+    <Box>
       <Text>{label}</Text>
       <Input {...props} />
-    </div>
+    </Box>
   );
 }

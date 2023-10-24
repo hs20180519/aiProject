@@ -1,5 +1,5 @@
 import { Center, Box, Flex, useColorModeValue, useDisclosure, Spinner } from "@chakra-ui/react";
-import { FiEdit2, FiTrendingUp, FiCodesandbox, FiStar, FiUser } from "react-icons/fi";
+import { FiEdit2, FiTrendingUp, FiCodesandbox, FiStar, FiDatabase, FiUser } from "react-icons/fi";
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserStateContext, DispatchContext } from "../../App";
@@ -12,8 +12,9 @@ import Header from "./Header";
 const LinkItems: Array<type.LinkItemProps> = [
   { id: "study", name: "단어학습", icon: FiEdit2 },
   { id: "rank", name: "랭킹", icon: FiTrendingUp },
-  { id: "wordbook", name: "단어장", icon: FiStar },
   { id: "grammar", name: "문법 교정", icon: FiCodesandbox },
+  { id: "wordbook", name: "단어장", icon: FiStar },
+  { id: "wordlist", name: "저장소", icon: FiDatabase },
   { id: "mypage", name: "내 정보", icon: FiUser },
 ];
 
@@ -59,7 +60,12 @@ const MainPage = () => {
 
   return (
     <Box minH={"100vh"} bg={useColorModeValue("gray.100", "gray.900")}>
-      <SidebarContent onClose={() => onClose} display={{ base: "none", md: "block" }} />
+      <SidebarContent
+        onClose={() => onClose}
+        display={{ base: "none", md: "block" }}
+        // linkItems={LinkItems}
+        onChange={(id) => {}}
+      />
       <Header isOpen={isOpen} onClose={onClose} />
       <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>

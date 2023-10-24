@@ -8,9 +8,11 @@ import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import OAuthPage from "./pages/OAuthPage";
 import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
 import RankFeild from "./components/RankFeild";
+import AddCustomeWordCard2 from "./components/Custom/AddCustomBook2";
 // import TestPage from "./pages/TestPage";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
+import AddCustomeWordCard from "./components/Custom/AddCustomWord";
 
 export const DispatchContext = createContext<DispatchEvent | null>(null);
 export const UserStateContext = createContext<UserState | null>(null);
@@ -77,6 +79,7 @@ function App() {
                 <Route path={"/signup"} element={<SignUpPage />} />
                 <Route path={"/oauth/kakao"} element={<OAuthPage />} />
                 <Route path={"/signup2"} element={<SignUpPage2 />} />
+                <Route path={"/custom"} element={<AddCustomeWordCard2 />} />
                 {/* <Route path={"/test"} element={<TestPage />} /> */}
               </Routes>
             </BrowserRouter>
