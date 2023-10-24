@@ -2,7 +2,7 @@
 export default function KakaoLoginButton() {
   return (
     <a href={`${process.env.REACT_APP_SERVER_URL_API}/oauth/kakao`}>
-      <img src={`${process.env.PUBLIC_URL}/images/kakao_login.png`} alt={"카카오 로그인"} />
+      <img src={`${process.env.PUBLIC_URL}/images/kakao_login_wide.png`} alt={"카카오 로그인"} />
     </a>
   );
 }

@@ -24,11 +24,11 @@ import {
 } from "@chakra-ui/react";
 
 import {
-  FiHome,
+  FiEdit2,
+  FiCodesandbox,
   FiTrendingUp,
-  FiCompass,
   FiStar,
-  FiSettings,
+  FiUser,
   FiMenu,
   FiBell,
   FiChevronDown,
@@ -41,6 +41,7 @@ import { IconType } from "react-icons";
 import InnerPage from "./InnerPage";
 
 interface LinkItemProps {
+  id: string;
   name: string;
   icon: IconType;
 }
@@ -61,11 +62,11 @@ interface SidebarProps extends BoxProps {
 }
 
 const LinkItems: Array<LinkItemProps> = [
-  { name: "홈", icon: FiHome },
-  { name: "단어학습", icon: FiTrendingUp },
-  { name: "Explore", icon: FiCompass },
-  { name: "단어장", icon: FiStar },
-  { name: "설정", icon: FiSettings },
+  { id: "study", name: "단어학습", icon: FiEdit2 },
+  { id: "rank", name: "랭킹", icon: FiTrendingUp },
+  { id: "wordbook", name: "단어장", icon: FiStar },
+  { id: "grammar", name: "문법 교정", icon: FiCodesandbox },
+  { id: "mypage", name: "내 정보", icon: FiUser },
 ];
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
@@ -82,7 +83,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <Flex h={"20"} alignItems={"center"} mx={"8"} justifyContent={"space-between"}>
         <Text fontSize={"2xl"} fontFamily={"monospace"} fontWeight={"bold"}>
-          {"🐔Wordy\r"}
+          {"🐾Wordy\r"}
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
