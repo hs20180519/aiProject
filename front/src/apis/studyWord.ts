@@ -12,7 +12,7 @@ export class FetchStudyWords {
    * ['custom'] = {  type: 'boolean' }
    */
   static async getStudyWord(queryParams: string) {
-    const url = `study/`;
+    const url = `/study/`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
     return instance.get(fullUrl);
@@ -21,8 +21,8 @@ export class FetchStudyWords {
   /** 학습 중간 저장
    * 해당 단어의 아이디와 정답 유무(correct=boolean) 같이 보내주세요 */
   static async saveLearn(data: { wordId: number; correct: boolean }) {
-    const url = `study/`;
-    return instance.post(url, data);
+    const url = `/study/`;
+    return instance.postQuery(url, data);
   }
 
   /** 학습 결과 조회
