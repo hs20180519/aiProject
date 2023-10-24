@@ -21,7 +21,7 @@ const handleApi = async({
     onFinally:()=>void
 }); */
 
-export default function AddCustomeWordCard({ label, ...props }: CustumeWordCard) {
+export default function AddCustomeWordCard({ label, ...props }: CustomeWordCard) {
   return (
     <div>
       <Text>{label}</Text>
