@@ -13,6 +13,7 @@ import AddCustomeWordCard2 from "./components/Custom/AddCustomBook2";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
 import AddCustomeWordCard from "./components/Custom/AddCustomWord";
+import TestGptWordPage from "./pages/TestGptWordPage/TestGptWordPage";
 
 export const DispatchContext = createContext<DispatchEvent | null>(null);
 export const UserStateContext = createContext<UserState | null>(null);
@@ -81,6 +82,7 @@ function App() {
                 <Route path={"/signup2"} element={<SignUpPage2 />} />
                 <Route path={"/custom"} element={<AddCustomeWordCard2 />} />
                 {/* <Route path={"/test"} element={<TestPage />} /> */}
+                <Route path={"/test_word"} element={<TestGptWordPage />} />
               </Routes>
             </BrowserRouter>
           </ChakraProvider>

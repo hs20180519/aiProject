@@ -6,7 +6,7 @@ app = FastAPI()
 gec_pipe = pipeline(model="hs2019125/gec-fine-tuned")
 
 router = APIRouter(
-    prefix="/api/grammar"
+    prefix="/python/api/grammar"
 )
 
 class Sentence(BaseModel):
@@ -18,7 +18,7 @@ async def correct_text(sentence: Sentence):
 
         if len(sentence.sentence) > 256:
             raise ValueError('256자 이상의 문장은 교정이 불가능합니다.')
-        
+
         if len(sentence.sentence)==0:
             raise ValueError('문장이 입력되지 않았습니다.')
 

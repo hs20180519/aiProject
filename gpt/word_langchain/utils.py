@@ -1,11 +1,10 @@
 import csv
 import datetime
 import json
+import logging
 import os
 import re
 import tempfile
-
-from config.logging_setup import logging
 
 
 def read_vocab_from_csv(file_path):
