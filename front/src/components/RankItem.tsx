@@ -1,5 +1,4 @@
-import { List, ListItem, ListIcon, ListProps } from "@chakra-ui/react";
-import { BsTriangleFill } from "react-icons/bs";
+import { ListProps } from "@chakra-ui/react";
 
 interface RankListProps extends ListProps {
   rankList: RankItemProps[];

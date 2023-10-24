@@ -1,8 +1,8 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { ChangeEvent, SyntheticEvent, useState, useEffect } from "react";
+import React, { ChangeEvent, SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import * as Api from "../../apis/api";
+import validateEmail from "../../libs/validateEmail";
 
 type NewUserInfoType = {
   name: string;
@@ -12,15 +12,7 @@ type NewUserInfoType = {
   verificationCode: string;
 };
 
-const validateEmail = (email: string): boolean => {
-  return (
-    email
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      ) !== null
-  );
-};
+let timer: NodeJS.Timer;
 
 const SignUp = () => {
   const [newUserInfo, setNewUserInfo] = useState<NewUserInfoType>({
@@ -36,23 +28,6 @@ const SignUp = () => {
   const navigate = useNavigate();
   const [isEmailAvailable, setIsEmailAvailable] = useState<boolean | null>(null);
   const [emailVerificationStatus, setEmailVerificationStatus] = useState<string | null>(null);
-  const [debouncedEmail, setDebouncedEmail] = useState(email);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (email === debouncedEmail) {
-        checkEmailAvailability(email);
-      }
-    }, 1000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [email, debouncedEmail]);
-
-  useEffect(() => {
-    setDebouncedEmail(email);
-  }, [email]);
 
   const getEmailStatus = () => {
     if (isEmailAvailable) {
@@ -69,7 +44,7 @@ const SignUp = () => {
 
   const checkEmailAvailability = async (email: string) => {
     try {
-      const response = await Api.get(`/auth/check?email=${email}`);
+      const response = await Api.get(`/api/auth/check?email=${email}`);
       const { isAvailable } = response.data;
       if (isAvailable) {
         setIsEmailAvailable(true);
@@ -86,7 +61,7 @@ const SignUp = () => {
 
   const emailVerification = async (email: string) => {
     try {
-      await Api.post(`/auth/register`, { email });
+      await Api.post(`/api/auth/register`, { email });
     } catch (err) {
       console.error("이메일 인증 중 오류 발생:", err);
     }
@@ -94,7 +69,7 @@ const SignUp = () => {
 
   const verifyEmailCode = async (verificationCode: string) => {
     try {
-      await Api.post(`/auth/verify`, { verificationCode });
+      await Api.post(`/api/auth/verify`, { verificationCode });
       setEmailVerificationStatus("이메일 인증이 완료되었습니다.");
     } catch (err) {
       console.error("이메일 인증 코드 확인 중 오류 발생:", err);
@@ -109,9 +84,12 @@ const SignUp = () => {
       email: value,
     });
     setEmailVerificationStatus(""); // 이메일이 변경될 때 초기화
-    if (value) {
-      checkEmailAvailability(value); // 이메일이 변경될 때 중복 확인 요청 보내기
-    }
+
+    if (timer) clearTimeout(timer);
+
+    timer = setTimeout(() => {
+      checkEmailAvailability(value);
+    }, 1000);
   };
 
   const handleSubmit = async (e: SyntheticEvent) => {
@@ -121,7 +99,7 @@ const SignUp = () => {
         // 이메일 인증 코드 확인
         await verifyEmailCode(verificationCode);
         // 회원가입 요청
-        await Api.post("/auth/signup", {
+        await Api.post("/api/auth/signup", {
           name,
           email,
           password,
@@ -153,6 +131,10 @@ const SignUp = () => {
       ...newUserInfo,
       [name]: value,
     });
+  };
+
+  const navigateToIntroPage = () => {
+    navigate("/");
   };
 
   const signUpPageInputForms = [
@@ -213,7 +195,6 @@ const SignUp = () => {
     <form onSubmit={handleSubmit}>
       <div
         style={{
-          paddingTop: "134px",
           height: "100vh",
           display: "flex",
           justifyContent: "center",
@@ -275,7 +256,7 @@ const SignUp = () => {
                       </button>
                     </div>
                   )}
-                  {i.dangerText.condition && (
+                  {i.dangerText?.condition && (
                     <div className={"text-danger"}>{i.dangerText.text}</div>
                   )}
                 </div>
@@ -283,6 +264,7 @@ const SignUp = () => {
               <button type={"submit"} className={"btn btn-primary"} disabled={!isFormValid}>
                 {"회원가입\r"}
               </button>
+              <button onClick={navigateToIntroPage}>홈 화면으로 이동</button>
               {emailVerificationStatus && (
                 <div className={"text-info"}>{emailVerificationStatus}</div>
               )}

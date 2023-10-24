@@ -5,6 +5,7 @@ import * as Api from "../apis/api";
 import { DispatchContext } from "../App";
 import { UserProps } from "../reducer";
 import KakaoLoginButton from "../components/KakaoLoginButton";
+import validateEmail from "../libs/validateEmail";
 
 interface LoginProps {
   email: string;
@@ -21,17 +22,6 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
   const dispatch = useContext(DispatchContext);
-
-  const validateEmail = (email: string) => {
-    return (
-      email
-        .toLowerCase()
-        .match(
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zAZ]{2,}))$/,
-        ) !== null
-    );
-  };
-
   const isEmailValid = validateEmail(email);
   const isPasswordValid = password.length >= 4;
   const isFormValid = isEmailValid && isPasswordValid;
@@ -48,29 +38,33 @@ const LoginPage = () => {
         email,
         password,
       });
-      const user = res.data;
-      if (!user) {
-        throw new Error("유저 정보 없음");
-      }
-      if (userTypeGuard(user)) {
-        const jwtToken = user.token;
-        sessionStorage.setItem("userToken", jwtToken);
 
-        dispatch({ type: "LOGOUT" });
-        navigate("/", { replace: true });
+      if (res.status === 200) {
+        const jwtToken = res.data.token;
+        sessionStorage.setItem("userToken", jwtToken);
+        const userInfo = await Api.get("/user");
+        if (userTypeGuard(userInfo.data)) {
+          dispatch({ type: "LOGIN_SUCCESS", payload: userInfo.data });
+          navigate("/main", { replace: true });
+        } else {
+          window.alert("유저 정보가 잘못되었습니다.");
+        }
       }
     } catch (err) {
+      console.log("catch");
       const objectErr = err as any;
       window.alert(objectErr.response.data);
     }
   };
 
+  const navigateToIntroPage = () => {
+    navigate("/");
+  };
+
   return (
-    <>
       <div
         style={{
-          paddingTop: "134px",
-          height: "100%",
+          height: "100vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -149,12 +143,12 @@ const LoginPage = () => {
                   {"회원가입"}
                 </button>
                 <KakaoLoginButton />
+                <button onClick={navigateToIntroPage}>홈 화면으로 이동</button>
               </p>
             </form>
           </div>
         </div>
       </div>
-    </>
   );
 };
 

@@ -65,7 +65,7 @@ export default function SignupCard() {
                 <InputRightElement h={"full"}>
                   <Button
                     variant={"ghost"}
-                    // onClick={() => setShowPassword((showPassword) => !showPassword)}
+                    onClick={() => setShowPassword((showPassword) => !showPassword)}
                   >
                     {/* {showPassword ? <ViewIcon /> : <ViewOffIcon />} */}
                   </Button>

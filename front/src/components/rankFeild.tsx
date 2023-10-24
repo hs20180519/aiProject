@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { ListItem, OrderedList, Spinner } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/react";
 import RankList from "./RankItem";
 
 import * as Api from "../apis/api";
@@ -14,16 +14,16 @@ const USER_RANK = [
 
 export default function RankFeild() {
   const [loading, setLoading] = useState(false);
-  const [usersRank, setUsersRank] = useState([]);
+  // const [usersRank, setUsersRank] = useState([]);
 
   const fetchUserRanks = async () => {
     setLoading(true);
     const res = await Api.get("/rank");
     const data = res?.data;
     if (Array.isArray(data)) {
-      setUsersRank(data);
-    } else {
-      setUsersRank([]);
+    //   setUsersRank(data);
+    // } else {
+    //   setUsersRank([]);
     }
     setLoading(false);
   };
