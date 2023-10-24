@@ -15,7 +15,7 @@ import {
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+// import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link as ReactRouterLink } from "react-router-dom";
 import KakaoLoginButton from "../../components/KakaoLoginButton";
 
@@ -65,9 +65,9 @@ export default function SignupCard() {
                 <InputRightElement h={"full"}>
                   <Button
                     variant={"ghost"}
-                    onClick={() => setShowPassword((showPassword) => !showPassword)}
+                    // onClick={() => setShowPassword((showPassword) => !showPassword)}
                   >
-                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    {/* {showPassword ? <ViewIcon /> : <ViewOffIcon />} */}
                   </Button>
                 </InputRightElement>
               </InputGroup>
