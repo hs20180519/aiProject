@@ -36,3 +36,5 @@ const createMockData = async (): Promise<void> => {
 createMockData()
   .then(() => console.log("Mock data 생성 완료"))
   .catch((err) => console.error(err));
+
+// npx ts-node src/mocks/mockProgress.ts

@@ -130,7 +130,7 @@ export const deleteCustomBook = async (req: Request, res: Response, next: NextFu
     return res.status(200).json({ message: "단어장이 삭제되었습니다." });
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -154,7 +154,7 @@ export const createCustomWordInBook = async (req: Request, res: Response, next: 
     return res.status(201).json(createdCustomWordInBook);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
 
@@ -201,6 +201,6 @@ export const deleteCustomWordInBook = async (req: Request, res: Response, next: 
     return res.status(200).json({ message: "단어가 삭제되었습니다." });
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };
