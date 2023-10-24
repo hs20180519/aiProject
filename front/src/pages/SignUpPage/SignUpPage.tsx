@@ -1,8 +1,30 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { ChangeEvent, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import * as Api from "../../apis/api";
+import useDebounced from "../../hooks/useDebounce";
+import validateEmail from "../../libs/validateEmail";
+
+import {
+  VStack,
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  HStack,
+  InputRightElement,
+  Stack,
+  Button,
+  Heading,
+  Text,
+  useColorModeValue,
+  Link as ChakraLink,
+} from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { Link as ReactRouterLink } from "react-router-dom";
+import KakaoLoginButton from "../Login/KakaoLoginButton";
 
 type NewUserInfoType = {
   name: string;
@@ -12,18 +34,11 @@ type NewUserInfoType = {
   verificationCode: string;
 };
 
-const validateEmail = (email: string): boolean => {
-  return (
-    email
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zAZ]{2,}))$/,
-      ) !== null
-  );
-};
+let timer: NodeJS.Timer;
 
 const SignUp = () => {
-  const location = useLocation();
+  const [showPassword, setShowPassword] = useState(false);
+
   const [newUserInfo, setNewUserInfo] = useState<NewUserInfoType>({
     name: "",
     email: "",
@@ -35,27 +50,60 @@ const SignUp = () => {
   const { name, email, password, confirmPassword, verificationCode } = newUserInfo;
 
   const navigate = useNavigate();
-  const [isEmailAvailable, setIsEmailAvailable] = useState<boolean | null>(null);
-  const [emailVerificationStatus, setEmailVerificationStatus] = useState<string | null>(null);
+  const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
+  const [hasEmailCode, setHasEmailCode] = useState<string | null>(null);
+  const debounceFetchTerm = useDebounced(email, 500);
 
-  const checkEmailAvailability = async (email: string) => {
-    try {
-      const response = await Api.get(`/auth/check?email=${email}`);
-      const { isAvailable } = response.data;
-      if (isAvailable) {
-        setIsEmailAvailable(true);
-        // 이메일이 사용 가능하면 이메일 인증 요청
-        await emailVerification(email);
-      } else {
-        setIsEmailAvailable(false);
-      }
-    } catch (err) {
-      console.error("이메일 중복 확인 중 오류 발생:", err);
-      setIsEmailAvailable(false);
+  const getEmailStatus = () => {
+    if (isEmailAvailable) {
+      return "이 이메일은 사용 가능합니다.";
     }
+    if (isEmailAvailable === false) {
+      return "이미 사용 중인 이메일 주소입니다.";
+    }
+    if (isEmailAvailable === undefined) {
+      return "이메일 가용성 확인 중 오류가 발생했습니다.";
+    }
+    return ""; // 반환값이 없을 경우 빈 문자열 반환
   };
 
-  const emailVerification = async (email: string) => {
+  // 1. 중복 검사를 진행한다.
+  const fetchEmailCheck = async () => {
+    try {
+      const res = await Api.get(`/auth/check?email=${email}`);
+      console.log("----이메일 유효성 검사 --");
+      console.log(res);
+      if (res.status === 403) {
+        setIsEmailAvailable(false);
+      } else {
+        setIsEmailAvailable(true);
+      }
+
+      const { isAvailable } = res.data;
+    } catch (e) {
+      console.log("----error----");
+      console.log(e);
+    }
+
+    // try {
+    //   const response = await Api.get(`/api/auth/check?email=${email}`);
+    //   console.log("----이메일 유효성 검사 --");
+    //   console.log(response);
+    //   const { isAvailable } = response.data;
+    //   if (isAvailable) {
+    //     setIsEmailAvailable(true);
+    //     // 이메일이 사용 가능하면 이메일 인증 요청
+    //     await emailVerification(email);
+    //   } else {
+    //     console.log("---중복 처리---");
+    //   }
+    // } catch (err) {
+    //   console.error("이메일 중복 확인 중 오류 발생:", err);
+    // }
+  };
+
+  // 2. 이메일 인증 요청을 보낸다.
+  const fetchEmailVerification = async () => {
     try {
       await Api.post(`/auth/register`, { email });
     } catch (err) {
@@ -63,42 +111,29 @@ const SignUp = () => {
     }
   };
 
-  const verifyEmailCode = async (verificationCode: string) => {
+  // 3. 인증번호 인증을 진행한다.
+  const fetchEmailCode = async (verificationCode: string) => {
     try {
       await Api.post(`/auth/verify`, { verificationCode });
-      setEmailVerificationStatus("이메일 인증이 완료되었습니다.");
+      setHasEmailCode("이메일 인증이 완료되었습니다.");
     } catch (err) {
       console.error("이메일 인증 코드 확인 중 오류 발생:", err);
-      setEmailVerificationStatus("이메일 인증 코드 확인 중 오류가 발생했습니다.");
+      setHasEmailCode("이메일 인증 코드 확인 중 오류가 발생했습니다.");
     }
   };
 
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setNewUserInfo({
-      ...newUserInfo,
-      email: value,
-    });
-    setEmailVerificationStatus(""); // 이메일이 변경될 때 초기화
-    if (value) {
-      checkEmailAvailability(value); // 이메일이 변경될 때 중복 확인 요청 보내기
-    }
-  };
-
-  const handleSubmit = async (e: SyntheticEvent) => {
-    e.preventDefault();
+  // 4. 회원가입을 진행한다.
+  const fetchRegister = async () => {
     try {
-      if (isFormValid && isEmailAvailable) {
-        // 이메일 인증 코드 확인
-        await verifyEmailCode(verificationCode);
-        // 회원가입 요청
-        await Api.post("/auth/signup", {
-          name,
-          email,
-          password,
-        });
-        navigate("/login");
-      }
+      // 이메일 인증 코드 확인
+      const validateCode = await fetchEmailCode(verificationCode);
+      // 회원가입 요청
+      await Api.post("/auth/signup", {
+        name,
+        email,
+        password,
+      });
+      navigate("/login");
     } catch (err) {
       if (err.isAxiosError) {
         const axiosError = err as AxiosError;
@@ -126,142 +161,142 @@ const SignUp = () => {
     });
   };
 
+  const navigateToIntroPage = () => {
+    navigate("/");
+  };
+
   useEffect(() => {
-    console.log(location);
-  }, [location]);
+    if (debounceFetchTerm) {
+      fetchEmailCheck();
+    }
+  }, [debounceFetchTerm]);
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <div
-          style={{
-            paddingTop: "134px",
-            height: "100vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              width: "300px",
-              boxShadow: "0px 4px 12px #00000026",
-            }}
-          >
-            <div
-              className={"container"}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-                gap: "16px",
-                padding: "16px",
-              }}
-            >
-              <h2 style={{ textAlign: "center" }}>{"워디 회원가입"}</h2>
-              <div
-                onSubmit={handleSubmit}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  height: "100%",
-                  width: "100%",
-                  gap: "16px",
-                }}
-              >
-                <div className={"form-group"}>
-                  <label style={{ fontSize: "18px" }}>{"이름"}</label>
-                  <input
-                    type={"text"}
-                    className={"form-control"}
-                    placeholder={"이름을 입력하세요."}
-                    name="name"
-                    value={name}
-                    onChange={handleChange}
-                  />
-                  {!isNameValid && name.length > 0 && (
-                    <div className={"text-danger"}>{"이름은 2글자 이상으로 설정해 주세요."}</div>
-                  )}
-                </div>
-                <div className={"form-group"}>
-                  <label style={{ fontSize: "18px" }}>{"이메일"}</label>
-                  <input
-                    type={"text"}
-                    className={"form-control"}
-                    placeholder={"생성할 이메일을 입력하세요."}
-                    value={email}
-                    name="email"
-                    onChange={handleEmailChange}
-                  />
-                  <button
-                    type="submit"
-                    className={"btn btn-primary"}
-                    onClick={() => emailVerification(email)}
-                    disabled={!isFormValid}
+    <Flex
+      minH={"100vh"}
+      align={"center"}
+      justify={"center"}
+      bg={useColorModeValue("gray.100", "gray.800")}
+    >
+      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+        <Stack align={"center"}>
+          <Heading fontSize={"4xl"} textAlign={"center"}>
+            Sign up
+          </Heading>
+          <Text fontSize={"lg"} color={"gray.600"}>
+            to enjoy all of our cool features ✌️
+          </Text>
+        </Stack>
+        <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
+          <Stack spacing={4}>
+            <Box w="360px">
+              <FormControl id="firstName" isRequired>
+                <FormLabel>이름</FormLabel>
+                <Input type="text" name="name" value={name} onChange={handleChange} />
+              </FormControl>
+            </Box>
+            <Box w="360px">
+              <FormControl id="email" isRequired>
+                <FormLabel>이메일</FormLabel>
+                {email.length !== 0 && (
+                  <Text
+                    position="absolute"
+                    right="24px"
+                    bottom="10px"
+                    fontSize="xs"
+                    color={isEmailAvailable ? "green.500" : "tomato"}
                   >
-                    {"이메일 인증 요청"}
-                  </button>
+                    {isEmailAvailable ? "사용 가능" : "이미 사용"}
+                  </Text>
+                )}
 
-                  {!isEmailValid && email.length > 0 && (
-                    <div className={"text-danger"}>{"이메일 형식이 올바르지 않습니다."}</div>
-                  )}
-                </div>
-                <div className={"form-group"}>
-                  <label style={{ fontSize: "18px" }}>{"비밀번호"}</label>
-                  <input
-                    type={"password"}
-                    className={"form-control"}
-                    placeholder={"비밀번호를 입력하세요."}
-                    value={password}
+                <Input name="email" type="email" value={email} onChange={handleChange} />
+              </FormControl>
+            </Box>
+            <Box w="360px">
+              <FormControl id="code" isRequired>
+                <FormLabel>인증번호</FormLabel>
+                <Input
+                  type="text"
+                  name="verificationCode"
+                  value={verificationCode}
+                  onChange={handleChange}
+                />
+                <Box position="absolute" right="0" top="45%">
+                  <Button
+                    fontSize={"sm"}
+                    border={"none"}
+                    bg={"none"}
+                    onClick={fetchEmailVerification}
+                  >
+                    인증번호 전송
+                  </Button>
+                </Box>
+              </FormControl>
+            </Box>
+
+            <Box w="360px">
+              <FormControl id="password" isRequired>
+                <FormLabel>비밀번호</FormLabel>
+                <InputGroup>
+                  <Input
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     onChange={handleChange}
+                    value={password}
                   />
-                  {!isPasswordValid && password.length > 0 && (
-                    <div className={"text-danger"}>
-                      {"비밀번호는 4글자 이상으로 설정해 주세요."}
-                    </div>
-                  )}
-                </div>
-                <div className={"form-group"}>
-                  <label style={{ fontSize: "18px" }}>{"비밀번호 확인"}</label>
-                  <input
-                    type={"password"}
-                    className={"form-control"}
-                    placeholder={"비밀번호 확인."}
+                  <InputRightElement h={"full"}>
+                    <Button variant={"ghost"} onClick={() => setShowPassword((prev) => !prev)}>
+                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+            </Box>
+            <Box w="360px">
+              <FormControl id="password_confirm" isRequired>
+                <FormLabel>비밀번호 확인</FormLabel>
+                <InputGroup>
+                  <Input
                     value={confirmPassword}
                     name="confirmPassword"
+                    type={showPassword ? "text" : "password"}
                     onChange={handleChange}
                   />
-                  {!isPasswordValid && confirmPassword.length > 0 && (
-                    <div className={"text-danger"}>{"비밀번호가 일치한지 확인해 주세요."}</div>
-                  )}
-                </div>
-                <div className={"form-group"}>
-                  <label style={{ fontSize: "18px" }}>{"이메일 인증 코드"}</label>
-                  <input
-                    type={"text"}
-                    className={"form-control"}
-                    placeholder={"이메일에서 받은 인증 코드를 입력하세요."}
-                    value={verificationCode}
-                    name="verificationCode"
-                    onChange={handleChange}
-                  />
-                </div>
-                <button type={"submit"} className={"btn btn-primary"} disabled={!isFormValid}>
-                  {"회원가입\r"}
-                </button>
-                {emailVerificationStatus && (
-                  <div className={"text-info"}>{emailVerificationStatus}</div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    </>
+                  <InputRightElement h={"full"}>
+                    <Button variant={"ghost"} onClick={() => setShowPassword((prev) => !prev)}>
+                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </FormControl>
+            </Box>
+
+            <Stack spacing={10} pt={2}>
+              <Button
+                loadingText="Submitting"
+                size="lg"
+                bg={"blue.400"}
+                color={"white"}
+                _hover={{
+                  bg: "blue.500",
+                }}
+              >
+                회원가입
+              </Button>
+            </Stack>
+            <Stack pt={6}>
+              <Text align={"center"}>
+                Already a user?{" "}
+                <ChakraLink as={ReactRouterLink} color={"blue.400"} to="/login">
+                  Login
+                </ChakraLink>
+              </Text>
+            </Stack>
+          </Stack>
+        </Box>
+      </Stack>
+    </Flex>
   );
 };
 

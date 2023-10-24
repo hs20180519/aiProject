@@ -2,12 +2,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import React, { useReducer, useEffect, useState, createContext } from "react";
 import InrtoPage from "./pages/IntroPage";
-import MainPage from "./pages/MainPage";
-import LoginPage from "./pages/LoginPage";
+import MainPage from "./pages/Main/MainPage";
+import LoginPage from "./pages/Login/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
-import KakaoTestPage from "./pages/KakaoTestPage";
 import OAuthPage from "./pages/OAuthPage";
 import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
+import RankFeild from "./components/RankFeild";
+// import TestPage from "./pages/TestPage";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
 import TestGptWordPage from "./pages/TestGptWordPage/TestGptWordPage";
@@ -27,8 +28,9 @@ function App() {
 
   const fetchCurrentUser = async () => {
     try {
+      console.log("-----로그인 요청----");
       // 이전에 발급받은 토큰이 있다면, 이를 가지고 유저 정보를 받아옴.
-      const res = await Api.get("user");
+      const res = await Api.get("/user");
       const currentUser = res.data;
 
       // dispatch 함수를 통해 로그인 성공 상태로 만듦.
@@ -65,17 +67,18 @@ function App() {
   return (
     <DispatchContext.Provider value={dispatch}>
       <UserStateContext.Provider value={userState}>
-        <div className={"App"}>
+        <div className="App">
           <ChakraProvider theme={theme}>
             <BrowserRouter>
               <Routes>
+                <Route path={"/rank"} element={<RankFeild />} />
                 <Route path={"/"} element={<InrtoPage />} />
                 <Route path={"/main"} element={<MainPage />} />
                 <Route path={"/login"} element={<LoginPage />} />
                 <Route path={"/signup"} element={<SignUpPage />} />
-                <Route path={"/kakao"} element={<KakaoTestPage />} />
                 <Route path={"/oauth/kakao"} element={<OAuthPage />} />
                 <Route path={"/signup2"} element={<SignUpPage2 />} />
+                {/* <Route path={"/test"} element={<TestPage />} /> */}
                 <Route path={"/test_word"} element={<TestGptWordPage />} />
               </Routes>
             </BrowserRouter>

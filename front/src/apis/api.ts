@@ -29,6 +29,29 @@ async function post<T>(endpoint: string, data: T) {
   });
 }
 
+async function postQuery<T>(endpoint: string, data: T) {
+  const queryParams = new URLSearchParams();
+
+  for (const key in data) {
+    if (data[key] !== undefined) {
+      queryParams.append(key, String(data[key])); 
+    }
+  }
+
+  const queryString = queryParams.toString();
+  const urlWithQueryString = serverUrl + endpoint + '?' + queryString;
+
+  console.log(`%cPOST 요청: ${urlWithQueryString}`, "color: #296aba;");
+  console.log(`%cPOST 요청 데이터: ${queryString}`, "color: #296aba;");
+
+  return axios.post(urlWithQueryString, null, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
+    },
+  });
+}
+
 async function put<T>(endpoint: string, data: T) {
   // JSON.stringify 함수: Javascript 객체를 JSON 형태로 변환함.
   const bodyData = JSON.stringify(data);
@@ -65,4 +88,4 @@ async function del(endpoint: string) {
 
 // 아래처럼 export한 후, import * as A 방식으로 가져오면,
 // A.get, A.post 로 쓸 수 있음.
-export { get, post, put, del as delete, putImage };
+export { get, post, postQuery, put, del as delete, putImage };

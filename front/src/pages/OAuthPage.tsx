@@ -17,9 +17,7 @@ export default function OAuthPage() {
 
   const fetchKakaoLogin = async () => {
     try {
-      console.log("------login request-------");
       const res = await fetchKakaoOAuthLogin(kakaoCode);
-      console.log(res);
 
       if (res.status !== 200) {
         alert("로그인 실패");
@@ -28,7 +26,7 @@ export default function OAuthPage() {
       }
       sessionStorage.setItem("userToken", res.data.access_token);
       await fetchCurrentUser();
-      // navigate("/main");
+      navigate("/main");
     } catch (e) {
       console.log(e);
     }
@@ -36,8 +34,9 @@ export default function OAuthPage() {
 
   const fetchCurrentUser = async () => {
     try {
-      const res = await Api.get("user");
+      const res = await Api.get("/user");
       const currentUser = res.data;
+      console.log(currentUser);
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: currentUser,
@@ -62,5 +61,5 @@ export default function OAuthPage() {
     }
   }, [kakaoCode]);
 
-  return <></>;
+  return <>카카오 로그인 페이지입니다.</>;
 }
