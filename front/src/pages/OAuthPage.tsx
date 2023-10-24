@@ -28,7 +28,7 @@ export default function OAuthPage() {
       }
       sessionStorage.setItem("userToken", res.data.access_token);
       await fetchCurrentUser();
-      // navigate("/main");
+      navigate("/main");
     } catch (e) {
       console.log(e);
     }
@@ -36,8 +36,9 @@ export default function OAuthPage() {
 
   const fetchCurrentUser = async () => {
     try {
-      const res = await Api.get("user");
+      const res = await Api.get("/user");
       const currentUser = res.data;
+      console.log(currentUser);
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: currentUser,
