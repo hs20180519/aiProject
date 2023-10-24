@@ -1,4 +1,4 @@
-import * as instance from "./api";
+import * as Api from "./api";
 
 export class FetchWordBook {
   /**
@@ -6,7 +6,7 @@ export class FetchWordBook {
    */
   static async createCustomBook(data: { title: string }) {
     const url = "/book";
-    return instance.post(url, data);
+    return Api.post(url, data);
   }
 
   /**
@@ -15,7 +15,7 @@ export class FetchWordBook {
    */
   static async getCustomBookList() {
     const url = "/book";
-    return instance.get(url);
+    return Api.get(url);
   }
 
   /**
@@ -33,7 +33,7 @@ export class FetchWordBook {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return instance.get(fullUrl);
+    return Api.get(fullUrl);
   }
 
   /**
@@ -41,7 +41,7 @@ export class FetchWordBook {
    */
   static async updateCustomBook(data: { title: string }) {
     const url = `/book`;
-    return instance.put(url, data);
+    return Api.put(url, data);
   }
 
   /**
@@ -52,7 +52,7 @@ export class FetchWordBook {
     const url = `/book`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return instance.delete(fullUrl);
+    return Api.delete(fullUrl);
   }
 
   /**
@@ -67,7 +67,7 @@ export class FetchWordBook {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return instance.post(fullUrl, data);
+    return Api.post(fullUrl, data);
   }
 
   /**
@@ -82,7 +82,7 @@ export class FetchWordBook {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return instance.put(fullUrl, data);
+    return Api.put(fullUrl, data);
   }
 
   /**
@@ -93,6 +93,6 @@ export class FetchWordBook {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return instance.delete(fullUrl);
+    return Api.delete(fullUrl);
   }
 }
