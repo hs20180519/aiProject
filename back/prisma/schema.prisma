@@ -16,7 +16,6 @@ model User {
   snsId        String?        @unique
   provider     String?
   profileImage String?
-  lastRank     Int?           @default(0)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   manager      Boolean        @default(false)
@@ -81,12 +80,14 @@ model CustomBook {
 }
 
 model Rank {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  score     Int      @default(0)
-  rankDate  DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  score       Int      @default(0)
+  currentRank Int?
+  pastRank    Int?
+  rankDate    DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId], map: "Rank_userId_fkey")
 }

@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { createChoices } from "../utils/createChoices";
 import * as wordInterface from "../interfaces/wordInterface";
 import { WordProgressDto, WordWithChoicesDto } from "../dtos/wordDto";
-import { plainToClass, plainToInstance } from "class-transformer";
+import { plainToInstance } from "class-transformer";
 
 const prisma = new PrismaClient();
 
