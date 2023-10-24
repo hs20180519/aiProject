@@ -6,7 +6,10 @@ import { DispatchContext } from "../App";
 import { UserProps } from "../reducer";
 import KakaoLoginButton from "../components/KakaoLoginButton";
 import validateEmail from "../libs/validateEmail";
+<<<<<<< HEAD
 
+=======
+>>>>>>> d13233f45cb7366d46efd6a16797f00687882c0d
 interface LoginProps {
   email: string;
   password: string;
@@ -14,7 +17,7 @@ interface LoginProps {
 
 const LoginPage = () => {
   const [formData, setFormData] = useState<LoginProps>({
-    email: "",
+    email: "sample8@example.com",
     password: "",
   });
 
@@ -22,6 +25,10 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
   const dispatch = useContext(DispatchContext);
+<<<<<<< HEAD
+=======
+
+>>>>>>> d13233f45cb7366d46efd6a16797f00687882c0d
   const isEmailValid = validateEmail(email);
   const isPasswordValid = password.length >= 4;
   const isFormValid = isEmailValid && isPasswordValid;
@@ -110,9 +117,7 @@ const LoginPage = () => {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
                 {!isEmailValid && email.length > 0 && (
-                  <div className={"text-danger"}>
-                    {`이메일 형식이 올바르지 않습니다.`}
-                  </div>
+                  <div className={"text-danger"}>{`이메일 형식이 올바르지 않습니다.`}</div>
                 )}
               </div>
               <div className={"form-group"}>
@@ -122,7 +127,9 @@ const LoginPage = () => {
                   className={"form-control"}
                   placeholder={"비밀번호를 입력하세요."}
                   value={password}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                 />
                 {!isPasswordValid && password.length > 0 && (
                   <div className={"text-danger"} style={{ color: "#FF6347" }}>

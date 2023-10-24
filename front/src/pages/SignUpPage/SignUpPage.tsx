@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { ChangeEvent, SyntheticEvent, useState } from "react";
+=======
+import React, { ChangeEvent, SyntheticEvent, useState, useEffect } from "react";
+>>>>>>> d13233f45cb7366d46efd6a16797f00687882c0d
 import { useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import * as Api from "../../apis/api";

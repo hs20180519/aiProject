@@ -27,6 +27,7 @@ function App() {
 
   const fetchCurrentUser = async () => {
     try {
+      console.log("-----로그인 요청----");
       // 이전에 발급받은 토큰이 있다면, 이를 가지고 유저 정보를 받아옴.
       const res = await Api.get("/user");
       const currentUser = res.data;
