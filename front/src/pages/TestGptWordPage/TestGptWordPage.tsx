@@ -1,8 +1,9 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Box, Button, Flex, Spinner, Tag, useToast } from "@chakra-ui/react";
-import { InputDialogData } from "../../apis/new_gpt_interface";
-import { FetchGpt } from "../../apis/new_gpt";
+import { InputDialogData } from "../../apis/gpt_interface";
+import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
+import { FetchStudyWords } from "../../apis/studyWord";
 
 const TestGptWordPage = () => {
   const [selectedWords, setSelectedWords] = useState([]);
@@ -12,13 +13,27 @@ const TestGptWordPage = () => {
 
   const toast = useToast();
 
-  const wordList = {
-    aboard: "배로",
-    abort: "중단하다",
-    about: "-에 대하여",
-    apple: "사과",
-    banana: "바나나",
-  };
+  const [dynamicWordList, setDynamicWordList] = useState({});
+
+  useEffect(() => {
+    const fetchWords = async () => {
+      try {
+        const result = await FetchStudyWords.getLearnResult("?userId=1");
+        const newWordList = result.reduce(
+          (obj: { [x: string]: any }, item: { word: { word: string; meaning: string } }) => {
+            obj[item.word.word] = item.word.meaning;
+            return obj;
+          },
+          {},
+        );
+        setDynamicWordList(newWordList);
+      } catch (error) {
+        console.log("Error fetching words:", error);
+      }
+    };
+
+    fetchWords();
+  }, []);
 
   const handleTagClick = useCallback(
     (word) => {
@@ -37,7 +52,7 @@ const TestGptWordPage = () => {
       const updatedDialogParams: InputDialogData = {
         line_count: selectedWords.length + 2,
         word_pairs: selectedWords.reduce((obj, word) => {
-          return { ...obj, [word]: wordList[word] };
+          return { ...obj, [word]: dynamicWordList[word] };
         }, {}),
       };
 
@@ -67,13 +82,13 @@ const TestGptWordPage = () => {
     } finally {
       setScriptLoading(false);
     }
-  }, [selectedWords, wordList, toast]);
+  }, [selectedWords, dynamicWordList, toast]);
 
   return (
     <Flex direction="column" align="center" justify="flex-start" height="100vh">
       <Box maxW="sm" p={4} borderWidth={1} borderRadius="lg">
         <Box>
-          {Object.keys(wordList).map((word) => (
+          {Object.keys(dynamicWordList).map((word) => (
             <Tag
               key={word}
               size="md"

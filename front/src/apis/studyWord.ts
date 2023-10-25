@@ -27,8 +27,18 @@ export class FetchStudyWords {
 
   /** 학습 결과 조회
    * 마지막 학습 시점에서 학습한 10개의 단어와 정답 유무 반환 */
-  static async getLearnResult() {
+  static async getLearnResult(queryParams: string){
     const url = `/study/result`;
-    return instance.get(url);
+    const queryString = new URLSearchParams(queryParams).toString();
+    const fullUrl = `${url}?${queryString}`;
+    const response = await instance.get(fullUrl);
+    return response.data;
+  }
+
+  /** 단어 목록 조회 */
+  static async getExperienceEdu() {
+    const url = `/study/experience`;
+    const wordList = await instance.get(url);
+    return wordList;
   }
 }

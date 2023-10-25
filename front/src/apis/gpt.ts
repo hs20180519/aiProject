@@ -1,37 +1,50 @@
-import { instance } from "./gpt_api";
+import axios from "axios";
+import {
+  InputGrammarData,
+  GrammarResponse,
+  InputDialogData,
+  DialogResponse,
+  HTTPValidationError,
+} from "./gpt_interface";
+
+const { REACT_APP_GPT_URL: baseURL, REACT_APP_GPT_TOKEN: token } = process.env;
+
+const instance = axios.create({
+  baseURL,
+  headers: {
+    "x-token": token,
+    "Content-Type": "application/json",
+  },
+});
 
 class FetchGpt {
-  /** 유저가 학습한 단어 보내기 */
-  static async postStudiedWord(words: string) {
+  static async getGrammar(params: InputGrammarData): Promise<GrammarResponse> {
     const url = "/explain-grammar";
-    const data = {
-      words,
-    };
-    const studiedWord = await instance.post(url, data);
-    return studiedWord;
+    try {
+      const response = await instance.post<GrammarResponse>(url, params);
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const errData: HTTPValidationError = error.response.data;
+        console.error("HTTP Validation Errors:", errData.detail.map((e) => e.msg).join(", "));
+      }
+      throw error;
+    }
   }
 
-  /** 에문 가져오기 */
-  static async getScript() {
-    const url = "/explain-grammar";
-    const studiedWord = await instance.get(url);
-    return studiedWord;
-  }
-
-  /** 문법 가져오기 */
-  static async getGrammar() {
-    const url = "/explain-grammar";
-    const studiedWord = await instance.get(url);
-    return studiedWord;
-  }
-
-  /** GPT를 통한 문장 해석 */
-  static async getTranslation() {
-    const url = "/translation";
-    const translatedSentence = await instance.get(url);
-    return translatedSentence;
+  static async getScript(params: InputDialogData): Promise<DialogResponse> {
+    const url = "/generate-dialog";
+    try {
+      const response = await instance.post<DialogResponse>(url, params);
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const errData: HTTPValidationError = error.response.data;
+        console.error("HTTP Validation Errors:", errData.detail.map((e) => e.msg).join(", "));
+      }
+      throw error;
+    }
   }
 }
 
-const fetchGpt = new FetchGpt();
-export default fetchGpt;
+export { FetchGpt };

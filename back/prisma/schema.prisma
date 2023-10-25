@@ -83,7 +83,7 @@ model CustomBook {
 model Rank {
   id          Int      @id @default(autoincrement())
   userId      Int
-  score       Int      
+  score       Int
   currentRank Int?
   pastRank    Int?
   rankDate    DateTime @default(now())
@@ -92,7 +92,6 @@ model Rank {
 
   @@index([userId], map: "Rank_userId_fkey")
 }
-
 
 model Post {
   id        Int       @id @default(autoincrement())
