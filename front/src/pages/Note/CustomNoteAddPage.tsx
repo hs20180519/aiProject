@@ -13,6 +13,7 @@ import {
 import { useState, useEffect } from "react";
 import { isStringLiteral } from "typescript";
 import customWord from "../../apis/customWord";
+import CustomNoteAddCard from "./AddCustomNoteCard.component";
 
 interface SubmitCustomWord {
   word: string;
@@ -67,52 +68,7 @@ export default function CustomNoteAddPage() {
             />
           </FormControl>
         </Box>
-        {isEditing && (
-          <Box
-            rounded={"lg"}
-            bg={useColorModeValue("white", "gray.700")}
-            boxShadow={"lg"}
-            p={8}
-            w="360px"
-          >
-            <Stack spacing={4}>
-              <FormControl id="word">
-                <Input type="text" placeholder="영어 단어" value={userCustomWord.word} />
-              </FormControl>
-              <FormControl id="mean">
-                <Input type="text" placeholder="단어 뜻" value={userCustomWord.meaning} />
-              </FormControl>
-              <Stack spacing={10}>
-                <Stack
-                  direction={{ base: "column", sm: "row" }}
-                  align={"start"}
-                  justify={"space-between"}
-                ></Stack>
-                <Button colorScheme="teal" color={"white"} variant="solid">
-                  ✚
-                </Button>
-              </Stack>
-            </Stack>
-          </Box>
-        )}
-        {!isEditing && (
-          <Box
-            rounded={"lg"}
-            bg={useColorModeValue("white", "gray.700")}
-            boxShadow={"lg"}
-            p={8}
-            w="360px"
-          >
-            <Stack spacing={4}>
-              <FormControl id="word">
-                <Text>{"영어단어"}</Text>
-              </FormControl>
-              <FormControl id="mean">
-                <Text>{"영어단어 뜻"}</Text>
-              </FormControl>
-            </Stack>
-          </Box>
-        )}
+        <CustomNoteAddCard isEditing={isEditing} userCustomWord={userCustomWord} />
       </Stack>
     </Flex>
   );
