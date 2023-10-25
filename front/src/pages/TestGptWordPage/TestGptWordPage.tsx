@@ -37,15 +37,30 @@ const TestGptWordPage = () => {
 
   const handleTagClick = useCallback(
     (word) => {
-      const newSelectedWords = selectedWords.includes(word)
-        ? selectedWords.filter((w) => w !== word)
-        : [...selectedWords, word];
-      setSelectedWords(newSelectedWords);
+      if (selectedWords.includes(word)) {
+        // 이미 선택된 단어를 다시 클릭한 경우: 선택 취소
+        const newSelectedWords = selectedWords.filter((w) => w !== word);
+        setSelectedWords(newSelectedWords);
+      } else {
+        // 새로운 단어를 선택하는 경우
+        if (selectedWords.length >= 3) {
+          toast({
+            title: "단어는 3개까지 선택 가능 합니다.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+          return;
+        }
+
+        const newSelectedWords = [...selectedWords, word];
+        setSelectedWords(newSelectedWords);
+      }
     },
-    [selectedWords],
+    [selectedWords, toast],
   );
 
-  const handleGetScript = useCallback(async () => {
+    const handleGetScript = useCallback(async () => {
     console.log("handleGetScript 실행, 현재 selectedWords:", selectedWords);
     setScriptLoading(true);
     try {
@@ -78,7 +93,7 @@ const TestGptWordPage = () => {
       });
 
       console.log("API 호출 실패:", error);
-      setScriptResult(`Failed to fetch script: ${error.message || error}`);
+      // setScriptResult(`Failed to fetch script: ${error.message || error}`);
     } finally {
       setScriptLoading(false);
     }

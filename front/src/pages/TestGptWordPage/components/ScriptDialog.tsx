@@ -53,10 +53,10 @@ const ScriptDialog = ({
         });
 
         console.log("API 호출 실패:", error);
-        setGrammarResult((prevResults) => ({
-          ...prevResults,
-          [dialogKey]: `Failed to fetch grammar: ${error.message || error}`,
-        }));
+        // setGrammarResult((prevResults) => ({
+        //   ...prevResults,
+        //   [dialogKey]: `Failed to fetch grammar: ${error.message || error}`,
+        // }));
       } finally {
         setLoadingEntryKey(null);
         setGrammarLoading(false);
