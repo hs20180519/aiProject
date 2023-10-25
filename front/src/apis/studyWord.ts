@@ -27,12 +27,12 @@ export class FetchStudyWords {
 
   /** 학습 결과 조회
    * 마지막 학습 시점에서 학습한 10개의 단어와 정답 유무 반환 */
-  static async getLearnResult(queryParams: string){
+  static async getLearnResult(){
     const url = `/study/result`;
-    const queryString = new URLSearchParams(queryParams).toString();
-    const fullUrl = `${url}?${queryString}`;
-    const response = await instance.get(fullUrl);
-    return response.data;
+    const res = await instance.get("/user");
+    const userId = res.data.id;
+    const fullUrl = `${url}?userId=${userId}`
+    return instance.get(fullUrl);
   }
 
   /** 단어 목록 조회 */

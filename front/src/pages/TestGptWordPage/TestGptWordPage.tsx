@@ -18,8 +18,8 @@ const TestGptWordPage = () => {
   useEffect(() => {
     const fetchWords = async () => {
       try {
-        const result = await FetchStudyWords.getLearnResult("?userId=1");
-        const newWordList = result.reduce(
+        const result = await FetchStudyWords.getLearnResult();
+        const newWordList = result.data.reduce(
           (obj: { [x: string]: any }, item: { word: { word: string; meaning: string } }) => {
             obj[item.word.word] = item.word.meaning;
             return obj;
