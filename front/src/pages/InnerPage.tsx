@@ -19,7 +19,7 @@ export default function InnerPage() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Box minH="100vh" display="flex" alignItems="center" justifyContent="center">
+      <Box minH="80vh" display="flex" alignItems="center" justifyContent="center">
         {showTestPage && !showResultPage ? ( // Render TestPage or ResultPage based on state
           <TestPage
             selectedCategory={selectedCategory}

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from "axios";
 
 export const serverUrl = `${process.env.REACT_APP_SERVER_URL_API}`;
@@ -15,7 +16,7 @@ async function get(endpoint: string) {
   return res;
 }
 
-async function post<T>(endpoint: string, data: T) {
+async function post(endpoint: string, data: any) {
   // JSON.stringify 함수: Javascript 객체를 JSON 형태로 변환함.
   const bodyData = JSON.stringify(data);
   console.log(`%cPOST 요청: ${serverUrl + endpoint}`, "color: #296aba;");
@@ -34,12 +35,12 @@ async function postQuery<T>(endpoint: string, data: T) {
 
   for (const key in data) {
     if (data[key] !== undefined) {
-      queryParams.append(key, String(data[key])); 
+      queryParams.append(key, String(data[key]));
     }
   }
 
   const queryString = queryParams.toString();
-  const urlWithQueryString = serverUrl + endpoint + '?' + queryString;
+  const urlWithQueryString = serverUrl + endpoint + "?" + queryString;
 
   console.log(`%cPOST 요청: ${urlWithQueryString}`, "color: #296aba;");
   console.log(`%cPOST 요청 데이터: ${queryString}`, "color: #296aba;");
