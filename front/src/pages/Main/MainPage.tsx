@@ -24,11 +24,11 @@ import RankFeildPage from "../Rank/RankFeildPage";
 // grammar
 import TypingSentencePage from "../Grammar/TypingSentencePage";
 
-// inner
+// inner = study
 import InnerPage from "../InnerPage";
 
+// gptPage
 import TestGptWordPage from "../TestGptWordPage/TestGptWordPage";
-import AddCustomeWordCard from "../../components/Custom/AddCustomWord";
 
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -84,5 +84,5 @@ const MainPage = () => {
     </Box>
   );
 };
-// mypage추가시
+
 export default MainPage;
