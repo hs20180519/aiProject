@@ -5,9 +5,10 @@ import InrtoPage from "./pages/IntroPage";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
-import KakaoTestPage from "./pages/KakaoTestPage";
 import OAuthPage from "./pages/OAuthPage";
 import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
+import RankFeild from "./components/RankFeild";
+import TestPage from "./pages/TestPage";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
 
@@ -64,17 +65,18 @@ function App() {
   return (
     <DispatchContext.Provider value={dispatch}>
       <UserStateContext.Provider value={userState}>
-        <div className={"App"}>
+        <div className="App">
           <ChakraProvider theme={theme}>
             <BrowserRouter>
               <Routes>
+                <Route path={"/rank"} element={<RankFeild />} />
                 <Route path={"/"} element={<InrtoPage />} />
                 <Route path={"/main"} element={<MainPage />} />
                 <Route path={"/login"} element={<LoginPage />} />
                 <Route path={"/signup"} element={<SignUpPage />} />
-                <Route path={"/kakao"} element={<KakaoTestPage />} />
                 <Route path={"/oauth/kakao"} element={<OAuthPage />} />
                 <Route path={"/signup2"} element={<SignUpPage2 />} />
+                <Route path={"/test"} element={<TestPage />} />
               </Routes>
             </BrowserRouter>
           </ChakraProvider>
