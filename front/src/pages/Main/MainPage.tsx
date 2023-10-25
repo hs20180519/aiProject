@@ -22,7 +22,7 @@ import CustomNoteDetailPage from "../Note/CustomNoteDetailPage";
 import RankFeildPage from "../Rank/RankFeildPage";
 
 // grammar
-import TypingSentencePage from "../Grammar/TypingSentencePage";
+import GrammarPage from "../Grammar/GramnarPage";
 
 // inner = study
 import InnerPage from "../InnerPage";
@@ -75,7 +75,7 @@ const MainPage = () => {
           <Route path="note/:id" element={<CustomNoteDetailPage />} />
           <Route path="note_add" element={<CustomNoteAddPage />} />
           <Route path="rank" element={<RankFeildPage />} />
-          <Route path="grammar" element={<TypingSentencePage />} />
+          <Route path="grammar" element={<GrammarPage />} />
           <Route path="test_word" element={<TestGptWordPage />} />
           {/* <Route path="mypage" element={<MyPage />} />  페이지 추가할시 import후 주석제거*/}
           {/* <Route path="wordlist" element={<WordsPage />}  /> 페이지 추가할시 import후 주석제거*/}
