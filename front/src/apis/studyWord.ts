@@ -35,6 +35,16 @@ export class FetchStudyWords {
     return instance.get(fullUrl);
   }
 
+  /** 학습 결과 조회 (GPT 전용) */
+  static async getLearnResultWithGpt(queryParams: string){
+    const url = `/study/result`;
+    const queryString = new URLSearchParams(queryParams).toString();
+    const fullUrl = `${url}?${queryString}`;
+    const response = await instance.get(fullUrl);
+    return response.data;
+  }
+
+
   /** 단어 목록 조회 */
   static async getExperienceEdu() {
     const url = `/study/experience`;
