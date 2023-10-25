@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { Spinner } from "@chakra-ui/react";
-import RankList from "./RankItem";
+import RankList from "../../components/RankItem";
 
-import * as Api from "../apis/api";
+import * as Api from "../../apis/api";
 
 const USER_RANK = [
   { id: 1, nickname: "진채영짱짱맨", score: 97 },
@@ -12,7 +12,7 @@ const USER_RANK = [
   { id: 4, nickname: "최강채영", score: 100 },
 ];
 
-export default function RankFeild() {
+export default function RankFeildPage() {
   const [loading, setLoading] = useState(false);
   // const [usersRank, setUsersRank] = useState([]);
 
@@ -21,9 +21,9 @@ export default function RankFeild() {
     const res = await Api.get("/rank");
     const data = res?.data;
     if (Array.isArray(data)) {
-    //   setUsersRank(data);
-    // } else {
-    //   setUsersRank([]);
+      //   setUsersRank(data);
+      // } else {
+      //   setUsersRank([]);
     }
     setLoading(false);
   };

@@ -10,21 +10,32 @@ import {
   Heading,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { isStringLiteral } from "typescript";
+import customWord from "../../apis/customWord";
 
 interface SubmitCustomWord {
   word: string;
-  mean: string;
+  meaning: string;
 }
 /** 단어하나가 추가되면 편집 창이 생기는 로직만들어야함 */
-export default function AddCustomBook() {
+export default function CustomNoteAddPage() {
   const [disable, setDisable] = useState(true);
   const [isEditing, setIsEditing] = useState(true);
   const [userCustomWord, setUserCustomWord] = useState<SubmitCustomWord>({
     word: "",
-    mean: "",
+    meaning: "",
   });
+
+  const [getCustomWord, setGetCustomWord] = useState();
+
+  /**단어 추가하는 api */
+  customWord.createCustomWordInBook;
+
+  /**단어 업데이트 될때 목록 출력하는 api */
+  useEffect(() => {
+    const data = customWord.getBook(`?book={custom}&customBookId="${getCustomWord}"`);
+  }, []);
 
   return (
     <Flex
@@ -69,7 +80,7 @@ export default function AddCustomBook() {
                 <Input type="text" placeholder="영어 단어" value={userCustomWord.word} />
               </FormControl>
               <FormControl id="mean">
-                <Input type="text" placeholder="단어 뜻" value={userCustomWord.mean} />
+                <Input type="text" placeholder="단어 뜻" value={userCustomWord.meaning} />
               </FormControl>
               <Stack spacing={10}>
                 <Stack

@@ -1,6 +1,6 @@
 import * as Api from "./api";
 
-export class FetchWordBook {
+export default class FetchCustomWord {
   /**
    * 커스텀 단어장 생성
    */
@@ -10,7 +10,7 @@ export class FetchWordBook {
   }
 
   /**
-   * 커스텀 단어장 목록
+   * 커스텀 단어장 목록 조회
    * 예를들어 단어장 페이지에 기본으로 있어야할 단어장들 (수능, 토익 , 학습, 틀린 등등) 후 다음 배열에 추가할 목록들
    */
   static async getCustomBookList() {

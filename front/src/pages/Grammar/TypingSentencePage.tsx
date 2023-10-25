@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { useParams } from "react-router-dom";
 import { ChangeEvent, useState } from "react";
-import GrammarInput from "../components/GrammarFix";
+import GrammarInput from "../../components/GrammarFix";
 
 /**
  * 추가 작업할 것: 유저가 선택한 단어가 넘어오게 설정해줘야함

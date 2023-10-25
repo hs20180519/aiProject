@@ -24,7 +24,6 @@ import {
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link as ReactRouterLink } from "react-router-dom";
-import KakaoLoginButton from "../Login/KakaoLoginButton";
 
 type NewUserInfoType = {
   name: string;
@@ -53,6 +52,7 @@ const SignUp = () => {
   const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
   const [hasEmailCode, setHasEmailCode] = useState<string | null>(null);
   const debounceFetchTerm = useDebounced(email, 500);
+  const [isClick, setIsClick] = useState(false);
 
   const getEmailStatus = () => {
     if (isEmailAvailable) {
@@ -106,6 +106,7 @@ const SignUp = () => {
   const fetchEmailVerification = async () => {
     try {
       await Api.post(`/auth/register`, { email });
+      setIsClick(true);
     } catch (err) {
       console.error("이메일 인증 중 오류 발생:", err);
     }
@@ -114,7 +115,9 @@ const SignUp = () => {
   // 3. 인증번호 인증을 진행한다.
   const fetchEmailCode = async (verificationCode: string) => {
     try {
+      console.log("------클릭했나------");
       await Api.post(`/auth/verify`, { verificationCode });
+      // const validateCode = await fetchEmailCode(verificationCode);
       setHasEmailCode("이메일 인증이 완료되었습니다.");
     } catch (err) {
       console.error("이메일 인증 코드 확인 중 오류 발생:", err);
@@ -223,14 +226,26 @@ const SignUp = () => {
                   onChange={handleChange}
                 />
                 <Box position="absolute" right="0" top="45%">
-                  <Button
-                    fontSize={"sm"}
-                    border={"none"}
-                    bg={"none"}
-                    onClick={fetchEmailVerification}
-                  >
-                    인증번호 전송
-                  </Button>
+                  {!isClick && (
+                    <Button
+                      fontSize={"sm"}
+                      border={"none"}
+                      bg={"none"}
+                      onClick={fetchEmailVerification}
+                    >
+                      인증번호 전송
+                    </Button>
+                  )}
+                  {isClick && (
+                    <Button
+                      fontSize={"sm"}
+                      border={"none"}
+                      bg={"none"}
+                      onClick={(verificationCode) => fetchEmailCode}
+                    >
+                      확인
+                    </Button>
+                  )}
                 </Box>
               </FormControl>
             </Box>
@@ -287,9 +302,9 @@ const SignUp = () => {
             </Stack>
             <Stack pt={6}>
               <Text align={"center"}>
-                Already a user?{" "}
+                이미 회원이신가요?{" "}
                 <ChakraLink as={ReactRouterLink} color={"blue.400"} to="/login">
-                  Login
+                  로그인
                 </ChakraLink>
               </Text>
             </Stack>
