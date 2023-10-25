@@ -1,6 +1,7 @@
 import Router, { Express } from "express";
 import * as studyController from "../controllers/studyController";
 import passportJwt from "../middlewares/passportJwt";
+
 const studyRouter: Express = Router();
 
 studyRouter.get("/experience", studyController.experience);

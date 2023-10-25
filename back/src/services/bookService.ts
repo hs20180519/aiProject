@@ -145,6 +145,14 @@ export const deleteCustomBook = async (userId: number, customBookId: number): Pr
   return;
 };
 
+export const deleteAllCustomBook = async (userId: number) => {
+  await prisma.customBook.deleteMany({
+    where: {
+      userId: userId,
+    },
+  });
+};
+
 export const createCustomWordInBook = async (
   customBookId: number,
   word: string,
