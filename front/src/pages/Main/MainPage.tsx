@@ -77,10 +77,12 @@ const MainPage = () => {
           <Route path="rank" element={<RankFeildPage />} />
           <Route path="grammar" element={<TypingSentencePage />} />
           <Route path="test_word" element={<TestGptWordPage />} />
+          {/* <Route path="mypage" element={<MyPage />} />  페이지 추가할시 import후 주석제거*/}
+          {/* <Route path="wordlist" element={<WordsPage />}  /> 페이지 추가할시 import후 주석제거*/}
         </Routes>
       </Box>
     </Box>
   );
 };
-
+// mypage추가시
 export default MainPage;
