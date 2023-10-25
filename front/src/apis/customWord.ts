@@ -1,12 +1,11 @@
 import * as Api from "./api";
 
 export default class FetchCustomWord {
-  /**
-   * 커스텀 단어장 생성
-   */
+  /** 커스텀 단어장 생성 */
   static async createCustomBook(data: { title: string }) {
     const url = "/book";
-    return Api.post(url, data);
+    const newNote = await Api.post(url, data);
+    return newNote;
   }
 
   /**
@@ -15,7 +14,8 @@ export default class FetchCustomWord {
    */
   static async getCustomBookList() {
     const url = "/book";
-    return Api.get(url);
+    const getNoteList = await Api.get(url);
+    return getNoteList;
   }
 
   /**
@@ -33,15 +33,14 @@ export default class FetchCustomWord {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return Api.get(fullUrl);
+    const getNoteDetail = await Api.get(fullUrl);
+    return getNoteDetail;
   }
 
-  /**
-   * 커스텀 단어장 title 업데이트
-   */
+  /** 커스텀 단어장 title 업데이트 */
   static async updateCustomBook(data: { title: string }) {
     const url = `/book`;
-    return Api.put(url, data);
+    return await Api.put(url, data);
   }
 
   /**
@@ -52,7 +51,8 @@ export default class FetchCustomWord {
     const url = `/book`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return Api.delete(fullUrl);
+    const delNote = await Api.delete(fullUrl);
+    return delNote;
   }
 
   /**
@@ -67,7 +67,7 @@ export default class FetchCustomWord {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return Api.post(fullUrl, data);
+    return await Api.post(fullUrl, data);
   }
 
   /**
@@ -82,7 +82,7 @@ export default class FetchCustomWord {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return Api.put(fullUrl, data);
+    return await Api.put(fullUrl, data);
   }
 
   /**
@@ -93,6 +93,6 @@ export default class FetchCustomWord {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return Api.delete(fullUrl);
+    return await Api.delete(fullUrl);
   }
 }

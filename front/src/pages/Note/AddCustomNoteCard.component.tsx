@@ -25,7 +25,14 @@ export default function CustomNoteAddCard(isEditing, userCustomWord) {
                 align={"start"}
                 justify={"space-between"}
               ></Stack>
-              <Button colorScheme="teal" color={"white"} variant="solid">
+              <Button
+                onClick={(e) => {
+                  e.target;
+                }}
+                colorScheme="teal"
+                color={"white"}
+                variant="solid"
+              >
                 ✚
               </Button>
             </Stack>

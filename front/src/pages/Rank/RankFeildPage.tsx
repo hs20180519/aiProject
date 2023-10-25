@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { Spinner } from "@chakra-ui/react";
 import RankList from "../../components/RankItem";
-
 import * as Api from "../../apis/api";
+import Loading from "../../components/Loading";
 
 const USER_RANK = [
   { id: 1, nickname: "진채영짱짱맨", score: 97 },
@@ -32,12 +31,7 @@ export default function RankFeildPage() {
     fetchUserRanks();
   }, []);
 
-  if (loading)
-    return (
-      <StyledLoading>
-        <Spinner size="lg" color="blue.500" className="loading" />;
-      </StyledLoading>
-    );
+  if (loading) return <Loading />;
 
   return <RankList rankList={USER_RANK} />;
 }

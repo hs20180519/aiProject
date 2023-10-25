@@ -1,4 +1,4 @@
-import { Center, Box, Flex, useColorModeValue, useDisclosure, Spinner } from "@chakra-ui/react";
+import { Center, Box, Flex, useColorModeValue, useDisclosure } from "@chakra-ui/react";
 import { FiEdit2, FiTrendingUp, FiCodesandbox, FiStar, FiDatabase, FiUser } from "react-icons/fi";
 import { useState, useContext, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
@@ -14,7 +14,7 @@ import MobileNav from "./MobileNav";
 import { UserStateContext, DispatchContext } from "../../App";
 
 // note
-import CustomNoteAddPage from "../Note/CustomNoteAddPage";
+import AddCustomNotePage from "../Note/AddCustomNotePage";
 import CustomNoteListPage from "../Note/CustomNoteListPage";
 import CustomNoteDetailPage from "../Note/CustomNoteDetailPage";
 
@@ -29,6 +29,7 @@ import InnerPage from "../InnerPage";
 
 // gptPage
 import TestGptWordPage from "../TestGptWordPage/TestGptWordPage";
+import Loading from "../../components/Loading";
 
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -54,14 +55,7 @@ const MainPage = () => {
     navigate("/");
   };
 
-  if (!user)
-    return (
-      <Flex>
-        <Center w="100vw" h="100vh">
-          <Spinner size="xl" color="cyan.500" />
-        </Center>
-      </Flex>
-    );
+  if (!user) return <Loading />;
 
   return (
     <Box minH={"100vh"} bg={useColorModeValue("gray.100", "gray.900")}>
@@ -73,7 +67,7 @@ const MainPage = () => {
           <Route path="" element={<InnerPage />} />
           <Route path="notes" element={<CustomNoteListPage />} />
           <Route path="note/:id" element={<CustomNoteDetailPage />} />
-          <Route path="note_add" element={<CustomNoteAddPage />} />
+          <Route path="note_add" element={<AddCustomNotePage />} />
           <Route path="rank" element={<RankFeildPage />} />
           <Route path="grammar" element={<GrammarPage />} />
           <Route path="test_word" element={<TestGptWordPage />} />
