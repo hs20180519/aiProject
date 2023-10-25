@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Rank } from "@prisma/client";
 import { createChoices } from "../utils/createChoices";
 import * as wordInterface from "../interfaces/wordInterface";
 import { WordProgressDto, WordWithChoicesDto } from "../dtos/wordDto";
@@ -124,6 +124,7 @@ export const saveLearn = async (
   wordId: number,
   correct: boolean,
 ): Promise<void> => {
+  console.log(userId, wordId, correct);
   await prisma.wordProgress.create({
     data: {
       userId,
@@ -135,7 +136,7 @@ export const saveLearn = async (
 };
 
 export const updateScore = async (userId: number): Promise<void> => {
-  const rank = await prisma.rank.findFirst({
+  const rank: Rank | null = await prisma.rank.findFirst({
     where: { userId },
   });
 

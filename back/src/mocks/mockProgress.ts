@@ -6,19 +6,26 @@ const learnRandomWords = async (user: User, learningCount: number) => {
   // 모든 단어 가져오기
   const words: Word[] = await prisma.word.findMany();
 
+  const actions = [];
+
   for (let i = 0; i < learningCount; i++) {
     // 랜덤한 단어 선택하기
     const randomWord = words[Math.floor(Math.random() * words.length)];
 
     // 선택한 단어를 학습한것으로 간주
-    await prisma.wordProgress.create({
-      data: {
-        userId: user.id,
-        wordId: randomWord.id,
-        correct: Math.random() < 0.5, // 50% 확률로 정답
-      },
-    });
+    actions.push(
+      prisma.wordProgress.create({
+        data: {
+          userId: user.id,
+          wordId: randomWord.id,
+          correct: Math.random() < 0.5, // 50% 확률로 정답
+        },
+      }),
+    );
   }
+
+  // 모든 create 쿼리 실행
+  await prisma.$transaction(actions);
 };
 
 const createMockData = async (): Promise<void> => {
