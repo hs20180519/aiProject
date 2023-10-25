@@ -13,6 +13,7 @@ interface WordData {
 
 interface TestPageProps {
   selectedCategory: string;
+  setShowResultPage: (value: boolean) => void; 
 }
 
 interface Answer {
@@ -43,13 +44,14 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
   );
 };
 
-const TestPage: React.FC<TestPageProps> = ({ selectedCategory }) => {
+const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage }) => {
   const [wordData, setWordData] = useState<WordData>();
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Answer>();
   const [popupIsOpen, setPopupIsOpen] = useState(false);
   const [popupIsCorrect, setPopupIsCorrect] = useState(false);
   const [popupCorrectAnswer, setPopupCorrectAnswer] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
 
 
   const fetchWords = async () => {
@@ -81,23 +83,26 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory }) => {
 
   const handleChoiceClick = (choice: string) => {
     const userAnswer = choice;
-  const correctAnswer = wordData.meaning;
-  const isCorrect = userAnswer === correctAnswer;
-  const newAnswer: Answer = {
-    id: wordData.id,
-    userAnswer,
-    correctAnswer,
-    isCorrect,
-  };
+    const correctAnswer = wordData.meaning;
+    const isCorrect = userAnswer === correctAnswer;
+    const newAnswer: Answer = {
+      id: wordData.id,
+      userAnswer,
+      correctAnswer,
+      isCorrect,
+    };
 
-  setAnswers(newAnswer);
+    setAnswers(newAnswer);
 
-  setPopupCorrectAnswer(correctAnswer);
-  setPopupIsCorrect(isCorrect);
-
-  setPopupIsOpen(true);
+    setPopupCorrectAnswer(correctAnswer);
+    setPopupIsCorrect(isCorrect);
+    setPopupIsOpen(true);
 
     saveLearn(wordData, isCorrect);
+
+    if (currentIndex < 10) {
+      setCurrentIndex(currentIndex + 1);
+    }
   };
 
   const handleDontKnow = () => {
@@ -108,20 +113,28 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory }) => {
       correctAnswer,
       isCorrect: false,
     };
-  
+
     setAnswers(newAnswer);
 
     setPopupCorrectAnswer(correctAnswer);
     setPopupIsCorrect(false);
     setPopupIsOpen(true);
 
-  saveLearn(wordData, false);
+    saveLearn(wordData, false);
+
+    if (currentIndex < 10) {
+      setCurrentIndex(currentIndex + 1);
+    }
   };
 
   const handleModalClose = () => {
     setPopupIsOpen(false);
 
-    fetchWords();
+    if (currentIndex === 10) {
+      setShowResultPage(true);
+    } else {
+      fetchWords();
+    }
   };
 
   const currentWordSet = wordData;
@@ -137,7 +150,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory }) => {
         <Text fontSize="2xl" mb={4}>
           {currentWord}
         </Text>
-        {currentChoices.map(choice => (
+        {currentChoices.map((choice) => (
           <Button
             variant={selectedChoice === choice ? "solid" : "outline"}
             colorScheme="blue"
