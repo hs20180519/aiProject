@@ -1,7 +1,10 @@
 import { Box, Flex, Icon } from "@chakra-ui/react";
 import * as type from "./main.type";
 
-export default function NavItem({ icon, children, ...rest }: type.NavItemProps) {
+interface NavItemProps extends type.NavItemProps {
+  active?: boolean;
+}
+export default function NavItem({ icon, children, active, ...rest }: NavItemProps) {
   return (
     <Box as={"a"} href={"#"} style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
       <Flex

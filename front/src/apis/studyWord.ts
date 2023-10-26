@@ -29,6 +29,9 @@ export class FetchStudyWords {
    * 마지막 학습 시점에서 학습한 10개의 단어와 정답 유무 반환 */
   static async getLearnResult() {
     const url = `/study/result`;
-    return instance.get(url);
+    const res = await instance.get("/user");
+    const userId = res.data.id;
+    const fullUrl = `${url}?userId=${userId}`
+    return instance.get(fullUrl);
   }
 }

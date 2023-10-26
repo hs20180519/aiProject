@@ -20,11 +20,11 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  useToast,
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link as ReactRouterLink } from "react-router-dom";
-import KakaoLoginButton from "../Login/KakaoLoginButton";
 
 type NewUserInfoType = {
   name: string;
@@ -36,9 +36,10 @@ type NewUserInfoType = {
 
 let timer: NodeJS.Timer;
 
+const TOAST_TIMEOUT_INTERVAL = 800;
 const SignUp = () => {
+  const toast = useToast();
   const [showPassword, setShowPassword] = useState(false);
-
   const [newUserInfo, setNewUserInfo] = useState<NewUserInfoType>({
     name: "",
     email: "",
@@ -53,6 +54,8 @@ const SignUp = () => {
   const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
   const [hasEmailCode, setHasEmailCode] = useState<string | null>(null);
   const debounceFetchTerm = useDebounced(email, 500);
+  const [sendEmailCodeClick, setSendEmailCodeClick] = useState(false);
+  const [succededEmailCode, setSuccededEmailCode] = useState(false);
 
   const getEmailStatus = () => {
     if (isEmailAvailable) {
@@ -103,44 +106,68 @@ const SignUp = () => {
   };
 
   // 2. 이메일 인증 요청을 보낸다.
-  const fetchEmailVerification = async () => {
+  const fetchSendEmailCode = async () => {
     try {
       await Api.post(`/auth/register`, { email });
-    } catch (err) {
-      console.error("이메일 인증 중 오류 발생:", err);
+      setSendEmailCodeClick(true);
+    } catch (e) {
+      console.error("이메일 인증 중 오류 발생:", e);
     }
   };
 
   // 3. 인증번호 인증을 진행한다.
-  const fetchEmailCode = async (verificationCode: string) => {
+  const fetchCheckEmailCode = async () => {
     try {
-      await Api.post(`/auth/verify`, { verificationCode });
-      setHasEmailCode("이메일 인증이 완료되었습니다.");
-    } catch (err) {
-      console.error("이메일 인증 코드 확인 중 오류 발생:", err);
-      setHasEmailCode("이메일 인증 코드 확인 중 오류가 발생했습니다.");
+      console.log("------클릭했나------");
+      const res = await Api.post(`/auth/verify`, { email, code: verificationCode });
+      console.log("-----이메일 인증 확인----");
+      console.log(res);
+      if (res.status === 200) {
+        setSuccededEmailCode(true);
+        toast({
+          title: `이메일 인증 완료!`,
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+      }
+    } catch (e) {
+      toast({
+        title: `이메일 인증 실패!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+      setSuccededEmailCode(false);
     }
   };
 
   // 4. 회원가입을 진행한다.
   const fetchRegister = async () => {
     try {
-      // 이메일 인증 코드 확인
-      const validateCode = await fetchEmailCode(verificationCode);
-      // 회원가입 요청
-      await Api.post("/auth/signup", {
-        name,
-        email,
-        password,
-      });
-      navigate("/login");
-    } catch (err) {
-      if (err.isAxiosError) {
-        const axiosError = err as AxiosError;
-        console.error(axiosError.response?.data);
+      const res = await Api.post("/auth/signup", { name, email, password });
+      console.log("------------회원가입----------");
+      console.log(res);
+      if (res.status === 201) {
+        toast({
+          title: `회원가입이 완료되었습니다.`,
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+        setTimeout(() => {
+          navigate("/login");
+        }, TOAST_TIMEOUT_INTERVAL + 100);
       } else {
-        console.error(err);
+        toast({
+          title: `회원가입도중 오류가 발생했습니다..`,
+          status: "error",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
       }
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -181,10 +208,10 @@ const SignUp = () => {
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
           <Heading fontSize={"4xl"} textAlign={"center"}>
-            Sign up
+            워디 회원가입!
           </Heading>
           <Text fontSize={"lg"} color={"gray.600"}>
-            to enjoy all of our cool features ✌️
+            AI와 함께 쉽게 배우는 영단어✌️
           </Text>
         </Stack>
         <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
@@ -206,7 +233,7 @@ const SignUp = () => {
                     fontSize="xs"
                     color={isEmailAvailable ? "green.500" : "tomato"}
                   >
-                    {isEmailAvailable ? "사용 가능" : "이미 사용"}
+                    {isEmailAvailable ? "사용 가능" : "사용 중이거나 사용 불가"}
                   </Text>
                 )}
 
@@ -223,14 +250,26 @@ const SignUp = () => {
                   onChange={handleChange}
                 />
                 <Box position="absolute" right="0" top="45%">
-                  <Button
-                    fontSize={"sm"}
-                    border={"none"}
-                    bg={"none"}
-                    onClick={fetchEmailVerification}
-                  >
-                    인증번호 전송
-                  </Button>
+                  {!succededEmailCode ? (
+                    <Button
+                      fontSize={"sm"}
+                      border={"none"}
+                      bg={"none"}
+                      onClick={!sendEmailCodeClick ? fetchSendEmailCode : fetchCheckEmailCode}
+                    >
+                      {!sendEmailCodeClick ? "인증번호 전송" : "확인"}
+                    </Button>
+                  ) : (
+                    <Button
+                      fontSize={"sm"}
+                      border={"none"}
+                      bg={"none"}
+                      disabled={true}
+                      color={"teal.500"}
+                    >
+                      인증완료
+                    </Button>
+                  )}
                 </Box>
               </FormControl>
             </Box>
@@ -281,15 +320,16 @@ const SignUp = () => {
                 _hover={{
                   bg: "blue.500",
                 }}
+                onClick={fetchRegister}
               >
                 회원가입
               </Button>
             </Stack>
             <Stack pt={6}>
               <Text align={"center"}>
-                Already a user?{" "}
+                이미 회원이신가요?{" "}
                 <ChakraLink as={ReactRouterLink} color={"blue.400"} to="/login">
-                  Login
+                  로그인
                 </ChakraLink>
               </Text>
             </Stack>
