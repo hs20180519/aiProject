@@ -86,7 +86,7 @@ const SignUp = () => {
     }
 
     // try {
-    //   const response = await Api.get(`/api/auth/check?email=${email}`);
+    //   const response = await Api.get(`/auth/check?email=${email}`);
     //   console.log("----이메일 유효성 검사 --");
     //   console.log(response);
     //   const { isAvailable } = response.data;

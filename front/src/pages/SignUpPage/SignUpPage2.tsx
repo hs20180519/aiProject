@@ -44,7 +44,7 @@ const SignUp = () => {
 
   const checkEmailAvailability = async (email: string) => {
     try {
-      const response = await Api.get(`/api/auth/check?email=${email}`);
+      const response = await Api.get(`/auth/check?email=${email}`);
       const { isAvailable } = response.data;
       if (isAvailable) {
         setIsEmailAvailable(true);
@@ -61,7 +61,7 @@ const SignUp = () => {
 
   const emailVerification = async (email: string) => {
     try {
-      await Api.post(`/api/auth/register`, { email });
+      await Api.post(`/auth/register`, { email });
     } catch (err) {
       console.error("이메일 인증 중 오류 발생:", err);
     }
@@ -69,7 +69,7 @@ const SignUp = () => {
 
   const verifyEmailCode = async (verificationCode: string) => {
     try {
-      await Api.post(`/api/auth/verify`, { verificationCode });
+      await Api.post(`/auth/verify`, { verificationCode });
       setEmailVerificationStatus("이메일 인증이 완료되었습니다.");
     } catch (err) {
       console.error("이메일 인증 코드 확인 중 오류 발생:", err);
@@ -99,7 +99,7 @@ const SignUp = () => {
         // 이메일 인증 코드 확인
         await verifyEmailCode(verificationCode);
         // 회원가입 요청
-        await Api.post("/api/auth/signup", {
+        await Api.post("/auth/signup", {
           name,
           email,
           password,
