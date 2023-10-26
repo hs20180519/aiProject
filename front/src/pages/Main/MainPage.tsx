@@ -3,7 +3,7 @@ import { FiEdit2, FiTrendingUp, FiCodesandbox, FiStar, FiDatabase, FiUser } from
 import { useState, useContext, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
-import * as type from "./main.type";
+import * as type from "../../apis/types/main";
 
 // global component
 import SidebarContent from "./SidebarContent";
@@ -15,8 +15,8 @@ import { UserStateContext, DispatchContext } from "../../App";
 
 // note
 import AddCustomNotePage from "../Note/AddCustomNotePage";
-import CustomNoteListPage from "../Note/CustomNoteListPage";
-import CustomNoteDetailPage from "../Note/CustomNoteDetailPage";
+import NoteListPage from "../Note/NoteListPage";
+import NoteDetailPage from "../Note/NoteDetailPage";
 
 // rank
 import RankFeildPage from "../Rank/RankFeildPage";
@@ -68,8 +68,8 @@ const MainPage = () => {
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
         <Routes>
           <Route path="" element={<InnerPage />} />
-          <Route path="notes" element={<CustomNoteListPage />} />
-          <Route path="note/:id" element={<CustomNoteDetailPage />} />
+          <Route path="notes" element={<NoteListPage />} />
+          <Route path="note/:id" element={<NoteDetailPage />} />
           <Route path="note_add" element={<AddCustomNotePage />} />
           <Route path="rank" element={<RankFeildPage />} />
           {<Route path="grammar" element={<GrammarPage />} />}
