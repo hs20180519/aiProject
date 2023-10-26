@@ -4,7 +4,7 @@ stages:
   - backend_deploy
 
 variables:
-  SSH_SERVER: 34.64.215.129
+  SSH_SERVER: 34.64.87.27
   SSH_PORT: 22
   SSH_USER: elice
   FRONT_TARGET_DIR: /front/build
