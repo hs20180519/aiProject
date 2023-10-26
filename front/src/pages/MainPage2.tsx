@@ -1,7 +1,6 @@
-"use client";
-
 import {
   IconButton,
+  Center,
   Avatar,
   Box,
   CloseButton,
@@ -21,23 +20,28 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  Spinner,
 } from "@chakra-ui/react";
 
 import {
-  FiHome,
+  FiEdit2,
+  FiCodesandbox,
   FiTrendingUp,
-  FiCompass,
   FiStar,
-  FiSettings,
+  FiUser,
   FiMenu,
   FiBell,
   FiChevronDown,
 } from "react-icons/fi";
 
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserStateContext, DispatchContext } from "../App";
 import { IconType } from "react-icons";
 import InnerPage from "./InnerPage";
 
 interface LinkItemProps {
+  id: string;
   name: string;
   icon: IconType;
 }
@@ -49,6 +53,8 @@ interface NavItemProps extends FlexProps {
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
+  onLogout: () => void;
+  nickname: string;
 }
 
 interface SidebarProps extends BoxProps {
@@ -56,11 +62,11 @@ interface SidebarProps extends BoxProps {
 }
 
 const LinkItems: Array<LinkItemProps> = [
-  { name: "홈", icon: FiHome },
-  { name: "단어학습", icon: FiTrendingUp },
-  { name: "Explore", icon: FiCompass },
-  { name: "단어장", icon: FiStar },
-  { name: "설정", icon: FiSettings },
+  { id: "study", name: "단어학습", icon: FiEdit2 },
+  { id: "rank", name: "랭킹", icon: FiTrendingUp },
+  { id: "wordbook", name: "단어장", icon: FiStar },
+  { id: "grammar", name: "문법 교정", icon: FiCodesandbox },
+  { id: "mypage", name: "내 정보", icon: FiUser },
 ];
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
@@ -77,7 +83,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <Flex h={"20"} alignItems={"center"} mx={"8"} justifyContent={"space-between"}>
         <Text fontSize={"2xl"} fontFamily={"monospace"} fontWeight={"bold"}>
-          {"🐔Wordy\r"}
+          {"🐾Wordy\r"}
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
@@ -122,7 +128,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
   );
 };
 
-const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+const MobileNav = ({ onOpen, nickname = "워디35", onLogout, ...rest }: MobileProps) => {
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -170,7 +176,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing={"1px"}
                   ml={"2"}
                 >
-                  <Text fontSize={"sm"}>{"Elice"}</Text>
+                  <Text fontSize={"sm"}>{nickname}</Text>
                   <Text fontSize={"xs"} color={"gray.600"}>
                     {"1팀\r"}
                   </Text>
@@ -186,9 +192,8 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
             >
               <MenuItem>{"프로필"}</MenuItem>
               <MenuItem>{"설정"}</MenuItem>
-              <MenuItem>{"Billing"}</MenuItem>
               <MenuDivider />
-              <MenuItem>{"로그아웃"}</MenuItem>
+              <MenuItem onClick={onLogout}>{"로그아웃"}</MenuItem>
             </MenuList>
           </Menu>
         </Flex>
@@ -199,6 +204,36 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 
 const SidebarWithHeader = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+  const { user } = useContext(UserStateContext);
+  const dispatch = useContext(DispatchContext);
+
+  // 메인페이지가 마운트 될 시 유저가 없으면 로그인 페이지로 리다이렉트
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user]);
+
+  const handleClickLogout = () => {
+    // 1. 세션 스토리지에서 토큰을 삭제한다.
+    sessionStorage.removeItem("userToken");
+
+    // 2. 로그아웃 상태를 dispatch 한다.
+    dispatch({ type: "LOGOUT" });
+
+    // 3. 랜딩 페이지로 이동한다.
+    navigate("/");
+  };
+
+  if (!user)
+    return (
+      <Flex>
+        <Center w="100vw" h="100vh">
+          <Spinner size="xl" color="cyan.500" />
+        </Center>
+      </Flex>
+    );
 
   return (
     <Box minH={"100vh"} bg={useColorModeValue("gray.100", "gray.900")}>
@@ -215,7 +250,7 @@ const SidebarWithHeader = () => {
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      <MobileNav onOpen={onOpen} />
+      <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
         <InnerPage />
       </Box>

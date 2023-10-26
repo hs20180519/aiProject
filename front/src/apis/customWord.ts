@@ -1,21 +1,21 @@
-import * as instance from "./api";
+import * as Api from "./api";
 
-export class FetchWordBook {
-  /**
-   * 커스텀 단어장 생성
-   */
+export default class FetchCustomWord {
+  /** 커스텀 단어장 생성 */
   static async createCustomBook(data: { title: string }) {
     const url = "/book";
-    return instance.post(url, data);
+    const newNote = await Api.post(url, data);
+    return newNote;
   }
 
   /**
-   * 커스텀 단어장 목록
+   * 커스텀 단어장 목록 조회
    * 예를들어 단어장 페이지에 기본으로 있어야할 단어장들 (수능, 토익 , 학습, 틀린 등등) 후 다음 배열에 추가할 목록들
    */
   static async getCustomBookList() {
     const url = "/book";
-    return instance.get(url);
+    const getNoteList = await Api.get(url);
+    return getNoteList;
   }
 
   /**
@@ -33,15 +33,14 @@ export class FetchWordBook {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return instance.get(fullUrl);
+    const getNoteDetail = await Api.get(fullUrl);
+    return getNoteDetail;
   }
 
-  /**
-   * 커스텀 단어장 title 업데이트
-   */
+  /** 커스텀 단어장 title 업데이트 */
   static async updateCustomBook(data: { title: string }) {
     const url = `/book`;
-    return instance.put(url, data);
+    return await Api.put(url, data);
   }
 
   /**
@@ -52,7 +51,8 @@ export class FetchWordBook {
     const url = `/book`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return instance.delete(fullUrl);
+    const delNote = await Api.delete(fullUrl);
+    return delNote;
   }
 
   /**
@@ -67,7 +67,7 @@ export class FetchWordBook {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return instance.post(fullUrl, data);
+    return await Api.post(fullUrl, data);
   }
 
   /**
@@ -82,7 +82,7 @@ export class FetchWordBook {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return instance.put(fullUrl, data);
+    return await Api.put(fullUrl, data);
   }
 
   /**
@@ -93,6 +93,6 @@ export class FetchWordBook {
     const url = `/book/word`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
-    return instance.delete(fullUrl);
+    return await Api.delete(fullUrl);
   }
 }

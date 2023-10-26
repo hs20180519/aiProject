@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 
-export default function CallToActionWithAnnotation() {
+export default function IntroPage() {
   return (
     <StyledContainer>
       <Link to={"/login"}>

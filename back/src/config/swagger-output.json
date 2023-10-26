@@ -360,7 +360,16 @@
           "Study"
         ],
         "summary": "학습 종료 결과",
-        "description": "학습 종료시 학습 단어 결과 반환",
+        "description": "학습 종료시 학습 단어 결과 반환. query?userId=",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"

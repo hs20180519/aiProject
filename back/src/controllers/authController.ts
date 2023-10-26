@@ -12,6 +12,7 @@ export const checkEmail = async (req: Request, res: Response, next: NextFunction
    */
   try {
     const email = req.query.email as string;
+    console.log(email);
     if (email) {
       const existingUserEmail = await authService.getUserByEmail(email);
       if (existingUserEmail)

@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { ListItem, OrderedList, Spinner } from "@chakra-ui/react";
-import RankList from "./RankItem";
-
-import * as Api from "../apis/api";
+import RankList from "../../components/RankItem";
+import * as Api from "../../apis/api";
+import Loading from "../../components/Loading";
 
 const USER_RANK = [
   { id: 1, nickname: "진채영짱짱맨", score: 97 },
@@ -12,18 +11,18 @@ const USER_RANK = [
   { id: 4, nickname: "최강채영", score: 100 },
 ];
 
-export default function RankFeild() {
+export default function RankFeildPage() {
   const [loading, setLoading] = useState(false);
-  const [usersRank, setUsersRank] = useState([]);
+  // const [usersRank, setUsersRank] = useState([]);
 
   const fetchUserRanks = async () => {
     setLoading(true);
     const res = await Api.get("/rank");
     const data = res?.data;
     if (Array.isArray(data)) {
-      setUsersRank(data);
-    } else {
-      setUsersRank([]);
+      //   setUsersRank(data);
+      // } else {
+      //   setUsersRank([]);
     }
     setLoading(false);
   };
@@ -32,12 +31,7 @@ export default function RankFeild() {
     fetchUserRanks();
   }, []);
 
-  if (loading)
-    return (
-      <StyledLoading>
-        <Spinner size="lg" color="blue.500" className="loading" />;
-      </StyledLoading>
-    );
+  if (loading) return <Loading />;
 
   return <RankList rankList={USER_RANK} />;
 }

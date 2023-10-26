@@ -1,166 +1,183 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from "react";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
-// import axios from "axios";
-// import { FetchStudyWords } from "../apis/studyWord";
-// import WordCard from "../components/WordCard";
-// import MoveButton from "../components/MoveButton";
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@chakra-ui/react";
+import { FetchStudyWords } from "../apis/studyWord";
 
 interface WordData {
-  englishWord: string;
-  koreanMeaning: string;
+  id: number;
+  word: string;
+  meaning: string;
+  category: string;
+  choices: string[];
+}
+
+interface TestPageProps {
+  selectedCategory: string;
+  setShowResultPage: (value: boolean) => void; 
 }
 
 interface Answer {
+  id: number;
   userAnswer: string;
   correctAnswer: string;
+  isCorrect: boolean;
 }
 
-interface TestPageProps {}
-
-const shuffleArray = (array: string[]) => {
-  const shuffledArray = [...array];
-  // eslint-disable-next-line no-plusplus
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-  }
-  return shuffledArray;
+const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>
+          {isCorrect ? "정답" : "오답"}
+        </ModalHeader>
+        <ModalBody>
+          {isCorrect ? "정답입니다!" : `틀렸습니다. 정답은: ${correctAnswer}`}
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme="blue" onClick={onClose}>
+            확인
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
 };
 
-const TestPage: React.FC<TestPageProps> = () => {
-  const [wordData, setWordData] = useState<WordData[]>([]);
-  const [options, setOptions] = useState<string[]>([]);
-  const [currentWordIndex, setCurrentWordIndex] = useState<number>(0);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<Answer[]>([]);
-  const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
+const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage }) => {
+  const [wordData, setWordData] = useState<WordData>();
+  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<Answer>();
+  const [popupIsOpen, setPopupIsOpen] = useState(false);
+  const [popupIsCorrect, setPopupIsCorrect] = useState(false);
+  const [popupCorrectAnswer, setPopupCorrectAnswer] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
 
+
+  const fetchWords = async () => {
+    try {
+      const queryParams = `${selectedCategory}=true`;
+      const response = await FetchStudyWords.getStudyWord(queryParams);
+      const newWordData = response.data;
+      setWordData(newWordData);
+      console.log(wordData)
+    } catch (error) {
+      console.error('Error fetching words:', error);
+    }
+  };
+
+  const saveLearn = async (wordData, isCorrect) => {
+    try {
+      FetchStudyWords.saveLearn({
+        wordId: wordData.id,
+        correct: isCorrect,
+      });
+    } catch (error) {
+      console.error('Error saving learn: ', error)
+    }
+  }
 
   useEffect(() => {
-    const fetchWords = async () => {
-      setWordData([
-        { englishWord: "Apple", koreanMeaning: "사과" },
-        { englishWord: "Banana", koreanMeaning: "바나나" },
-        { englishWord: "Orange", koreanMeaning: "오렌지" },
-        { englishWord: "Grape", koreanMeaning: "포도" },
-        { englishWord: "Strawberry", koreanMeaning: "딸기" },
-        { englishWord: "Watermelon", koreanMeaning: "수박" },
-        { englishWord: "Pineapple", koreanMeaning: "파인애플" },
-        { englishWord: "Mango", koreanMeaning: "망고" },
-        { englishWord: "Cherry", koreanMeaning: "체리" },
-        { englishWord: "Peach", koreanMeaning: "복숭아" },
-      ]);
-      setOptions([
-        "레몬", "라임", "키위", "블루베리", "매실",
-        "귤", "마늘", "감", "멜론", "토마토",
-        "아보카도", "참외", "한라봉", "두리안", "은행",
-        "자몽", "석류", "방울토마토", "체리토마토", "배",
-        "파파야", "코코넛", "블랙베리", "라즈베리", "패션프루트",
-        "밤", "낑깡", "호박", "앵두", "아사이베리",
-        "자두", "샤인머스캣", "모과", "크랜베리", "아몬드",
-        "천도복숭아", "잣", "애호박", "레드향", "산딸기"
-      ]);
+      fetchWords();
+  }, [selectedCategory]);
+
+  const handleChoiceClick = (choice: string) => {
+    const userAnswer = choice;
+    const correctAnswer = wordData.meaning;
+    const isCorrect = userAnswer === correctAnswer;
+    const newAnswer: Answer = {
+      id: wordData.id,
+      userAnswer,
+      correctAnswer,
+      isCorrect,
     };
-    fetchWords();
-  }, []);
 
-  useEffect(() => {
-    const shuffledOptions = shuffleArray(options);
-    setShuffledOptions(shuffledOptions);
-  }, [currentWordIndex, options]);
+    setAnswers(newAnswer);
 
-  const handleNextWord = () => {
-    setCurrentWordIndex(prevIndex => prevIndex + 1);
-    setSelectedOption(null);
+    setPopupCorrectAnswer(correctAnswer);
+    setPopupIsCorrect(isCorrect);
+    setPopupIsOpen(true);
 
-    const shuffledOptions = shuffleArray(options);
-    setShuffledOptions(shuffledOptions);
+    saveLearn(wordData, isCorrect);
+
+    if (currentIndex < 10) {
+      setCurrentIndex(currentIndex + 1);
+    }
   };
 
-  const handlePrevWord = () => {
-    setCurrentWordIndex(prevIndex => Math.max(0, prevIndex - 1));
+  const handleDontKnow = () => {
+    const correctAnswer = wordData.meaning;
+    const newAnswer: Answer = {
+      id: wordData.id,
+      userAnswer: null,
+      correctAnswer,
+      isCorrect: false,
+    };
+
+    setAnswers(newAnswer);
+
+    setPopupCorrectAnswer(correctAnswer);
+    setPopupIsCorrect(false);
+    setPopupIsOpen(true);
+
+    saveLearn(wordData, false);
+
+    if (currentIndex < 10) {
+      setCurrentIndex(currentIndex + 1);
+    }
   };
 
-  const handleOptionClick = (option: string) => {
-    const userAnswer = option;
-    const correctAnswer = wordData[currentWordIndex]?.koreanMeaning;
+  const handleModalClose = () => {
+    setPopupIsOpen(false);
 
-    const newAnswer: Answer = { userAnswer, correctAnswer };
-    setAnswers(prevAnswers => [...prevAnswers, newAnswer]);
-
-    setSelectedOption(option);
-  };
-  
-  const handleComplete = () => {
-    const results = wordData.map((word, index) => {
-      const userAnswer = answers[index]?.userAnswer;
-      const correctAnswer = word.koreanMeaning;
-      const isCorrect = userAnswer === correctAnswer;
-
-      return {
-        englishWord: word.englishWord,
-        userAnswer,
-        correctAnswer,
-        isCorrect,
-      };
-    });
-
-    console.log('Results:', results);
-
-    const correctCount = results.reduce(
-      (count, result) => (result.isCorrect ? count + 1 : count),
-      0
-    );
-
-    alert(`You got ${correctCount} out of 10 correct!`);
+    if (currentIndex === 10) {
+      setShowResultPage(true);
+    } else {
+      fetchWords();
+    }
   };
 
-
-  const currentWord = wordData[currentWordIndex];
-  const currentWordKoreanMeaning = currentWord?.koreanMeaning;
-  
+  const currentWordSet = wordData;
+  const currentWord = currentWordSet?.word;
+  const currentChoices = currentWordSet?.choices || [];
 
   return (
-    <Flex align={"center"} justify={"center"} height={"100vh"}>
-      <Box maxW={"sm"} p={4} borderWidth={1} borderRadius={"lg"}>
-        <Text fontSize={"xl"} fontWeight={"bold"} mb={4}>
-          {"Wordy\r"}
+    <Flex align="center" justify="center" height="100vh">
+      <Box maxW="sm" p={4} borderWidth={1} borderRadius="lg">
+        <Text fontSize="xl" fontWeight="bold" mb={4}>
+          Wordy
         </Text>
-        <Text fontSize={"2xl"} mb={4}>
-          {currentWord?.englishWord}
+        <Text fontSize="2xl" mb={4}>
+          {currentWord}
         </Text>
-        {shuffledOptions.slice(currentWordIndex * 3, currentWordIndex * 3 + 3).concat(currentWordKoreanMeaning).map(option => (
+        {currentChoices.map((choice) => (
           <Button
-            key={option}
-            variant={selectedOption === option ? "solid" : "outline"}
-            colorScheme={"blue"}
-            onClick={() => handleOptionClick(option)}
+            variant={selectedChoice === choice ? "solid" : "outline"}
+            colorScheme="blue"
+            onClick={() => handleChoiceClick(choice)}
+            key={choice}
             mr={2}
             mb={2}
-            width={"auto"}
+            width="auto"
           >
-            {option}
+            {choice}
           </Button>
         ))}
 
-        <Flex justify={"space-between"} mt={4}>
-          <Button onClick={handlePrevWord} disabled={currentWordIndex === 0}>
-            {"이전\r"}
+        <Flex justify="center" mt={4}>
+          <Button onClick={handleDontKnow} colorScheme="red">
+            모르겠어요
           </Button>
-          {currentWordIndex === 9 ? (
-            <Button colorScheme={"green"} onClick={handleComplete} mt={4}>
-              {"완료\r"}
-            </Button>
-          ) : (
-            <Button onClick={handleNextWord}>
-              {"다음\r"}
-            </Button>
-          )}
         </Flex>
+        <PopupModal
+          isOpen={popupIsOpen}
+          onClose={handleModalClose}
+          isCorrect={popupIsCorrect}
+          correctAnswer={popupCorrectAnswer}
+        />
       </Box>
     </Flex>
-      );
-    };
+  );
+};
 
 export default TestPage;
