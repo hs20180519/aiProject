@@ -467,6 +467,16 @@
         "security": []
       }
     },
+    "/api/book/allDel": {
+      "delete": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/book/word": {
       "post": {
         "tags": [
