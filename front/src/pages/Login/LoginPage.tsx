@@ -18,15 +18,18 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  useToast,
   Center,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
 interface LoginProps {
   email: string;
   password: string;
 }
+const TOAST_TIMEOUT_INTERVAL = 800;
 
 const LoginPage = () => {
+  const toast = useToast();
   const [formData, setFormData] = useState<LoginProps>({
     email: "sample8@example.com",
     password: "",
@@ -58,30 +61,40 @@ const LoginPage = () => {
         const userInfo = await Api.get("/user");
         if (userTypeGuard(userInfo.data)) {
           dispatch({ type: "LOGIN_SUCCESS", payload: userInfo.data });
+          toast({
+            title: `로그인 성공!`,
+            status: "success",
+            isClosable: true,
+            duration: TOAST_TIMEOUT_INTERVAL - 300,
+          });
           navigate("/main", { replace: true });
         } else {
           window.alert("유저 정보가 잘못되었습니다.");
         }
       }
     } catch (err) {
-      const objectErr = err as any;
-      window.alert(objectErr.response.data);
+      toast({
+        title: `아이디 또는 비밀번호가 틀렸습니다!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
     }
   };
 
   // const handleSubmit = async (e: SyntheticEvent) => {
   //   e.preventDefault();
-  
+
   //   try {
   //     const res = await Api.post("/auth", {
   //       email,
   //       password,
   //     });
-  
+
   //     if (res.status === 200) {
   //       const jwtToken = res.data.token;
   //       sessionStorage.setItem("userToken", jwtToken);
-  
+
   //       // 서버에서 로그인 실패 시 오류 메시지가 JSON 객체로 반환?
   //       if (res.data.errorMessage) {
   //         const errorResponse = JSON.stringify(res.data.errorMessage);
@@ -109,72 +122,73 @@ const LoginPage = () => {
 
   return (
     <Flex
-      minH={'100vh'}
-      align={'center'}
-      justify={'center'}
-      bg={useColorModeValue('gray.100', 'gray.800')}
+      minH={"100vh"}
+      align={"center"}
+      justify={"center"}
+      bg={useColorModeValue("gray.100", "gray.800")}
     >
-    <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-      <Box
-        rounded={'lg'}
-        bg={useColorModeValue('white', 'gray.700')}
-        boxShadow={'md'}
-        p={8}
-      >
-        <Heading fontSize={"4xl"} textAlign={"center"}>
-          워디 로그인
-        </Heading>
-      <Stack spacing={10} pt={5}>
-        <form onSubmit={handleSubmit}>
-          <FormControl id="email">
-            <FormLabel>이메일</FormLabel>
-            <Input
-              type="text"
-              placeholder="이메일을 입력하세요."
-              value={email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            />
-            {!isEmailValid && email.length > 0 && (
-              <Text color="red.500">이메일 형식이 올바르지 않습니다.</Text>
-            )}
-          </FormControl>
-          <FormControl id="password">
-            <FormLabel>비밀번호</FormLabel>
-            <Input
-              type="password"
-              placeholder="비밀번호를 입력하세요."
-              value={password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
-            {!isPasswordValid && password.length > 0 && (
-              <Text color="red.500">비밀번호는 4글자 이상이어야 합니다.</Text>
-            )}
-          </FormControl>
+      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+        <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"md"} p={8}>
+          <Heading fontSize={"4xl"} textAlign={"center"}>
+            워디 로그인
+          </Heading>
           <Stack spacing={10} pt={5}>
-          <Button type="submit" colorScheme="teal" variant="solid" size="lg" width="100%" disabled={!isFormValid}>
-            로그인
-          </Button>
+            <form onSubmit={handleSubmit}>
+              <FormControl id="email">
+                <FormLabel>이메일</FormLabel>
+                <Input
+                  type="text"
+                  placeholder="이메일을 입력하세요."
+                  value={email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                />
+                {!isEmailValid && email.length > 0 && (
+                  <Text color="red.500">이메일 형식이 올바르지 않습니다.</Text>
+                )}
+              </FormControl>
+              <FormControl id="password">
+                <FormLabel>비밀번호</FormLabel>
+                <Input
+                  type="password"
+                  placeholder="비밀번호를 입력하세요."
+                  value={password}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                />
+                {!isPasswordValid && password.length > 0 && (
+                  <Text color="red.500">비밀번호는 4글자 이상이어야 합니다.</Text>
+                )}
+              </FormControl>
+              <Stack spacing={10} pt={5}>
+                <Button
+                  type="submit"
+                  colorScheme="teal"
+                  variant="solid"
+                  size="lg"
+                  width="100%"
+                  disabled={!isFormValid}
+                >
+                  로그인
+                </Button>
+              </Stack>
+            </form>
           </Stack>
-        </form>
-        </Stack>
-        <Stack spacing={10} pt={3}>
-        <Text fontSize="sm" color="gray.600">
-          아직 회원이 아니시라면?{' '}
-          <Button as="a" href="/SignUp" colorScheme="teal" variant="link" size="xl">
-            회원가입
-          </Button>
-        <Stack spacing={10} pt={5}>
-          <KakaoLoginButton />
-        </Stack>
-        <Stack spacing={10} pt={3}>
-          <Button onClick={navigateToIntroPage}>처음 화면으로 이동
-            </Button>
+          <Stack spacing={10} pt={3}>
+            <Text fontSize="sm" color="gray.600">
+              아직 회원이 아니시라면?{" "}
+              <Button as="a" href="/SignUp" colorScheme="teal" variant="link" size="xl">
+                회원가입
+              </Button>
+              <Stack spacing={10} pt={5}>
+                <KakaoLoginButton />
+              </Stack>
+              <Stack spacing={10} pt={3}>
+                <Button onClick={navigateToIntroPage}>처음 화면으로 이동</Button>
+              </Stack>
+            </Text>
           </Stack>
-        </Text>
-        </Stack>
-      </Box>
+        </Box>
       </Stack>
     </Flex>
   );
