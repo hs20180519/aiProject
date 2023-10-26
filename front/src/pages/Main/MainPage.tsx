@@ -31,6 +31,9 @@ import InnerPage from "../InnerPage";
 import TestGptWordPage from "../TestGptWordPage/TestGptWordPage";
 import Loading from "../../components/Loading";
 
+// mypage
+import MyPage from "../MyPage";
+
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
@@ -72,7 +75,7 @@ const MainPage = () => {
           {<Route path="grammar" element={<GrammarPage />} />}
           <Route path="grammar/:word" element={<GrammarPage />} />
           <Route path="test_word" element={<TestGptWordPage />} />
-          {/* <Route path="mypage" element={<MyPage />} />  페이지 추가할시 import후 주석제거*/}
+          <Route path="mypage" element={<MyPage />} />
           {/* <Route path="wordlist" element={<WordsPage />}  /> 페이지 추가할시 import후 주석제거*/}
         </Routes>
       </Box>
