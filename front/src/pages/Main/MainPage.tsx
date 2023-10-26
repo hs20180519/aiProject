@@ -3,7 +3,7 @@ import { FiEdit2, FiTrendingUp, FiCodesandbox, FiStar, FiDatabase, FiUser } from
 import { useState, useContext, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
-import * as type from "./main.type";
+import * as type from "../../apis/types/main.type";
 
 // global component
 import SidebarContent from "./SidebarContent";

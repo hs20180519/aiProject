@@ -32,7 +32,7 @@ export default function CustomNoteAddPage() {
     word: "",
     meaning: "",
   });
-
+  const [word, setWord] = useState("");
   const [getCustomWord, setGetCustomWord] = useState();
 
   /** 커스텀 단어장 생성 api */
@@ -46,17 +46,31 @@ export default function CustomNoteAddPage() {
           isClosable: true,
           duration: TOAST_TIMEOUT_INTERVAL,
         });
+        console.log("------bookId가뭐야???------");
+        console.log(res.data);
       }
     } catch (e) {
       console.error();
     }
   };
+
   /**단어 추가하는 api */
-  CustomWord.createCustomWordInBook;
+  const fetchAddWord = async (params, data) => {
+    try {
+      const res = await CustomWord.addCustomWord(params, data);
+      if (res.status === 201) {
+        console.log(res.data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const refreshWords = () => {};
 
   /**단어 업데이트 될때 목록 출력하는 api */
   useEffect(() => {
-    const data = CustomWord.getBook(`?book={custom}&customBookId="${getCustomWord}"`);
+    const data = CustomWord.getNoteDetail(`?book={custom}&customBookId="${getCustomWord}"`);
   }, []);
 
   return (
@@ -89,7 +103,14 @@ export default function CustomNoteAddPage() {
             />
           </FormControl>
         </Box>
-        <CustomNoteAddCard isEditing={isEditing} userCustomWord={userCustomWord} />
+        <CustomNoteAddCard
+          isEditing={isEditing}
+          userCustomWord={userCustomWord}
+          // key={word.id}
+          word={word}
+          setWord={setWord}
+          refresh={refreshWords}
+        />
       </Stack>
     </Flex>
   );

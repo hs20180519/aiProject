@@ -2,7 +2,7 @@ import { Box, CloseButton, Flex, useColorModeValue, Text, BoxProps } from "@chak
 import { NavLink } from "react-router-dom";
 import { FiEdit2, FiStar, FiUser, FiCodesandbox, FiTrendingUp, FiDatabase } from "react-icons/fi";
 import NavItem from "./NavItem";
-import * as type from "./main.type";
+import * as type from "../../apis/types/main.type";
 import { useLocation } from "react-router-dom";
 
 const LinkItems: Array<type.LinkItemProps> = [

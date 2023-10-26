@@ -8,7 +8,7 @@ import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import OAuthPage from "./pages/OAuthPage";
 import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
 import GrammarPage from "./pages/Grammar/GramnarPage";
-
+import TypingSentencePage from "./pages/Grammar/TypingSentencePage";
 // import TestPage from "./pages/TestPage";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
@@ -82,7 +82,7 @@ function App() {
                 <Route path={"/signup"} element={<SignUpPage />} />
                 <Route path={"/oauth/kakao"} element={<OAuthPage />} />
                 <Route path={"/signup2"} element={<SignUpPage2 />} />
-                <Route path={"/grammar"} element={<GrammarPage />} />
+                <Route path={"/grammar"} element={<TypingSentencePage />} />
               </Routes>
             </BrowserRouter>
           </ChakraProvider>

@@ -1,35 +1,13 @@
-import {
-  Box,
-  Badge,
-  Text,
-  Flex,
-  Center,
-  Spacer,
-  useColorModeValue,
-  SimpleGrid,
-  Checkbox,
-  AbsoluteCenter,
-} from "@chakra-ui/react";
-
+import { Box, Text, useColorModeValue, AbsoluteCenter } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-
 import { DeleteIcon } from "@chakra-ui/icons";
-import CustomWord from "../../apis/customWord";
-
-export interface CustomWordProps {
-  id: string;
-  title: string;
-}
-export interface CustomWordListProps {
-  customWordList: CustomWordProps[];
-  isEditing: boolean;
-}
+import * as type from "../../apis/types/custom";
 
 /** 유저가 갖고있는 수 만큼 */
-export default function CustomWordList({ customWordList, isEditing }: CustomWordListProps) {
+export default function CustomWordList({ customWordList, isEditing }: type.CustomWordListProps) {
   return (
     <>
-      {customWordList.map((customWord: CustomWordProps) => (
+      {customWordList.map((customWord: type.CustomWordProps) => (
         <Link to={`/main/notes/${customWord.id}`}>
           <Box
             fontWeight="semibold"
@@ -43,10 +21,9 @@ export default function CustomWordList({ customWordList, isEditing }: CustomWord
             borderRadius="lg"
           >
             {isEditing && <DeleteIcon right="24px" position={"absolute"} />}
-
-            <AbsoluteCenter>
-              <Text id={customWord.id}>{customWord.title}</Text>
-            </AbsoluteCenter>
+            {/* <AbsoluteCenter> */}
+            <Text id={customWord.id}>{customWord.title}</Text>
+            {/* </AbsoluteCenter> */}
           </Box>
         </Link>
       ))}
