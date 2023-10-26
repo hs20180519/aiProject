@@ -7,10 +7,12 @@ import LoginPage from "./pages/Login/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import OAuthPage from "./pages/OAuthPage";
 import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
-import RankFeild from "./components/RankFeild";
+import GrammarPage from "./pages/Grammar/GramnarPage";
+
 // import TestPage from "./pages/TestPage";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
+
 import TestGptWordPage from "./pages/TestGptWordPage/TestGptWordPage";
 
 export const DispatchContext = createContext<DispatchEvent | null>(null);
@@ -64,6 +66,9 @@ function App() {
   };
 
   const theme = extendTheme({ color });
+
+  // auth ->/, /signin, /signup, /oauth
+  // main  -> /main /customlist ,/rank, /
   return (
     <DispatchContext.Provider value={dispatch}>
       <UserStateContext.Provider value={userState}>
@@ -71,15 +76,13 @@ function App() {
           <ChakraProvider theme={theme}>
             <BrowserRouter>
               <Routes>
-                <Route path={"/rank"} element={<RankFeild />} />
                 <Route path={"/"} element={<InrtoPage />} />
-                <Route path={"/main"} element={<MainPage />} />
+                <Route path={"/main/*"} element={<MainPage />} />
                 <Route path={"/login"} element={<LoginPage />} />
                 <Route path={"/signup"} element={<SignUpPage />} />
                 <Route path={"/oauth/kakao"} element={<OAuthPage />} />
                 <Route path={"/signup2"} element={<SignUpPage2 />} />
-                {/* <Route path={"/test"} element={<TestPage />} /> */}
-                <Route path={"/test_word"} element={<TestGptWordPage />} />
+                <Route path={"/grammar"} element={<GrammarPage />} />
               </Routes>
             </BrowserRouter>
           </ChakraProvider>
