@@ -11,7 +11,7 @@ bookRouter
   .put("/", joi.validateUpdateBook, passportJwt, bookController.updateCustomBook)
   .delete("/", joi.validateDeleteBook, passportJwt, bookController.deleteCustomBook);
 
-bookRouter.delete("/allDel", passportJwt, bookController.deleteAllCustomBook);
+bookRouter.delete("/all", passportJwt, bookController.deleteAllCustomBook);
 
 bookRouter
   .post("/word", joi.validateCreateWordInBook, passportJwt, bookController.createCustomWordInBook)
