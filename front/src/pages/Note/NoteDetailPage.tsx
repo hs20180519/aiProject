@@ -1,3 +1,4 @@
+/* eslint-diabled */
 import {
   Box,
   Stack,
@@ -12,15 +13,14 @@ import {
   Checkbox,
   AbsoluteCenter,
 } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
-export default function CustomNoteDetailPage() {
-  const { noteId } = useParams();
-  console.log("-------디테일 페이지---------");
+export default function NoteDetailPage() {
+  // const { noteId } = useParams();
 
   return (
     <Stack>
-      <Heading>{noteId}</Heading>
+      {/* <Heading>{noteId}</Heading> */}
       <Box>
         <Text>{}</Text>
       </Box>

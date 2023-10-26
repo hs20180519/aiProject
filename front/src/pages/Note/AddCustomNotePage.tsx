@@ -13,64 +13,27 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { isStringLiteral } from "typescript";
-import CustomWord from "../../apis/customWord";
-import CustomNoteAddCard from "./AddCustomNoteCard.component";
-
-interface SubmitCustomWord {
-  word: string;
-  meaning: string;
-}
-const TOAST_TIMEOUT_INTERVAL = 700;
+import * as Api from "../../apis/customWord";
+import CustomNoteAdd from "./Components/AddCustomNote";
+import * as type from "../../apis/types/custom";
 
 /** 단어 하나가 추가되면 편집 창이 생기는 로직만들어야함 */
 export default function CustomNoteAddPage() {
-  const toast = useToast();
   const [empty, setEmpty] = useState(false);
   const [disable, setDisable] = useState(true);
   const [isEditing, setIsEditing] = useState(true);
-  const [userCustomWord, setUserCustomWord] = useState<SubmitCustomWord>({
+  const [userCustomWord, setUserCustomWord] = useState<type.SubmitCustomWord>({
     word: "",
     meaning: "",
   });
   const [word, setWord] = useState("");
   const [getCustomWord, setGetCustomWord] = useState();
 
-  /** 커스텀 단어장 생성 api */
-  const fetchCreateCustomBook = async (title) => {
-    try {
-      const res = await CustomWord.createCustomBook(title);
-      if (res.status === 201) {
-        toast({
-          title: `새로운 단어장 생성 완료!`,
-          status: "success",
-          isClosable: true,
-          duration: TOAST_TIMEOUT_INTERVAL,
-        });
-        console.log("------bookId가뭐야???------");
-        console.log(res.data);
-      }
-    } catch (e) {
-      console.error();
-    }
-  };
-
-  /**단어 추가하는 api */
-  const fetchAddWord = async (params, data) => {
-    try {
-      const res = await CustomWord.addCustomWord(params, data);
-      if (res.status === 201) {
-        console.log(res.data);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   const refreshWords = () => {};
 
   /**단어 업데이트 될때 목록 출력하는 api */
   useEffect(() => {
-    const data = CustomWord.getNoteDetail(`?book={custom}&customBookId="${getCustomWord}"`);
+    const data = Api.getNoteDetail(`?book={custom}&customBookId="${getCustomWord}"`);
   }, []);
 
   return (
@@ -103,7 +66,7 @@ export default function CustomNoteAddPage() {
             />
           </FormControl>
         </Box>
-        <CustomNoteAddCard
+        <CustomNoteAdd
           isEditing={isEditing}
           userCustomWord={userCustomWord}
           // key={word.id}

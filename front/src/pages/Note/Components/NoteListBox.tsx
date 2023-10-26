@@ -1,13 +1,13 @@
 import { Box, Text, useColorModeValue, AbsoluteCenter } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { DeleteIcon } from "@chakra-ui/icons";
-import * as type from "../../apis/types/custom";
+import * as type from "../../../apis/types/custom";
 
 /** 유저가 갖고있는 수 만큼 */
-export default function CustomWordList({ customWordList, isEditing }: type.CustomWordListProps) {
+export default function NoteListBox({ noteList, isEditing }: type.NoteListProps) {
   return (
     <>
-      {customWordList.map((customWord: type.CustomWordProps) => (
+      {noteList.map((customWord: type.NoteTitleProps) => (
         <Link to={`/main/notes/${customWord.id}`}>
           <Box
             fontWeight="semibold"

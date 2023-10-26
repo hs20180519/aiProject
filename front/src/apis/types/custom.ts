@@ -1,8 +1,15 @@
-export interface CustomWordProps {
+interface NoteTitleProps {
   id: string;
   title: string;
 }
-export interface CustomWordListProps {
-  customWordList: CustomWordProps[];
+interface NoteListProps {
+  noteList: NoteTitleProps[];
   isEditing: boolean;
 }
+
+interface SubmitCustomWord {
+  word: string;
+  meaning: string;
+}
+
+export type { NoteTitleProps, NoteListProps, SubmitCustomWord };

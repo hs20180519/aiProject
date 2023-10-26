@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import RankList from "../../components/RankItem";
+import RankList from "./RankItem";
 import * as Api from "../../apis/api";
 import Loading from "../../components/Loading";
 
