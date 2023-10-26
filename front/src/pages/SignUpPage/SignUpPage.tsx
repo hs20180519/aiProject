@@ -315,11 +315,8 @@ const SignUp = () => {
               <Button
                 loadingText="Submitting"
                 size="lg"
-                bg={"blue.400"}
+                colorScheme="teal"
                 color={"white"}
-                _hover={{
-                  bg: "blue.500",
-                }}
                 onClick={fetchRegister}
               >
                 회원가입
@@ -328,7 +325,7 @@ const SignUp = () => {
             <Stack pt={6}>
               <Text align={"center"}>
                 이미 회원이신가요?{" "}
-                <ChakraLink as={ReactRouterLink} color={"blue.400"} to="/login">
+                <ChakraLink as={ReactRouterLink} color={"green.400"} to="/login">
                   로그인
                 </ChakraLink>
               </Text>
