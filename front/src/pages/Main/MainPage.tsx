@@ -69,7 +69,8 @@ const MainPage = () => {
           <Route path="note/:id" element={<CustomNoteDetailPage />} />
           <Route path="note_add" element={<AddCustomNotePage />} />
           <Route path="rank" element={<RankFeildPage />} />
-          <Route path="grammar" element={<GrammarPage />} />
+          {<Route path="grammar" element={<GrammarPage />} />}
+          <Route path="grammar/:word" element={<GrammarPage />} />
           <Route path="test_word" element={<TestGptWordPage />} />
           {/* <Route path="mypage" element={<MyPage />} />  페이지 추가할시 import후 주석제거*/}
           {/* <Route path="wordlist" element={<WordsPage />}  /> 페이지 추가할시 import후 주석제거*/}

@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 const LinkItems: Array<type.LinkItemProps> = [
   { id: "", name: "단어학습", icon: FiEdit2 },
   { id: "rank", name: "랭킹", icon: FiTrendingUp },
-  { id: "grammar", name: "문법 교정", icon: FiCodesandbox },
+  { id: "grammar/ai", name: "문법 교정", icon: FiCodesandbox },
   { id: "notes", name: "단어장", icon: FiStar },
   { id: "wordlist", name: "저장소", icon: FiDatabase },
   { id: "mypage", name: "내 정보", icon: FiUser },
