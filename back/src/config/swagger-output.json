@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Wordy API",
-    "description": "API 자동 문서화 및 테스트",
+    "title": "swagger-example",
+    "description": "스웨거 자동 문서화",
     "version": "1.0.0"
   },
   "servers": [
@@ -276,8 +276,7 @@
           "201": {
             "description": "Created"
           }
-        },
-        "security": []
+        }
       }
     },
     "/api/study/experience": {
@@ -476,7 +475,7 @@
         "security": []
       }
     },
-    "/api/book/allDel": {
+    "/api/book/all": {
       "delete": {
         "description": "",
         "responses": {
@@ -742,7 +741,6 @@
             "description": "Created"
           }
         },
-        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -835,7 +833,6 @@
             "description": "Not Found"
           }
         },
-        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -880,8 +877,7 @@
           "404": {
             "description": "Not Found"
           }
-        },
-        "security": []
+        }
       }
     },
     "/api/comment/": {
@@ -912,7 +908,6 @@
             "description": "Created"
           }
         },
-        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -957,7 +952,6 @@
             "description": "Not Found"
           }
         },
-        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -999,8 +993,7 @@
           "404": {
             "description": "Not Found"
           }
-        },
-        "security": []
+        }
       }
     }
   },

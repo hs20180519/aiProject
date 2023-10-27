@@ -2,6 +2,8 @@ export interface Word {
   id: number;
   meaning: string;
   category: string;
-  correct: boolean | null;
-  customBookId: number | null;
+  correct?: string | null;
+  customBookId?: number | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

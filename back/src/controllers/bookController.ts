@@ -53,7 +53,7 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
    */
   try {
     const page: number = req.query.page ? Number(req.query.page) : 1;
-    const limit: number = req.query.page ? Number(req.query.limit) : 10;
+    const limit: number = req.query.limit ? Number(req.query.limit) : 10;
     const userId: number = (req.user as User).id;
     const category: string = String(req.query.book);
     const customBookId: string = String(req.query.customBookId);
@@ -70,16 +70,10 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
         bookService.getWordByCategory(page, limit, userId, "custom", customBookId),
     };
 
-    let words;
-
     if (category && queryServiceMap[category]) {
-      words = await queryServiceMap[category](userId, customBookId);
+      const words = await queryServiceMap[category](userId, customBookId);
       return res.status(200).json(words);
     }
-
-    words = await bookService.getAllWords(page, limit);
-
-    return res.status(200).json(words);
   } catch (error) {
     console.error(error);
     return next(error);
