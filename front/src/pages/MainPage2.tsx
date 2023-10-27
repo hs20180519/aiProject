@@ -38,7 +38,7 @@ import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserStateContext, DispatchContext } from "../App";
 import { IconType } from "react-icons";
-import InnerPage from "./InnerPage";
+import WordPage from "./Word/WordPage";
 
 interface LinkItemProps {
   id: string;
@@ -258,7 +258,7 @@ const SidebarWithHeader = () => {
       </Drawer>
       <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
-        <InnerPage />
+        <WordPage />
       </Box>
     </Box>
   );

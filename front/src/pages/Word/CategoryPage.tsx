@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text, Stack } from "@chakra-ui/react";
 
 const CategoryPage = ({ onSelectCategory }) => {
   const categories = ["csat", "toeic", "toefl", "ielts"];
@@ -18,20 +18,21 @@ const CategoryPage = ({ onSelectCategory }) => {
 
   return (
     <Flex direction="column" align="center">
-      <Text fontSize="2xl" mb={4}>
-        카테고리 선택
+      <Text fontSize="2xl" mb={4} textAlign="center">
+        단어학습<br />카테고리 선택
       </Text>
-      {categories.map((category) => (
-        <Button
-          key={category}
-          variant={selectedCategory === category ? "solid" : "outline"}
-          colorScheme="blue"
-          onClick={() => handleCategorySelect(category)}
-          mb={2}
-        >
-          {category}
-        </Button>
-      ))}
+      <Stack spacing={2}>
+        {categories.map((category) => (
+          <Button
+            key={category}
+            variant={selectedCategory === category ? "solid" : "outline"}
+            colorScheme="blue"
+            onClick={() => handleCategorySelect(category)}
+          >
+            {category}
+          </Button>
+        ))}
+      </Stack>
       <Button
         onClick={handleApplyCategory}
         colorScheme="green"

@@ -7,7 +7,7 @@ import ResultPage from "./ResultPage";
 
 const theme = extendTheme({});
 
-export default function InnerPage() {
+export default function WordPage() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [showTestPage, setShowTestPage] = useState(false);
   const [showResultPage, setShowResultPage] = useState(false);

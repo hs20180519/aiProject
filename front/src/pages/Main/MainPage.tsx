@@ -25,7 +25,7 @@ import RankFeildPage from "../Rank/RankFeildPage";
 import GrammarPage from "../Grammar/GramnarPage";
 
 // inner = study
-import InnerPage from "../InnerPage";
+import WordPage from "../Word/WordPage";
 
 // gptPage
 import TestGptWordPage from "../TestGptWordPage/TestGptWordPage";
@@ -70,7 +70,7 @@ const MainPage = () => {
       <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
         <Routes>
-          <Route path="" element={<InnerPage />} />
+          <Route path="word" element={<WordPage />} />
           <Route path="notes" element={<NoteListPage />} />
           <Route path="note/:id" element={<NoteDetailPage />} />
           <Route path="note_add" element={<AddCustomNotePage />} />
