@@ -7,7 +7,7 @@ import {
   HTTPValidationError,
 } from "./gpt_interface";
 
-const { REACT_APP_GPT_URL: baseURL, REACT_APP_GPT_TOKEN: token } = process.env;
+const { REACT_APP_GPT_SVR_URL: baseURL, REACT_APP_GPT_TOKEN: token } = process.env;
 
 const instance = axios.create({
   baseURL,
@@ -19,7 +19,7 @@ const instance = axios.create({
 
 class FetchGpt {
   static async getGrammar(params: InputGrammarData): Promise<GrammarResponse> {
-    const url = "/explain-grammar";
+    const url = "/gpt/explain-grammar";
     try {
       const response = await instance.post<GrammarResponse>(url, params);
       return response.data;
@@ -33,7 +33,7 @@ class FetchGpt {
   }
 
   static async getScript(params: InputDialogData): Promise<DialogResponse> {
-    const url = "/generate-dialog";
+    const url = "/gpt/generate-dialog";
     try {
       const response = await instance.post<DialogResponse>(url, params);
       return response.data;
