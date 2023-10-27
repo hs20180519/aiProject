@@ -5,7 +5,6 @@ import * as type from "../../../apis/types/custom";
 
 /** 단어장 타이틀 상자입니다. */
 export default function NoteListBox({ noteList, isEditing }: type.NoteListProps) {
-  console.log(noteList);
   return (
     <>
       {noteList.map((note: type.NoteTitleProps) => (

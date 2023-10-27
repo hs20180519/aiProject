@@ -1,14 +1,12 @@
-import { Box, Text, useColorModeValue, WrapItem, AbsoluteCenter } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Box, Text, useColorModeValue, VStack, StackDivider } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import * as type from "../../../apis/types/custom";
 import { AiTwotoneStar } from "react-icons/ai";
 
 /** 단어와 뜻을 표시하는 상자입니다. */
 export default function WordBox({ words, isEditing }) {
-  console.log(words[0].word);
   return (
-    <>
+    <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
       {words.map((word: type.WordsProps) => (
         <Box
           fontWeight="semibold"
@@ -24,15 +22,9 @@ export default function WordBox({ words, isEditing }) {
         >
           <Text fontSize="xl">{word.word}</Text>
           <Text fontSize="xl">{word.meaning}</Text>
-          {/* {isEditing ? (
-            <DeleteIcon right="24px" position={"absolute"} />
-          ) : (
-            <WrapItem right="24px" position={"absolute"}>
-              <AiTwotoneStar />
-            </WrapItem>
-          )} */}
+          <AiTwotoneStar />
         </Box>
       ))}
-    </>
+    </VStack>
   );
 }

@@ -21,7 +21,6 @@ const NOTE_LIST = [
 
 /** 유저가 저장한 단어장 목록을 보여주는 페이지입니다. */
 export default function CustomNoteListPage() {
-  const [category, setCategory] = useState();
   const [noteList, setNoteList] = useState(NOTE_LIST);
   const [customNoteList, setCustomNoteList] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -29,14 +28,14 @@ export default function CustomNoteListPage() {
   const allChecked = checkedItems.every(Boolean);
 
   /** 노트 목록 가져오기 */
-  async function getNoteList() {
+  async function fetchNoteList() {
     const res = await Api.getCustomNotes();
     console.log(res.data);
     setCustomNoteList(res.data);
   }
 
   useEffect(() => {
-    getNoteList();
+    fetchNoteList();
   }, []);
   return (
     <>

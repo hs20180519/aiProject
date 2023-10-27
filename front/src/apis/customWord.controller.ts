@@ -131,7 +131,6 @@ export const fetchDelWord = async (prams) => {
       //   duration: TOAST_TIMEOUT_INTERVAL - 200,
       // });
     } else if (res.status === 400) {
-      console.log(res, `잘못된 요청입니다.`);
       // toast({
       //   title: `잘못된 요청입니다.`,
       //   status: "error",
