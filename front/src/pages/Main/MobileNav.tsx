@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
 import { Link as ReactRouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;

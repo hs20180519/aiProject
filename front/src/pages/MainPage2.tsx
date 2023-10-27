@@ -129,6 +129,12 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 };
 
 const MobileNav = ({ onOpen, nickname = "워디35", onLogout, ...rest }: MobileProps) => {
+  const navigate = useNavigate();
+
+  const navigateToMyPage = () => {
+    navigate("/mypage");
+  };
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -190,7 +196,7 @@ const MobileNav = ({ onOpen, nickname = "워디35", onLogout, ...rest }: MobileP
               bg={useColorModeValue("white", "gray.900")}
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
-              <MenuItem>{"프로필"}</MenuItem>
+              <MenuItem onClick={navigateToMyPage}>{"프로필"}</MenuItem>
               <MenuItem>{"설정"}</MenuItem>
               <MenuDivider />
               <MenuItem onClick={onLogout}>{"로그아웃"}</MenuItem>
