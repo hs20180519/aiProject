@@ -12,31 +12,30 @@ import {
   AbsoluteCenter,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import * as Api from "../../apis/customWord.controller";
+import * as Api from "../../apis/customWord";
 
 const NOTE_LIST = [
   { id: "correct", title: "학습한 단어" },
   { id: "incorrect", title: "틀린 단어" },
-  { id: "csat", title: "수능" },
-  { id: "toeic", title: "TOEIC" },
-  { id: "toefl", title: "TOEPL" },
-  { id: "ielts", title: "IELTS" },
 ];
 
+/** 유저가 저장한 단어장 목록을 보여주는 페이지입니다. */
 export default function CustomNoteListPage() {
-  const [wordList, setWordList] = useState(NOTE_LIST);
+  const [noteList, setNoteList] = useState(NOTE_LIST);
   const [customNoteList, setCustomNoteList] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [checkedItems, setCheckedItems] = useState([false, false]);
   const allChecked = checkedItems.every(Boolean);
 
-  async function getNoteList() {
-    const res = await Api.fetchCustomNotes();
-    console.log(res);
-    // setCustomNoteList();
+  /** 노트 목록 가져오기 */
+  async function fetchNoteList() {
+    const res = await Api.getCustomNotes();
+    console.log(res.data);
+    setCustomNoteList(res.data);
   }
+
   useEffect(() => {
-    getNoteList();
+    fetchNoteList();
   }, []);
   return (
     <>
@@ -78,9 +77,8 @@ export default function CustomNoteListPage() {
             </AbsoluteCenter>
           </Box>
         </Link>
-        {/* 학습한 단어장 및 DB 단어장 목록 */}
-        <NoteListBox noteList={wordList} isEditing={isEditing} />
-        {/* 유저가 추가한 단어장 목록 */}
+
+        <NoteListBox noteList={noteList} isEditing={isEditing} />
         <NoteListBox noteList={customNoteList} isEditing={isEditing} />
       </SimpleGrid>
     </>

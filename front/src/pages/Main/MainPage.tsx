@@ -25,11 +25,12 @@ import RankFeildPage from "../Rank/RankFeildPage";
 import GrammarPage from "../Grammar/GramnarPage";
 
 // inner = study
-import InnerPage from "../InnerPage";
+import WordPage from "../Word/WordPage";
 
 // gptPage
 import TestGptWordPage from "../TestGptWordPage/TestGptWordPage";
 import Loading from "../../components/Loading";
+import ParamTestGptWordPage from "../TestGptWordPage/ParamTestGptWordPage";
 
 // mypage
 import MyPage from "../MyPage";
@@ -70,15 +71,16 @@ const MainPage = () => {
       <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
         <Routes>
-          <Route path="" element={<InnerPage />} />
+          <Route path="word" element={<WordPage />} />
           <Route path="notes" element={<NoteListPage />} />
-          <Route path="note/:id" element={<NoteDetailPage />} />
+          <Route path="note/:note_id" element={<NoteDetailPage />} />
           <Route path="note_add" element={<AddCustomNotePage />} />
           <Route path="rank" element={<RankFeildPage />} />
           <Route path="grammar/:word" element={<GrammarPage />} />
           <Route path="test_word" element={<TestGptWordPage />} />
           <Route path="mypage" element={<MyPage />} />
           <Route path="storage" element={<StoragePage />} />
+          <Route path="paramTestGptWordPage" element={<ParamTestGptWordPage />} />
         </Routes>
       </Box>
     </Box>

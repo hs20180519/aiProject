@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from "react";
 import { Button, Text, Box, Spacer, Spinner, VStack, useToast } from "@chakra-ui/react";
-import { DialogEntry, DialogResponse, InputGrammarData } from "../../../apis/new_gpt_interface";
+import { DialogEntry, DialogResponse, InputGrammarData } from "../../../apis/gpt_interface";
 import { simpleHash } from "../utils/gptUtils";
-import { FetchGpt } from "../../../apis/new_gpt";
+import { FetchGpt } from "../../../apis/gpt";
 import GrammarDialog from "./GrammarDialog";
 
 const ScriptDialog = ({
@@ -53,10 +53,10 @@ const ScriptDialog = ({
         });
 
         console.log("API 호출 실패:", error);
-        setGrammarResult((prevResults) => ({
-          ...prevResults,
-          [dialogKey]: `Failed to fetch grammar: ${error.message || error}`,
-        }));
+        // setGrammarResult((prevResults) => ({
+        //   ...prevResults,
+        //   [dialogKey]: `Failed to fetch grammar: ${error.message || error}`,
+        // }));
       } finally {
         setLoadingEntryKey(null);
         setGrammarLoading(false);

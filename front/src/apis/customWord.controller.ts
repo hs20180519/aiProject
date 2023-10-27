@@ -1,3 +1,4 @@
+// 여기 안쓰는 거임
 import * as Api from "./customWord";
 // import { useToast } from "@chakra-ui/react";
 
@@ -31,6 +32,7 @@ export const fetchCustomNotes = async () => {
       // res.status(200).json(data);
       console.log(res.data);
       console.log("------넘어왔다!!------");
+      return res.data;
     } else if (res.status === 204) {
       console.log(`데이터가 없습니다.`, res);
     }
@@ -129,7 +131,6 @@ export const fetchDelWord = async (prams) => {
       //   duration: TOAST_TIMEOUT_INTERVAL - 200,
       // });
     } else if (res.status === 400) {
-      console.log(res, `잘못된 요청입니다.`);
       // toast({
       //   title: `잘못된 요청입니다.`,
       //   status: "error",
