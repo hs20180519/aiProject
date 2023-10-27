@@ -70,7 +70,7 @@ export const getWordByCategory = async (
     return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
   } else {
     const totalWordCount: number = await prisma.word.count({
-      where: { category: category },
+      where: { category: category, authorId: userId },
     });
     const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
     const offset: { take: number; skip: number } = getPaginationParams(page, limit);
@@ -141,6 +141,7 @@ export const createCustomWordInBook = async (
   customBookId: number,
   word: string,
   meaning: string,
+  userId: number,
 ): Promise<WordDto> => {
   const createdWord: Word = await prisma.word.create({
     data: {
@@ -148,6 +149,7 @@ export const createCustomWordInBook = async (
       word: word,
       meaning: meaning,
       category: "custom",
+      authorId: userId,
     },
   });
   return plainToInstance(WordDto, createdWord);
