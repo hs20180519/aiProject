@@ -46,7 +46,7 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
    * #swagger.tags = ['Book']
    * #swagger.summary = '단어장 단어 조회'
    * #swagger.description = '쿼리별 단어장 조회 (서버사이드 페이징)
-   * ?book={correct, incorrect, csat, toeic, toefl, custom}&customBookId="" '
+   * ?book={correct, incorrect, csat, toeic, toefl, favorite, custom}&customBookId="" '
    * #swagger.security = [{
    *   "bearerAuth": []
    * }]
