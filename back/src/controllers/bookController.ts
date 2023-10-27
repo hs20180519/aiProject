@@ -66,6 +66,7 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
       csat: (userId: number) => bookService.getWordByCategory(page, limit, userId, "csat"),
       toeic: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toeic"),
       toefl: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toefl"),
+      favorite: (userId: number) => bookService.getWordByCategory(page, limit, userId, "favorite"),
       custom: (userId: number, customBookId: string | undefined) =>
         bookService.getWordByCategory(page, limit, userId, "custom", customBookId),
     };
@@ -148,6 +149,7 @@ export const createCustomWordInBook = async (req: Request, res: Response, next: 
    * }]
    */
   try {
+    const userId: number = (req.user as User).id;
     const customBookId: number = Number(req.query.customBookId);
     const { word, meaning } = req.body;
 
@@ -155,6 +157,7 @@ export const createCustomWordInBook = async (req: Request, res: Response, next: 
       customBookId,
       word,
       meaning,
+      userId,
     );
     return res.status(201).json(createdCustomWordInBook);
   } catch (error) {
@@ -204,6 +207,19 @@ export const deleteCustomWordInBook = async (req: Request, res: Response, next: 
     await bookService.deleteCustomWordInBook(customBookId, wordId);
 
     return res.status(200).json({ message: "단어가 삭제되었습니다." });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
+export const createFavoriteWordInBook = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId: number = (req.user as User).id;
+    const wordId: number = Number(req.query.wordId);
+
+    const createdFavoriteWord = await bookService.createFavoriteWord(userId, wordId);
+    return res.status(201).json(createdFavoriteWord);
   } catch (error) {
     console.error(error);
     return next(error);
