@@ -69,7 +69,7 @@ const MainPage = () => {
         <Routes>
           <Route path="" element={<InnerPage />} />
           <Route path="notes" element={<NoteListPage />} />
-          <Route path="note/:id" element={<NoteDetailPage />} />
+          <Route path=":category/:note_id" element={<NoteDetailPage />} />
           <Route path="note_add" element={<AddCustomNotePage />} />
           <Route path="rank" element={<RankFeildPage />} />
           <Route path="grammar/:word" element={<GrammarPage />} />

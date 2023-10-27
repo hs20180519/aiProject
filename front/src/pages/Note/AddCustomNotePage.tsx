@@ -33,7 +33,7 @@ export default function CustomNoteAddPage() {
 
   /**단어 업데이트 될때 목록 출력하는 api */
   useEffect(() => {
-    const data = Api.getNoteDetail(`?book={custom}&customBookId="${getCustomWord}"`);
+    const data = Api.getNoteDetail(`?book=custom&customBookId="${getCustomWord}"`);
   }, []);
 
   return (

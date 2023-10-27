@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import { DeleteIcon } from "@chakra-ui/icons";
 import * as type from "../../../apis/types/custom";
 
-/** 유저가 갖고있는 수 만큼 */
+/** 단어장 타이틀 상자입니다. */
 export default function NoteListBox({ noteList, isEditing }: type.NoteListProps) {
+  console.log(noteList);
   return (
     <>
-      {noteList.map((customWord: type.NoteTitleProps) => (
-        <Link to={`/main/notes/${customWord.id}`}>
+      {noteList.map((note: type.NoteTitleProps) => (
+        <Link to={`/main/note/${note.id}`}>
           <Box
             fontWeight="semibold"
             rounded={"lg"}
@@ -22,7 +23,7 @@ export default function NoteListBox({ noteList, isEditing }: type.NoteListProps)
           >
             {isEditing && <DeleteIcon right="24px" position={"absolute"} />}
             {/* <AbsoluteCenter> */}
-            <Text id={customWord.id}>{customWord.title}</Text>
+            <Text id={note.id}>{note.title}</Text>
             {/* </AbsoluteCenter> */}
           </Box>
         </Link>
