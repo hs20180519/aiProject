@@ -3,7 +3,7 @@ import { FiEdit2, FiTrendingUp, FiCodesandbox, FiStar, FiDatabase, FiUser } from
 import { useState, useContext, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
-import * as type from "./main.type";
+import * as type from "../../apis/types/main";
 
 // global component
 import SidebarContent from "./SidebarContent";
@@ -15,8 +15,8 @@ import { UserStateContext, DispatchContext } from "../../App";
 
 // note
 import AddCustomNotePage from "../Note/AddCustomNotePage";
-import CustomNoteListPage from "../Note/CustomNoteListPage";
-import CustomNoteDetailPage from "../Note/CustomNoteDetailPage";
+import NoteListPage from "../Note/NoteListPage";
+import NoteDetailPage from "../Note/NoteDetailPage";
 
 // rank
 import RankFeildPage from "../Rank/RankFeildPage";
@@ -25,12 +25,18 @@ import RankFeildPage from "../Rank/RankFeildPage";
 import GrammarPage from "../Grammar/GramnarPage";
 
 // inner = study
-import InnerPage from "../InnerPage";
+import WordPage from "../Word/WordPage";
 
 // gptPage
 import TestGptWordPage from "../TestGptWordPage/TestGptWordPage";
 import Loading from "../../components/Loading";
 import ParamTestGptWordPage from "../TestGptWordPage/ParamTestGptWordPage";
+
+// mypage
+import MyPage from "../MyPage";
+
+// storage
+import StoragePage from "../Storage/StoragePage";
 
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,16 +71,16 @@ const MainPage = () => {
       <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
         <Routes>
-          <Route path="" element={<InnerPage />} />
-          <Route path="notes" element={<CustomNoteListPage />} />
-          <Route path="note/:id" element={<CustomNoteDetailPage />} />
+          <Route path="word" element={<WordPage />} />
+          <Route path="notes" element={<NoteListPage />} />
+          <Route path="note/:id" element={<NoteDetailPage />} />
           <Route path="note_add" element={<AddCustomNotePage />} />
           <Route path="rank" element={<RankFeildPage />} />
-          <Route path="grammar" element={<GrammarPage />} />
+          <Route path="grammar/:word" element={<GrammarPage />} />
           <Route path="test_word" element={<TestGptWordPage />} />
-          <Route path={"paramTestGptWordPage"} element={<ParamTestGptWordPage />} />
-          {/* <Route path="mypage" element={<MyPage />} />  페이지 추가할시 import후 주석제거*/}
-          {/* <Route path="wordlist" element={<WordsPage />}  /> 페이지 추가할시 import후 주석제거*/}
+          <Route path="mypage" element={<MyPage />} />
+          <Route path="storage" element={<StoragePage />} />
+          <Route path="paramTestGptWordPage" element={<ParamTestGptWordPage />} />
         </Routes>
       </Box>
     </Box>

@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { Box, Table, Thead, Tbody, Tr, Th, Td, Text, Button, Link } from "@chakra-ui/react";
+import { FetchStudyWords } from "../../apis/studyWord";
+import { Link as RouterLink } from "react-router-dom";
 import { useToast, Checkbox, Button, Box, Table, Thead, Tbody, Tr, Th, Td, Text } from "@chakra-ui/react";
 import { FetchStudyWords } from "../apis/studyWord";
 import { useNavigate } from 'react-router-dom';
@@ -71,7 +74,7 @@ const ResultPage = () => {
       </Text>
 
       <Text fontSize="2xl" fontWeight="bold" mb={4}>
-        결과 ({correctAnswers} / {totalAnswers})
+        단어 학습 결과 (정답 개수 {correctAnswers}개 / 총 단어 개수 {totalAnswers}개)
       </Text>
       <Table>
         <Thead>
@@ -87,13 +90,22 @@ const ResultPage = () => {
             <Tr key={index}>
               <Td><Checkbox isChecked={checkedWords[result.word.word] || false} onChange={() => toggleCheckbox(result.word.word)} /></Td>
               <Td>{index + 1}</Td>
-              <Td>{result.correct ? "🐾" : "☠️"}</Td>
+              <Td>{result.correct ? "⭕" : "❌"}</Td>
               <Td>{result.word.word}</Td>
               <Td>{result.word.meaning}</Td>
             </Tr>
           ))}
         </Tbody>
       </Table>
+      <Button as={RouterLink} to="/main/grammar/ai" colorScheme="blue" m={2}>
+        스크립트로 공부하러 가기
+      </Button>
+      <Button as={RouterLink} to="/main/word" colorScheme="green" m={2} onClick={() => window.location.reload()}>
+        단어학습 더 하기
+      </Button>
+      <Button as={RouterLink} to="/main" colorScheme="red" m={2}>
+        학습 끝내기
+      </Button>
     </Box>
   );
 };

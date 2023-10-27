@@ -38,7 +38,7 @@ import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserStateContext, DispatchContext } from "../App";
 import { IconType } from "react-icons";
-import InnerPage from "./InnerPage";
+import WordPage from "./Word/WordPage";
 
 interface LinkItemProps {
   id: string;
@@ -129,6 +129,12 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 };
 
 const MobileNav = ({ onOpen, nickname = "워디35", onLogout, ...rest }: MobileProps) => {
+  const navigate = useNavigate();
+
+  const navigateToMyPage = () => {
+    navigate("/mypage");
+  };
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -190,7 +196,7 @@ const MobileNav = ({ onOpen, nickname = "워디35", onLogout, ...rest }: MobileP
               bg={useColorModeValue("white", "gray.900")}
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
-              <MenuItem>{"프로필"}</MenuItem>
+              <MenuItem onClick={navigateToMyPage}>{"프로필"}</MenuItem>
               <MenuItem>{"설정"}</MenuItem>
               <MenuDivider />
               <MenuItem onClick={onLogout}>{"로그아웃"}</MenuItem>
@@ -252,7 +258,7 @@ const SidebarWithHeader = () => {
       </Drawer>
       <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
-        <InnerPage />
+        <WordPage />
       </Box>
     </Box>
   );

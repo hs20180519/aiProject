@@ -1,7 +1,7 @@
 import { Box, FormControl, Input, Stack, Text, Button, useColorModeValue } from "@chakra-ui/react";
 
 /** 커스텀 단어장 추가하는 카드 */
-export default function CustomNoteAddCard(isEditing, userCustomWord) {
+export default function AddCustomNoteCard(isEditing, userCustomWord) {
   return (
     <>
       {isEditing && (

@@ -1,5 +1,5 @@
 import { Box, Flex, Icon } from "@chakra-ui/react";
-import * as type from "./main.type";
+import * as type from "../../apis/types/main";
 
 interface NavItemProps extends type.NavItemProps {
   active?: boolean;

@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
 import * as Api from "../../apis/api";
 import useDebounced from "../../hooks/useDebounce";
 import validateEmail from "../../libs/validateEmail";
@@ -25,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link as ReactRouterLink } from "react-router-dom";
+import { AxiosError } from "axios";
 
 type NewUserInfoType = {
   name: string;
@@ -59,13 +59,13 @@ const SignUp = () => {
 
   const getEmailStatus = () => {
     if (isEmailAvailable) {
-      return "이 이메일은 사용 가능합니다.";
+      return "사용 가능한 이메일";
     }
     if (isEmailAvailable === false) {
-      return "이미 사용 중인 이메일 주소입니다.";
+      return "사용중인 이메일";
     }
     if (isEmailAvailable === undefined) {
-      return "이메일 가용성 확인 중 오류가 발생했습니다.";
+      return "올바르지 않은 형식";
     }
     return ""; // 반환값이 없을 경우 빈 문자열 반환
   };
@@ -76,20 +76,21 @@ const SignUp = () => {
       const res = await Api.get(`/auth/check?email=${email}`);
       console.log("----이메일 유효성 검사 --");
       console.log(res);
+      setIsEmailAvailable(true);
       if (res.status === 403) {
         setIsEmailAvailable(false);
       } else {
         setIsEmailAvailable(true);
       }
 
-      const { isAvailable } = res.data;
     } catch (e) {
+      const customError = e as AxiosError;
       console.log("----error----");
-      console.log(e);
+      setIsEmailAvailable(customError.response.status === 409 ? false : undefined);
     }
 
     // try {
-    //   const response = await Api.get(`/api/auth/check?email=${email}`);
+    //   const response = await Api.get(`/auth/check?email=${email}`);
     //   console.log("----이메일 유효성 검사 --");
     //   console.log(response);
     //   const { isAvailable } = response.data;
@@ -110,17 +111,33 @@ const SignUp = () => {
     try {
       await Api.post(`/auth/register`, { email });
       setSendEmailCodeClick(true);
+  
+      // 인증 요청 메일 발송 성공 시 토스트 알람 표시
+      toast({
+        title: "이메일 인증 요청이 성공적으로 전송되었습니다.",
+        status: "success",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
     } catch (e) {
       console.error("이메일 인증 중 오류 발생:", e);
+  
+      // 인증 요청 메일 발송 실패 시 토스트 알람 표시
+      toast({
+        title: "이메일 인증 요청을 보내는 중 오류가 발생했습니다.",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
     }
   };
 
   // 3. 인증번호 인증을 진행한다.
   const fetchCheckEmailCode = async () => {
     try {
-      console.log("------클릭했나------");
+      // console.log("------클릭했나------");
       const res = await Api.post(`/auth/verify`, { email, code: verificationCode });
-      console.log("-----이메일 인증 확인----");
+      // console.log("-----이메일 인증 확인----");
       console.log(res);
       if (res.status === 200) {
         setSuccededEmailCode(true);
@@ -233,7 +250,7 @@ const SignUp = () => {
                     fontSize="xs"
                     color={isEmailAvailable ? "green.500" : "tomato"}
                   >
-                    {isEmailAvailable ? "사용 가능" : "사용 중이거나 사용 불가"}
+                    {getEmailStatus()}
                   </Text>
                 )}
 
@@ -315,11 +332,8 @@ const SignUp = () => {
               <Button
                 loadingText="Submitting"
                 size="lg"
-                bg={"blue.400"}
+                colorScheme="teal"
                 color={"white"}
-                _hover={{
-                  bg: "blue.500",
-                }}
                 onClick={fetchRegister}
               >
                 회원가입
@@ -328,7 +342,7 @@ const SignUp = () => {
             <Stack pt={6}>
               <Text align={"center"}>
                 이미 회원이신가요?{" "}
-                <ChakraLink as={ReactRouterLink} color={"blue.400"} to="/login">
+                <ChakraLink as={ReactRouterLink} color={"green.400"} to="/login">
                   로그인
                 </ChakraLink>
               </Text>

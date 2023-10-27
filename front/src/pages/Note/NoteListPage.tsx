@@ -1,64 +1,42 @@
 import { useState, useEffect } from "react";
-import CustomWordList from "./CustomNoteList.component";
+import NoteListBox from "./Components/NoteListBox";
 import {
   useColorModeValue,
   Flex,
   Spacer,
   Box,
   Heading,
-  ButtonGroup,
   Button,
   Badge,
   SimpleGrid,
   AbsoluteCenter,
-  useToast,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import * as Api from "../../apis/api";
-import CustomWord from "../../apis/customWord";
+import * as Api from "../../apis/customWord.controller";
 
-const TOAST_TIMEOUT_INTERVAL = 700;
+const NOTE_LIST = [
+  { id: "correct", title: "학습한 단어" },
+  { id: "incorrect", title: "틀린 단어" },
+  { id: "csat", title: "수능" },
+  { id: "toeic", title: "TOEIC" },
+  { id: "toefl", title: "TOEPL" },
+  { id: "ielts", title: "IELTS" },
+];
 
 export default function CustomNoteListPage() {
-  const [customWordList, setCustomWordList] = useState([]);
+  const [wordList, setWordList] = useState(NOTE_LIST);
+  const [customNoteList, setCustomNoteList] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [checkedItems, setCheckedItems] = useState([false, false]);
   const allChecked = checkedItems.every(Boolean);
 
-  const toast = useToast();
-
-  const fetchCustomNoteList = async () => {
-    try {
-      // fetch
-      const res = await CustomWord.getCustomBookList();
-      console.log(res);
-      if (res.status === 200) {
-        setCustomWordList(res.data);
-      }
-    } catch (e) {
-      // error
-      console.error(e);
-    }
-  };
-
-  const fetchDeleteNote = async (params) => {
-    try {
-      const res = await CustomWord.deleteCustomBook(params);
-      if (res.status === 200) {
-        toast({
-          title: `삭제 완료!`,
-          status: "success",
-          isClosable: true,
-          duration: TOAST_TIMEOUT_INTERVAL,
-        });
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
+  async function getNoteList() {
+    const res = await Api.fetchCustomNotes();
+    console.log(res);
+    // setCustomNoteList();
+  }
   useEffect(() => {
-    fetchCustomNoteList();
+    getNoteList();
   }, []);
   return (
     <>
@@ -100,19 +78,10 @@ export default function CustomNoteListPage() {
             </AbsoluteCenter>
           </Box>
         </Link>
-        {/* 학습한 단어 목록 */}
-        <Box
-          fontWeight="semibold"
-          rounded={"lg"}
-          bg={useColorModeValue("white", "gray.700")}
-          boxShadow={"lg"}
-          alignItems="center"
-          p={8}
-          height="120px"
-          borderWidth="3px"
-          borderRadius="lg"
-        ></Box>
-        <CustomWordList customWordList={customWordList} isEditing={isEditing} />
+        {/* 학습한 단어장 및 DB 단어장 목록 */}
+        <NoteListBox noteList={wordList} isEditing={isEditing} />
+        {/* 유저가 추가한 단어장 목록 */}
+        <NoteListBox noteList={customNoteList} isEditing={isEditing} />
       </SimpleGrid>
     </>
   );
