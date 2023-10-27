@@ -12,6 +12,7 @@ const LinkItems: Array<type.LinkItemProps> = [
   { id: "notes", name: "단어장", icon: FiStar },
   { id: "wordlist", name: "저장소", icon: FiDatabase },
   { id: "mypage", name: "내 정보", icon: FiUser },
+  { id: "test_word", name: "gpt 테스트 페이지", icon: FiUser },
 ];
 export default function SidebarContent({ onClose, ...rest }: type.SidebarProps) {
   const location = useLocation();

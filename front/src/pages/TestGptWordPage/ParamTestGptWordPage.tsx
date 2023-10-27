@@ -1,9 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Button, Spinner, useToast } from "@chakra-ui/react";
+import { Spinner, useToast } from "@chakra-ui/react";
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
+import { useLocation } from "react-router-dom";
 
-const ParamTestGptWordPage = ({ receivedWords }) => {
+const ParamTestGptWordPage = () => {
+  const location = useLocation();
+  const receivedWords = location.state?.receivedWords || {};
+
   const [isScriptLoading, setScriptLoading] = useState(false);
   const [scriptResult, setScriptResult] = useState(null);
   const [isGrammarLoading, setGrammarLoading] = useState(false);
@@ -39,7 +43,7 @@ const ParamTestGptWordPage = ({ receivedWords }) => {
     } finally {
       setScriptLoading(false);
     }
-  }, [receivedWords, toast]);
+  }, [toast]);
 
   useEffect(() => {
     if (receivedWords) {
@@ -49,9 +53,7 @@ const ParamTestGptWordPage = ({ receivedWords }) => {
 
   return (
     <div>
-      <Button isDisabled={isScriptLoading}>
-        {isScriptLoading ? <Spinner /> : "대화 생성하기"}
-      </Button>
+      {isScriptLoading ? <Spinner /> : <></>}
       {scriptResult ? (
         <ScriptDialog
           dialogResult={JSON.parse(scriptResult)}

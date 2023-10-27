@@ -83,6 +83,7 @@ function App() {
                 <Route path={"/oauth/kakao"} element={<OAuthPage />} />
                 <Route path={"/signup2"} element={<SignUpPage2 />} />
                 <Route path={"/grammar"} element={<GrammarPage />} />
+                <Route path={"/test_word"} element={<TestGptWordPage />} />
               </Routes>
             </BrowserRouter>
           </ChakraProvider>
