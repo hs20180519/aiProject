@@ -119,9 +119,11 @@ const TestGptWordPage = () => {
                   {word}
                 </Tag>
               ))}
-              <Button mt={4} onClick={handleGetScript} isDisabled={isGrammarLoading || isScriptLoading}>
-                {isScriptLoading ? <Spinner /> : "대화 생성하기"}
-              </Button>
+              <Box>
+                <Button mt={4} onClick={handleGetScript} isDisabled={isGrammarLoading || isScriptLoading}>
+                  {isScriptLoading ? <Spinner /> : "대화 생성하기"}
+                </Button>
+              </Box>
             </>
           )}
         </Box>
