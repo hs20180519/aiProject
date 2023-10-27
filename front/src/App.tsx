@@ -7,8 +7,7 @@ import LoginPage from "./pages/Login/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import OAuthPage from "./pages/OAuthPage";
 import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
-import GrammarPage from "./pages/Grammar/GramnarPage";
-import TypingSentencePage from "./pages/Grammar/TypingSentencePage";
+
 // import TestPage from "./pages/TestPage";
 import * as Api from "./apis/api";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
