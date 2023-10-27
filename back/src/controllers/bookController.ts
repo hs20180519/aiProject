@@ -66,6 +66,7 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
       csat: (userId: number) => bookService.getWordByCategory(page, limit, userId, "csat"),
       toeic: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toeic"),
       toefl: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toefl"),
+      favorite: (userId: number) => bookService.getWordByCategory(page, limit, userId, "favorite"),
       custom: (userId: number, customBookId: string | undefined) =>
         bookService.getWordByCategory(page, limit, userId, "custom", customBookId),
     };
