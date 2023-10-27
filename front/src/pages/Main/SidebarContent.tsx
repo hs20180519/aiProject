@@ -17,7 +17,7 @@ const LinkItems: Array<type.LinkItemProps> = [
   { id: "word", name: "단어학습", icon: FiEdit2 },
   { id: "rank", name: "랭킹", icon: FiTrendingUp },
   { id: "grammar/ai", name: "문법 교정", icon: FiCodesandbox },
-  { id: "test_word", name: "문장 생성", icon: FiEdit },
+  { id: "gpt_dialog", name: "문장 생성", icon: FiEdit },
   { id: "notes", name: "단어장", icon: FiStar },
   { id: "storage", name: "저장소", icon: FiDatabase },
   { id: "mypage", name: "내 정보", icon: FiUser },

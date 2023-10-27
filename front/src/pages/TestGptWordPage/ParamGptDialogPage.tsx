@@ -4,7 +4,7 @@ import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
 import { useLocation } from "react-router-dom";
 
-const ParamTestGptWordPage = () => {
+const ParamGptDialogPage = () => {
   const location = useLocation();
   const receivedWords = location.state?.receivedWords || {};
 
@@ -77,4 +77,4 @@ const ParamTestGptWordPage = () => {
   );
 };
 
-export default ParamTestGptWordPage;
+export default ParamGptDialogPage;

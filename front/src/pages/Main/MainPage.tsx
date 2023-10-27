@@ -28,9 +28,9 @@ import GrammarPage from "../Grammar/GramnarPage";
 import WordPage from "../Word/WordPage";
 
 // gptPage
-import TestGptWordPage from "../TestGptWordPage/TestGptWordPage";
+import GptDialogPage from "../TestGptWordPage/GptDialogPage";
 import Loading from "../../components/Loading";
-import ParamTestGptWordPage from "../TestGptWordPage/ParamTestGptWordPage";
+import ParamGptDialogPage from "../TestGptWordPage/ParamGptDialogPage";
 
 // mypage
 import MyPage from "../MyPage";
@@ -77,10 +77,10 @@ const MainPage = () => {
           <Route path="note_add" element={<AddCustomNotePage />} />
           <Route path="rank" element={<RankFeildPage />} />
           <Route path="grammar/:word" element={<GrammarPage />} />
-          <Route path="test_word" element={<TestGptWordPage />} />
+          <Route path="gpt_dialog" element={<GptDialogPage />} />
+          <Route path="paramTestGptWordPage" element={<ParamGptDialogPage />} />
           <Route path="mypage" element={<MyPage />} />
           <Route path="storage" element={<StoragePage />} />
-          <Route path="paramTestGptWordPage" element={<ParamTestGptWordPage />} />
         </Routes>
       </Box>
     </Box>

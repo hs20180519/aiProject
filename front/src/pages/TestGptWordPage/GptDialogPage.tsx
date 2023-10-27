@@ -5,7 +5,7 @@ import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
 import { FetchStudyWords } from "../../apis/studyWord";
 
-const TestGptWordPage = () => {
+const GptDialogPage = () => {
   const [selectedWords, setSelectedWords] = useState([]);
   const [isScriptLoading, setScriptLoading] = useState(false);
   const [scriptResult, setScriptResult] = useState(null);
@@ -109,6 +109,9 @@ const TestGptWordPage = () => {
         <Text fontSize="xl" fontWeight="bold" mb={4}>
           최근 학습한 단어로 문장을 생성해 보세요!
         </Text>
+        <Text fontSize="sm" mb={4}>
+          단어 학습 후 결과 페이지에서도 이용하실 수 있습니다!
+        </Text>
         <Box maxW="sm" p={4} borderWidth={1} borderRadius="lg">
           <Box width="100%">
             {isWordsLoading ? (
@@ -166,4 +169,4 @@ const TestGptWordPage = () => {
   );
 };
 
-export default TestGptWordPage;
+export default GptDialogPage;
