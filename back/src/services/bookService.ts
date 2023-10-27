@@ -129,7 +129,7 @@ export const deleteCustomBook = async (userId: number, customBookId: number): Pr
   return;
 };
 
-export const deleteAllCustomBook = async (userId: number) => {
+export const deleteAllCustomBook = async (userId: number): Promise<void> => {
   await prisma.customBook.deleteMany({
     where: {
       userId: userId,

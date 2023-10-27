@@ -58,9 +58,6 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
     const category: string = String(req.query.book);
     const customBookId: string = String(req.query.customBookId);
 
-    console.log(customBookId);
-    console.log(category);
-
     const queryServiceMap: {
       [key: string]: (userId: number, customBookId?: string) => Promise<any>;
     } = {
@@ -221,7 +218,7 @@ export const createFavoriteWordInBook = async (req: Request, res: Response, next
     const userId: number = (req.user as User).id;
     const wordId: number = Number(req.query.wordId);
 
-    const createdFavoriteWord = await bookService.createFavoriteWord(userId, wordId);
+    const createdFavoriteWord: WordDto = await bookService.createFavoriteWord(userId, wordId);
     return res.status(201).json(createdFavoriteWord);
   } catch (error) {
     console.error(error);

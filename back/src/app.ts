@@ -41,21 +41,19 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     },
   }),
 );
 app.use(passport.initialize());
 app.use(passport.session());
 
-// 카카오에서 넘어오는 데이터 서버에서 쓰기 쉽게 변환해줌
-passport.serializeUser(function (user: any, done) {
+passport.serializeUser(function (user: any, done): void {
   console.log("serialize User");
   done(null, user);
 });
-passport.deserializeUser(function (user: any, done) {
+passport.deserializeUser(function (user: any, done): void {
   console.log("deserialize User");
-
   done(null, user);
 });
 passport.use("local", local);

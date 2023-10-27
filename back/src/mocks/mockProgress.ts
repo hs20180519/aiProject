@@ -2,11 +2,11 @@ import { PrismaClient, User, Word } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const learnRandomWords = async (user: User, learningCount: number) => {
+const learnRandomWords = async (user: User, learningCount: number): Promise<void> => {
   // 모든 단어 가져오기
   const words: Word[] = await prisma.word.findMany();
 
-  const actions = [];
+  const actions: any[] = [];
 
   for (let i = 0; i < learningCount; i++) {
     // 랜덤한 단어 선택하기

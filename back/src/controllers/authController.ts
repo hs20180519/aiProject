@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { Request, Response, NextFunction } from "express";
 import * as authService from "../services/authService";
 import * as authInterface from "../interfaces/authInterface";
-import { User } from "@prisma/client";
+import { User, VerifiCode } from "@prisma/client";
 import { UserDto } from "../dtos/userDto";
 
 export const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
@@ -11,10 +11,10 @@ export const checkEmail = async (req: Request, res: Response, next: NextFunction
    * #swagger.summary = '[회원가입 요청 전] 이메일 중복 체크 ?email=...'
    */
   try {
-    const email = req.query.email as string;
+    const email: string = req.query.email as string;
     console.log(email);
     if (email) {
-      const existingUserEmail = await authService.getUserByEmail(email);
+      const existingUserEmail: User | null = await authService.getUserByEmail(email);
       if (existingUserEmail)
         return res.status(409).json({ message: "이미 사용중인 이메일 입니다." });
       else return res.status(200).json({ message: "사용 가능한 이메일 입니다." });
@@ -33,7 +33,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
    */
   try {
     const email = req.body.email;
-    const existingCode = await authService.getVerifyCodeByEmail(email);
+    const existingCode: VerifiCode | null = await authService.getVerifyCodeByEmail(email);
     if (!existingCode) await authService.sendVerificationCode(email);
     else await authService.resendVerificationCode(email);
     return res.status(200).json({ message: "인증코드가 전송되었습니다." });

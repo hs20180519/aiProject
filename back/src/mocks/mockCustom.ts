@@ -1,19 +1,19 @@
-import { PrismaClient } from "@prisma/client";
+import { CustomBook, PrismaClient, User } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const createMockData = async () => {
-  const users = await prisma.user.findMany();
+const createMockData = async (): Promise<void> => {
+  const users: User[] = await prisma.user.findMany();
 
   for (let user of users) {
-    const customBook = await prisma.customBook.create({
+    const customBook: CustomBook = await prisma.customBook.create({
       data: {
         title: "Custom Book - " + user.id,
         userId: user.id,
       },
     });
 
-    let wordActions = [];
+    let wordActions: any[] = [];
     for (let i = 1; i <= 10; i++) {
       wordActions.push(
         prisma.word.create({
@@ -27,7 +27,7 @@ const createMockData = async () => {
       );
     }
 
-    const words = await prisma.$transaction(wordActions);
+    const words: any[] = await prisma.$transaction(wordActions);
 
     let progressActions = words.map((word) =>
       prisma.wordProgress.create({

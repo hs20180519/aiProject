@@ -6,7 +6,7 @@ const responseLogger = (
   res: Response & { write: any; end: any },
   next: NextFunction,
 ) => {
-  const start = Date.now();
+  const start: number = Date.now();
 
   console.log(
     `[요청] 🔜 IP${req.ip} ${req.method} ${req.path}?query=${JSON.stringify(
@@ -23,12 +23,12 @@ const responseLogger = (
 
   const chunks: any[] = [];
 
-  res.write = (...restArgs: any[]) => {
+  res.write = (...restArgs: any[]): void => {
     chunks.push(Buffer.from(restArgs[0]));
     oldWrite.apply(res, restArgs);
   };
 
-  res.end = (...restArgs: any[]) => {
+  res.end = (...restArgs: any[]): void => {
     if (restArgs[0]) {
       chunks.push(Buffer.from(restArgs[0]));
     }
