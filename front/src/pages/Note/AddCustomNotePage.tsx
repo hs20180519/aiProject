@@ -13,15 +13,22 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { isStringLiteral } from "typescript";
-import * as Api from "../../apis/customWord";
 import CustomNoteAdd from "./Components/AddCustomNote";
 import * as type from "../../apis/types/custom";
+import {
+  postCustomNote,
+  putCustomNote,
+  postCustomWord,
+  putCustomWord,
+  getNoteDetail,
+} from "../../apis/customWord";
 
 /** 단어 하나가 추가되면 편집 창이 생기는 로직만들어야함 */
 export default function CustomNoteAddPage() {
   const [empty, setEmpty] = useState(false);
   const [disable, setDisable] = useState(true);
   const [isEditing, setIsEditing] = useState(true);
+  const [title, setTitle] = useState("");
   const [userCustomWord, setUserCustomWord] = useState<type.SubmitCustomWord>({
     word: "",
     meaning: "",
@@ -31,9 +38,15 @@ export default function CustomNoteAddPage() {
 
   const refreshWords = () => {};
 
+  async function fetchNewCustomNote(data) {
+    const res = await postCustomNote(data);
+    console.log("단어장 생성");
+    console.log(res);
+    setTitle(res.data);
+  }
   /**단어 업데이트 될때 목록 출력하는 api */
   useEffect(() => {
-    const data = Api.getNoteDetail(`?book={custom}&customBookId="${getCustomWord}"`);
+    const data = getNoteDetail(`?book=custom&customBookId="${getCustomWord}"`);
   }, []);
 
   return (
