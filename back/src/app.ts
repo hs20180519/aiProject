@@ -17,6 +17,7 @@ import studyRouter from "./routers/studyRouter";
 import bookRouter from "./routers/bookRouter";
 import progressRouter from "./routers/progressRouter";
 import rankRouter from "./routers/rankRouter";
+import storageRouter from "./routers/storageRouter";
 import session from "express-session";
 import compression from "compression";
 import helmet from "helmet";
@@ -72,6 +73,7 @@ app.use("/api/study", studyRouter);
 app.use("/api/book", bookRouter);
 app.use("/api/progress", progressRouter);
 app.use("/api/rank", rankRouter);
+app.use("/api/storage", storageRouter);
 
 // 미사용 라우터
 app.use("/api/post", postRouter);
