@@ -76,12 +76,13 @@ const SignUp = () => {
       setIsEmailAvailable(true);
       if (res.status === 403) {
         setIsEmailAvailable(false);
+      } else if (res.status === 409) {
+        setIsEmailAvailable(undefined);
       } else {
         setIsEmailAvailable(true);
       }
     } catch (e) {
-      const customError = e as AxiosError;
-      setIsEmailAvailable(customError.response.status === 409 ? false : undefined);
+      console.error(e);
     }
   };
 
