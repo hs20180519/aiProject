@@ -11,8 +11,6 @@ import authRouter from "./routers/authRouter";
 import oAuthRouter from "./routers/oAuthRouter";
 import userRouter from "./routers/userRouter";
 import uploadRouter from "./routers/uploadRouter";
-import postRouter from "./routers/postRouter";
-import commentRouter from "./routers/commentRouter";
 import studyRouter from "./routers/studyRouter";
 import bookRouter from "./routers/bookRouter";
 import progressRouter from "./routers/progressRouter";
@@ -74,10 +72,6 @@ app.use("/api/book", bookRouter);
 app.use("/api/progress", progressRouter);
 app.use("/api/rank", rankRouter);
 app.use("/api/storage", storageRouter);
-
-// 미사용 라우터
-app.use("/api/post", postRouter);
-app.use("/api/comment", commentRouter);
 
 app.use(errorLogger);
 
