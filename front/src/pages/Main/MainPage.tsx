@@ -34,8 +34,8 @@ import Loading from "../../components/Loading";
 // mypage
 import MyPage from "../MyPage";
 
-// // categorypage
-// import CategoryPage from "../CategoryPage";
+// storage
+import StoragePage from "../Storage/StoragePage";
 
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -75,11 +75,10 @@ const MainPage = () => {
           <Route path="note/:id" element={<NoteDetailPage />} />
           <Route path="note_add" element={<AddCustomNotePage />} />
           <Route path="rank" element={<RankFeildPage />} />
-          {<Route path="grammar" element={<GrammarPage />} />}
           <Route path="grammar/:word" element={<GrammarPage />} />
           <Route path="test_word" element={<TestGptWordPage />} />
           <Route path="mypage" element={<MyPage />} />
-          {/* <Route path="wordlist" element={<WordsPage />}  /> 페이지 추가할시 import후 주석제거*/}
+          <Route path="storage" element={<StoragePage />} />
         </Routes>
       </Box>
     </Box>

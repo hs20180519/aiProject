@@ -4,7 +4,6 @@ import { useParams } from "react-router";
 import { Input, Button, VStack, HStack, Box, Heading, StackDivider } from "@chakra-ui/react";
 
 // Todo: 컴포넌트로 나누기 ? 모듈화 ?
-// params로 word 받기
 
 const GrammarPage = () => {
   const { word } = useParams<{ word }>();
@@ -25,21 +24,6 @@ const GrammarPage = () => {
     } catch (error) {
       console.error("Error sending data:", error);
     }
-  };
-
-  // word가 정의되지 않은 경우를 처리
-  const renderContent = () => {
-    if (!word) {
-      return <div>자유롭게 영작을 해주세요!</div>;
-    }
-    return (
-      // word가 정의된 경우 처리할 내용
-      <div>
-        <strong>{word}</strong>가 포함된 문장을 입력해주세요!
-        <br />
-        <strong>우리 wordy</strong>가 고쳐줄 거예요!
-      </div>
-    );
   };
 
   return (
