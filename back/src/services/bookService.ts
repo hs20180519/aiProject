@@ -85,27 +85,6 @@ export const getWordByCategory = async (
   }
 };
 
-// export const getAllWords = async (
-//   page: number,
-//   limit: number,
-// ): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
-//   const totalWordCount: number = await prisma.word.count({});
-//   const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
-//   const offset: { take: number; skip: number } = getPaginationParams(page, limit);
-//
-//   const words: Word[] = await prisma.word.findMany({
-//     where: {
-//       category: {
-//         not: "custom",
-//       },
-//     },
-//     orderBy: { word: "asc" },
-//     ...offset,
-//   });
-//
-//   return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
-// };
-
 export const updateCustomBook = async (
   userId: number,
   customBookId: number,
@@ -218,4 +197,23 @@ export const deleteCustomWordInBook = async (
   await prisma.word.delete({
     where: { id: wordId },
   });
+};
+
+export const createFavoriteWord = async (userId: number, wordId: number): Promise<WordDto> => {
+  const existingWord: Word | null = await prisma.word.findUnique({ where: { id: wordId } });
+
+  if (!existingWord) {
+    throw new Error(`ID가 ${wordId}인 단어를 찾을 수 없습니다.`);
+  }
+
+  const newWord: Word = await prisma.word.create({
+    data: {
+      word: existingWord.word,
+      meaning: existingWord.meaning,
+      category: "favorite",
+      authorId: userId,
+    },
+  });
+
+  return plainToInstance(WordDto, newWord);
 };

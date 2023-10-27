@@ -210,3 +210,16 @@ export const deleteCustomWordInBook = async (req: Request, res: Response, next: 
     return next(error);
   }
 };
+
+export const createFavoriteWordInBook = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId: number = (req.user as User).id;
+    const wordId: number = Number(req.query.wordId);
+
+    const createdFavoriteWord = await bookService.createFavoriteWord(userId, wordId);
+    return res.status(201).json(createdFavoriteWord);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
