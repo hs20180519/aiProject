@@ -5,7 +5,6 @@ import useDebounced from "../../hooks/useDebounce";
 import validateEmail from "../../libs/validateEmail";
 
 import {
-  VStack,
   Flex,
   Box,
   FormControl,
@@ -74,36 +73,16 @@ const SignUp = () => {
   const fetchEmailCheck = async () => {
     try {
       const res = await Api.get(`/auth/check?email=${email}`);
-      console.log("----이메일 유효성 검사 --");
-      console.log(res);
       setIsEmailAvailable(true);
       if (res.status === 403) {
         setIsEmailAvailable(false);
       } else {
         setIsEmailAvailable(true);
       }
-
     } catch (e) {
       const customError = e as AxiosError;
-      console.log("----error----");
       setIsEmailAvailable(customError.response.status === 409 ? false : undefined);
     }
-
-    // try {
-    //   const response = await Api.get(`/auth/check?email=${email}`);
-    //   console.log("----이메일 유효성 검사 --");
-    //   console.log(response);
-    //   const { isAvailable } = response.data;
-    //   if (isAvailable) {
-    //     setIsEmailAvailable(true);
-    //     // 이메일이 사용 가능하면 이메일 인증 요청
-    //     await emailVerification(email);
-    //   } else {
-    //     console.log("---중복 처리---");
-    //   }
-    // } catch (err) {
-    //   console.error("이메일 중복 확인 중 오류 발생:", err);
-    // }
   };
 
   // 2. 이메일 인증 요청을 보낸다.
@@ -111,7 +90,7 @@ const SignUp = () => {
     try {
       await Api.post(`/auth/register`, { email });
       setSendEmailCodeClick(true);
-  
+
       // 인증 요청 메일 발송 성공 시 토스트 알람 표시
       toast({
         title: "이메일 인증 요청이 성공적으로 전송되었습니다.",
@@ -121,7 +100,7 @@ const SignUp = () => {
       });
     } catch (e) {
       console.error("이메일 인증 중 오류 발생:", e);
-  
+
       // 인증 요청 메일 발송 실패 시 토스트 알람 표시
       toast({
         title: "이메일 인증 요청을 보내는 중 오류가 발생했습니다.",
@@ -135,10 +114,7 @@ const SignUp = () => {
   // 3. 인증번호 인증을 진행한다.
   const fetchCheckEmailCode = async () => {
     try {
-      // console.log("------클릭했나------");
       const res = await Api.post(`/auth/verify`, { email, code: verificationCode });
-      // console.log("-----이메일 인증 확인----");
-      console.log(res);
       if (res.status === 200) {
         setSuccededEmailCode(true);
         toast({
@@ -163,8 +139,6 @@ const SignUp = () => {
   const fetchRegister = async () => {
     try {
       const res = await Api.post("/auth/signup", { name, email, password });
-      console.log("------------회원가입----------");
-      console.log(res);
       if (res.status === 201) {
         toast({
           title: `회원가입이 완료되었습니다.`,
