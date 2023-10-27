@@ -24,4 +24,6 @@ bookRouter
     bookController.deleteCustomWordInBook,
   );
 
+bookRouter.post("/favorite", passportJwt, bookController.createFavoriteWordInBook);
+
 export default bookRouter;

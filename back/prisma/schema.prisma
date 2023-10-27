@@ -20,11 +20,10 @@ model User {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   manager      Boolean        @default(false)
-  comment      Comment[]
   customBook   CustomBook[]
-  post         Post[]
   rank         Rank[]
   wordProgress WordProgress[]
+  Word         Word[]
 }
 
 model VerifiCode {
@@ -37,13 +36,15 @@ model VerifiCode {
 
 model Word {
   id           Int            @id @default(autoincrement())
-  word         String         @unique @db.VarChar(30)
+  word         String         @db.VarChar(30)
   meaning      String         @db.VarChar(100)
   category     String
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   customBookId Int?
   customBook   CustomBook?    @relation(fields: [customBookId], references: [id], onDelete: Cascade)
+  author       User?          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId     Int?
   wordProgress WordProgress[]
 
   @@index([category, customBookId])
@@ -83,7 +84,7 @@ model CustomBook {
 model Rank {
   id          Int      @id @default(autoincrement())
   userId      Int
-  score       Int      
+  score       Int
   currentRank Int?
   pastRank    Int?
   rankDate    DateTime @default(now())
@@ -91,37 +92,4 @@ model Rank {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId], map: "Rank_userId_fkey")
-}
-
-
-model Post {
-  id        Int       @id @default(autoincrement())
-  title     String?
-  content   String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  authorId  Int?
-  viewCount Int       @default(0)
-  comment   Comment[]
-  author    User?     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  @@index([authorId], map: "Post_authorId_fkey")
-}
-
-model Comment {
-  id        Int       @id @default(autoincrement())
-  content   String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  authorId  Int?
-  postId    Int
-  parentId  Int?
-  author    User?     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  parent    Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
-  children  Comment[] @relation("CommentToComment")
-  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  @@index([parentId])
-  @@index([authorId], map: "Comment_authorId_fkey")
-  @@index([postId], map: "Comment_postId_fkey")
 }

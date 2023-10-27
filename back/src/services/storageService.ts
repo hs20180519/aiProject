@@ -13,7 +13,9 @@ export const getAllWords = async (page: number, limit: number) => {
   const words: Word[] = await prisma.word.findMany({
     where: {
       category: {
-        not: "custom",
+        not: {
+          in: ["custom", "favorite"],
+        },
       },
     },
     orderBy: { word: "asc" },

@@ -4,7 +4,7 @@ import * as storageService from "../services/storageService";
 export const getAllWords = async (req: Request, res: Response, next: NextFunction) => {
   /**
    * #swagger.tags = ['Storage']
-   * #swagger.summary = '모든 단어 조회 (커스텀 제외)'
+   * #swagger.summary = '모든 단어 조회 (커스텀, 즐겨찾기 단어 제외)'
    * #swagger.description = '서버사이드 페이징'
    * #swagger.security = [{
    *   "bearerAuth": []

@@ -31,7 +31,7 @@ const TOAST_TIMEOUT_INTERVAL = 800;
 const LoginPage = () => {
   const toast = useToast();
   const [formData, setFormData] = useState<LoginProps>({
-    email: "sample8@example.com",
+    email: "",
     password: "",
   });
 
