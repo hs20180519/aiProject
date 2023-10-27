@@ -88,7 +88,7 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
               <MenuItem as={ReactRouterLink} to="/main/mypage">{"프로필"}</MenuItem>
-              <MenuItem>{"설정"}</MenuItem>
+              {/* <MenuItem>{"설정"}</MenuItem> */}
               <MenuDivider />
               <MenuItem onClick={onLogout}>{"로그아웃"}</MenuItem>
             </MenuList>

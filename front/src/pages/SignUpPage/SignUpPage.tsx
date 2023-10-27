@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
 import * as Api from "../../apis/api";
 import useDebounced from "../../hooks/useDebounce";
 import validateEmail from "../../libs/validateEmail";
@@ -25,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link as ReactRouterLink } from "react-router-dom";
+import { AxiosError } from "axios";
 
 type NewUserInfoType = {
   name: string;
@@ -59,13 +59,13 @@ const SignUp = () => {
 
   const getEmailStatus = () => {
     if (isEmailAvailable) {
-      return "이 이메일은 사용 가능합니다.";
+      return "사용 가능한 이메일";
     }
     if (isEmailAvailable === false) {
-      return "이미 사용 중인 이메일 주소입니다.";
+      return "사용중인 이메일";
     }
     if (isEmailAvailable === undefined) {
-      return "이메일 가용성 확인 중 오류가 발생했습니다.";
+      return "올바르지 않은 형식";
     }
     return ""; // 반환값이 없을 경우 빈 문자열 반환
   };
@@ -76,16 +76,17 @@ const SignUp = () => {
       const res = await Api.get(`/auth/check?email=${email}`);
       console.log("----이메일 유효성 검사 --");
       console.log(res);
+      setIsEmailAvailable(true);
       if (res.status === 403) {
         setIsEmailAvailable(false);
       } else {
         setIsEmailAvailable(true);
       }
 
-      const { isAvailable } = res.data;
     } catch (e) {
+      const customError = e as AxiosError;
       console.log("----error----");
-      console.log(e);
+      setIsEmailAvailable(customError.response.status === 409 ? false : undefined);
     }
 
     // try {
@@ -249,7 +250,7 @@ const SignUp = () => {
                     fontSize="xs"
                     color={isEmailAvailable ? "green.500" : "tomato"}
                   >
-                    {isEmailAvailable ? "사용 가능" : "사용 중이거나 사용 불가"}
+                    {getEmailStatus()}
                   </Text>
                 )}
 
