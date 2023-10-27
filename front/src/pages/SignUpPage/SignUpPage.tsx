@@ -59,13 +59,13 @@ const SignUp = () => {
 
   const getEmailStatus = () => {
     if (isEmailAvailable) {
-      return "이 이메일은 사용 가능합니다.";
+      return "사용 가능한 이메일";
     }
     if (isEmailAvailable === false) {
-      return "이미 사용 중인 이메일 주소입니다.";
+      return "사용중인 이메일";
     }
     if (isEmailAvailable === undefined) {
-      return "이메일 가용성 확인 중 오류가 발생했습니다.";
+      return "올바르지 않은 형식";
     }
     return ""; // 반환값이 없을 경우 빈 문자열 반환
   };
