@@ -103,22 +103,28 @@ const TestGptWordPage = () => {
     <Flex direction="column" align="center" justify="flex-start" height="100vh">
       <Box maxW="sm" p={4} borderWidth={1} borderRadius="lg">
         <Box>
-          {Object.keys(dynamicWordList).map((word) => (
-            <Tag
-              key={word}
-              size="md"
-              variant={selectedWords.includes(word) ? "solid" : "outline"}
-              colorScheme="teal"
-              m={1}
-              onClick={() => handleTagClick(word)}
-            >
-              {word}
-            </Tag>
-          ))}
+          {Object.keys(dynamicWordList).length === 0 ? (
+            <div style={{ fontSize: '24px', fontWeight: 'bold' }}>최근 학습한 단어 없음</div>
+          ) : (
+            <>
+              {Object.keys(dynamicWordList).map((word) => (
+                <Tag
+                  key={word}
+                  size="md"
+                  variant={selectedWords.includes(word) ? "solid" : "outline"}
+                  colorScheme="teal"
+                  m={1}
+                  onClick={() => handleTagClick(word)}
+                >
+                  {word}
+                </Tag>
+              ))}
+              <Button mt={4} onClick={handleGetScript} isDisabled={isGrammarLoading || isScriptLoading}>
+                {isScriptLoading ? <Spinner /> : "대화 생성하기"}
+              </Button>
+            </>
+          )}
         </Box>
-        <Button mt={4} onClick={handleGetScript} isDisabled={isGrammarLoading || isScriptLoading}>
-          {isScriptLoading ? <Spinner /> : "대화 생성하기"}
-        </Button>
         <Box mt={4} maxW="sm">
           {scriptResult ? (
             <ScriptDialog
