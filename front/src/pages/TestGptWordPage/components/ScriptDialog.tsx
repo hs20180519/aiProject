@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Button, Text, Box, Spacer, Spinner, VStack, useToast } from "@chakra-ui/react";
+import { Button, Text, Box, Spacer, Spinner, VStack, useToast, Flex } from "@chakra-ui/react";
 import { DialogEntry, DialogResponse, InputGrammarData } from "../../../apis/gpt_interface";
 import { simpleHash } from "../utils/gptUtils";
 import { FetchGpt } from "../../../apis/gpt";
@@ -78,20 +78,33 @@ const ScriptDialog = ({
           : null;
 
         return (
-          <Box key={dialogKey} p={2} borderWidth={1} borderRadius="md">
-            <Text fontWeight="bold">{entry.speaker}:</Text>
-            <Text>{entry.message}</Text>
-            <Button
-              mt={2}
-              onClick={() => {
-                if (!isGrammarLoading) {
-                  handleGetGrammar([entry], dialogKey);
-                }
-              }}
-              isDisabled={isGrammarLoading || isScriptLoading}
-            >
-              {loadingEntryKey === dialogKey && isGrammarLoading ? <Spinner /> : "문법 설명"}
-            </Button>
+          <Box
+            key={dialogKey}
+            p={2}
+            borderWidth={1}
+            borderRadius="md"
+            bg={entry.speaker === "Person A" ? "gray.50" : ""}
+            width="100%"
+          >
+            <Flex direction="column" justifyContent="space-between">
+              <Text fontWeight="bold">{entry.speaker}:</Text>
+              <Text>{entry.message}</Text>
+            </Flex>
+            <Box textAlign="right">
+              <Button
+                mt={2}
+                onClick={() => {
+                  if (!isGrammarLoading) {
+                    handleGetGrammar([entry], dialogKey);
+                  }
+                }}
+                isDisabled={isGrammarLoading || isScriptLoading}
+                borderWidth={2}
+                borderColor="white"
+              >
+                {loadingEntryKey === dialogKey && isGrammarLoading ? <Spinner /> : "문법 설명"}
+              </Button>
+            </Box>
 
             <Spacer mt={6} />
             {currentGrammarResult && <GrammarDialog grammar={currentGrammarResult.grammar} />}

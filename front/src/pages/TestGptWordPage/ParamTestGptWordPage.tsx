@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Box, Flex, Spinner, useToast } from "@chakra-ui/react";
+import { Text, Box, Flex, Spinner, useToast } from "@chakra-ui/react";
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
 import { useLocation } from "react-router-dom";
@@ -52,16 +52,25 @@ const ParamTestGptWordPage = () => {
   }, [receivedWords, handleGetScript]);
 
   return (
-    <Flex height="100vh" align="center" justify="center">
-      <Box background="white" boxShadow="md" p={6} rounded="md">
-        {isScriptLoading ? <Spinner /> : null}
+    <Flex direction="column" align="center" justify="flex-start" minHeight="100vh">
+      <Box background="white" boxShadow="md" p={6} rounded="md" flexGrow={1} width="100%">
+        {isScriptLoading ? (
+          <Flex justifyContent="center" alignItems="center" height="100%" direction="column">
+            <Text fontSize="xl" fontWeight="bold" mb={4}>
+              대화문을 생성 중입니다
+            </Text>
+            <Spinner />
+          </Flex>
+        ) : null}
         {scriptResult ? (
-          <ScriptDialog
-            dialogResult={JSON.parse(scriptResult)}
-            isGrammarLoading={isGrammarLoading}
-            setGrammarLoading={setGrammarLoading}
-            isScriptLoading={isScriptLoading}
-          />
+          <Box m="8">
+            <ScriptDialog
+              dialogResult={JSON.parse(scriptResult)}
+              isGrammarLoading={isGrammarLoading}
+              setGrammarLoading={setGrammarLoading}
+              isScriptLoading={isScriptLoading}
+            />
+          </Box>
         ) : null}
       </Box>
     </Flex>

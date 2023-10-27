@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Text, Box, Button, Flex, Spinner, Tag, useToast } from "@chakra-ui/react";
+import { Tooltip, Text, Box, Button, Flex, Spinner, Tag, useToast } from "@chakra-ui/react";
 import { InputDialogData } from "../../apis/gpt_interface";
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
@@ -10,6 +10,7 @@ const TestGptWordPage = () => {
   const [isScriptLoading, setScriptLoading] = useState(false);
   const [scriptResult, setScriptResult] = useState(null);
   const [isGrammarLoading, setGrammarLoading] = useState(false);
+  const [isWordsLoading, setWordsLoading] = useState(true);
 
   const toast = useToast();
 
@@ -18,6 +19,7 @@ const TestGptWordPage = () => {
   useEffect(() => {
     const fetchWords = async () => {
       try {
+        setWordsLoading(true);
         const result = await FetchStudyWords.getLearnResult();
         const newWordList = result.data.reduce(
           (obj: { [x: string]: string }, item: { word: { word: string; meaning: string } }) => {
@@ -29,6 +31,8 @@ const TestGptWordPage = () => {
         setDynamicWordList(newWordList);
       } catch (error) {
         console.log("Error fetching words:", error);
+      } finally {
+        setWordsLoading(false);
       }
     };
 
@@ -60,7 +64,7 @@ const TestGptWordPage = () => {
     [selectedWords, toast],
   );
 
-    const handleGetScript = useCallback(async () => {
+  const handleGetScript = useCallback(async () => {
     console.log("handleGetScript 실행, 현재 selectedWords:", selectedWords);
     setScriptLoading(true);
     try {
@@ -100,15 +104,17 @@ const TestGptWordPage = () => {
   }, [selectedWords, dynamicWordList, toast]);
 
   return (
-    <Box background="white" boxShadow="md" p={6} rounded="md">
-      <Flex direction="column" align="center" justify="flex-start" height="100vh">
+    <Box background="white" boxShadow="md" p={6} rounded="md" flexGrow={1} width="100%">
+      <Flex direction="column" align="center" justify="flex-start" minHeight="100vh">
         <Text fontSize="xl" fontWeight="bold" mb={4}>
           최근 학습한 단어로 문장을 생성해 보세요!
         </Text>
         <Box maxW="sm" p={4} borderWidth={1} borderRadius="lg">
-          <Box>
-            {Object.keys(dynamicWordList).length === 0 ? (
-              <div style={{ fontSize: '24px', fontWeight: 'bold' }}>최근 학습한 단어 없음</div>
+          <Box width="100%">
+            {isWordsLoading ? (
+              <Spinner /> // 로딩 중일 때 Spinner 표시
+            ) : Object.keys(dynamicWordList).length === 0 ? (
+              <div style={{ fontSize: "24px", fontWeight: "bold" }}>최근 학습한 단어 없음</div>
             ) : (
               <>
                 {Object.keys(dynamicWordList).map((word) => (
@@ -123,10 +129,23 @@ const TestGptWordPage = () => {
                     {word}
                   </Tag>
                 ))}
-                <Box>
-                  <Button mt={4} onClick={handleGetScript} isDisabled={isGrammarLoading || isScriptLoading}>
-                    {isScriptLoading ? <Spinner /> : "대화 생성하기"}
-                  </Button>
+                <Box width="100%">
+                  <Box textAlign="center">
+                    <Tooltip
+                      label={selectedWords.length > 0 ? "" : "단어를 먼저 선택해주세요!"}
+                      placement="top"
+                    >
+                      <Button
+                        mt={4}
+                        onClick={handleGetScript}
+                        isDisabled={
+                          isGrammarLoading || isScriptLoading || selectedWords.length === 0
+                        }
+                      >
+                        {isScriptLoading ? <Spinner /> : "대화 생성하기"}
+                      </Button>
+                    </Tooltip>
+                  </Box>
                 </Box>
               </>
             )}
