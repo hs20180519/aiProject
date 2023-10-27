@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Box, Button, Flex, Spinner, Tag, useToast } from "@chakra-ui/react";
+import { Text, Box, Button, Flex, Spinner, Tag, useToast } from "@chakra-ui/react";
 import { InputDialogData } from "../../apis/gpt_interface";
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
@@ -100,45 +100,50 @@ const TestGptWordPage = () => {
   }, [selectedWords, dynamicWordList, toast]);
 
   return (
-    <Flex direction="column" align="center" justify="flex-start" height="100vh">
-      <Box maxW="sm" p={4} borderWidth={1} borderRadius="lg">
-        <Box>
-          {Object.keys(dynamicWordList).length === 0 ? (
-            <div style={{ fontSize: '24px', fontWeight: 'bold' }}>최근 학습한 단어 없음</div>
-          ) : (
-            <>
-              {Object.keys(dynamicWordList).map((word) => (
-                <Tag
-                  key={word}
-                  size="md"
-                  variant={selectedWords.includes(word) ? "solid" : "outline"}
-                  colorScheme="teal"
-                  m={1}
-                  onClick={() => handleTagClick(word)}
-                >
-                  {word}
-                </Tag>
-              ))}
-              <Box>
-                <Button mt={4} onClick={handleGetScript} isDisabled={isGrammarLoading || isScriptLoading}>
-                  {isScriptLoading ? <Spinner /> : "대화 생성하기"}
-                </Button>
-              </Box>
-            </>
-          )}
+    <Box background="white" boxShadow="md" p={6} rounded="md">
+      <Flex direction="column" align="center" justify="flex-start" height="100vh">
+        <Text fontSize="xl" fontWeight="bold" mb={4}>
+          최근 학습한 단어로 문장을 생성해 보세요!
+        </Text>
+        <Box maxW="sm" p={4} borderWidth={1} borderRadius="lg">
+          <Box>
+            {Object.keys(dynamicWordList).length === 0 ? (
+              <div style={{ fontSize: '24px', fontWeight: 'bold' }}>최근 학습한 단어 없음</div>
+            ) : (
+              <>
+                {Object.keys(dynamicWordList).map((word) => (
+                  <Tag
+                    key={word}
+                    size="md"
+                    variant={selectedWords.includes(word) ? "solid" : "outline"}
+                    colorScheme="teal"
+                    m={1}
+                    onClick={() => handleTagClick(word)}
+                  >
+                    {word}
+                  </Tag>
+                ))}
+                <Box>
+                  <Button mt={4} onClick={handleGetScript} isDisabled={isGrammarLoading || isScriptLoading}>
+                    {isScriptLoading ? <Spinner /> : "대화 생성하기"}
+                  </Button>
+                </Box>
+              </>
+            )}
+          </Box>
+          <Box mt={4} maxW="sm">
+            {scriptResult ? (
+              <ScriptDialog
+                dialogResult={JSON.parse(scriptResult)}
+                isGrammarLoading={isGrammarLoading}
+                setGrammarLoading={setGrammarLoading}
+                isScriptLoading={isScriptLoading}
+              />
+            ) : null}
+          </Box>
         </Box>
-        <Box mt={4} maxW="sm">
-          {scriptResult ? (
-            <ScriptDialog
-              dialogResult={JSON.parse(scriptResult)}
-              isGrammarLoading={isGrammarLoading}
-              setGrammarLoading={setGrammarLoading}
-              isScriptLoading={isScriptLoading}
-            />
-          ) : null}
-        </Box>
-      </Box>
-    </Flex>
+      </Flex>
+    </Box>
   );
 };
 

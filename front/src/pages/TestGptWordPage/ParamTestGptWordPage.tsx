@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Spinner, useToast } from "@chakra-ui/react";
+import { Box, Flex, Spinner, useToast } from "@chakra-ui/react";
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
 import { useLocation } from "react-router-dom";
@@ -52,17 +52,19 @@ const ParamTestGptWordPage = () => {
   }, [receivedWords, handleGetScript]);
 
   return (
-    <div>
-      {isScriptLoading ? <Spinner /> : <></>}
-      {scriptResult ? (
-        <ScriptDialog
-          dialogResult={JSON.parse(scriptResult)}
-          isGrammarLoading={isGrammarLoading}
-          setGrammarLoading={setGrammarLoading}
-          isScriptLoading={isScriptLoading}
-        />
-      ) : null}
-    </div>
+    <Flex height="100vh" align="center" justify="center">
+      <Box background="white" boxShadow="md" p={6} rounded="md">
+        {isScriptLoading ? <Spinner /> : null}
+        {scriptResult ? (
+          <ScriptDialog
+            dialogResult={JSON.parse(scriptResult)}
+            isGrammarLoading={isGrammarLoading}
+            setGrammarLoading={setGrammarLoading}
+            isScriptLoading={isScriptLoading}
+          />
+        ) : null}
+      </Box>
+    </Flex>
   );
 };
 

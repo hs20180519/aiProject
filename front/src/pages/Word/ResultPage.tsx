@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Box, Table, Thead, Tbody, Tr, Th, Td, Text, Button, Link } from "@chakra-ui/react";
 import { FetchStudyWords } from "../../apis/studyWord";
 import { Link as RouterLink } from "react-router-dom";
-import { useToast, Checkbox, Button, Box, Table, Thead, Tbody, Tr, Th, Td, Text } from "@chakra-ui/react";
-import { FetchStudyWords } from "../apis/studyWord";
+import { Tooltip, useToast, Checkbox, Button, Box, Table, Thead, Tbody, Tr, Th, Td, Text } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom';
 
 const ResultPage = () => {
@@ -66,19 +64,13 @@ const ResultPage = () => {
 
   return (
     <Box>
-      <Button onClick={handleSendCheckedWords} isDisabled={checkedCount === 0}>
-        선택된 단어 전달
-      </Button>
-      <Text fontSize="lg" mb={2}>
-        {checkedCount} 개 선택됨
-      </Text>
-
       <Text fontSize="2xl" fontWeight="bold" mb={4}>
         단어 학습 결과 (정답 개수 {correctAnswers}개 / 총 단어 개수 {totalAnswers}개)
       </Text>
       <Table>
         <Thead>
           <Tr>
+            <Th></Th>
             <Th>번호</Th>
             <Th>정답여부</Th>
             <Th>단어</Th>
@@ -97,9 +89,21 @@ const ResultPage = () => {
           ))}
         </Tbody>
       </Table>
-      <Button as={RouterLink} to="/main/grammar/ai" colorScheme="blue" m={2}>
-        스크립트로 공부하러 가기
-      </Button>
+      {checkedCount > 0 && ( // checkedCount가 0보다 클 때만 출력
+        <Text fontSize="sm" fontWeight="light" mb={2} color="gray.600">
+          {checkedCount} 개 선택됨
+        </Text>
+      )}
+      <Tooltip label={checkedCount === 0 ? "단어를 먼저 선택해주세요!" : ""}>
+        <Button
+          onClick={handleSendCheckedWords}
+          isDisabled={checkedCount === 0}
+          colorScheme="blue"
+          m={2}
+        >
+          스크립트로 공부하러 가기
+        </Button>
+      </Tooltip>
       <Button as={RouterLink} to="/main/word" colorScheme="green" m={2} onClick={() => window.location.reload()}>
         단어학습 더 하기
       </Button>
