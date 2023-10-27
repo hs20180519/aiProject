@@ -110,17 +110,33 @@ const SignUp = () => {
     try {
       await Api.post(`/auth/register`, { email });
       setSendEmailCodeClick(true);
+  
+      // 인증 요청 메일 발송 성공 시 토스트 알람 표시
+      toast({
+        title: "이메일 인증 요청이 성공적으로 전송되었습니다.",
+        status: "success",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
     } catch (e) {
       console.error("이메일 인증 중 오류 발생:", e);
+  
+      // 인증 요청 메일 발송 실패 시 토스트 알람 표시
+      toast({
+        title: "이메일 인증 요청을 보내는 중 오류가 발생했습니다.",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
     }
   };
 
   // 3. 인증번호 인증을 진행한다.
   const fetchCheckEmailCode = async () => {
     try {
-      console.log("------클릭했나------");
+      // console.log("------클릭했나------");
       const res = await Api.post(`/auth/verify`, { email, code: verificationCode });
-      console.log("-----이메일 인증 확인----");
+      // console.log("-----이메일 인증 확인----");
       console.log(res);
       if (res.status === 200) {
         setSuccededEmailCode(true);

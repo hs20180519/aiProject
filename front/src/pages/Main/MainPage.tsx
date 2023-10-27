@@ -34,6 +34,9 @@ import Loading from "../../components/Loading";
 // mypage
 import MyPage from "../MyPage";
 
+// // categorypage
+// import CategoryPage from "../CategoryPage";
+
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
