@@ -63,8 +63,8 @@ const GrammarPage = () => {
         </Box>
       </HStack>
 
-      {/* {responseData && ( */}
       <VStack align="start" spacing={4} width="70%">
+        <Box fontSize={"15px"}>교정된 문장 :</Box>
         <Box
           border="1px"
           p={6}
