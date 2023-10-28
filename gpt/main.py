@@ -14,7 +14,12 @@ app = FastAPI()
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 origins = [
-    "*",
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "http://34.64.87.27",
+    "https://34.64.87.27",
+    "http://kdt-ai-8-team01-1.elicecoding.com",
+    "https://kdt-ai-8-team01-1.elicecoding.com"
 ]
 
 app.add_middleware(
