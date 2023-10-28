@@ -67,21 +67,21 @@ location = /openapi.json {
 }
 
 location /python/api/ {
-    proxy_pass http://localhost:8777;
+    proxy_pass http://10.178.0.12:8777;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 }
 
 location /python/doc/ {
-    proxy_pass http://localhost:8777/redoc;
+    proxy_pass http://10.178.0.12:8777/redoc;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 }
 
 location = /python/openapi.json {
-    proxy_pass http://localhost:8777/openapi.json;
+    proxy_pass http://10.178.0.12:8777/openapi.json;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
