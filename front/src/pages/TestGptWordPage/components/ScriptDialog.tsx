@@ -1,26 +1,40 @@
 import React, { useState, useCallback } from "react";
-import { Button, Text, Box, Spacer, Spinner, VStack, useToast, Flex } from "@chakra-ui/react";
+import {
+  Tooltip,
+  Button,
+  Text,
+  Box,
+  Spacer,
+  Spinner,
+  VStack,
+  useToast,
+  Flex,
+} from "@chakra-ui/react";
 import { DialogEntry } from "../../../apis/gpt_interface";
 import { simpleHash } from "../utils/gptUtils";
 import { FetchGpt } from "../../../apis/gpt";
 import GrammarDialog from "./GrammarDialog";
 
-const highlightWords = (text: string, selectedWords: string[]) =>
-  text
+const highlightWords = (text: string, selectedWords: Record<string, string>) => {
+  const selectedWordKeys = Object.keys(selectedWords);
+  return text
     .split(" ")
     .map((word, index) => {
-      if (selectedWords.includes(word)) {
+      const foundKey = selectedWordKeys.find((key) => word.includes(key));
+      if (foundKey) {
+        const meaning = selectedWords[foundKey];
         return (
-          <span
-            key={index}
-            style={{
-              backgroundColor: "yellow",
-              fontStyle: "italic",
-              textDecoration: "underline",
-            }}
-          >
-            {word}
-          </span>
+          <Tooltip label={meaning} key={index}>
+            <span
+              style={{
+                backgroundColor: "yellow",
+                fontStyle: "italic",
+                textDecoration: "underline",
+              }}
+            >
+              {word}
+            </span>
+          </Tooltip>
         );
       }
       return word;
@@ -32,6 +46,7 @@ const highlightWords = (text: string, selectedWords: string[]) =>
       acc.push(curr);
       return acc;
     }, [] as React.ReactNode[]);
+};
 
 const ScriptDialog = ({
   dialogResult,

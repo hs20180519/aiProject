@@ -6,7 +6,7 @@ import ScriptDialog from "./components/ScriptDialog";
 import { FetchStudyWords } from "../../apis/studyWord";
 
 const GptDialogPage = () => {
-  const [selectedWords, setSelectedWords] = useState([]);
+  const [selectedWords, setSelectedWords] = useState({});
   const [isScriptLoading, setScriptLoading] = useState(false);
   const [scriptResult, setScriptResult] = useState(null);
   const [isGrammarLoading, setGrammarLoading] = useState(false);
@@ -41,13 +41,11 @@ const GptDialogPage = () => {
 
   const handleTagClick = useCallback(
     (word) => {
-      if (selectedWords.includes(word)) {
-        // 이미 선택된 단어를 다시 클릭한 경우: 선택 취소
-        const newSelectedWords = selectedWords.filter((w) => w !== word);
-        setSelectedWords(newSelectedWords);
+      const newSelectedWords = { ...selectedWords };
+      if (Object.prototype.hasOwnProperty.call(newSelectedWords, word)) {
+        delete newSelectedWords[word];
       } else {
-        // 새로운 단어를 선택하는 경우
-        if (selectedWords.length >= 3) {
+        if (Object.keys(newSelectedWords).length >= 3) {
           toast({
             title: "단어는 3개까지 선택 가능 합니다.",
             status: "error",
@@ -56,26 +54,21 @@ const GptDialogPage = () => {
           });
           return;
         }
-
-        const newSelectedWords = [...selectedWords, word];
-        setSelectedWords(newSelectedWords);
+        newSelectedWords[word] = dynamicWordList[word];
       }
+      setSelectedWords(newSelectedWords);
     },
-    [selectedWords, toast],
+    [selectedWords, dynamicWordList, toast],
   );
 
   const handleGetScript = useCallback(async () => {
-    console.log("handleGetScript 실행, 현재 selectedWords:", selectedWords);
     setScriptLoading(true);
     try {
       const updatedDialogParams: InputDialogData = {
-        line_count: selectedWords.length + 2,
-        word_pairs: selectedWords.reduce((obj, word) => {
-          return { ...obj, [word]: dynamicWordList[word] };
-        }, {}),
+        line_count: Object.keys(selectedWords).length + 2,
+        word_pairs: selectedWords,
       };
 
-      console.log("API 호출 전, updatedDialogParams:", updatedDialogParams);
       const apiResult = await FetchGpt.getScript(updatedDialogParams);
 
       toast({
@@ -84,8 +77,6 @@ const GptDialogPage = () => {
         duration: 3000,
         isClosable: true,
       });
-
-      console.log("API 호출 결과:", apiResult);
       setScriptResult(JSON.stringify(apiResult));
     } catch (error) {
       toast({
@@ -95,13 +86,10 @@ const GptDialogPage = () => {
         duration: 5000,
         isClosable: true,
       });
-
-      console.log("API 호출 실패:", error);
-      // setScriptResult(`Failed to fetch script: ${error.message || error}`);
     } finally {
       setScriptLoading(false);
     }
-  }, [selectedWords, dynamicWordList, toast]);
+  }, [selectedWords, toast]);
 
   return (
     <Box background="white" boxShadow="md" p={6} rounded="md" flexGrow={1} width="100%">
@@ -124,7 +112,7 @@ const GptDialogPage = () => {
                   <Tag
                     key={word}
                     size="md"
-                    variant={selectedWords.includes(word) ? "solid" : "outline"}
+                    variant={Object.keys(selectedWords).includes(word) ? "solid" : "outline"}
                     colorScheme="teal"
                     m={1}
                     onClick={() => handleTagClick(word)}
@@ -135,14 +123,18 @@ const GptDialogPage = () => {
                 <Box width="100%">
                   <Box textAlign="center">
                     <Tooltip
-                      label={selectedWords.length > 0 ? "" : "단어를 먼저 선택해주세요!"}
+                      label={
+                        Object.keys(selectedWords).length > 0 ? "" : "단어를 먼저 선택해주세요!"
+                      }
                       placement="top"
                     >
                       <Button
                         mt={4}
                         onClick={handleGetScript}
                         isDisabled={
-                          isGrammarLoading || isScriptLoading || selectedWords.length === 0
+                          isGrammarLoading ||
+                          isScriptLoading ||
+                          Object.keys(selectedWords).length === 0
                         }
                       >
                         {isScriptLoading ? <Spinner /> : "대화 생성하기"}
