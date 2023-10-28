@@ -19,7 +19,9 @@ origins = [
     "http://34.64.87.27",
     "https://34.64.87.27",
     "http://kdt-ai-8-team01-1.elicecoding.com",
-    "https://kdt-ai-8-team01-1.elicecoding.com"
+    "https://kdt-ai-8-team01-1.elicecoding.com",
+    "http://172.19.0.3:5001",
+    "http://172.19.0.4"
 ]
 
 app.add_middleware(
