@@ -160,6 +160,7 @@ const GptDialogPage = () => {
                 isGrammarLoading={isGrammarLoading}
                 setGrammarLoading={setGrammarLoading}
                 isScriptLoading={isScriptLoading}
+                selectedWords={selectedWords}
               />
             ) : null}
           </Box>

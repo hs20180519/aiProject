@@ -69,6 +69,7 @@ const ParamGptDialogPage = () => {
               isGrammarLoading={isGrammarLoading}
               setGrammarLoading={setGrammarLoading}
               isScriptLoading={isScriptLoading}
+              selectedWords={Object.keys(receivedWords)}
             />
           </Box>
         ) : null}

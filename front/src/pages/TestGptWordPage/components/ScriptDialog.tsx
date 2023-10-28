@@ -1,48 +1,62 @@
 import React, { useState, useCallback } from "react";
 import { Button, Text, Box, Spacer, Spinner, VStack, useToast, Flex } from "@chakra-ui/react";
-import { DialogEntry, DialogResponse, InputGrammarData } from "../../../apis/gpt_interface";
+import { DialogEntry } from "../../../apis/gpt_interface";
 import { simpleHash } from "../utils/gptUtils";
 import { FetchGpt } from "../../../apis/gpt";
 import GrammarDialog from "./GrammarDialog";
+
+const highlightWords = (text: string, selectedWords: string[]) =>
+  text
+    .split(" ")
+    .map((word, index) => {
+      if (selectedWords.includes(word)) {
+        return (
+          <span
+            key={index}
+            style={{
+              backgroundColor: "yellow",
+              fontStyle: "italic",
+              textDecoration: "underline",
+            }}
+          >
+            {word}
+          </span>
+        );
+      }
+      return word;
+    })
+    .reduce((acc, curr, index) => {
+      if (index !== 0) {
+        acc.push(" ");
+      }
+      acc.push(curr);
+      return acc;
+    }, [] as React.ReactNode[]);
 
 const ScriptDialog = ({
   dialogResult,
   isGrammarLoading,
   setGrammarLoading,
   isScriptLoading,
-}: {
-  dialogResult: DialogResponse;
-  isGrammarLoading: boolean;
-  setGrammarLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  isScriptLoading: boolean;
+  selectedWords,
 }) => {
-  const [grammarResult, setGrammarResult] = useState({});
-  const [loadingEntryKey, setLoadingEntryKey] = useState(null);
+  const [grammarResult, setGrammarResult] = useState<Record<string, string>>({});
+  const [loadingEntryKey, setLoadingEntryKey] = useState<string | null>(null);
   const toast = useToast();
 
   const handleGetGrammar = useCallback(
     async (dialog: DialogEntry[], dialogKey: string) => {
-      console.log("handleGetGrammar 실행, 현재 dialog:", dialog, "현재 dialogKey:", dialogKey);
       setLoadingEntryKey(dialogKey);
       setGrammarLoading(true);
       try {
-        const updatedGrammarParams: InputGrammarData = {
-          dialog,
-        };
-        const apiResult = await FetchGpt.getGrammar(updatedGrammarParams);
-
+        const apiResult = await FetchGpt.getGrammar({ dialog });
+        setGrammarResult((prev) => ({ ...prev, [dialogKey]: JSON.stringify(apiResult) }));
         toast({
           title: "Grammar fetch successful.",
           status: "success",
           duration: 3000,
           isClosable: true,
         });
-
-        console.log("API 호출 결과:", apiResult);
-        setGrammarResult((prevResults) => ({
-          ...prevResults,
-          [dialogKey]: JSON.stringify(apiResult),
-        }));
       } catch (error) {
         toast({
           title: "Grammar fetch failed.",
@@ -51,21 +65,15 @@ const ScriptDialog = ({
           duration: 5000,
           isClosable: true,
         });
-
-        console.log("API 호출 실패:", error);
-        // setGrammarResult((prevResults) => ({
-        //   ...prevResults,
-        //   [dialogKey]: `Failed to fetch grammar: ${error.message || error}`,
-        // }));
       } finally {
         setLoadingEntryKey(null);
         setGrammarLoading(false);
       }
     },
-    [toast, setGrammarLoading],
+    [setGrammarLoading, toast],
   );
 
-  if (!dialogResult || !dialogResult.dialog) {
+  if (!dialogResult?.dialog) {
     return null;
   }
 
@@ -76,7 +84,6 @@ const ScriptDialog = ({
         const currentGrammarResult = grammarResult[dialogKey]
           ? JSON.parse(grammarResult[dialogKey])
           : null;
-
         return (
           <Box
             key={dialogKey}
@@ -88,16 +95,12 @@ const ScriptDialog = ({
           >
             <Flex direction="column" justifyContent="space-between">
               <Text fontWeight="bold">{entry.speaker}:</Text>
-              <Text>{entry.message}</Text>
+              <Text>{highlightWords(entry.message, selectedWords)}</Text>
             </Flex>
             <Box textAlign="right">
               <Button
                 mt={2}
-                onClick={() => {
-                  if (!isGrammarLoading) {
-                    handleGetGrammar([entry], dialogKey);
-                  }
-                }}
+                onClick={() => !isGrammarLoading && handleGetGrammar([entry], dialogKey)}
                 isDisabled={isGrammarLoading || isScriptLoading}
                 borderWidth={2}
                 borderColor="white"
@@ -105,7 +108,6 @@ const ScriptDialog = ({
                 {loadingEntryKey === dialogKey && isGrammarLoading ? <Spinner /> : "문법 설명"}
               </Button>
             </Box>
-
             <Spacer mt={6} />
             {currentGrammarResult && <GrammarDialog grammar={currentGrammarResult.grammar} />}
           </Box>
