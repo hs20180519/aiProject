@@ -13,11 +13,13 @@ async function groupWords(): Promise<void> {
     groups.push(group);
   }
 
-  for (const group of groups) {
-    await prisma.meaningGroup.create({
-      data: { meanings: group },
-    });
-  }
+  // Transaction 생성
+  const createPromises = groups.map((group) =>
+    prisma.meaningGroup.create({ data: { meanings: group } }),
+  );
+
+  // 모든 create 쿼리 실행
+  await prisma.$transaction(createPromises);
 }
 
 groupWords()

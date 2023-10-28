@@ -619,7 +619,7 @@ for (let i = 0; i < sampleUsers.length; i++) {
   dummyUsers.push(dummyUser);
 }
 
-async function hashAndInsertUsers() {
+async function hashAndInsertUsers(): Promise<void> {
   for (const user of dummyUsers) {
     const hashedPassword = await bcrypt.hash(user.password, 10);
 

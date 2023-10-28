@@ -70,10 +70,11 @@ export const saveLearn = async (req: Request, res: Response, next: NextFunction)
    */
   try {
     const userId: number = (req.user as User).id;
-    const { wordId, correct } = req.body;
+    const wordId: number = Number(req.query.wordId);
+    const correct: boolean = Boolean(req.query.correct === "true");
 
-    if (correct === true) await studyService.updateScore(userId);
-
+    if (correct) await studyService.updateScore(userId);
+    console.log(correct);
     await studyService.saveLearn(userId, wordId, correct);
     return res.status(201).json({ message: "저장되었습니다." });
   } catch (error) {

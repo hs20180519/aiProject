@@ -70,7 +70,7 @@ export const getWordByCategory = async (
     return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
   } else {
     const totalWordCount: number = await prisma.word.count({
-      where: { category: category },
+      where: { category: category, authorId: userId },
     });
     const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
     const offset: { take: number; skip: number } = getPaginationParams(page, limit);
@@ -83,22 +83,6 @@ export const getWordByCategory = async (
 
     return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
   }
-};
-
-export const getAllWords = async (
-  page: number,
-  limit: number,
-): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
-  const totalWordCount: number = await prisma.word.count({});
-  const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
-  const offset: { take: number; skip: number } = getPaginationParams(page, limit);
-
-  const words: Word[] = await prisma.word.findMany({
-    orderBy: { word: "asc" },
-    ...offset,
-  });
-
-  return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
 };
 
 export const updateCustomBook = async (
@@ -145,10 +129,19 @@ export const deleteCustomBook = async (userId: number, customBookId: number): Pr
   return;
 };
 
+export const deleteAllCustomBook = async (userId: number): Promise<void> => {
+  await prisma.customBook.deleteMany({
+    where: {
+      userId: userId,
+    },
+  });
+};
+
 export const createCustomWordInBook = async (
   customBookId: number,
   word: string,
   meaning: string,
+  userId: number,
 ): Promise<WordDto> => {
   const createdWord: Word = await prisma.word.create({
     data: {
@@ -156,6 +149,7 @@ export const createCustomWordInBook = async (
       word: word,
       meaning: meaning,
       category: "custom",
+      authorId: userId,
     },
   });
   return plainToInstance(WordDto, createdWord);
@@ -205,4 +199,23 @@ export const deleteCustomWordInBook = async (
   await prisma.word.delete({
     where: { id: wordId },
   });
+};
+
+export const createFavoriteWord = async (userId: number, wordId: number): Promise<WordDto> => {
+  const existingWord: Word | null = await prisma.word.findUnique({ where: { id: wordId } });
+
+  if (!existingWord) {
+    throw new Error(`ID가 ${wordId}인 단어를 찾을 수 없습니다.`);
+  }
+
+  const newWord: Word = await prisma.word.create({
+    data: {
+      word: existingWord.word,
+      meaning: existingWord.meaning,
+      category: "favorite",
+      authorId: userId,
+    },
+  });
+
+  return plainToInstance(WordDto, newWord);
 };

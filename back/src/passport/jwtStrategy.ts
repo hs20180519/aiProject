@@ -1,5 +1,5 @@
 import passportJWT from "passport-jwt";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 
 const JwtStrategy = passportJWT.Strategy;
 const ExtractJwt = passportJWT.ExtractJwt;
@@ -11,9 +11,9 @@ const jwtOptions = {
 };
 
 /** @description jwt전략*/
-const jwt = new JwtStrategy(jwtOptions, async (payload, done) => {
+const jwt = new JwtStrategy(jwtOptions, async (payload, done): Promise<void> => {
   try {
-    const user = await prisma.user.findUnique({
+    const user: User | null = await prisma.user.findUnique({
       where: {
         id: payload.id,
       },

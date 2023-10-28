@@ -12,7 +12,7 @@ export const createChoices = async (word: wordInterface.Word): Promise<WordWithC
   let wordMeaning: string = `'${word.meaning}'`;
 
   const additionalMeaningsGroup: any = await prisma.$queryRaw`
-     SELECT meanings FROM MeaningGroup WHERE JSON_CONTAINS(meanings, JSON_ARRAY(${wordMeaning}), '$') = false LIMIT 1`;
+     SELECT meanings FROM MeaningGroup WHERE JSON_CONTAINS(meanings, JSON_ARRAY(${wordMeaning}), '$') = false ORDER BY RAND() LIMIT 1`;
 
   let additionalMeanings: string[] = additionalMeaningsGroup.flatMap(
     (group: { meanings: any }) => group.meanings,

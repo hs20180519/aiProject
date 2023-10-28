@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
 /** @description local 전략*/
-const local = new LocalStrategy(
+const local: LocalStrategy = new LocalStrategy(
   {
     usernameField: "email",
     passwordField: "password",

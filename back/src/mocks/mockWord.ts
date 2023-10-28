@@ -11,7 +11,7 @@ function generateRandomString(length: number): string {
   return result;
 }
 
-function generateMockData(num: number) {
+function generateMockData(num: number): any[] {
   const categories: string[] = ["csat", "toeic", "toefl"];
 
   let data: any[] = [];
@@ -45,7 +45,7 @@ async function insertMockData(dataArr: any[]): Promise<void> {
   }
 }
 
-const mockData = generateMockData(50000); // mock data 개수
+const mockData: any[] = generateMockData(50000); // mock data 개수
 
 insertMockData(mockData)
   .then((): void => {

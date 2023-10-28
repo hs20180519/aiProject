@@ -12,8 +12,8 @@ const passportLocal = (
   },
   res: Response,
   next: NextFunction,
-) => {
-  passport.authenticate("local", { session: true }, (error: Error, user: User, info: any) => {
+): void => {
+  passport.authenticate("local", { session: true }, (error: Error, user: User) => {
     if (error) {
       console.error(error);
       return next(error);
@@ -21,9 +21,9 @@ const passportLocal = (
     if (!user) {
       return res.status(400).json({ message: "유효하지 않은 사용자 입니다." });
     }
-    const secretKey = process.env.JWT_SECRET_KEY!;
-    const tokenExpires = process.env.JWT_TOKEN_EXPIRES!;
-    const token = generateJwt(
+    const secretKey: string = process.env.JWT_SECRET_KEY!;
+    const tokenExpires: string = process.env.JWT_TOKEN_EXPIRES!;
+    const token: string = generateJwt(
       {
         id: user.id,
         name: user.name,
@@ -41,7 +41,7 @@ const passportLocal = (
   })(req, res, next);
 };
 
-export default (req: Request, res: Response, next: NextFunction) => {
+export default (req: Request, res: Response, next: NextFunction): void => {
   passportLocal(
     req as Request & {
       user?: User;

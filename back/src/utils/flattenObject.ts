@@ -3,10 +3,10 @@
  * 이었는데? DTO 패턴 적용으로 이걸 사용할 일이 있을까..?*/
 export const flattenObject = (
   obj: object,
-  prefix = "",
+  prefix: string = "",
   res: Record<string, unknown> = {},
 ): Record<string, unknown> =>
   Object.entries(obj).reduce((r: Record<string, unknown>, [k, v]: [string, any]) => {
-    const key = `${prefix}${prefix ? "." : ""}${k}`;
+    const key: string = `${prefix}${prefix ? "." : ""}${k}`;
     return typeof v === "object" ? flattenObject(v as object, key, r) : { ...r, [key]: v };
   }, res);

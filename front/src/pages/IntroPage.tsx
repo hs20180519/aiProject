@@ -12,11 +12,23 @@ import {
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 
-export default function CallToActionWithAnnotation() {
+export default function IntroPage() {
   return (
     <StyledContainer>
       <Link to={"/login"}>
-        <StyledLoginHeader>{"로그인"}</StyledLoginHeader>
+        <StyledLoginHeader>
+          <Button
+            colorScheme={"green"}
+            bg={"teal.500"}
+            rounded={"full"}
+            px={6}
+            _hover={{
+              bg: "teal.400",
+            }}
+          >
+            {"로그인"}
+          </Button>
+        </StyledLoginHeader>
       </Link>
       <Container maxW={"3xl"}>
         <Stack
@@ -30,15 +42,19 @@ export default function CallToActionWithAnnotation() {
             fontSize={{ base: "2xl", sm: "4xl", md: "6xl" }}
             lineHeight={"110%"}
           >
-            Ai 튜터와 함께하는
+            AI와 함께하는 영어학습 워디!
             <br />
-            <Text as={"span"} color={"green.400"}>
+            <Text as={"span"} color={"teal.400"}>
               단어학습 Wordy
             </Text>
           </Heading>
-          <Text color={"gray.500"}>
-            단어 학습이 어려운 분들을 위해 준비했습니다. AI튜터와 함께 단어 학습을 해보세요.
-          </Text>
+          <Stack spacing={3}>
+            <Text color={"gray.500"}>
+              영포자를 위한 영단어 학습 서비스, AI와 함께하는 문법교정까지!
+            </Text>
+            <Text color={"gray.500"}>꾸준한 학습을 위한 리마인드 서비스를 제공합니다.</Text>
+            <Text color={"gray.500"}>워디로 갓생살기 시작해보세요🐶</Text>
+          </Stack>
           <Stack
             direction={"column"}
             spacing={3}
@@ -49,14 +65,14 @@ export default function CallToActionWithAnnotation() {
             <Link to={"/test"}>
               <Button
                 colorScheme={"green"}
-                bg={"green.400"}
+                bg={"teal.500"}
                 rounded={"full"}
                 px={6}
                 _hover={{
-                  bg: "green.500",
+                  bg: "teal.400",
                 }}
               >
-                Wordy 단어 학습
+                Wordy 🐾 체험하기
               </Button>
             </Link>
             <Link to={"/signup"}>
@@ -109,7 +125,7 @@ const StyledContainer = styled.div`
   height: 100%;
 `;
 
-const StyledLoginHeader = styled(Button)`
+const StyledLoginHeader = styled.div`
   position: fixed;
   top: 24px;
   right: 24px;

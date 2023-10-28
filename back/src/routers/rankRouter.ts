@@ -7,16 +7,17 @@ import Router from "express";
 // -> 학습자 개인의 랭킹도 추적할 수 있어야겠지? -> 개인 랭킹 조회
 // -> 랭킹변동을 알려줘야겠네? 어느시점에 저장하고 어느 시점에 알려주고, 어던 방식으로 알려줘야할까? -> ...
 
-const RankRouter = Router();
+// 라우터 변수는 생성자가 아니라 소문자로 변경했습니다
+const rankRouter = Router();
 
 /**유저 랭킹 목록 */
-RankRouter.get("/", rankController.getUsersRankList);
+rankRouter.get("/", rankController.getUsersRankList);
 
 /** 로그인한 유저의 랭킹 */
 // 접근못함
-RankRouter.get("/:userId", rankController.getUserRank);
+rankRouter.get("/:userId", rankController.getUserRank);
 
 /**유저 랭킹 차 가져오기*/
-RankRouter.get("/gap/:userId", rankController.getUserGapRank);
+rankRouter.get("/gap/:userId", rankController.getUserGapRank);
 
-export default RankRouter;
+export default rankRouter;

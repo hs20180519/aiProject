@@ -1,0 +1,117 @@
+import React, { useEffect, useState } from "react";
+import { FetchStudyWords } from "../../apis/studyWord";
+import { Link as RouterLink } from "react-router-dom";
+import { Tooltip, useToast, Checkbox, Button, Box, Table, Thead, Tbody, Tr, Th, Td, Text } from "@chakra-ui/react";
+import { useNavigate } from 'react-router-dom';
+
+const ResultPage = () => {
+  const [resultData, setResultData] = useState([]);
+  const [checkedWords, setCheckedWords] = useState({});
+  const [checkedCount, setCheckedCount] = useState(0);
+
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  useEffect(() => {
+    // Fetch results data from the backend when the component mounts
+    const fetchResults = async () => {
+      try {
+        const response = await FetchStudyWords.getLearnResult();
+        const resultData = response.data;
+        setResultData(resultData);
+      } catch (error) {
+        console.error("Error fetching results:", error);
+      }
+    };
+
+    fetchResults();
+  }, []);
+
+  // Calculate the number of correct answers and total answers
+  const totalAnswers = resultData.length;
+  const correctAnswers = resultData.filter((result) => result.correct).length;
+
+  const handleSendCheckedWords = () => {
+    const selectedWords = {};
+    for (const result of resultData) {
+      if (checkedWords[result.word.word]) {
+        selectedWords[result.word.word] = result.word.meaning;
+      }
+    }
+    navigate('/main/paramTestGptWordPage', { state: { receivedWords: selectedWords } });
+  };
+
+  const toggleCheckbox = (word) => {
+    setCheckedWords(prevState => {
+      const newCheckedWords = { ...prevState, [word]: !prevState[word] };
+      const newCount = Object.values(newCheckedWords).filter(Boolean).length;
+
+      if (newCount <= 3) {
+        setCheckedCount(newCount);
+        return newCheckedWords;
+      } else {
+        toast({
+          title: "Limit Reached",
+          description: "3개까지만 선택할 수 있어요",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        return prevState;
+      }
+    });
+  };
+
+  return (
+    <Box>
+      <Text fontSize="2xl" fontWeight="bold" mb={4}>
+        단어 학습 결과 (정답 개수 {correctAnswers}개 / 총 단어 개수 {totalAnswers}개)
+      </Text>
+      <Table>
+        <Thead>
+          <Tr>
+            <Th></Th>
+            <Th>번호</Th>
+            <Th>정답여부</Th>
+            <Th>단어</Th>
+            <Th>뜻</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {resultData.map((result, index) => (
+            <Tr key={index}>
+              <Td><Checkbox isChecked={checkedWords[result.word.word] || false} onChange={() => toggleCheckbox(result.word.word)} /></Td>
+              <Td>{index + 1}</Td>
+              <Td>{result.correct ? "⭕" : "❌"}</Td>
+              <Td>{result.word.word}</Td>
+              <Td>{result.word.meaning}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+      {checkedCount > 0 && ( // checkedCount가 0보다 클 때만 출력
+        <Text fontSize="sm" fontWeight="light" mb={2} color="gray.600">
+          {checkedCount} 개 선택됨
+        </Text>
+      )}
+      <Tooltip label={checkedCount === 0 ? "단어를 먼저 선택해주세요!" : ""}>
+        <Button
+          onClick={handleSendCheckedWords}
+          isDisabled={checkedCount === 0}
+          colorScheme="blue"
+          m={2}
+        >
+          스크립트로 공부하러 가기
+        </Button>
+      </Tooltip>
+      <Button as={RouterLink} to="/main/word" colorScheme="green" m={2} onClick={() => window.location.reload()}>
+        단어학습 더 하기
+      </Button>
+      <Button as={RouterLink} to="/main" colorScheme="red" m={2}>
+        학습 끝내기
+      </Button>
+    </Box>
+  );
+};
+
+export default ResultPage;

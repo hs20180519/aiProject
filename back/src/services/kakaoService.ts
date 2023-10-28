@@ -1,17 +1,6 @@
 import axios from "axios";
 
-// todo interface 경로 수정
-export interface KakaoAuthToken {
-  access_token: string;
-  refresh_token: string;
-}
-
-export interface KakaoProfile {
-  snsId: string;
-  nickname: string;
-  picture?: string | undefined;
-  email?: string | undefined;
-}
+import { KakaoAuthToken } from "../interfaces/kakaoInterface";
 
 class KakaoService {
   key: string;
@@ -24,7 +13,7 @@ class KakaoService {
   /**
    * @description 카카오 인가코드를 받기위한 URL 가져오기
    */
-  getAuthCodeURL() {
+  getAuthCodeURL(): string {
     return `https://kauth.kakao.com/oauth/authorize?client_id=${this.key}&redirect_uri=${this.redirectUri}&response_type=code`;
   }
 
@@ -48,12 +37,10 @@ class KakaoService {
 
     const { data } = await axios.post("https://kauth.kakao.com/oauth/token", params, configs);
 
-    const kakaoToken: KakaoAuthToken = {
+    return {
       access_token: data.access_token,
       refresh_token: data.refresh_token,
     };
-
-    return kakaoToken;
   }
 
   /**
@@ -72,18 +59,16 @@ class KakaoService {
       const { data } = await axios.get(url, configs);
       console.log(data);
 
-      const kakaoProfile: KakaoProfile = {
+      return {
         snsId: data.id.toString(),
         nickname: data.kakao_account.profile.nickname,
         email: data.kakao_account.email,
         picture: data.kakao_account.profile.profile_image_url,
       };
-
-      return kakaoProfile;
     } catch (e) {
       console.log(e);
     }
   }
 }
 
-export const kakaoService = new KakaoService();
+export const kakaoService: KakaoService = new KakaoService();
