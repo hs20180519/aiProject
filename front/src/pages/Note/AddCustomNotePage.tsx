@@ -22,11 +22,12 @@ import {
   putCustomWord,
   getNoteDetail,
 } from "../../apis/customWord";
+import WordBox from "./Components/WordBox";
 
 /** 단어 하나가 추가되면 편집 창이 생기는 로직만들어야함 */
 export default function CustomNoteAddPage() {
   const [empty, setEmpty] = useState(false);
-  const [disable, setDisable] = useState(true);
+  const [disable, setDisable] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
   const [title, setTitle] = useState("");
   const [userCustomWord, setUserCustomWord] = useState<type.SubmitCustomWord>({
@@ -44,10 +45,16 @@ export default function CustomNoteAddPage() {
     console.log(res);
     setTitle(res.data);
   }
+
+  const fetchWord = (data) => {
+    const res = postCustomWord("?s", data);
+  };
   /**단어 업데이트 될때 목록 출력하는 api */
   useEffect(() => {
     const data = getNoteDetail(`?book=custom&customBookId="${getCustomWord}"`);
   }, []);
+  console.log("-------이건 뭐지?---------");
+  console.log(word);
 
   return (
     <Flex
@@ -68,13 +75,15 @@ export default function CustomNoteAddPage() {
           w="360px"
         >
           <FormControl id="custom-book">
-            <Input
+            <Input //왜 입력이 안되징?
               type="text"
               placeholder="단어장 이름"
+              value={title}
               disabled={disable}
               onChange={(e) => {
                 e.preventDefault();
                 setDisable(false);
+                setTitle(title);
               }}
             />
           </FormControl>
