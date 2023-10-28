@@ -1,9 +1,10 @@
 import { CustomBook, PrismaClient, Word } from "@prisma/client";
-const prisma = new PrismaClient();
 import { BookDto, BooksDto } from "../dtos/bookDto";
 import { plainToInstance } from "class-transformer";
 import getPaginationParams from "../utils/getPaginationParams";
 import { WordDto, WordProgressDto } from "../dtos/wordDto";
+
+const prisma = new PrismaClient();
 
 export const createBook = async (userId: number, title: string): Promise<BookDto> => {
   const createdBook = prisma.customBook.create({
@@ -220,4 +221,16 @@ export const createFavoriteWord = async (userId: number, wordId: number): Promis
   });
 
   return plainToInstance(WordDto, newWord);
+};
+
+export const deleteAllFavoriteWord = async (userId: number) => {
+  return prisma.word.deleteMany({
+    where: { authorId: userId },
+  });
+};
+
+export const deleteFavoriteWord = async (userId: number, wordId: number) => {
+  return prisma.word.delete({
+    where: { id: wordId, authorId: userId },
+  });
 };
