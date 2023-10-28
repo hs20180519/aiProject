@@ -70,13 +70,15 @@ export const getWordByCategory = async (
     return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
   } else {
     const totalWordCount: number = await prisma.word.count({
-      where: { category: category, authorId: userId },
+      where:
+        category === "favorite" ? { category: category, authorId: userId } : { category: category },
     });
     const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
     const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
     const words: Word[] = await prisma.word.findMany({
-      where: { category: category },
+      where:
+        category === "favorite" ? { category: category, authorId: userId } : { category: category },
       orderBy: { word: "asc" },
       ...offset,
     });
