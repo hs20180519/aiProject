@@ -1,9 +1,10 @@
 import { CustomBook, PrismaClient, Word } from "@prisma/client";
-const prisma = new PrismaClient();
 import { BookDto, BooksDto } from "../dtos/bookDto";
 import { plainToInstance } from "class-transformer";
 import getPaginationParams from "../utils/getPaginationParams";
 import { WordDto, WordProgressDto } from "../dtos/wordDto";
+
+const prisma = new PrismaClient();
 
 export const createBook = async (userId: number, title: string): Promise<BookDto> => {
   const createdBook = prisma.customBook.create({
@@ -70,13 +71,15 @@ export const getWordByCategory = async (
     return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
   } else {
     const totalWordCount: number = await prisma.word.count({
-      where: { category: category, authorId: userId },
+      where:
+        category === "favorite" ? { category: category, authorId: userId } : { category: category },
     });
     const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
     const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
     const words: Word[] = await prisma.word.findMany({
-      where: { category: category },
+      where:
+        category === "favorite" ? { category: category, authorId: userId } : { category: category },
       orderBy: { word: "asc" },
       ...offset,
     });
@@ -218,4 +221,16 @@ export const createFavoriteWord = async (userId: number, wordId: number): Promis
   });
 
   return plainToInstance(WordDto, newWord);
+};
+
+export const deleteAllFavoriteWord = async (userId: number) => {
+  return prisma.word.deleteMany({
+    where: { authorId: userId },
+  });
+};
+
+export const deleteFavoriteWord = async (userId: number, wordId: number) => {
+  return prisma.word.delete({
+    where: { id: wordId, authorId: userId },
+  });
 };

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as storageService from "../services/storageService";
+import { User } from "@prisma/client";
 
 export const getAllWords = async (req: Request, res: Response, next: NextFunction) => {
   /**

@@ -214,6 +214,13 @@ export const deleteCustomWordInBook = async (req: Request, res: Response, next: 
 };
 
 export const createFavoriteWordInBook = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Book']
+   * #swagger.summary = '즐겨찾기 추가 ?wordId='
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
   try {
     const userId: number = (req.user as User).id;
     const wordId: number = Number(req.query.wordId);
@@ -223,5 +230,28 @@ export const createFavoriteWordInBook = async (req: Request, res: Response, next
   } catch (error) {
     console.error(error);
     return next(error);
+  }
+};
+
+export const deleteFavoriteWord = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Book']
+   * #swagger.summary = '즐겨찾기 단어 삭제. ?wordId&all / all="true" 요청 시 유저의 모든 즐겨찾기 단어 삭제'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
+  try {
+    const userId: number = (req.user as User).id;
+    const wordId: number = Number(req.query.wordId);
+    const all: boolean = Boolean(req.query.all === "true");
+
+    if (all) await bookService.deleteAllFavoriteWord(userId);
+    else await bookService.deleteFavoriteWord(userId, wordId);
+
+    return res.status(200).json({ message: "즐겨찾기 단어 삭제 완료" });
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 };
