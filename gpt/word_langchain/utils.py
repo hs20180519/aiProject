@@ -24,6 +24,8 @@ def check_words_in_dialog(word_list, dialog):
     dialog_content = ' '.join([item.message for item in dialog.dialog]).lower()
     logging.info(f"Dialog content: {dialog_content}")
     for word in word_list:
+        # 이 표현식은 변수 word로 시작하고 그 뒤에 소문자가 올 수 있는 단어를 찾는다.
+        # 예: word = "cat"이면 "cat", "cats", "catty" 등을 찾는다.
         pattern = re.compile(rf'\b{word.lower()}[a-z]*\b')
         match = pattern.search(dialog_content)
         logging.info(f"Searching for word: {word}, Match found: {match}")

@@ -24,7 +24,8 @@ def generate_dialog(llm_chain, variable_dict, selected_word_dict, retries=DEFAUL
         logging.info(f'{generated_result.generations}')
         logging.info(f'{generated_result.llm_output}')
 
-        dialog_fixed_json = re.sub(r',\s*([\]}])', r'\1', generated_result.generations[0][0].text)
+        # 배열이나 객체의 마지막에 위치한 쉼표(trailing comma) 제거
+        dialog_fixed_json = re.sub(r',\s*([]}])', r'\1', generated_result.generations[0][0].text)
 
         try:
             dialog_response_content = dialog_parser.parse(dialog_fixed_json)
