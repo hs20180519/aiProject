@@ -5,6 +5,7 @@ interface NoteTitleProps {
 interface NoteListProps {
   noteList: NoteTitleProps[];
   isEditing: boolean;
+  onClick: (e) => Promise<void>;
 }
 
 interface WordsProps {

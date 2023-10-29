@@ -1,4 +1,5 @@
-import { Box, FormControl, Input, Stack, Text, Button, useColorModeValue } from "@chakra-ui/react";
+import { Box, Stack, useColorModeValue } from "@chakra-ui/react";
+import WordInput from "../Components/WordInput";
 import Btn from "../../../components/Btn";
 
 /** 커스텀 단어장 추가하는 카드 */
@@ -14,20 +15,8 @@ export default function AddCustomNoteCard({ isItAdd, setIsItAdd, customWord, onC
           w="360px"
         >
           <Stack spacing={4}>
-            <FormControl id="word">
-              <Input id="word" type="text" placeholder="추가할 단어" value={customWord.word} />
-            </FormControl>
-            <FormControl id="mean">
-              <Input
-                id="meaning"
-                type="text"
-                placeholder="추가할 단어의 뜻, 의미"
-                value={customWord.meaning}
-              />
-            </FormControl>
-            <Stack spacing={10}>
-              <Btn text="단어 추가" onClick={onClick} variant="solid" />
-            </Stack>
+            <WordInput text1="추가할 단어" text2="단어의 뜻, 의미" value={customWord} />
+            <Btn text="단어 추가" onClick={onClick} variant="solid" type="submit" />
           </Stack>
         </Box>
       )}

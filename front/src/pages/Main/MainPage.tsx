@@ -66,7 +66,11 @@ const MainPage = () => {
 
   return (
     <Box minH={"100vh"} bg={useColorModeValue("gray.100", "gray.900")}>
-      <SidebarContent onClose={onClose} display={{ base: "none", md: "block" }} />
+      <SidebarContent
+        onClose={onClose}
+        display={{ base: "none", md: "block" }}
+        position={"fixed"}
+      />
       <Header isOpen={isOpen} onClose={onClose} />
       <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
