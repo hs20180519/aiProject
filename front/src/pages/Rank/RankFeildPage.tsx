@@ -3,28 +3,37 @@ import styled from "@emotion/styled";
 import RankList from "./RankItem";
 import * as Api from "../../apis/api";
 import Loading from "../../components/Loading";
-
-const USER_RANK = [
-  { id: 1, nickname: "진채영짱짱맨", score: 97 },
-  { id: 2, nickname: "진채영최강맨", score: 99 },
-  { id: 3, nickname: "지존채영", score: 98 },
-  { id: 4, nickname: "최강채영", score: 100 },
-];
+import Pagination from "../../components/Pagination";
 
 export default function RankFeildPage() {
   const [loading, setLoading] = useState(false);
-  // const [usersRank, setUsersRank] = useState([]);
+  const [usersRank, setUsersRank] = useState([]);
 
-  const fetchUserRanks = async () => {
+  // Pagination
+  const limit = 3;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pagingIndex, setPagingIndex] = useState(1);
+
+  const fetchUserRanks = async (page = 1) => {
     setLoading(true);
-    const res = await Api.get("/rank");
+    const res = await Api.get(`/rank`);
     const data = res?.data;
     if (Array.isArray(data)) {
-      //   setUsersRank(data);
-      // } else {
-      //   setUsersRank([]);
+      setUsersRank(data);
+    } else {
+      setUsersRank([]);
     }
     setLoading(false);
+  };
+
+  /** 페이지네이션 핸들링 */
+  const handleChangePage = (page: number) => {
+    fetchUserRanks(page);
+  };
+  const handleChangePaingIndex = (pagingIndex: number) => {
+    const range = pagingIndex === 1 ? 0 : (pagingIndex - 1) * limit;
+    setPagingIndex(pagingIndex);
   };
 
   useEffect(() => {
@@ -33,7 +42,19 @@ export default function RankFeildPage() {
 
   if (loading) return <Loading />;
 
-  return <RankList rankList={USER_RANK} />;
+  return (
+    <>
+      <RankList rankList={usersRank} />
+      <Pagination
+        pagingIndex={pagingIndex}
+        currentPage={currentPage}
+        limit={limit}
+        handleChangePage={handleChangePage}
+        handleChangePaginIndex={handleChangePaingIndex}
+        totalPage={101}
+      />
+    </>
+  );
 }
 
 const StyledLoading = styled.div`

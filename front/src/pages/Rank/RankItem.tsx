@@ -15,12 +15,12 @@ const RankItem = ({ rankList }: RankListProps) => {
   return (
     <>
       {rankList.map((rank: RankItemProps, index: number) => (
-        <Grid templateColumns="repeat(3, 1fr)" gap={6}>
-          <Box key={rank.id} w="100px" bg="white">
+        <Grid templateColumns="repeat(3, 1fr)" gap={2}>
+          <Box key={rank.id} bg="white" w="50px">
             <Text>{index + 1}등</Text>
           </Box>
           <Spacer />
-          <Box w="100px">
+          <Box>
             <Text> {rank.nickname}</Text>
           </Box>
           <Spacer />
