@@ -1,15 +1,5 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  FormControl,
-  HStack,
-  Flex,
-  Input,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, ButtonGroup, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import WordInput from "../Components/WordInput";
 import Btn from "../../../components/Btn";
 
 export default function CustomWordBox({ words, isEditing, setIsEditing }) {
@@ -25,8 +15,7 @@ export default function CustomWordBox({ words, isEditing, setIsEditing }) {
             w="360px"
           >
             <Stack spacing={4}>
-              <Input placeholder="단어" />
-              <Input placeholder="뜻, 의미" />
+              <WordInput text1={words.word} text2={words.meaning} value={words} />
             </Stack>
             <ButtonGroup mt={5}>
               <Btn text="저장" onClick={() => setIsEditing((prev) => !prev)} />

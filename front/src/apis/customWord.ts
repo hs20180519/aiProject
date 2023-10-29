@@ -51,6 +51,17 @@ export const delCustomNote = async (queryParams: string) => {
   }
 };
 
+/** 커스텀 단어장 전체 삭제 */
+export const delAllCustomNote = async () => {
+  const url = `/book`;
+  try {
+    const res = await Api.delete(url);
+    return res;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 /**
  * 커스텀 단어장에 단어 추가
  * query?customBookId=id

@@ -1,7 +1,5 @@
 import { Box, Text, useColorModeValue, VStack, StackDivider, Stack } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
 import * as type from "../../../apis/types/custom";
-import styled from "@emotion/styled";
 import BookmarkBtn from "../../../components/BookmarkBtn";
 
 /** 단어와 뜻을 표시하는 상자입니다. */
