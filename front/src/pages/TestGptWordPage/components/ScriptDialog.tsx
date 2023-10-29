@@ -25,15 +25,19 @@ const highlightWords = (text: string, selectedWords: Record<string, string>) => 
         const meaning = selectedWords[foundKey];
         return (
           <Tooltip label={meaning} key={index}>
-            <span
+            <Text
+              as="span"
+              fontStyle="italic"
+              fontWeight="600"
               style={{
-                backgroundColor: "yellow",
-                fontStyle: "italic",
-                textDecoration: "underline",
+                backgroundImage: "linear-gradient(transparent 60%, #F8CD07 40%)",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "100% 15px",
+                backgroundPosition: "0 100%",
               }}
             >
               {word}
-            </span>
+            </Text>
           </Tooltip>
         );
       }
