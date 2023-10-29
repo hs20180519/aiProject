@@ -149,7 +149,6 @@ export const createCustomWordInBook = async (req: Request, res: Response, next: 
    * }]
    */
   try {
-    const userId: number = (req.user as User).id;
     const customBookId: number = Number(req.query.customBookId);
     const { word, meaning } = req.body;
 
@@ -157,7 +156,6 @@ export const createCustomWordInBook = async (req: Request, res: Response, next: 
       customBookId,
       word,
       meaning,
-      userId,
     );
     return res.status(201).json(createdCustomWordInBook);
   } catch (error) {
@@ -252,6 +250,6 @@ export const deleteFavoriteWord = async (req: Request, res: Response, next: Next
     return res.status(200).json({ message: "즐겨찾기 단어 삭제 완료" });
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };

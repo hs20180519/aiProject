@@ -23,7 +23,7 @@ model User {
   customBook   CustomBook[]
   rank         Rank[]
   wordProgress WordProgress[]
-  Word         Word[]
+  Favorite     Favorite[]
 }
 
 model VerifiCode {
@@ -36,19 +36,28 @@ model VerifiCode {
 
 model Word {
   id           Int            @id @default(autoincrement())
-  word         String         @db.VarChar(30)
+  word         String         @unique @db.VarChar(30)
   meaning      String         @db.VarChar(100)
   category     String
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   customBookId Int?
   customBook   CustomBook?    @relation(fields: [customBookId], references: [id], onDelete: Cascade)
-  author       User?          @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId     Int?
   wordProgress WordProgress[]
+  favorite     Favorite[]
 
   @@index([category, customBookId])
   @@index([customBookId], map: "Word_customBookId_fkey")
+}
+
+model Favorite {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  wordId Int
+  user   User @relation(fields: [userId], references: [id])
+  word   Word @relation(fields: [wordId], references: [id])
+
+  @@index([userId, wordId])
 }
 
 model MeaningGroup {

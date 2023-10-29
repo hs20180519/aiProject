@@ -12,9 +12,10 @@ export const getAllWords = async (req: Request, res: Response, next: NextFunctio
    * }]
    */
   try {
+    const userId: number = (req.user as User).id;
     const page: number = req.query.page ? Number(req.query.page) : 1;
     const limit: number = req.query.llimit ? Number(req.query.limit) : 10;
-    const words = await storageService.getAllWords(page, limit);
+    const words = await storageService.getAllWords(userId, page, limit);
     return res.status(200).json(words);
   } catch (error) {
     console.error(error);
