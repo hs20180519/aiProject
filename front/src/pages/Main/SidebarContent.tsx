@@ -1,5 +1,5 @@
 import { Box, CloseButton, Flex, useColorModeValue, Text, BoxProps } from "@chakra-ui/react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import {
   FiEdit2,
   FiStar,
@@ -36,9 +36,11 @@ export default function SidebarContent({ onClose, ...rest }: type.SidebarProps) 
       {...rest}
     >
       <Flex h={"20"} alignItems={"center"} mx={"8"} justifyContent={"space-between"}>
-        <Text fontSize={"2xl"} fontFamily={"monospace"} fontWeight={"bold"}>
-          {"🐾Wordy\r"}
-        </Text>
+        <Link to="/main">
+          <Text fontSize={"2xl"} fontFamily={"monospace"} fontWeight={"bold"}>
+            {"🐾Wordy\r"}
+          </Text>
+        </Link>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link: type.LinkItemProps) => (

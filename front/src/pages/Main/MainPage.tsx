@@ -74,7 +74,7 @@ const MainPage = () => {
           <Route path="word" element={<WordPage />} />
           <Route path="notes" element={<NoteListPage />} />
           <Route path="note/:note_id" element={<NoteDetailPage />} />
-          <Route path="note_add" element={<AddCustomNotePage />} />
+          <Route path="note_add/:note_id" element={<AddCustomNotePage />} />
           <Route path="rank" element={<RankFeildPage />} />
           <Route path="grammar/:word" element={<GrammarPage />} />
           <Route path="gpt_dialog" element={<GptDialogPage />} />

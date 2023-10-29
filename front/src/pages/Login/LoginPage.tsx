@@ -65,7 +65,7 @@ const LoginPage = () => {
             title: `로그인 성공!`,
             status: "success",
             isClosable: true,
-            duration: TOAST_TIMEOUT_INTERVAL - 300,
+            duration: TOAST_TIMEOUT_INTERVAL,
           });
           navigate("/main", { replace: true });
         } else {
@@ -82,40 +82,6 @@ const LoginPage = () => {
     }
   };
 
-  // const handleSubmit = async (e: SyntheticEvent) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const res = await Api.post("/auth", {
-  //       email,
-  //       password,
-  //     });
-
-  //     if (res.status === 200) {
-  //       const jwtToken = res.data.token;
-  //       sessionStorage.setItem("userToken", jwtToken);
-
-  //       // 서버에서 로그인 실패 시 오류 메시지가 JSON 객체로 반환?
-  //       if (res.data.errorMessage) {
-  //         const errorResponse = JSON.stringify(res.data.errorMessage);
-  //         window.alert(errorResponse);
-  //       } else {
-  //         const userInfo = await Api.get("/user");
-  //         if (userTypeGuard(userInfo.data)) {
-  //           dispatch({ type: "LOGIN_SUCCESS", payload: userInfo.data });
-  //           navigate("/main", { replace: true });
-  //         } else {
-  //           window.alert("유저 정보가 잘못되었습니다.");
-  //         }
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.log("catch");
-  //     const objectErr = err as any;
-  //     window.alert(objectErr.response.data);
-  //   }
-  // };
-
   const navigateToIntroPage = () => {
     navigate("/");
   };
@@ -129,13 +95,13 @@ const LoginPage = () => {
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"md"} p={8}>
-          <Heading fontSize={"4xl"} textAlign={"center"}>
+          <Heading fontSize={"4xl"} textAlign={"center"} color={"teal.600"}>
             워디 로그인
           </Heading>
           <Stack spacing={10} pt={5}>
             <form onSubmit={handleSubmit}>
               <FormControl id="email">
-                <FormLabel>이메일</FormLabel>
+                <FormLabel color={"gray.600"}>이메일</FormLabel>
                 <Input
                   type="text"
                   placeholder="이메일을 입력하세요."
@@ -147,7 +113,7 @@ const LoginPage = () => {
                 )}
               </FormControl>
               <FormControl id="password">
-                <FormLabel>비밀번호</FormLabel>
+                <FormLabel color={"gray.600"}>비밀번호</FormLabel>
                 <Input
                   type="password"
                   placeholder="비밀번호를 입력하세요."

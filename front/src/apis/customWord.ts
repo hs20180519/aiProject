@@ -6,13 +6,7 @@ export async function postCustomNote(data: { title: string }) {
   const url = "/book";
   try {
     const res = await Api.post(url, data);
-    const status = res.status;
-    if (status === 201) {
-      console.log(`단어장 생성 완료! 단어를 추가해 보세요.`, res);
-      return res;
-    } else if (status === 400) {
-      console.log(`잘못된 요청입니다.`, res);
-    }
+    return res;
   } catch (e) {
     console.error(e);
   }
@@ -23,12 +17,8 @@ export const getCustomNotes = async () => {
   const url = "/book";
   try {
     const res = await Api.get(url);
-    const status = res.status;
-    if (status === 200) {
-      return res;
-    } else if (status === 204) {
-      console.log(`커스텀 단어장 리스트가 없습니다.`);
-    }
+
+    return res;
   } catch (e) {
     console.error(e);
   }
@@ -39,13 +29,7 @@ export const putCustomNote = async (data: { title: string }) => {
   const url = `/book`;
   try {
     const res = await Api.put(url, data);
-    const status = res.status;
-    if (status === 200) {
-      console.log(status, `단어장 이름 수정 완료!`);
-      return res;
-    } else if (status === 400) {
-      console.log("잘못된 요청입니다.", status);
-    }
+    return res;
   } catch (e) {
     console.error(e as AxiosError);
   }
@@ -61,10 +45,7 @@ export const delCustomNote = async (queryParams: string) => {
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
     const res = await Api.delete(fullUrl);
-    if (res.status === 200) {
-      console.log(`----삭제완료----`);
-      return res;
-    }
+    return res;
   } catch (e) {
     console.error(e);
   }
@@ -84,12 +65,7 @@ export const postCustomWord = async (
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
     const res = await Api.post(fullUrl, data);
-    if (res.status === 201) {
-      console.log(`단어 추가 완료`, res);
-      return res;
-    } else if (res.status === 400) {
-      console.log(`잘못된 요청입니다.`, res.status);
-    }
+    return res;
   } catch (e) {
     console.error(e);
   }
@@ -110,16 +86,8 @@ export const getNoteDetail = async (queryParams: string) => {
   const url = `/book/word`;
   const queryString = new URLSearchParams(queryParams).toString();
   const fullUrl = `${url}?${queryString}`;
-  console.log(fullUrl);
-  try {
-    const res = await Api.get(fullUrl);
-    if (res.status === 200) {
-      console.log(`성공적으로 단어 목록을 가져왔습니다.`, res);
-      return res;
-    }
-  } catch (e) {
-    console.error(e);
-  }
+  const res = await Api.get(fullUrl);
+  return res;
 };
 
 /**
@@ -136,10 +104,7 @@ export const putCustomWord = async (
   const fullUrl = `${url}?${queryString}`;
   try {
     const res = await Api.put(fullUrl, data);
-    if (res.status === 200) {
-      console.log(`성공적으로 단어가 업데이트 되었습니다.`, res);
-      return res;
-    }
+    return res;
   } catch (e) {
     console.error(e);
   }
@@ -155,12 +120,7 @@ export const delCustomWord = async (queryParams: string) => {
   const fullUrl = `${url}?${queryString}`;
   try {
     const res = await Api.delete(fullUrl);
-    if (res.status === 200) {
-      console.log(`단어 삭제 완료!`, res);
-      return res;
-    } else if (res.status === 400) {
-      console.log(`잘못된 요청입니다.`, res);
-    }
+    return res;
   } catch (e) {
     console.log(e);
   }

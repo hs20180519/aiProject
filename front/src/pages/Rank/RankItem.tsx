@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { ListProps, Box } from "@chakra-ui/react";
+import { ListProps, Box, Flex, Center, Text, Square, Spacer, Grid } from "@chakra-ui/react";
 
 interface RankListProps extends ListProps {
   rankList: RankItemProps[];
@@ -15,10 +15,19 @@ const RankItem = ({ rankList }: RankListProps) => {
   return (
     <>
       {rankList.map((rank: RankItemProps, index: number) => (
-        <Box key={rank.id}>
-          <p>{index + 1}등</p>
-          <p> {rank.nickname}</p> <p>{rank.score}</p>
-        </Box>
+        <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+          <Box key={rank.id} w="100px" bg="white">
+            <Text>{index + 1}등</Text>
+          </Box>
+          <Spacer />
+          <Box w="100px">
+            <Text> {rank.nickname}</Text>
+          </Box>
+          <Spacer />
+          <Box key={rank.id} w="100px">
+            <Text>{rank.score}</Text>
+          </Box>
+        </Grid>
       ))}
     </>
   );

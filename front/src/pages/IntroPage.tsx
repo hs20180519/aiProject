@@ -4,31 +4,20 @@ import {
   Heading,
   Container,
   Text,
-  Button,
   Stack,
   Icon,
   useColorModeValue,
   createIcon,
 } from "@chakra-ui/react";
-import styled from "@emotion/styled";
+import Btn from "../components/Btn";
 
 export default function IntroPage() {
   return (
-    <StyledContainer>
+    <>
       <Link to={"/login"}>
-        <StyledLoginHeader>
-          <Button
-            colorScheme={"green"}
-            bg={"teal.500"}
-            rounded={"full"}
-            px={6}
-            _hover={{
-              bg: "teal.400",
-            }}
-          >
-            {"로그인"}
-          </Button>
-        </StyledLoginHeader>
+        <div style={{ position: "fixed", top: 24, right: 24 }}>
+          <Btn rounded={"full"} px={6} text="로그인" />
+        </div>
       </Link>
       <Container maxW={"3xl"}>
         <Stack
@@ -63,7 +52,8 @@ export default function IntroPage() {
             position={"relative"}
           >
             <Link to={"/test"}>
-              <Button
+              <Btn
+                text=" Wordy 🐾 체험하기"
                 colorScheme={"green"}
                 bg={"teal.500"}
                 rounded={"full"}
@@ -71,14 +61,10 @@ export default function IntroPage() {
                 _hover={{
                   bg: "teal.400",
                 }}
-              >
-                Wordy 🐾 체험하기
-              </Button>
+              />
             </Link>
             <Link to={"/signup"}>
-              <Button variant={"link"} colorScheme={"blue"} size={"sm"}>
-                회원가입
-              </Button>
+              <Btn text="회원가입" variant={"link"} colorScheme={"blue"} size={"sm"} />
             </Link>
             <Box>
               <Icon
@@ -103,7 +89,7 @@ export default function IntroPage() {
           </Stack>
         </Stack>
       </Container>
-    </StyledContainer>
+    </>
   );
 }
 
@@ -119,14 +105,3 @@ const Arrow = createIcon({
     />
   ),
 });
-
-const StyledContainer = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
-const StyledLoginHeader = styled.div`
-  position: fixed;
-  top: 24px;
-  right: 24px;
-`;

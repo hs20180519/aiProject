@@ -1,10 +1,11 @@
-import { Box, Text, useColorModeValue, VStack, StackDivider } from "@chakra-ui/react";
+import { Box, Text, useColorModeValue, VStack, StackDivider, Stack } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import * as type from "../../../apis/types/custom";
-import { AiTwotoneStar } from "react-icons/ai";
+import styled from "@emotion/styled";
+import BookmarkBtn from "../../../components/BookmarkBtn";
 
 /** 단어와 뜻을 표시하는 상자입니다. */
-export default function WordBox({ words, isEditing }) {
+export default function WordBox({ words, isEditing, isBookmarked }) {
   return (
     <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
       {words.map((word: type.WordsProps) => (
@@ -20,9 +21,15 @@ export default function WordBox({ words, isEditing }) {
           borderRadius="lg"
           id={word.id}
         >
-          <Text fontSize="xl">{word.word}</Text>
-          <Text fontSize="xl">{word.meaning}</Text>
-          <AiTwotoneStar />
+          <Stack direction="row" mt={-3}>
+            <Text fontSize="xl" right={24}>
+              {word.word}
+            </Text>
+            <Text fontSize="xl" position={"absolute"} right={24}>
+              {word.meaning}
+            </Text>
+            <BookmarkBtn isBookmarked={isBookmarked} />
+          </Stack>
         </Box>
       ))}
     </VStack>
