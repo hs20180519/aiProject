@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { DeleteIcon } from "@chakra-ui/icons";
 import * as type from "../../../apis/types/custom";
 
-/** 단어장 타이틀 상자입니다. */
+/** 단어장 상자입니다. */
 export default function NoteListBox({ noteList, isEditing }: type.NoteListProps) {
   return (
     <>

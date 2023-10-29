@@ -75,7 +75,7 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
                 >
                   <Text fontSize={"sm"}>{nickname}</Text>
                   <Text fontSize={"xs"} color={"gray.600"}>
-                    {"1팀\r"}
+                    {"Happy Wordy!\r"}
                   </Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
@@ -87,7 +87,9 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
               bg={useColorModeValue("white", "gray.900")}
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
-              <MenuItem as={ReactRouterLink} to="/main/mypage">{"프로필"}</MenuItem>
+              <MenuItem as={ReactRouterLink} to="/main/mypage">
+                {"프로필"}
+              </MenuItem>
               {/* <MenuItem>{"설정"}</MenuItem> */}
               <MenuDivider />
               <MenuItem onClick={onLogout}>{"로그아웃"}</MenuItem>
