@@ -8,6 +8,7 @@ import {
   Icon,
   useColorModeValue,
   createIcon,
+  Image,
 } from "@chakra-ui/react";
 import Btn from "../components/Btn";
 
@@ -19,6 +20,25 @@ export default function IntroPage() {
           <Btn rounded={"full"} px={6} text="로그인" />
         </div>
       </Link>
+      <Image
+        position="absolute"
+        mt={200}
+        left={-200}
+        transform={"rotate( 120deg )"}
+        zIndex={-9999}
+        w={400}
+        src={`${process.env.PUBLIC_URL}/images/hedgehog.png`}
+        alt={"고슴도치"}
+      />
+      <Image
+        position="absolute"
+        mt={450}
+        right={28}
+        zIndex={-9999}
+        w={600}
+        src={`${process.env.PUBLIC_URL}/images/dogs.png`}
+        alt="강아지들"
+      />
       <Container maxW={"3xl"}>
         <Stack
           as={Box}
@@ -79,14 +99,15 @@ export default function IntroPage() {
                 fontSize={"lg"}
                 fontFamily={"Caveat"}
                 position={"absolute"}
-                right={"-125px"}
-                top={"-15px"}
+                right={"-120px"}
+                top={"-20px"}
                 transform={"rotate(10deg)"}
               >
                 Wordy와 함께 단어공부!
               </Text>
             </Box>
           </Stack>
+          <Stack direction="row"></Stack>
         </Stack>
       </Container>
     </>

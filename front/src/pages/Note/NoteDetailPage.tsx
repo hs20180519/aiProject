@@ -1,16 +1,9 @@
 /* eslint-diabled */
-import {
-  Stack,
-  Heading,
-  Grid,
-  Spacer,
-  InputGroup,
-  InputLeftElement,
-  HStack,
-} from "@chakra-ui/react";
+import { Stack, Heading, HStack, useToast } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { getNoteDetail } from "../../apis/customWord";
 import { useState, useEffect } from "react";
+import * as Api from "../../apis/api";
 import WordBox from "./Components/WordBox";
 import { stringify } from "querystring";
 import Pagination from "../../components/Pagination";
@@ -22,9 +15,12 @@ const NOTE_LIST = [
   { id: "incorrect", title: "틀린 단어" },
 ];
 
+const TOAST_TIMEOUT_INTERVAL = 700;
+
 /** 단어 상세보기 페이지입니다. */
 export default function NoteDetailPage() {
   const { note_id } = useParams();
+  const toast = useToast();
 
   /**SelectNote */
   const [category, setCategory] = useState([]);
@@ -72,10 +68,44 @@ export default function NoteDetailPage() {
     console.log(e.target.value);
   };
 
-  /** api완성후 연결 예정 */
-  function fetchBookmark() {
-    setIsBookmarked(true);
-  }
+  /** 즐겨찾기 추가 */
+  const fetchBookmark = async () => {
+    const data = "wordId";
+    try {
+      const res = await Api.post("/favorite", data);
+      if (res.status === 201) {
+        setIsBookmarked(true);
+        toast({
+          title: `즐겨찾기 추가완료!`,
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // delete api 새로 만들기
+  /** 즐겨찾기 삭제 */
+  const fetchDelBookmark = async () => {
+    const data = "wordId";
+    try {
+      const res = await Api.delete("/favorite");
+      if (res.status === 200) {
+        setIsBookmarked(false);
+        toast({
+          title: `즐겨찾기 단어 삭제 완료!`,
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   /** 페이지네이션 핸들링 */
   const handleChangePage = (page: number) => {

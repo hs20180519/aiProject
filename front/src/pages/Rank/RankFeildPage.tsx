@@ -4,6 +4,7 @@ import RankList from "./RankItem";
 import * as Api from "../../apis/api";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
+import { Box, Heading } from "@chakra-ui/react";
 
 export default function RankFeildPage() {
   const [loading, setLoading] = useState(false);
@@ -37,13 +38,20 @@ export default function RankFeildPage() {
   };
 
   useEffect(() => {
-    fetchUserRanks();
+    if (usersRank) {
+      fetchUserRanks();
+    } else {
+      console.log("랭킹 유저가 없습니다.");
+    }
   }, []);
 
   if (loading) return <Loading />;
 
   return (
     <>
+      <Box>
+        <Heading>Wordy 랭킹</Heading>
+      </Box>
       <RankList rankList={usersRank} />
       <Pagination
         pagingIndex={pagingIndex}
@@ -56,16 +64,3 @@ export default function RankFeildPage() {
     </>
   );
 }
-
-const StyledLoading = styled.div`
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-
-  .loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-`;

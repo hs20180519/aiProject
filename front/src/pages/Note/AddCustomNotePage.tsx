@@ -5,7 +5,6 @@ import {
   Input,
   Stack,
   HStack,
-  Text,
   Spacer,
   Heading,
   useColorModeValue,
@@ -13,11 +12,9 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import { isStringLiteral } from "typescript";
 import AddCustomNote from "./Components/AddCustomNote";
 import * as type from "../../apis/types/custom";
 import {
-  postCustomNote,
   putCustomNote,
   postCustomWord,
   putCustomWord,
@@ -30,8 +27,6 @@ import CustomWordBox from "./Components/CustomWordBox";
 
 const TOAST_TIMEOUT_INTERVAL = 700;
 
-// todo 단어장 title input입력시 redirect되는 에러 해결하기
-// 생성된 커스텀단어id 값 확인
 export default function CustomNoteAddPage() {
   const { note_id } = useParams();
   const navigate = useNavigate();
@@ -68,12 +63,16 @@ export default function CustomNoteAddPage() {
     }
   };
 
-  /** 단어추가하는 함수 */
-  const fetchWord = async (data) => {
-    const res = await postCustomWord(`?`, data); // todo 단어장 id받기
+  /** 단어추가하는 API */
+  const fetchWordAdd = async (data) => {
+    try {
+      const res = await postCustomWord(`bookId=${note_id}`, data);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  /** 해당 단어장 목록 가져오는 함수 */
+  /** 해당 단어장 목록 가져오는 API */
   const fetchWordList = async () => {
     try {
       const url = `customBookId=${note_id}`;
@@ -85,6 +84,20 @@ export default function CustomNoteAddPage() {
     }
   };
 
+  /** 단어 수정하는 API */
+  const fetchEditWord = async (data) => {
+    let word_id;
+    try {
+      const res = await putCustomWord(`customBookId=${note_id}?wordId=${word_id}`, data);
+      if (res.status === 200) {
+        console.log("단어 수정완료");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  /** 생성된 단어장 삭제 API */
   const fetchDelNote = async () => {
     const url = `customBookId=${note_id}`;
     try {
@@ -103,16 +116,22 @@ export default function CustomNoteAddPage() {
     }
   };
 
+  /** 단어추가 함수 */
+  const addWord = (e) => {
+    const data = e.target;
+    fetchWordAdd(data);
+  };
+
   useEffect(() => {
     fetchWordList();
-  }, []);
+  }, [words]);
 
   return (
     <>
       <Flex minWidth="max-content" alignItems="center" gap="2" mb="5">
         <Btn text="단어장 삭제" colorScheme="red" onClick={fetchDelNote} />
         <Spacer />
-        <Btn text="단어장 저장" onClick={navigate("/main/notes")} />
+        <Btn text="단어장 생성 완료" onClick={() => navigate("/main/notes")} />
       </Flex>
       <Flex
         height={"100%"}
@@ -160,7 +179,7 @@ export default function CustomNoteAddPage() {
             isItAdd={isItAdd}
             setIsItAdd={setIsItAdd}
             customWord={customWord}
-            onClick={fetchWord}
+            onClick={addWord}
           />
           {words.map(() => (
             <CustomWordBox isEditing={isEditing} setIsEditing={setIsEditing} words={words} />
