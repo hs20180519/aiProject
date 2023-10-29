@@ -98,6 +98,6 @@ export const getLearnResult = async (req: Request, res: Response, next: NextFunc
     return res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };

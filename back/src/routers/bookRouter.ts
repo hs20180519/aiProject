@@ -2,6 +2,7 @@ import Router, { Express } from "express";
 import passportJwt from "../middlewares/passportJwt";
 import * as bookController from "../controllers/bookController";
 import * as joi from "../validators/bookValidator";
+import { deleteFavoriteWord } from "../controllers/bookController";
 
 const bookRouter: Express = Router();
 
@@ -24,6 +25,8 @@ bookRouter
     bookController.deleteCustomWordInBook,
   );
 
-bookRouter.post("/favorite", passportJwt, bookController.createFavoriteWordInBook);
+bookRouter
+  .post("/favorite", passportJwt, bookController.createFavoriteWordInBook)
+  .delete("/favorite", passportJwt, bookController.deleteFavoriteWord);
 
 export default bookRouter;

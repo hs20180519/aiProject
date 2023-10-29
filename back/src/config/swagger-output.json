@@ -638,6 +638,10 @@
     },
     "/api/book/favorite": {
       "post": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "즐겨찾기 추가 ?wordId=",
         "description": "",
         "parameters": [
           {
@@ -652,7 +656,37 @@
           "201": {
             "description": "Created"
           }
-        }
+        },
+        "security": []
+      },
+      "delete": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "즐겨찾기 단어 삭제. ?wordId&all / all=\"true\" 요청 시 유저의 모든 즐겨찾기 단어 삭제",
+        "description": "",
+        "parameters": [
+          {
+            "name": "wordId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "all",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
       }
     },
     "/api/progress/": {

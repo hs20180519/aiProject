@@ -71,15 +71,13 @@ export const getWordByCategory = async (
     return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
   } else {
     const totalWordCount: number = await prisma.word.count({
-      where:
-        category === "favorite" ? { category: category, authorId: userId } : { category: category },
+      where: { category: category },
     });
     const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
     const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
     const words: Word[] = await prisma.word.findMany({
-      where:
-        category === "favorite" ? { category: category, authorId: userId } : { category: category },
+      where: { category: category },
       orderBy: { word: "asc" },
       ...offset,
     });
@@ -144,7 +142,6 @@ export const createCustomWordInBook = async (
   customBookId: number,
   word: string,
   meaning: string,
-  userId: number,
 ): Promise<WordDto> => {
   const createdWord: Word = await prisma.word.create({
     data: {
@@ -152,7 +149,6 @@ export const createCustomWordInBook = async (
       word: word,
       meaning: meaning,
       category: "custom",
-      authorId: userId,
     },
   });
   return plainToInstance(WordDto, createdWord);
@@ -205,32 +201,23 @@ export const deleteCustomWordInBook = async (
 };
 
 export const createFavoriteWord = async (userId: number, wordId: number): Promise<WordDto> => {
-  const existingWord: Word | null = await prisma.word.findUnique({ where: { id: wordId } });
-
-  if (!existingWord) {
-    throw new Error(`ID가 ${wordId}인 단어를 찾을 수 없습니다.`);
-  }
-
-  const newWord: Word = await prisma.word.create({
+  const favoriteWord = await prisma.favorite.create({
     data: {
-      word: existingWord.word,
-      meaning: existingWord.meaning,
-      category: "favorite",
-      authorId: userId,
+      userId: userId,
+      wordId: wordId,
     },
   });
-
-  return plainToInstance(WordDto, newWord);
+  return plainToInstance(WordDto, favoriteWord);
 };
 
 export const deleteAllFavoriteWord = async (userId: number) => {
-  return prisma.word.deleteMany({
-    where: { authorId: userId },
+  return prisma.favorite.deleteMany({
+    where: { userId: userId },
   });
 };
 
 export const deleteFavoriteWord = async (userId: number, wordId: number) => {
-  return prisma.word.delete({
-    where: { id: wordId, authorId: userId },
+  return prisma.favorite.delete({
+    where: { userId: userId, wordId: wordId },
   });
 };

@@ -19,8 +19,8 @@ import storageRouter from "./routers/storageRouter";
 import session from "express-session";
 import compression from "compression";
 import helmet from "helmet";
+import { limiter } from "./config/limiter";
 import { local, jwt } from "./passport";
-import { limiter } from "./utils/limiter";
 import { startScheduler } from "./services/remindService";
 
 const app: express.Application = express();
