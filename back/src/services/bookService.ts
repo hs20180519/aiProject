@@ -1,4 +1,4 @@
-import { CustomBook, PrismaClient, Word } from "@prisma/client";
+import { CustomBook, Favorite, PrismaClient, Word } from "@prisma/client";
 import { BookDto, BooksDto } from "../dtos/bookDto";
 import { plainToInstance } from "class-transformer";
 import getPaginationParams from "../utils/getPaginationParams";
@@ -61,6 +61,7 @@ export const getWordByCategory = async (
       where: { id: bookId, userId: userId },
       include: { word: true },
     });
+
     const totalWordCount: number = customBook!.word.length;
     const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
     const offset: { take: number; skip: number } = getPaginationParams(page, limit);
@@ -73,6 +74,7 @@ export const getWordByCategory = async (
     const totalWordCount: number = await prisma.word.count({
       where: { category: category },
     });
+
     const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
     const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
@@ -84,6 +86,30 @@ export const getWordByCategory = async (
 
     return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
   }
+};
+export const getWordByFavorite = async (
+  page: number,
+  limit: number,
+  userId: number,
+): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
+  const totalWordCount: number = await prisma.favorite.count({ where: { userId: userId } });
+  const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
+  const offset: { take: number; skip: number } = getPaginationParams(page, limit);
+
+  const favoriteWord: (Favorite & { word: Word })[] = await prisma.favorite.findMany({
+    where: {
+      userId: userId,
+    },
+    include: {
+      word: true,
+    },
+    ...offset,
+  });
+
+  const words: Word[] = favoriteWord.map((item) => item.word);
+  words.sort((a: Word, b: Word) => a.word.localeCompare(b.word, "en", { sensitivity: "base" }));
+
+  return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
 };
 
 export const updateCustomBook = async (
