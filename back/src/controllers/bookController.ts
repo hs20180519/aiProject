@@ -3,6 +3,7 @@ import { User } from "@prisma/client";
 import * as bookService from "../services/bookService";
 import { BookDto, BooksDto } from "../dtos/bookDto";
 import { WordDto } from "../dtos/wordDto";
+import { getWordByFavorite } from "../services/bookService";
 
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -66,7 +67,7 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
       csat: (userId: number) => bookService.getWordByCategory(page, limit, userId, "csat"),
       toeic: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toeic"),
       toefl: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toefl"),
-      favorite: (userId: number) => bookService.getWordByCategory(page, limit, userId, "favorite"),
+      favorite: (userId: number) => bookService.getWordByFavorite(page, limit, userId),
       custom: (userId: number, customBookId: string | undefined) =>
         bookService.getWordByCategory(page, limit, userId, "custom", customBookId),
     };
