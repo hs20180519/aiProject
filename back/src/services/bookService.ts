@@ -66,7 +66,7 @@ export const getWordByCategory = async (
     const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
     const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
-    customBook!.word.sort((a, b) => a.word.localeCompare(b.word));
+    customBook!.word.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
     const words: Word[] = customBook!.word.slice(offset.skip, offset.skip + offset.take);
 
     return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
