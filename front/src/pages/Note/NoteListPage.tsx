@@ -21,6 +21,8 @@ import {
 } from "../../apis/customWord";
 import Btn from "../../components/Btn";
 
+import Loading from "../../components/Loading";
+
 const NOTE_LIST = [
   { id: "correct", title: "학습한 단어" },
   { id: "incorrect", title: "틀린 단어" },
@@ -32,6 +34,9 @@ export default function CustomNoteListPage() {
   const navigate = useNavigate();
   const toast = useToast();
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
   const [noteList, setNoteList] = useState(NOTE_LIST);
   const [customNoteList, setCustomNoteList] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -40,6 +45,7 @@ export default function CustomNoteListPage() {
 
   /** 노트 목록 가져오기 */
   const fetchNoteList = async () => {
+    setLoading(true);
     try {
       const res = await getCustomNotes();
       console.log("------노트 목록 -----");
@@ -48,6 +54,7 @@ export default function CustomNoteListPage() {
     } catch (e) {
       console.error(e);
     }
+    setLoading(false);
   };
 
   /** 타이틀 저장시 유저 커스텀 단어장 생성 */
@@ -133,6 +140,8 @@ export default function CustomNoteListPage() {
     fetchNoteList(); // 왜 무한 요청을 보내지..?
   }, []);
 
+  if (loading) return <Loading />;
+
   return (
     <>
       <Flex minWidth="max-content" alignItems="center" gap="2" mb="5">
@@ -164,6 +173,7 @@ export default function CustomNoteListPage() {
           borderWidth="3px"
           borderRadius="lg"
           onClick={fetchNewCustomNote}
+          cursor={"pointer"}
         >
           <AbsoluteCenter>
             <Badge

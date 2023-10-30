@@ -67,8 +67,8 @@ async function put<T>(endpoint: string, data: T) {
   });
 }
 
-async function putImage(endpoint: string, formData: FormData) {
-  return axios.put(serverUrl + endpoint, formData, {
+async function sendImage(method: "post" | "put", endpoint: string, formData: FormData) {
+  return axios[method](serverUrl + endpoint, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${sessionStorage.getItem("userToken")}`,
@@ -89,4 +89,4 @@ async function del(endpoint: string) {
 
 // 아래처럼 export한 후, import * as A 방식으로 가져오면,
 // A.get, A.post 로 쓸 수 있음.
-export { get, post, postQuery, put, del as delete, putImage };
+export { get, post, postQuery, put, del as delete, sendImage };
