@@ -51,7 +51,6 @@ const SignUp = () => {
 
   const navigate = useNavigate();
   const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
-  const [hasEmailCode, setHasEmailCode] = useState<string | null>(null);
   const debounceFetchTerm = useDebounced(email, 500);
   const [sendEmailCodeClick, setSendEmailCodeClick] = useState(false);
   const [succededEmailCode, setSuccededEmailCode] = useState(false);
@@ -76,9 +75,8 @@ const SignUp = () => {
       setIsEmailAvailable(true);
       if (res.status === 403) {
         setIsEmailAvailable(false);
-      } else if (res.status === 400 || res.status === 409) {
-        setIsEmailAvailable(undefined);
-      } else {
+      } 
+      else {
         setIsEmailAvailable(true);
       }
     } catch (e) {
