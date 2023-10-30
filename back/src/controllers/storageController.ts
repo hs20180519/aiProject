@@ -25,6 +25,14 @@ export const getAllWords = async (req: Request, res: Response, next: NextFunctio
 };
 
 export const searchWords = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Storage']
+   * #swagger.summary = '단어 검색(커스텀 단어 제외)'
+   * #swagger.description = '서버사이드 페이징. 검색쿼리에 포함된 모든 단어 조회, 정확히 일치하는 단어는 첫 번째 인덱스로 재배치 후 반환'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
   try {
     const userId: number = (req.user as User).id;
     const searchTerm: string = String(req.query.q);
