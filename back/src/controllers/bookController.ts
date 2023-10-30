@@ -3,7 +3,6 @@ import { User } from "@prisma/client";
 import * as bookService from "../services/bookService";
 import { BookDto, BooksDto } from "../dtos/bookDto";
 import { WordDto } from "../dtos/wordDto";
-import { getWordByFavorite } from "../services/bookService";
 
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
   /**

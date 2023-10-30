@@ -248,12 +248,12 @@ export const createFavoriteWord = async (userId: number, wordId: number): Promis
 
 export const deleteAllFavoriteWord = async (userId: number) => {
   return prisma.favorite.deleteMany({
-    where: { userId: userId },
+    where: { userId },
   });
 };
 
 export const deleteFavoriteWord = async (userId: number, wordId: number) => {
   return prisma.favorite.delete({
-    where: { userId: userId, wordId: wordId },
+    where: { userId_wordId: { userId, wordId } },
   });
 };

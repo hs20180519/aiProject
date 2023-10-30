@@ -57,7 +57,7 @@ model Favorite {
   user   User @relation(fields: [userId], references: [id])
   word   Word @relation(fields: [wordId], references: [id])
 
-  @@index([userId, wordId])
+  @@unique([userId, wordId])
 }
 
 model MeaningGroup {
