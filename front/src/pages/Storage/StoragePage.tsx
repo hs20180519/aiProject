@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import * as instance from "../../apis/api";
-import { Box, Button, Flex, Grid } from "@chakra-ui/react";
+import { Box, Grid } from "@chakra-ui/react";
 import WordBox from "./Components/WordBox";
 import CustomModal from "./Components/CustomModal";
 import Pagination from "../../components/Pagination";
 
-// 정렬 추가 ? .. abc 순 / 역순으로
 // 단어 검색 가능하게
 
 interface Word {
@@ -22,6 +21,8 @@ const Storage: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [pagingIndex, setPagingIndex] = useState(1);
+  const limit = 5;
 
   const fetchWordData = async (pageNumber: number) => {
     try {
@@ -29,6 +30,7 @@ const Storage: React.FC = () => {
       if (response.data && Array.isArray(response.data.words)) {
         setWordData(response.data.words);
         setTotalPages(response.data.totalPages);
+        console.log(response.data.totalPages);
         setCurrentPage(pageNumber);
       }
     } catch (error) {
@@ -36,16 +38,14 @@ const Storage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchWordData(1); // 페이지 번호 1로 데이터 가져오기
-  }, []);
-
   const handlePageChange = (pageNumber: number) => {
     fetchWordData(pageNumber);
   };
 
-  const handlePageChangeIndex = (pageIndex: number) => {
-    fetchWordData((pageIndex - 1) * 15 + 1);
+  const handleChangePagingIndex = (pagingIndex: number) => {
+    const range = pagingIndex === 1 ? 0 : (pagingIndex - 1) * limit;
+    console.log(range);
+    setPagingIndex(pagingIndex);
   };
 
   const handleBookmarkClick = async (wordId: number, isFavorite: boolean) => {
@@ -76,39 +76,13 @@ const Storage: React.FC = () => {
     }
   };
 
-  const renderPagination = () => {
-    return (
-      <Pagination
-        pagingIndex={currentPage}
-        limit={5}
-        totalPage={totalPages}
-        currentPage={currentPage}
-        handleChangePage={handlePageChange}
-        handleChangePaginIndex={handlePageChangeIndex}
-      />
-    );
-  };
-  const renderPagination2 = () => {
-    return (
-      <Flex justifyContent="center" alignItems="center" marginTop="20px">
-        <Button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          marginRight="10px"
-        >
-          이전
-        </Button>
-        <p style={{ margin: "0 10px" }}> {currentPage}</p>
-        <Button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          marginLeft="10px"
-        >
-          다음
-        </Button>
-      </Flex>
-    );
-  };
+  useEffect(() => {
+    fetchWordData(1);
+  }, []);
+
+  useEffect(() => {
+    console.log(currentPage);
+  }, [currentPage]);
 
   return (
     <Box>
@@ -122,7 +96,14 @@ const Storage: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         message={modalMessage}
       />
-      {renderPagination()}
+      <Pagination
+        pagingIndex={pagingIndex}
+        currentPage={currentPage}
+        limit={limit}
+        totalPage={totalPages}
+        handleChangePage={handlePageChange}
+        handleChangePaginIndex={handleChangePagingIndex}
+      />
     </Box>
   );
 };
