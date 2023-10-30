@@ -6,7 +6,6 @@ import {
   Avatar,
   Box,
   Center,
-  Image,
   Flex,
   Text,
   Stack,
@@ -24,11 +23,14 @@ export default function SocialProfileWithImage() {
     // API 호출: 사용자 정보 가져오기
     Api.get('/user')
       .then((response) => {
+
         // API 응답에서 이름과 이메일 추출
         const userData = response.data;
+        console.log(userData);
+
         setName(userData.name);
         setEmail(userData.email);
-        setUserImage(userData.image); // 이미지 URL 또는 해당 키에 맞게 업데이트
+        setUserImage(userData.profileImage);
       })
       .catch((error) => {
         console.error('API 호출 오류:', error);
@@ -37,18 +39,24 @@ export default function SocialProfileWithImage() {
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+    console.log("Selected file:", file); // 선택한 파일 로깅
+
     if (file) {
       // 이미지 업로드 API 호출
       const formData = new FormData();
-      formData.append('image', file);
-      Api.post('/upload/profile-image', formData)
-        .then((response) => {
-          // 이미지 업로드 성공 시 이미지 URL을 업데이트
-          setUserImage(response.data.imageUrl);
-        })
-        .catch((error) => {
-          console.error('이미지 업로드 오류:', error);
-        });
+      formData.append('profileImage', file);
+
+      Api.sendImage('post', '/upload/profile-image', formData)
+      .then((response) => {
+        console.log("Server Response:", response); // 서버 응답 로깅
+        // 이미지 업로드 성공 시 이미지 URL을 업데이트
+        setUserImage(response.data);
+      })
+      .catch((error) => {
+        console.error('이미지 업로드 오류:', error);
+      });
+    } else {
+      console.log("No file selected."); // 파일이 선택되지 않았을 경우 로깅
     }
   };
 
@@ -70,6 +78,7 @@ export default function SocialProfileWithImage() {
           <Avatar
             size={'xl'}
             src={userImage}
+            key={userImage}
             css={{
               border: '2px solid white',
             }}
@@ -83,7 +92,7 @@ export default function SocialProfileWithImage() {
             <Text color={'gray.500'}>{email}</Text>
           </Stack>
           <Stack mb={5}>
-            <input type="file" onChange={handleImageUpload} />
+            <input type="file" name="profileImage" onChange={handleImageUpload} />
           </Stack>
           <Stack direction={'row'} justify={'center'} spacing={6}>
             <Stack spacing={0} align={'center'}>

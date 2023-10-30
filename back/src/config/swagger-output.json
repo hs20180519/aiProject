@@ -299,7 +299,7 @@
           "Study"
         ],
         "summary": "단어 학습",
-        "description": "쿼리별 단어 학습  * ?book={correct, incorrect, csat, toeic, toefl, custom}&customBookId=\"\" ",
+        "description": "쿼리별 단어 학습\r  * ?book={correct, incorrect, csat, toeic, toefl, custom}&customBookId=\"\" ",
         "parameters": [
           {
             "name": "customBookId",
@@ -533,7 +533,7 @@
           "Book"
         ],
         "summary": "단어장 단어 조회",
-        "description": "쿼리별 단어장 조회 (서버사이드 페이징)  * ?book={correct, incorrect, csat, toeic, toefl, favorite, custom}&customBookId=\"\" ",
+        "description": "쿼리별 단어장 조회 (서버사이드 페이징)\r  * ?book={correct, incorrect, csat, toeic, toefl, favorite, custom}&customBookId=\"\" ",
         "parameters": [
           {
             "name": "page",

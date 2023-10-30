@@ -1,14 +1,16 @@
 import { Icon } from "@chakra-ui/react";
-import { StarIcon } from "@chakra-ui/icons"; // Import the StarIcon from Chakra UI
 import { PiStarFill, PiStarDuotone } from "react-icons/pi";
 
+/** 북마크 :
+ * favorite true -> 꽉찬 별,
+ * favorite false -> 빈 별 */
 const BookMark = ({ favorite, onClick }) => {
   return (
     <>
       {favorite ? (
-        <Icon as={PiStarFill} boxSize={6} color={"yellow.500"} onClick={onClick} />
+        <Icon as={PiStarFill} boxSize={5} color={"yellow.500"} onClick={onClick} />
       ) : (
-        <Icon as={PiStarDuotone} boxSize={6} color={"yellow.500"} onClick={onClick} />
+        <Icon as={PiStarDuotone} boxSize={5} color={"yellow.500"} onClick={onClick} />
       )}
     </>
   );
