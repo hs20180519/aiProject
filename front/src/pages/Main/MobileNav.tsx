@@ -27,20 +27,19 @@ interface MobileProps extends FlexProps {
 }
 
 export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...rest }: MobileProps) {
-  const [userName, setUserName] = useState(""); // 유저 이름 상태 추가
-  const [profileImage, setProfileImage] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userImage, setUserImage] = useState("https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256");
 
-  // useEffect를 사용하여 유저 이름을 가져오는 코드 추가
   useEffect(() => {
-    // 사용자 이름 가져오는 API 호출
+    // 사용자 정보 가져오는 API 호출
     Api.get('/user')
       .then((response) => {
         const userData = response.data;
         setUserName(userData.name);
-        setProfileImage(userData.Image);
+        setUserImage(userData.profileImage || "https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256");
       })
       .catch((error) => {
-        console.error('사용자 이름 가져오기 오류:', error);
+        console.error('사용자 정보 가져오기 오류:', error);
       });
   }, []);
 
@@ -82,9 +81,7 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
               <HStack>
                 <Avatar
                   size={"sm"}
-                  src={
-                    "https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256"
-                  }
+                  src={userImage}
                 />
                 <VStack
                   display={{ base: "none", md: "flex" }}
@@ -92,7 +89,7 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
                   spacing={"1px"}
                   ml={"2"}
                 >
-                <Text fontSize={"sm"}>{userName || nickname}</Text>
+                  <Text fontSize={"sm"}>{userName || nickname}</Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
                   <FiChevronDown />
