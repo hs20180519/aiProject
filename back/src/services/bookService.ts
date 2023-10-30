@@ -226,8 +226,18 @@ export const deleteCustomWordInBook = async (
   });
 };
 
+export const getFavoriteWordByWordId = async (userId: number, wordId: number): Promise<WordDto> => {
+  const favoriteWord: Favorite | null = await prisma.favorite.findFirst({
+    where: {
+      userId: userId,
+      wordId: wordId,
+    },
+  });
+  return plainToInstance(WordDto, favoriteWord);
+};
+
 export const createFavoriteWord = async (userId: number, wordId: number): Promise<WordDto> => {
-  const favoriteWord = await prisma.favorite.create({
+  const favoriteWord: Favorite = await prisma.favorite.create({
     data: {
       userId: userId,
       wordId: wordId,

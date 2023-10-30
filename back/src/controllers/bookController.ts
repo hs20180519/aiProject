@@ -224,6 +224,8 @@ export const createFavoriteWordInBook = async (req: Request, res: Response, next
     const userId: number = (req.user as User).id;
     const wordId: number = Number(req.query.wordId);
 
+    const existingFavorite: WordDto = await bookService.getFavoriteWordByWordId(userId, wordId);
+    if (existingFavorite) return res.status(409).json({ message: "이미 추가한 단어입니다." });
     const createdFavoriteWord: WordDto = await bookService.createFavoriteWord(userId, wordId);
     return res.status(201).json(createdFavoriteWord);
   } catch (error) {
