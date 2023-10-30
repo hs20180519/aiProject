@@ -9,7 +9,15 @@ export const getAllWords = async (
   page: number,
   limit: number,
 ): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
-  const totalWordCount: number = 3493;
+  const totalWordCount: number = await prisma.word.count({
+    where: {
+      category: {
+        not: {
+          in: ["custom"],
+        },
+      },
+    },
+  });
   const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
   const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
@@ -57,14 +65,16 @@ export const searchWords = async (
   searchTerm: string,
   page: number,
   limit: number,
-) => {
-  const totalWordCount = 3493;
-  const totalPages = Math.ceil(totalWordCount / (limit ?? 10));
-  const offset = (page - 1) * limit;
+): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
+  const totalWordCount: number = await prisma.word.count({
+    where: {
+      AND: [{ word: { contains: searchTerm } }, { category: { not: "custom" } }],
+    },
+  });
+  const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
+  const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
   const words = await prisma.word.findMany({
-    take: limit,
-    skip: offset,
     where: {
       AND: [{ word: { contains: searchTerm } }, { category: { not: "custom" } }],
     },
@@ -77,6 +87,7 @@ export const searchWords = async (
         select: { userId: true },
       },
     },
+    ...offset,
   });
 
   const sortedWords = [...words].sort((a, b) => {
@@ -94,7 +105,7 @@ export const searchWords = async (
   }));
 
   return {
-    words: mappedWords,
+    words: plainToInstance(WordDto, mappedWords),
     totalPages,
     currentPage: page,
   };
