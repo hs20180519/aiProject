@@ -3,6 +3,7 @@ import * as instance from "../../apis/api";
 import { Box, Button, Flex, Grid } from "@chakra-ui/react";
 import WordBox from "./Components/WordBox";
 import CustomModal from "./Components/CustomModal";
+import Pagination from "../../components/Pagination";
 
 // 정렬 추가 ? .. abc 순 / 역순으로
 // 단어 검색 가능하게
@@ -21,6 +22,31 @@ const Storage: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+
+  const fetchWordData = async (pageNumber: number) => {
+    try {
+      const response = await instance.get(`/storage?page=${pageNumber}&limit=15`);
+      if (response.data && Array.isArray(response.data.words)) {
+        setWordData(response.data.words);
+        setTotalPages(response.data.totalPages);
+        setCurrentPage(pageNumber);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWordData(1); // 페이지 번호 1로 데이터 가져오기
+  }, []);
+
+  const handlePageChange = (pageNumber: number) => {
+    fetchWordData(pageNumber);
+  };
+
+  const handlePageChangeIndex = (pageIndex: number) => {
+    fetchWordData((pageIndex - 1) * 15 + 1);
+  };
 
   const handleBookmarkClick = async (wordId: number, isFavorite: boolean) => {
     try {
@@ -50,28 +76,19 @@ const Storage: React.FC = () => {
     }
   };
 
-  const fetchWordData = async (pageNumber: number) => {
-    try {
-      const response = await instance.get(`/storage?page=${pageNumber}&limit=15`);
-      if (response.data && Array.isArray(response.data.words)) {
-        setWordData(response.data.words);
-        setTotalPages(response.data.totalPages);
-        setCurrentPage(pageNumber);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchWordData(1); // 페이지 번호 1로 데이터 가져오기
-  }, []);
-
-  const handlePageChange = (pageNumber: number) => {
-    fetchWordData(pageNumber);
-  };
-
   const renderPagination = () => {
+    return (
+      <Pagination
+        pagingIndex={currentPage}
+        limit={5}
+        totalPage={totalPages}
+        currentPage={currentPage}
+        handleChangePage={handlePageChange}
+        handleChangePaginIndex={handlePageChangeIndex}
+      />
+    );
+  };
+  const renderPagination2 = () => {
     return (
       <Flex justifyContent="center" alignItems="center" marginTop="20px">
         <Button
