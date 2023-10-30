@@ -57,7 +57,6 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
     const userId: number = (req.user as User).id;
     const category: string = String(req.query.book);
     const customBookId: string = String(req.query.customBookId);
-
     const queryServiceMap: {
       [key: string]: (userId: number, customBookId?: string) => Promise<any>;
     } = {
@@ -67,7 +66,7 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
       toeic: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toeic"),
       toefl: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toefl"),
       favorite: (userId: number) => bookService.getWordByFavorite(page, limit, userId),
-      custom: (userId: number, customBookId: string | undefined) =>
+      customs: (userId: number, customBookId: string | undefined) =>
         bookService.getWordByCategory(page, limit, userId, "custom", customBookId),
     };
 

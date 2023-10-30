@@ -6,4 +6,6 @@ const storageRouter: Express = Router();
 
 storageRouter.get("/", passportJwt, storageController.getAllWords);
 
+storageRouter.get("/search", passportJwt, storageController.searchWords);
+
 export default storageRouter;
