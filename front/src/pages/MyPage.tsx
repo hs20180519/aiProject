@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Chart from '@toast-ui/react-chart';
-import * as Api from '../apis/api';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import * as Api from "../apis/api";
+import { useNavigate } from "react-router-dom";
 import {
   Heading,
   Avatar,
@@ -13,29 +12,23 @@ import {
   Button,
   useColorModeValue,
 } from '@chakra-ui/react';
+// import { PieChart } from '@toast-ui/chart';
 
-export default function ProfileWithImage() {
-
-  type UserInfoType = {
-    name: string;
-    email: string;
-    profileImage: string;
-  }
-
-  const [user, setUser] = useState<UserInfoType>({
-    name: '',
-    email: '',
-    profileImage: '',
-  });
+export default function SocialProfileWithImage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [userImage, setUserImage] = useState('');
   const [progress, setProgress] = useState(0);
-  const chartRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 사용자 정보 가져오기
+    // 사용자의 이름과 이메일 가져오기 (일반 로그인 사용자)
     Api.get('/user')
       .then((response) => {
-        setUser(response.data);
+        const userData = response.data;
+        setName(userData.name);
+        setEmail(userData.email);
+        setUserImage(userData.profileImage);
       })
       .catch((error) => {
         console.error('사용자 정보 가져오기 오류:', error);
@@ -45,7 +38,9 @@ export default function ProfileWithImage() {
     Api.get('/progress')
       .then((progressResponse) => {
         const progressData = progressResponse.data;
+        // 사용자의 학습 진행률 가져오기
         setProgress(progressData.progress);
+
       })
       .catch((progressError) => {
         console.error('학습 진행 정보 가져오기 오류:', progressError);
@@ -54,36 +49,29 @@ export default function ProfileWithImage() {
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
-    console.log('Selected file:', file);
+    console.log("Selected file:", file); // 선택한 파일 로깅
 
     if (file) {
+      // 이미지 업로드 API 호출
       const formData = new FormData();
       formData.append('profileImage', file);
 
       Api.sendImage('post', '/upload/profile-image', formData)
-        .then((response) => {
-          console.log('Server Response:', response);
-          setUser({ ...user, profileImage: response.data });
-        })
-        .catch((error) => {
-          console.error('이미지 업로드 오류:', error);
-        });
+      .then((response) => {
+        console.log("Server Response:", response); // 서버 응답 로깅
+        // 이미지 업로드 성공 시 이미지 URL을 업데이트
+        setUserImage(response.data);
+      })
+      .catch((error) => {
+        console.error('이미지 업로드 오류:', error);
+      });
     } else {
-      console.log('No file selected.');
+      console.log("No file selected."); // 파일이 선택되지 않았을 경우 로깅
     }
   };
 
   const navigateToMainPage = () => {
-    navigate('/main/word');
-  };
-
-  const pieChartData = {
-    categories: ['CSAT', 'TOEIC', 'IELTS', 'TOEFL'],
-    series: [
-      {
-        data: [25, 35, 20, 20], // 학습 진행률 데이터
-      },
-    ],
+    navigate("/main/word");
   };
 
   return (
@@ -99,8 +87,8 @@ export default function ProfileWithImage() {
         <Flex justify={'center'} mt={5}>
           <Avatar
             size={'xl'}
-            src={user.profileImage}
-            key={user.profileImage}
+            src={userImage}
+            key={userImage}
             css={{
               border: '2px solid white',
             }}
@@ -109,12 +97,12 @@ export default function ProfileWithImage() {
         <Box p={6}>
           <Stack spacing={0} align={'center'} mb={5}>
             <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
-              {user.name}
+              {name}
             </Heading>
-            <Text color={'gray.500'}>{user.email}</Text>
+            <Text color={'gray.500'}>{email}</Text>
           </Stack>
           <Stack mb={5}>
-            <input type='file' name='profileImage' onChange={handleImageUpload} />
+            <input type="file" name="profileImage" onChange={handleImageUpload} />
           </Stack>
           <Stack direction={'row'} justify={'center'} spacing={6}>
             <Stack spacing={0} align={'center'}>
@@ -122,12 +110,6 @@ export default function ProfileWithImage() {
               <Text fontSize={'sm'} color={'gray.500'}>
                 {progress}% 완료
               </Text>
-              <Chart
-                ref={chartRef}
-                data={pieChartData}
-                options={{ chart: { width: 300, height: 300 } }}
-                type='pie'
-              />
             </Stack>
           </Stack>
           <Button

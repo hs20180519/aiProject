@@ -28,6 +28,7 @@ interface MobileProps extends FlexProps {
 
 export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...rest }: MobileProps) {
   const [userName, setUserName] = useState(""); // 유저 이름 상태 추가
+  const [profileImage, setProfileImage] = useState("");
 
   // useEffect를 사용하여 유저 이름을 가져오는 코드 추가
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
       .then((response) => {
         const userData = response.data;
         setUserName(userData.name);
+        setProfileImage(userData.Image);
       })
       .catch((error) => {
         console.error('사용자 이름 가져오기 오류:', error);
