@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import * as instance from "../../apis/api";
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex, Grid } from "@chakra-ui/react";
+import WordBox from "./Components/WordBox";
+import CustomModal from "./Components/CustomModal";
 
 // 정렬 추가 ? .. abc 순 / 역순으로
 // 단어 검색 가능하게
@@ -10,16 +12,47 @@ interface Word {
   word: string;
   meaning: string;
   category: string;
+  isFavorite: boolean;
 }
 
 const Storage: React.FC = () => {
   const [wordData, setWordData] = useState<Word[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
+  const handleBookmarkClick = async (wordId: number, isFavorite: boolean) => {
+    try {
+      if (!isFavorite) {
+        const data = { wordId };
+        const response = await instance.post(`/book/favorite?wordId=${wordId}`, data);
+        if (response.status === 201) {
+          setWordData((prevWordData) =>
+            prevWordData.map((word) => (word.id === wordId ? { ...word, isFavorite: true } : word)),
+          );
+          // 즐겨찾기가 추가되면 모달을 엽니다.
+          setIsModalOpen(true);
+          setModalMessage("즐겨찾기가 추가되었습니다. 단어장에서 확인해주세요 :)");
+        }
+      } else {
+        const response = await instance.delete(`/book/favorite?wordId=${wordId}`);
+        if (response.status === 200) {
+          setWordData((prevWordData) =>
+            prevWordData.map((word) =>
+              word.id === wordId ? { ...word, isFavorite: false } : word,
+            ),
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling favorite status:", error);
+    }
+  };
 
   const fetchWordData = async (pageNumber: number) => {
     try {
-      const response = await instance.get(`/storage?page=${pageNumber}`);
+      const response = await instance.get(`/storage?page=${pageNumber}&limit=15`);
       if (response.data && Array.isArray(response.data.words)) {
         setWordData(response.data.words);
         setTotalPages(response.data.totalPages);
@@ -36,55 +69,6 @@ const Storage: React.FC = () => {
 
   const handlePageChange = (pageNumber: number) => {
     fetchWordData(pageNumber);
-  };
-
-  const renderWords = () => {
-    const wordGroups = [];
-    for (let i = 0; i < wordData.length; i += 2) {
-      const word1 = wordData[i];
-      const word2 = wordData[i + 1];
-
-      wordGroups.push(
-        <Flex key={i} width="100%">
-          <Box
-            key={word1.id}
-            style={{
-              textAlign: "center",
-              backgroundColor: "white",
-              width: "50%",
-              height: "100px",
-              border: "1px solid #ddd",
-              borderRadius: "5px",
-              padding: "10px",
-              margin: "10px",
-            }}
-          >
-            <p style={{ fontSize: "30px" }}>{word1.word}</p>
-            <p style={{ color: "gray" }}>{word1.meaning}</p>
-          </Box>
-
-          {word2 && (
-            <Box
-              key={word2.id}
-              style={{
-                textAlign: "center",
-                backgroundColor: "white",
-                width: "50%",
-                height: "100px",
-                border: "1px solid #ddd",
-                borderRadius: "5px",
-                padding: "10px",
-                margin: "10px",
-              }}
-            >
-              <p style={{ fontSize: "30px" }}>{word2.word}</p>
-              <p style={{ color: "gray" }}>{word2.meaning}</p>
-            </Box>
-          )}
-        </Flex>,
-      );
-    }
-    return wordGroups;
   };
 
   const renderPagination = () => {
@@ -111,7 +95,16 @@ const Storage: React.FC = () => {
 
   return (
     <Box>
-      {renderWords()}
+      <Grid templateColumns="repeat(3, 1fr)" gap={1}>
+        {wordData.map((word) => (
+          <WordBox key={word.id} word={word} onBookmarkClick={handleBookmarkClick} />
+        ))}
+      </Grid>
+      <CustomModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        message={modalMessage}
+      />
       {renderPagination()}
     </Box>
   );
