@@ -58,7 +58,7 @@ export const getWordByCategory = async (
   if (customBookId) {
     const bookId: number = Number(customBookId);
     const customBook = await prisma.customBook.findUnique({
-      where: { id: bookId, userId: userId },
+      where: { id: bookId },
       include: { word: true },
     });
 
