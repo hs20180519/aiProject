@@ -15,10 +15,11 @@ import { useNavigate, useParams } from "react-router";
 import AddCustomNote from "./Components/AddCustomNote";
 import * as type from "../../apis/types/custom";
 import {
-  putCustomNote,
-  postCustomWord,
+  putCustomNoteTitle,
+  postCustomWordAdd,
   putCustomWord,
   getNoteDetail,
+  delCustomWord,
   delCustomNote,
 } from "../../apis/customWord";
 import Btn from "../../components/Btn";
@@ -26,6 +27,17 @@ import WordBox from "./Components/WordBox";
 import CustomWordBox from "./Components/CustomWordBox";
 
 const TOAST_TIMEOUT_INTERVAL = 700;
+
+type Category = "correct" | "incorrect" | "csat" | "toeic" | "toefl" | "favorite";
+export interface Word {
+  category: Category;
+  customBookId: number;
+  id: number;
+  meaning: string;
+  word: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function CustomNoteAddPage() {
   const { note_id } = useParams();
@@ -35,7 +47,7 @@ export default function CustomNoteAddPage() {
 
   const [disable, setDisable] = useState(false);
   const [isItAdd, setIsItAdd] = useState(false);
-  const [isEditing, setIsEditing] = useState(true);
+  const [titleIsEditing, setTitleIsEditing] = useState(true);
   const [title, setTitle] = useState("");
 
   const [customWord, setCustomWord] = useState<type.SubmitCustomWord>({
@@ -44,12 +56,37 @@ export default function CustomNoteAddPage() {
   });
 
   /** 추가한 단어목록 받아오는 애 */
-  const [words, setWords] = useState([]);
+  const [words, setWords] = useState<Word[]>([]);
 
-  const fetchTitle = async () => {
-    const data = { id: note_id, title: title };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCustomWord({ ...customWord, [name]: value });
+  };
+
+  /**
+   * 해당 단어장의 상세정보를 가져오는 함수
+   */
+  const fetchDetailBook = async () => {
     try {
-      const res = await putCustomNote(data);
+      const queryString = `customBookId=${note_id}`;
+      const res = await getNoteDetail(queryString);
+      console.log("-------단어장 조회조회조회죄히-------");
+      console.log(res);
+      if (res.status === 200) {
+        setWords(res.data.words);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  /** 단어장 이름 변경 API */
+  const fetchUpdateNoteTitle = async () => {
+    const data = { title };
+    try {
+      const res = await putCustomNoteTitle(data, note_id);
+      console.log("-----단어장 이름 변경----");
+      console.log(res);
       if (res.status === 200) {
         toast({
           title: `변경 완료!`,
@@ -57,51 +94,86 @@ export default function CustomNoteAddPage() {
           isClosable: true,
           duration: TOAST_TIMEOUT_INTERVAL,
         });
+        setTitleIsEditing(false);
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  /** 단어추가하는 API */
-  const fetchWordAdd = async (data) => {
+  /** 단어추가 */
+  const fetchWordAdd = async () => {
     try {
-      const res = await postCustomWord(`bookId=${note_id}`, data);
+      const res = await postCustomWordAdd(`customBookId=${note_id}`, customWord);
+      if (res.status === 201) {
+        toast({
+          title: "단어 추가 완료!",
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+        setCustomWord({ word: "", meaning: "" });
+        fetchDetailBook();
+        setIsItAdd(false);
+      }
     } catch (e) {
-      console.error(e);
+      toast({
+        title: "단어 추가도중 에러가 발생했어요!",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
     }
   };
 
-  /** 해당 단어장 목록 가져오는 API */
-  const fetchWordList = async () => {
+  /**
+   * 단어장 삭제
+   */
+  const fetchDeleteNote = async () => {
     try {
-      const url = `customBookId=${note_id}`;
-      const res = await getNoteDetail(url);
-      setWords(res.data.words);
-      console.log(res.data.words);
+      const res = await delCustomNote(`customBookId=${note_id}`);
+      console.log("-------단어장 삭제---------");
+      console.log(res);
+      if (res.status === 200) {
+        toast({
+          title: "단어장 삭제완료!",
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+        navigate("/main/notes");
+      }
     } catch (e) {
-      console.error(e);
+      console.log(e);
     }
   };
 
-  /** 단어 수정하는 API */
-  const fetchEditWord = async (data) => {
-    let word_id;
+  /** 단어를 수정합니다.
+   * @word_id 수정할 단어의 id
+   */
+  const fetchEditWord = async (word_id: number, data: type.SubmitCustomWord) => {
     try {
-      const res = await putCustomWord(`customBookId=${note_id}?wordId=${word_id}`, data);
+      const res = await putCustomWord(`customBookId=${note_id}&wordId=${word_id}`, data);
+      console.log("---------단어수정---------");
+      console.log(res);
       if (res.status === 200) {
         console.log("단어 수정완료");
+        fetchDetailBook();
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  /** 생성된 단어장 삭제 API */
-  const fetchDelNote = async () => {
-    const url = `customBookId=${note_id}`;
+  /** 단어를 삭제합니다.
+   * @word_id 삭제 단어의 id
+   */
+  const fetchDeleteWord = async (word_id: number) => {
+    const url = `customBookId=${note_id}&wordId=${word_id}`;
     try {
-      const res = await delCustomNote(url);
+      const res = await delCustomWord(url);
+      console.log("--------단어삭제-------");
+      console.log(res);
       if (res.status === 200) {
         toast({
           title: `삭제되었습니다.`,
@@ -109,27 +181,21 @@ export default function CustomNoteAddPage() {
           isClosable: true,
           duration: TOAST_TIMEOUT_INTERVAL,
         });
-        navigate("/main/notes");
+        fetchDetailBook();
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  /** 단어추가 함수 */
-  const addWord = (e) => {
-    const data = e.target;
-    fetchWordAdd(data);
-  };
-
   useEffect(() => {
-    fetchWordList();
-  }, [words]);
+    fetchDetailBook();
+  }, []);
 
   return (
     <>
       <Flex minWidth="max-content" alignItems="center" gap="2" mb="5">
-        <Btn text="단어장 삭제" colorScheme="red" onClick={fetchDelNote} />
+        <Btn text="단어장 삭제" colorScheme="red" onClick={fetchDeleteNote} />
         <Spacer />
         <Btn text="단어장 생성 완료" onClick={() => navigate("/main/notes")} />
       </Flex>
@@ -165,11 +231,11 @@ export default function CustomNoteAddPage() {
                   }}
                 />
                 <Btn
-                  text={isEditing ? `저장` : `수정`}
+                  text={titleIsEditing ? `저장` : `수정`}
                   onClick={() => {
-                    if (isEditing) fetchTitle();
+                    if (titleIsEditing) fetchUpdateNoteTitle();
                     setDisable((prev) => !prev);
-                    setIsEditing((prev) => !prev);
+                    setTitleIsEditing((prev) => !prev);
                   }}
                 />
               </HStack>
@@ -179,10 +245,11 @@ export default function CustomNoteAddPage() {
             isItAdd={isItAdd}
             setIsItAdd={setIsItAdd}
             customWord={customWord}
-            onClick={addWord}
+            onClick={fetchWordAdd}
+            onChange={handleChange}
           />
-          {words.map(() => (
-            <CustomWordBox isEditing={isEditing} setIsEditing={setIsEditing} words={words} />
+          {words.map((word: Word) => (
+            <CustomWordBox word={word} onUpdate={fetchEditWord} onDelete={fetchDeleteWord} />
           ))}
         </Stack>
       </Flex>

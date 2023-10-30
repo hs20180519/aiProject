@@ -55,7 +55,7 @@ export default function NoteDetailPage() {
       console.log(res);
       setWords(res.data.words);
       setCurrentPage(res.data.currentPage);
-      setTotalPages(101); // 수정된 api 합친 후 변경  setTotalPages(res.data.totalPages);
+      setTotalPages(res.data.totalPages);
     } catch (e) {
       console.error(e);
     }
@@ -120,7 +120,7 @@ export default function NoteDetailPage() {
     fetchNoteDetail();
     console.log("------현재페이지--------");
     console.log(currentPage);
-  }, [currentPage]);
+  }, []);
 
   useEffect(() => {
     if (keyword !== "") console.log(keyword);
@@ -141,7 +141,7 @@ export default function NoteDetailPage() {
         limit={limit}
         handleChangePage={handleChangePage}
         handleChangePaginIndex={handleChangePaingIndex}
-        totalPage={101}
+        totalPage={totalPages}
       />
     </Stack>
   );
