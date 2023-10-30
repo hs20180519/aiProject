@@ -3,7 +3,6 @@ import { User } from "@prisma/client";
 import * as bookService from "../services/bookService";
 import { BookDto, BooksDto } from "../dtos/bookDto";
 import { WordDto } from "../dtos/wordDto";
-import { getWordByFavorite } from "../services/bookService";
 
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -58,7 +57,6 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
     const userId: number = (req.user as User).id;
     const category: string = String(req.query.book);
     const customBookId: string = String(req.query.customBookId);
-
     const queryServiceMap: {
       [key: string]: (userId: number, customBookId?: string) => Promise<any>;
     } = {
@@ -68,7 +66,7 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
       toeic: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toeic"),
       toefl: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toefl"),
       favorite: (userId: number) => bookService.getWordByFavorite(page, limit, userId),
-      custom: (userId: number, customBookId: string | undefined) =>
+      customs: (userId: number, customBookId: string | undefined) =>
         bookService.getWordByCategory(page, limit, userId, "custom", customBookId),
     };
 
@@ -224,6 +222,8 @@ export const createFavoriteWordInBook = async (req: Request, res: Response, next
     const userId: number = (req.user as User).id;
     const wordId: number = Number(req.query.wordId);
 
+    const existingFavorite: WordDto = await bookService.getFavoriteWordByWordId(userId, wordId);
+    if (existingFavorite) return res.status(409).json({ message: "이미 추가한 단어입니다." });
     const createdFavoriteWord: WordDto = await bookService.createFavoriteWord(userId, wordId);
     return res.status(201).json(createdFavoriteWord);
   } catch (error) {

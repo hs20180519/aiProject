@@ -655,6 +655,9 @@
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "409": {
+            "description": "Conflict"
           }
         },
         "security": []
@@ -798,7 +801,34 @@
             }
           },
           {
-            "name": "llimit",
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/storage/search": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
             "in": "query",
             "schema": {
               "type": "string"
@@ -816,8 +846,7 @@
           "200": {
             "description": "OK"
           }
-        },
-        "security": []
+        }
       }
     }
   },

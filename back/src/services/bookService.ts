@@ -58,7 +58,7 @@ export const getWordByCategory = async (
   if (customBookId) {
     const bookId: number = Number(customBookId);
     const customBook = await prisma.customBook.findUnique({
-      where: { id: bookId, userId: userId },
+      where: { id: bookId },
       include: { word: true },
     });
 
@@ -226,8 +226,18 @@ export const deleteCustomWordInBook = async (
   });
 };
 
+export const getFavoriteWordByWordId = async (userId: number, wordId: number): Promise<WordDto> => {
+  const favoriteWord: Favorite | null = await prisma.favorite.findFirst({
+    where: {
+      userId: userId,
+      wordId: wordId,
+    },
+  });
+  return plainToInstance(WordDto, favoriteWord);
+};
+
 export const createFavoriteWord = async (userId: number, wordId: number): Promise<WordDto> => {
-  const favoriteWord = await prisma.favorite.create({
+  const favoriteWord: Favorite = await prisma.favorite.create({
     data: {
       userId: userId,
       wordId: wordId,
@@ -238,12 +248,12 @@ export const createFavoriteWord = async (userId: number, wordId: number): Promis
 
 export const deleteAllFavoriteWord = async (userId: number) => {
   return prisma.favorite.deleteMany({
-    where: { userId: userId },
+    where: { userId },
   });
 };
 
 export const deleteFavoriteWord = async (userId: number, wordId: number) => {
   return prisma.favorite.delete({
-    where: { userId: userId, wordId: wordId },
+    where: { userId_wordId: { userId, wordId } },
   });
 };
