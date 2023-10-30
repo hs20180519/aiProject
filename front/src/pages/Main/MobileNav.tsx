@@ -17,6 +17,8 @@ import {
 } from "@chakra-ui/react";
 import { FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
 import { Link as ReactRouterLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import * as Api from "../../apis/api";
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
@@ -25,6 +27,23 @@ interface MobileProps extends FlexProps {
 }
 
 export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...rest }: MobileProps) {
+  const [userName, setUserName] = useState(""); // 유저 이름 상태 추가
+  const [profileImage, setProfileImage] = useState("");
+
+  // useEffect를 사용하여 유저 이름을 가져오는 코드 추가
+  useEffect(() => {
+    // 사용자 이름 가져오는 API 호출
+    Api.get('/user')
+      .then((response) => {
+        const userData = response.data;
+        setUserName(userData.name);
+        setProfileImage(userData.Image);
+      })
+      .catch((error) => {
+        console.error('사용자 이름 가져오기 오류:', error);
+      });
+  }, []);
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -73,10 +92,7 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
                   spacing={"1px"}
                   ml={"2"}
                 >
-                  <Text fontSize={"sm"}>{nickname}</Text>
-                  <Text fontSize={"xs"} color={"gray.600"}>
-                    {"Happy Wordy!\r"}
-                  </Text>
+                <Text fontSize={"sm"}>{userName || nickname}</Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
                   <FiChevronDown />
