@@ -58,32 +58,43 @@ export const searchWords = async (
   page: number,
   limit: number,
 ) => {
-  const totalWordCount: number = 3493;
-  const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
-  const offset: number = (page - 1) * limit;
+  const totalWordCount = 3493;
+  const totalPages = Math.ceil(totalWordCount / (limit ?? 10));
+  const offset = (page - 1) * limit;
 
-  console.log(searchTerm);
-
-  const searchWords: WordDto[] = await prisma.$queryRawUnsafe(String.raw`
-  SELECT Word.*, IF(Favorite.userId IS NULL, false, true) AS isFavorite
-  FROM Word LEFT JOIN Favorite ON Word.id = Favorite.wordId AND Favorite.userId = ${userId}
-  WHERE MATCH(word) AGAINST('${searchTerm}') AND category <> 'custom'
-  ORDER BY MATCH(word) AGAINST('${searchTerm}') DESC LIMIT ${limit} OFFSET ${offset};
-`);
-
-  const words = searchWords.map((word) => {
-    const isFavorite: boolean = !!word.isFavorite;
-    return {
-      id: word.id,
-      word: word.word,
-      meaning: word.meaning,
-      category: word.category,
-      isFavorite,
-    };
+  const words = await prisma.word.findMany({
+    take: limit,
+    skip: offset,
+    where: {
+      AND: [{ word: { contains: searchTerm } }, { category: { not: "custom" } }],
+    },
+    orderBy: {
+      word: "desc",
+    },
+    include: {
+      favorite: {
+        where: { userId: userId },
+        select: { userId: true },
+      },
+    },
   });
 
+  const sortedWords = [...words].sort((a, b) => {
+    if (a.word === searchTerm) return -1;
+    if (b.word === searchTerm) return 1;
+    return 0;
+  });
+
+  const mappedWords = sortedWords.map((word) => ({
+    id: word.id,
+    word: word.word,
+    meaning: word.meaning,
+    category: word.category,
+    isFavorite: word.favorite.length > 0,
+  }));
+
   return {
-    words: plainToInstance(WordDto, words),
+    words: mappedWords,
     totalPages,
     currentPage: page,
   };
