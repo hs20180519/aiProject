@@ -35,6 +35,7 @@ app.add_middleware(
 app.include_router(gpt_router.router)
 app.include_router(grammar_router.router)
 
+
 @app.on_event("startup")
 async def init_app():
     print("🚀 GPT API START 🚀")
