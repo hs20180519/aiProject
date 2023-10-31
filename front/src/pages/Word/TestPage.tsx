@@ -57,7 +57,6 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
     try {
       const queryParams = `${selectedCategory}=true`;
       const response = await FetchStudyWords.getStudyWord(queryParams);
-      console.log(response.data)
       const newWordData = response.data;
       setWordData(newWordData);
     } catch (error) {
@@ -88,11 +87,9 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
     };
 
     setAnswers(newAnswer);
-
     setPopupCorrectAnswer(correctAnswer);
     setPopupIsCorrect(isCorrect);
     setPopupIsOpen(true);
-
     saveLearn(wordData, isCorrect);
   };
 
@@ -106,11 +103,9 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
     };
 
     setAnswers(newAnswer);
-
     setPopupCorrectAnswer(correctAnswer);
     setPopupIsCorrect(false);
     setPopupIsOpen(true);
-
     saveLearn(wordData, false);
   };
 

@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 import {
-  Tooltip,
-  useToast,
-  Checkbox,
   Button,
   Box,
   Table,
@@ -14,7 +11,6 @@ import {
   Td,
   Text,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 
 interface Answer {
   id: number;
@@ -25,18 +21,10 @@ interface Answer {
 }
 
 interface ExperienceResultPageProps {
-  collectAnswers: Answer[]; // 또는 실제로 사용하는 데이터 유형에 따라 타입 지정
+  collectAnswers: Answer[];
 }
 
-
 const ExperienceResultPage: React.FC<ExperienceResultPageProps> = ({ collectAnswers }) => {
-
-  const navigate = useNavigate();
-  const toast = useToast();
-
-  console.log(collectAnswers)
-
-  // Calculate the number of correct answers and total answers
   const totalAnswers = collectAnswers.length;
   const correctAnswers = collectAnswers.filter((result) => result.isCorrect).length;
 

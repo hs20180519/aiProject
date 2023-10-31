@@ -59,7 +59,6 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
       const response = await FetchExperience.getExperienceEdu();
       const newWordData = response.data;
       setWordData(newWordData);
-      console.log(wordData)
     } catch (error) {
       console.error('Error fetching words:', error);
     }
@@ -78,7 +77,6 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
     };
 
     setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
-
     setPopupCorrectAnswer(correctAnswer);
     setPopupIsCorrect(isCorrect);
     setPopupIsOpen(true);
@@ -95,7 +93,6 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
     };
 
     setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
-
     setPopupCorrectAnswer(correctAnswer);
     setPopupIsCorrect(false);
     setPopupIsOpen(true);
@@ -103,13 +100,10 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
 
   const handleModalClose = () => {
     setPopupIsOpen(false);
-
-    console.log(answers)
   
     if (currentIndex < 9) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      // When the 10th word is answered, show the ResultPage
       setCollectAnswers(answers);
       setShowExperienceResultPage(true);
     }
@@ -123,8 +117,6 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
   const currentWord = currentWordSet?.word;
   const currentChoices = currentWordSet?.choices || [];
   const totalWords = wordData.length;
-
-  
 
   return (
     <Flex align="center" justify="center" height="100vh">

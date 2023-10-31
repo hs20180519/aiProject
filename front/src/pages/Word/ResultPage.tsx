@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { FetchStudyWords } from "../../apis/studyWord";
-import { Link as RouterLink } from "react-router-dom";
 import {
   Tooltip,
   useToast,
@@ -31,7 +30,6 @@ const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestP
   const toast = useToast();
 
   useEffect(() => {
-    // Fetch results data from the backend when the component mounts
     const fetchResults = async () => {
       try {
         const response = await FetchStudyWords.getLearnResult();
@@ -45,17 +43,14 @@ const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestP
     fetchResults();
   }, []);
 
-  // Calculate the number of correct answers and total answers
   const totalAnswers = resultData.length;
   const correctAnswers = resultData.filter((result) => result.correct).length;
 
   const handleContinueLearning = () => {
-    // Reset the showResultPage state to false
     setShowResultPage(false);
   };
 
   const handleStopLearning = () => {
-    // Reset the showResultPage state to false
     setShowResultPage(false);
     setShowTestPage(false);
   };

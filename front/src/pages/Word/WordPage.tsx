@@ -19,18 +19,17 @@ export default function WordPage() {
   return (
     <ChakraProvider theme={theme}>
       <Box minH="80vh" display="flex" alignItems="center" justifyContent="center">
-        {showTestPage && !showResultPage ? ( // Render TestPage or ResultPage based on state
+        {showTestPage && !showResultPage ? (
           <TestPage
             selectedCategory={selectedCategory}
-            setShowResultPage={setShowResultPage} // Pass setShowResultPage to TestPage
+            setShowResultPage={setShowResultPage}
           />
-        ) : showResultPage ? ( // Render ResultPage if showResultPage is true
+        ) : showResultPage ? (
           <ResultPage 
             setShowResultPage={setShowResultPage}
             setShowTestPage={setShowTestPage}
           />
         ) : (
-          // Render the CategorySelection component
           <CategoryPage onSelectCategory={handleCategorySelect} />
         )}
       </Box>
