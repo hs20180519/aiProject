@@ -1,5 +1,5 @@
 import { Box, Flex } from "@chakra-ui/react";
-import BookMark from "./BookMark";
+import BookMark from "../../../components/BookMark";
 
 const WordBox = ({ word, onBookmarkClick }) => {
   return (
@@ -13,7 +13,7 @@ const WordBox = ({ word, onBookmarkClick }) => {
         border: "1px solid #ddd",
         borderRadius: "5px",
         padding: "10px",
-        margin: "10px",
+        marginBottom: "10px",
       }}
     >
       <Box flex={1} style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>

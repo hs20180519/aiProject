@@ -68,7 +68,7 @@ export const postCustomWordAdd = async (
  * ['toeic'] = {  type: 'boolean' }
  * ['toefl'] = { type: 'boolean' }
  * ['ielts'] = {  type: 'boolean' }
- * ['custom'] = {  type: 'boolean' }
+ * ['customs'] = {  type: 'boolean' }
  */
 export const getNoteDetail = async (queryParams: string) => {
   const url = `/book/word`;
@@ -76,8 +76,7 @@ export const getNoteDetail = async (queryParams: string) => {
   const fullUrl = `${url}?${queryString}`;
   console.log(fullUrl);
   const res = await Api.get(fullUrl);
-  console.log("---------요청------");
-  console.log(res);
+
   return res;
 };
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as instance from "../../apis/api";
 import { Box, Grid } from "@chakra-ui/react";
 import WordBox from "./Components/WordBox";
-import CustomModal from "./Components/CustomModal";
+import CustomModal from "../../components/CustomModal";
 import Pagination from "../../components/Pagination";
 
 // 단어 검색 가능하게
@@ -26,7 +26,7 @@ const Storage: React.FC = () => {
 
   const fetchWordData = async (pageNumber: number) => {
     try {
-      const response = await instance.get(`/storage?page=${pageNumber}&limit=15`);
+      const response = await instance.get(`/storage?page=${pageNumber}&limit=10`);
       if (response.data && Array.isArray(response.data.words)) {
         setWordData(response.data.words);
         setTotalPages(response.data.totalPages);
@@ -59,7 +59,8 @@ const Storage: React.FC = () => {
           );
           // 즐겨찾기가 추가되면 모달을 엽니다.
           setIsModalOpen(true);
-          setModalMessage("즐겨찾기가 추가되었습니다. 단어장에서 확인해주세요 :)");
+          const msg = `즐겨찾기가 추가되었습니다. 단어장에서 확인해주세요 :)`;
+          setModalMessage(msg);
         }
       } else {
         const response = await instance.delete(`/book/favorite?wordId=${wordId}`);
@@ -86,7 +87,7 @@ const Storage: React.FC = () => {
 
   return (
     <Box>
-      <Grid templateColumns="repeat(3, 1fr)" gap={1}>
+      <Grid templateColumns="repeat(2, 1fr)" gap={1}>
         {wordData.map((word) => (
           <WordBox key={word.id} word={word} onBookmarkClick={handleBookmarkClick} />
         ))}
