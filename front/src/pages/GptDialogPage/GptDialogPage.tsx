@@ -146,6 +146,9 @@ const GptDialogPage = () => {
             )}
           </Box>
           <Box mt={4} maxW="sm">
+            <Text mt={8} mb={4} fontSize="sm" color="gray.500">
+              생성된 문장의 단어를 클릭하거나 마우스 커서를 올리면 뜻을 확인 할 수 있습니다
+            </Text>
             {scriptResult ? (
               <ScriptDialog
                 dialogResult={JSON.parse(scriptResult)}
