@@ -8,9 +8,9 @@ const BookMark = ({ favorite, onClick }) => {
   return (
     <>
       {favorite ? (
-        <Icon as={PiStarFill} boxSize={5} color={"yellow.400"} onClick={onClick} />
+        <Icon as={PiStarFill} boxSize={4} color={"yellow.400"} onClick={onClick} />
       ) : (
-        <Icon as={PiStarDuotone} boxSize={5} color={"yellow.300"} onClick={onClick} />
+        <Icon as={PiStarDuotone} boxSize={4} color={"yellow.300"} onClick={onClick} />
       )}
     </>
   );

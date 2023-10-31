@@ -1,9 +1,7 @@
 import React, { ChangeEvent, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
-import { Input, Button, VStack, HStack, Box, Heading, StackDivider } from "@chakra-ui/react";
-
-// Todo: 컴포넌트로 나누기 ? 모듈화 ?
+import { Input, Button, VStack, HStack, Box, Heading } from "@chakra-ui/react";
 
 const GrammarPage = () => {
   const { word } = useParams<{ word }>();
@@ -28,7 +26,7 @@ const GrammarPage = () => {
 
   return (
     <VStack
-      // divider={<StackDivider borderColor="gray.200" />}
+      fontFamily="monospace"
       h="calc(90vh)"
       spacing={8}
       p={8}
@@ -38,20 +36,38 @@ const GrammarPage = () => {
       boxShadow="lg"
       backgroundColor="white"
     >
-      <Heading as="h1" size="lg">
+      <Heading
+        as="h1"
+        size="xl"
+        fontFamily="monospace"
+        sx={{
+          "@keyframes fly": {
+            "0%": { transform: "translateY(0)" },
+            "50%": { transform: "translateY(-10px)" },
+            "100%": { transform: "translateY(0)" },
+          },
+          "&.flying-text": {
+            animation: "fly 2s infinite",
+          },
+        }}
+        className="flying-text"
+      >
         문법 교정기
       </Heading>
 
       <Box>
-        {word == "ai" ? `자유롭게 영작을 해주세요!` : `${word}가 포함된 문장을 입력해주세요!`}
+        {/* 줄바꿈 넣고 싶어요 */}
+        {word == "ai"
+          ? `자유롭게 영작을 해주세요. 
+        wordy가 문법을 고쳐줄 거예요!`
+          : `${word}가 포함된 문장을 입력해주세요!`}
       </Box>
-      {/* {renderContent()} */}
-      <HStack width="70%">
+      <HStack width="70%" fontFamily="monospace">
         <Input
           size="lg"
           value={inputText}
           onChange={handleInputChange}
-          placeholder="문장을 입력해주세요."
+          placeholder="문장을 입력하세요"
           isTruncated
           width="100%"
           borderColor="lightgray"
@@ -66,6 +82,7 @@ const GrammarPage = () => {
       <VStack align="start" spacing={4} width="70%">
         <Box fontSize={"15px"}>교정된 문장 :</Box>
         <Box
+          fontFamily="monospace"
           border="1px"
           p={6}
           borderRadius="md"
