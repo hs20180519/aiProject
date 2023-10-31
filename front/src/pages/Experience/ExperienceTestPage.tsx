@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@chakra-ui/react";
-import { FetchStudyWords } from "../../apis/studyWord";
+import { FetchExperience } from "../../apis/experience";
 
 interface WordData {
   id: number;
@@ -11,17 +11,18 @@ interface WordData {
   choices: string[];
 }
 
-interface TestPageProps {
-  selectedCategory: string;
-  setShowResultPage: (value: boolean) => void; 
-}
-
 interface Answer {
   id: number;
+  word: string;
   userAnswer: string;
   correctAnswer: string;
   isCorrect: boolean;
 }
+
+interface ExperienceTestPageProps {
+    setShowExperienceResultPage: (value: boolean) => void;
+    setCollectAnswers: (answers: Answer[]) => void;
+  }
 
 const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
   return (
@@ -44,10 +45,10 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
   );
 };
 
-const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage }) => {
-  const [wordData, setWordData] = useState<WordData>();
+const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperienceResultPage, setCollectAnswers }) => {
+  const [wordData, setWordData] = useState<WordData[]>([]);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<Answer>();
+  const [answers, setAnswers] = useState<Answer[]>([]);
   const [popupIsOpen, setPopupIsOpen] = useState(false);
   const [popupIsCorrect, setPopupIsCorrect] = useState(false);
   const [popupCorrectAnswer, setPopupCorrectAnswer] = useState("");
@@ -55,8 +56,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
 
   const fetchWords = async () => {
     try {
-      const queryParams = `${selectedCategory}=true`;
-      const response = await FetchStudyWords.getStudyWord(queryParams);
+      const response = await FetchExperience.getExperienceEdu();
       const newWordData = response.data;
       setWordData(newWordData);
     } catch (error) {
@@ -64,73 +64,59 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
     }
   };
 
-  const saveLearn = async (wordData, isCorrect) => {
-    try {
-      FetchStudyWords.saveLearn({
-        wordId: wordData.id,
-        correct: isCorrect,
-      });
-    } catch (error) {
-      console.error('Error saving learn: ', error)
-    }
-  };
-
   const handleChoiceClick = (choice: string) => {
     const userAnswer = choice;
-    const correctAnswer = wordData.meaning;
+    const correctAnswer = wordData[currentIndex].meaning;
     const isCorrect = userAnswer === correctAnswer;
     const newAnswer: Answer = {
-      id: wordData.id,
+      id: wordData[currentIndex].id,
+      word: wordData[currentIndex].word,
       userAnswer,
       correctAnswer,
       isCorrect,
     };
 
-    setAnswers(newAnswer);
+    setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
     setPopupCorrectAnswer(correctAnswer);
     setPopupIsCorrect(isCorrect);
     setPopupIsOpen(true);
-    saveLearn(wordData, isCorrect);
   };
 
   const handleDontKnow = () => {
-    const correctAnswer = wordData.meaning;
+    const correctAnswer = wordData[currentIndex].meaning;
     const newAnswer: Answer = {
-      id: wordData.id,
+      id: wordData[currentIndex].id,
+      word: wordData[currentIndex].word,
       userAnswer: null,
       correctAnswer,
       isCorrect: false,
     };
 
-    setAnswers(newAnswer);
+    setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
     setPopupCorrectAnswer(correctAnswer);
     setPopupIsCorrect(false);
     setPopupIsOpen(true);
-    saveLearn(wordData, false);
   };
 
   const handleModalClose = () => {
     setPopupIsOpen(false);
-    
-    if (currentIndex === 9) {
-      setShowResultPage(true);
-    } else {
-      fetchWords();
-    }
-
-    if (currentIndex < 10) {
+  
+    if (currentIndex < 9) {
       setCurrentIndex(currentIndex + 1);
+    } else {
+      setCollectAnswers(answers);
+      setShowExperienceResultPage(true);
     }
   };
 
   useEffect(() => {
     fetchWords();
-  }, [selectedCategory]);
+  }, []);
 
-  const currentWordSet = wordData;
+  const currentWordSet = wordData[currentIndex];
   const currentWord = currentWordSet?.word;
   const currentChoices = currentWordSet?.choices || [];
-  const totalWords = 10;
+  const totalWords = wordData.length;
 
   return (
     <Flex align="center" justify="center" height="100vh">
@@ -177,4 +163,4 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
   );
 };
 
-export default TestPage;
+export default ExperienceTestPage;
