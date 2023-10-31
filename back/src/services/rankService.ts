@@ -37,41 +37,41 @@ export const getUsersRankList = async (page?: number, limit?: number): Promise<R
   );
 };
 
-export const getUserRank = async (): Promise<RankDto[]> => {
-  const users = await prisma.rank.findMany({
-    orderBy: {
-      score: "desc",
-    },
-    select: {
-      userId: true,
-      score: true,
-      currentRank: true,
-      user: {
-        select: { name: true, nickname: true, profileImage: true },
-      },
-    },
-  });
+// export const getUserRank = async (): Promise<RankDto[]> => {
+//   const users = await prisma.rank.findMany({
+//     orderBy: {
+//       score: "desc",
+//     },
+//     select: {
+//       userId: true,
+//       score: true,
+//       currentRank: true,
+//       user: {
+//         select: { name: true, nickname: true, profileImage: true },
+//       },
+//     },
+//   });
 
-  let rank = 1;
-  for (const user of users) {
-    await prisma.rank.update({
-      where: { userId: user.userId },
-      data: { currentRank: rank },
-    });
-    rank++;
-  }
-  console.log(users);
+//   let rank = 1;
+//   for (const user of users) {
+//     await prisma.rank.update({
+//       where: { userId: user.userId },
+//       data: { currentRank: rank },
+//     });
+//     rank++;
+//   }
+//   console.log(users);
 
-  return plainToInstance(
-    RankDto,
-    users.map((user) => ({
-      nickname: user.user.nickname,
-      profileImage: user.user.profileImage,
-      score: user.score,
-      currentRank: user.currentRank,
-    })),
-  );
-};
+//   return plainToInstance(
+//     RankDto,
+//     users.map((user) => ({
+//       nickname: user.user.nickname,
+//       profileImage: user.user.profileImage,
+//       score: user.score,
+//       currentRank: user.currentRank,
+//     })),
+//   );
+// };
 
 // export const getRankGap = async ()=> {
 //   const users = await prisma.rank.findMany({

@@ -17,15 +17,15 @@ export const getUsersRankList = async (req: Request, res: Response, next: NextFu
   }
 };
 
-export const getUsersRank = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const usersRank = await rankService.getUserRank();
-    res.status(200).json(usersRank);
-  } catch (e) {
-    res.status(500).json({ message: `유저 랭킹 조회에 실패하였습니다.` });
-    return next(e);
-  }
-};
+// export const getUsersRank = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const usersRank = await rankService.getUserRank();
+//     res.status(200).json(usersRank);
+//   } catch (e) {
+//     res.status(500).json({ message: `유저 랭킹 조회에 실패하였습니다.` });
+//     return next(e);
+//   }
+// };
 
 // export const getRankGap = async (req: Request, res: Response, next: NextFunction) => {
 //   try {
