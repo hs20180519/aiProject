@@ -1,5 +1,6 @@
-import { Stack, Button, Center, Text } from "@chakra-ui/react";
+import { Stack, Button, Center, Text, Box } from "@chakra-ui/react";
 import { FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleLeft, FaAngleRight } from "react-icons/fa";
+
 interface PaginationProps {
   pagingIndex: number;
   limit: number;
@@ -24,11 +25,11 @@ export default function Pagination({
 
   return (
     <Center>
-      <Stack direction="row" mt={4}>
+      <Stack direction="row" mt={4} alignItems="center">
         <Button
           onClick={() => {
-            handleChangePage(range);
-            handleChangePaginIndex(pagingIndex - 1);
+            handleChangePage(1);
+            handleChangePaginIndex(1);
           }}
           padding={0}
           isDisabled={pagingIndex === 1}
@@ -73,10 +74,10 @@ export default function Pagination({
         </Button>
         <Button
           onClick={() => {
-            handleChangePage(lastLimit * pagingIndex + 1);
-            handleChangePaginIndex(pagingIndex + 1);
+            handleChangePage(totalPage);
+            handleChangePaginIndex(Math.ceil(totalPage / limit));
           }}
-          isDisabled={totalPage < pagingIndex * limit}
+          isDisabled={totalPage === currentPage}
         >
           <FaAngleDoubleRight />
         </Button>

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Modal,
   ModalOverlay,
@@ -12,14 +11,14 @@ import {
 
 const CustomModal = ({ isOpen, onClose, message }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} size="xs">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>알림</ModalHeader>
         <ModalCloseButton />
         <ModalBody>{message}</ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
+          <Button colorScheme="pink" mr={3} onClick={onClose}>
             닫기
           </Button>
         </ModalFooter>

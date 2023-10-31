@@ -1,4 +1,12 @@
-import { Box, CloseButton, Flex, useColorModeValue, Text, BoxProps } from "@chakra-ui/react";
+import {
+  Box,
+  CloseButton,
+  Flex,
+  useColorModeValue,
+  Text,
+  BoxProps,
+  useMenuOption,
+} from "@chakra-ui/react";
 import { NavLink, Link } from "react-router-dom";
 import {
   FiEdit2,
@@ -14,7 +22,7 @@ import * as type from "../../apis/types/main";
 import { useLocation } from "react-router-dom";
 
 const LinkItems: Array<type.LinkItemProps> = [
-  { id: "word", name: "단어학습", icon: FiEdit2 },
+  { id: "", name: "단어학습", icon: FiEdit2 },
   { id: "rank", name: "랭킹", icon: FiTrendingUp },
   { id: "grammar/ai", name: "문법 교정", icon: FiCodesandbox },
   { id: "gpt_dialog", name: "문장 생성", icon: FiEdit },
@@ -24,6 +32,12 @@ const LinkItems: Array<type.LinkItemProps> = [
 ];
 export default function SidebarContent({ onClose, ...rest }: type.SidebarProps) {
   const location = useLocation();
+
+  //사이드 바가 닫히도록 헨들링
+  const handleLinkClick = () => {
+    onClose();
+  };
+
   return (
     <Box
       transition={"3s ease"}
@@ -44,7 +58,7 @@ export default function SidebarContent({ onClose, ...rest }: type.SidebarProps) 
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link: type.LinkItemProps) => (
-        <NavLink to={link.id} key={link.id}>
+        <NavLink to={link.id} key={link.id} onClick={handleLinkClick}>
           <NavItem icon={link.icon}>{link.name}</NavItem>
         </NavLink>
       ))}
