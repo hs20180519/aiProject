@@ -8,15 +8,22 @@ import {
   Icon,
   InputGroup,
   InputLeftElement,
-  Grid,
 } from "@chakra-ui/react";
 import { FaRobot, FaSortAlphaUp, FaDog, FaPencilAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import * as type from "../../../apis/types/custom";
 import Btn from "../../../components/Btn";
+
+interface WordBoxProps {
+  word: type.WordsProps;
+  isBookmarked: boolean;
+  onUpdate: (word_id: number, data: type.SubmitCustomWord) => void | Promise<void>;
+  onDelete: (word_id: number) => void | Promise<void>;
+}
+
 /** 단어와 뜻을 표시하는 상자입니다. */
-export default function WordBox({ word, isBookmarked, onUpdate, onDelete }) {
+export default function WordBox({ word, isBookmarked, onUpdate, onDelete }: WordBoxProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [updateWord, setUpdateWord] = useState(word.word);
   const [updateMeaning, setUpdateMeaning] = useState(word.meaning);
@@ -45,7 +52,7 @@ export default function WordBox({ word, isBookmarked, onUpdate, onDelete }) {
             height="130px"
             borderWidth="3px"
             borderRadius="lg"
-            id={word.id}
+            id={word.id.toString()}
           >
             <Stack direction="row" mt={-5}>
               <InputGroup>
@@ -78,27 +85,25 @@ export default function WordBox({ word, isBookmarked, onUpdate, onDelete }) {
           height="30px"
           borderWidth="3px"
           borderRadius="lg"
-          id={word.id}
+          id={word.id.toString()}
         >
           <Stack direction="row" mt={-4}>
             <Link to={`grammar/${word.word}}`}>
               <Icon as={FaRobot} boxSize={8} />
             </Link>
-            <Text fontSize="xl" right={24}>
+            <Text fontSize="xl" fontFamily={"monospace"} right={24}>
               {word.word}
             </Text>
             <Stack direction="row" position="absolute" right={6}>
               <Text fontSize="xl" color={"gray.400"}>
                 {word.meaning}
               </Text>
-              {/* <Icon as={FaPencilAlt} boxSize={3}  onClick={() => setIsEditing((prev) => !prev)/>}/> */}
               <Btn
                 size="xs"
                 variant="ghost"
                 text={<Icon as={FaPencilAlt} boxSize={3} />}
                 onClick={() => setIsEditing((prev) => !prev)}
               />
-              {/* <BookmarkBtn isBookmarked={isBookmarked} />  */}
             </Stack>
           </Stack>
         </Box>

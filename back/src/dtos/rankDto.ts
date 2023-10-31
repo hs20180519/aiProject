@@ -8,6 +8,8 @@ export class RankDto {
   @Exclude()
   id!: number;
 
+  rank?: number;
+
   @IsNumber()
   @IsNotEmpty()
   @Exclude()

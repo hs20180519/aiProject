@@ -46,7 +46,7 @@ export default function NoteDetailPage() {
   const [category, setCategory] = useState([]);
   const [customNote, setCustomNote] = useState([]);
   const [title, setTitle] = useState("");
-  const [words, setWords] = useState([]);
+  const [words, setWords] = useState<type.WordsProps[]>([]);
 
   /** Search Word */
   const [keyword, setKeyword] = useState(true);
@@ -264,10 +264,9 @@ export default function NoteDetailPage() {
 
   return (
     <Stack>
-      <HStack spacing={2}>
-        <SelectNote onSelect={onSelect} category={category} customNote={customNote} />
-        <SearchBar onSearch={handleSearchClick} />
-      </HStack>
+      <SelectNote onSelect={onSelect} category={category} customNote={customNote} />
+      <SearchBar onSearch={handleSearchClick} />
+
       <Heading color={"teal"}>{title}</Heading>
 
       {words.map((word: type.WordsProps) => (

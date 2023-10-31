@@ -17,41 +17,22 @@ export const getUsersRankList = async (req: Request, res: Response, next: NextFu
   }
 };
 
-export const getUserRank = async (req: Request, res: Response, next: NextFunction) => {
+export const getUsersRank = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId: number = (req.user as User).id;
-    const rank: number = await rankService.getUserRank(userId);
-    if (!rank) return res.status(400).json({ message: "유저의 랭킹을 가져올 수 없습니다." });
-
-    return res.status(200).json(rank);
+    const usersRank = await rankService.getUserRank();
+    res.status(200).json(usersRank);
   } catch (e) {
-    console.error(e);
+    res.status(500).json({ message: `유저 랭킹 조회에 실패하였습니다.` });
     return next(e);
   }
 };
 
-// export const updateUserRank = async (req Request, res: Response, next: NextFunction) => {
+// export const getRankGap = async (req: Request, res: Response, next: NextFunction) => {
 //   try {
-//     const updateUserRank6pm = await rankService.updateUserRank6pm;
-//     const updateUserRank8am = await rankService.updateUserRank8am;
-
-//     res.status(200).json(updateUserRank6pm,updateUserRank8am);
-//     console.log(updateUserRank6pm,updateUserRank8am);
+//     await rankService.getRankGap();
+//     res.status(200).json({ message: "랭킹 차 조회를 완료하였습니다." });
 //   } catch (e) {
-//     res.status(400).json(`${e}\n 랭킹을 불러올 수 없습니다.`);
-//     next(e);}}
-
-/** 유저 랭킹 변화 */
-export const getUserGapRank = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const userId: number = (req.user as User).id;
-    const userGapRank = await rankService.userGapRank(userId);
-
-    if (!userGapRank)
-      return res.status(400).json({ message: `유저 랭킹변화를 조회 할 수 없습니다.` });
-    return res.status(200).json(userGapRank);
-  } catch (e) {
-    console.error(e);
-    return next(e);
-  }
-};
+//     res.status(500).json({ message: "랭킹 차 조회에 실패하였습니다." });
+//     return next(e);
+//   }
+// };

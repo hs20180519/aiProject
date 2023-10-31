@@ -9,9 +9,10 @@ interface NoteListProps {
 }
 
 interface WordsProps {
-  id: string;
+  id: number;
   word: string;
   meaning: string;
+  correct?: boolean;
 }
 interface SubmitCustomWord {
   word: string;
