@@ -132,7 +132,7 @@ const ResultPage = () => {
         </Tooltip>
         <Button
           as={RouterLink}
-          to="/main/word"
+          to="/main"
           colorScheme="green"
           m={2}
           onClick={() => window.location.reload()}
