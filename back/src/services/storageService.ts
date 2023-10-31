@@ -9,7 +9,15 @@ export const getAllWords = async (
   page: number,
   limit: number,
 ): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
-  const totalWordCount: number = 3493;
+  const totalWordCount: number = await prisma.word.count({
+    where: {
+      category: {
+        not: {
+          in: ["custom"],
+        },
+      },
+    },
+  });
   const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
   const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
@@ -57,33 +65,47 @@ export const searchWords = async (
   searchTerm: string,
   page: number,
   limit: number,
-) => {
-  const totalWordCount: number = 3493;
+): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
+  const totalWordCount: number = await prisma.word.count({
+    where: {
+      AND: [{ word: { contains: searchTerm } }, { category: { not: "custom" } }],
+    },
+  });
   const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
-  const offset: number = (page - 1) * limit;
+  const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
-  console.log(searchTerm);
-
-  const searchWords: WordDto[] = await prisma.$queryRawUnsafe(String.raw`
-  SELECT Word.*, IF(Favorite.userId IS NULL, false, true) AS isFavorite
-  FROM Word LEFT JOIN Favorite ON Word.id = Favorite.wordId AND Favorite.userId = ${userId}
-  WHERE MATCH(word) AGAINST('${searchTerm}') AND category <> 'custom'
-  ORDER BY MATCH(word) AGAINST('${searchTerm}') DESC LIMIT ${limit} OFFSET ${offset};
-`);
-
-  const words = searchWords.map((word) => {
-    const isFavorite: boolean = !!word.isFavorite;
-    return {
-      id: word.id,
-      word: word.word,
-      meaning: word.meaning,
-      category: word.category,
-      isFavorite,
-    };
+  const words = await prisma.word.findMany({
+    where: {
+      AND: [{ word: { contains: searchTerm } }, { category: { not: "custom" } }],
+    },
+    orderBy: {
+      word: "desc",
+    },
+    include: {
+      favorite: {
+        where: { userId: userId },
+        select: { userId: true },
+      },
+    },
+    ...offset,
   });
 
+  const sortedWords = [...words].sort((a, b) => {
+    if (a.word === searchTerm) return -1;
+    if (b.word === searchTerm) return 1;
+    return 0;
+  });
+
+  const mappedWords = sortedWords.map((word) => ({
+    id: word.id,
+    word: word.word,
+    meaning: word.meaning,
+    category: word.category,
+    isFavorite: word.favorite.length > 0,
+  }));
+
   return {
-    words: plainToInstance(WordDto, words),
+    words: plainToInstance(WordDto, mappedWords),
     totalPages,
     currentPage: page,
   };

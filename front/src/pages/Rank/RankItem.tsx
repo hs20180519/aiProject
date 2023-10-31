@@ -1,15 +1,5 @@
 import styled from "@emotion/styled";
-import {
-  ListProps,
-  Box,
-  Flex,
-  Center,
-  Text,
-  Square,
-  Spacer,
-  Grid,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { ListProps, Box, Stack, Avatar, Text } from "@chakra-ui/react";
 
 interface RankListProps extends ListProps {
   rankList: RankItemProps[];
@@ -19,114 +9,44 @@ export interface RankItemProps {
   id: number;
   nickname: string;
   score: number;
+  profileImage: string;
 }
 
 const RankItem = ({ rankList }: RankListProps) => {
-  // const topThree = ()=>{
-  //   const topUserGroup = [];
-  //   for (let i = 0; i++; i<3){
-  //     topUserGroup.push(
-  //       <Grid templateColumns="repeat(3, 1fr)" gap={2} p={4}>
-  //         <Box
-  //           key={rankList.id}
-  //           bg="white"
-  //           w="30%"
-  //           fontWeight="semibold"
-  //           rounded={"lg"}
-  //           boxShadow={"lg"}
-  //           alignItems="center"
-  //           p={8}
-  //         >
-  //           <Text>{index + 1}등</Text>
-  //         </Box>
-
-  //         <Box
-  //           bg="white"
-  //           fontWeight="semibold"
-  //           rounded={"lg"}
-  //           boxShadow={"lg"}
-  //           alignItems="center"
-  //           p={8}
-  //         >
-  //           <Text> {rankList[0].nickname}</Text>
-  //         </Box>
-
-  //         <Box
-  //           key={rankList[0].id}
-  //           bg="white"
-  //           fontWeight="semibold"
-  //           rounded={"lg"}
-  //           boxShadow={"lg"}
-  //           alignItems="center"
-  //           p={8}
-  //         >
-  //           <Text>{rankList[0].score}</Text>
-  //         </Box>
-  //       </Grid>)
-
-  //   }
-  // }
   return (
     <>
       {rankList.map((rank: RankItemProps, index: number) => (
-        <Grid templateColumns="repeat(3, 1fr)" gap={2} p={4}>
-          <Box
-            key={rank.id}
-            bg={rank.id <= 3 ? "teal.300" : "yellow.100"}
-            w={"20%"}
-            fontWeight="semibold"
-            rounded={"lg"}
-            boxShadow={"lg"}
-            borderRadius="full"
-            alignItems="center"
-            p={8}
-          >
-            {index + 1}등
-          </Box>
-
-          <Box
-            bg="white"
-            fontWeight="semibold"
-            rounded={"lg"}
-            boxShadow={"lg"}
-            alignItems="center"
-            p={8}
-          >
-            <Text> {rank.nickname}</Text>
-          </Box>
-
-          <Box
-            key={rank.id}
-            bg="white"
-            fontWeight="semibold"
-            rounded={"lg"}
-            boxShadow={"lg"}
-            alignItems="center"
-            p={8}
-          >
-            <Text>{rank.score}</Text>
-          </Box>
-        </Grid>
+        <Box
+          key={rank.id}
+          bg={rank.id <= 3 ? "yellow.100" : "white"}
+          fontWeight="semibold"
+          rounded={"lg"}
+          boxShadow={"lg"}
+          borderRadius="full"
+          alignItems="center"
+          p={8}
+          mt={3}
+        >
+          <Stack direction="row">
+            <Text color={"teal.400"}>{index + 1}등</Text>
+            <Avatar
+              size={"sm"}
+              ml={2}
+              mr={3}
+              src={
+                rank?.profileImage
+                  ? rank.profileImage
+                  : "https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256"
+              }
+            />
+            <Text color={"gray.600"}> {rank.nickname}</Text>
+            <Text color={"teal.400"} position={"absolute"} right={12}>
+              {rank.score}점
+            </Text>
+          </Stack>
+        </Box>
       ))}
     </>
   );
 };
 export default RankItem;
-
-const StyledContainer = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
-const StyledWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 64px;
-`;
-
-const StyledFlexbox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;

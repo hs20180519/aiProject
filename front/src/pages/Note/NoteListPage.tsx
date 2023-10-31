@@ -8,6 +8,7 @@ import {
   Heading,
   Badge,
   SimpleGrid,
+  Stack,
   AbsoluteCenter,
   ButtonGroup,
   useToast,
@@ -26,6 +27,7 @@ import Loading from "../../components/Loading";
 const NOTE_LIST = [
   { id: "correct", title: "학습한 단어" },
   { id: "incorrect", title: "틀린 단어" },
+  { id: "favorite", title: "⭐️즐겨찾기" },
 ];
 const TOAST_TIMEOUT_INTERVAL = 800;
 
@@ -88,19 +90,18 @@ export default function CustomNoteListPage() {
   };
 
   /** 단어장 선택 삭제하기 */
-  const fetchDelCustomNote = async (e) => {
-    const url = e;
+  const fetchDelCustomNote = async (note_id) => {
     try {
-      const res = await delCustomNote(url);
+      const res = await delCustomNote(`customBookId=${note_id}`);
       console.dir(res);
-      // if (res.status === 200) {
-      //   toast({
-      //     title: `삭제되었습니다.`,
-      //     status: "success",
-      //     isClosable: true,
-      //     duration: TOAST_TIMEOUT_INTERVAL,
-      //   });
-      // }
+      if (res.status === 200) {
+        toast({
+          title: `삭제되었습니다.`,
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+      }
     } catch (e) {
       console.error(e);
     }
@@ -111,27 +112,28 @@ export default function CustomNoteListPage() {
     try {
       const res = await delAllCustomNote();
       console.log(res);
-      // if (res.status === 200) {
-      //   toast({
-      //     title: `전체 삭제 완료`,
-      //     status: "success",
-      //     isClosable: true,
-      //     duration: TOAST_TIMEOUT_INTERVAL,
-      //   });
-      // }
+      if (res.status === 200) {
+        toast({
+          title: `전체 삭제 완료`,
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+      }
     } catch (e) {
       console.error(e);
     }
   };
 
   /** 선택삭제 */
-  const delCustomNote = async (e) => {
+  const deleteCustomNote = async (e) => {
     // 모달로 삭제여부 확인
-    const noteId = e.target.value;
+    console.log(e);
+    const noteId = e.target.key;
     fetchDelCustomNote(noteId);
   };
   /** 전체삭제 함수 */
-  const delAllCustomNote = () => {
+  const delAllNote = () => {
     // 모달로 삭제여부 확인
     fetchDelAllCustomNote();
   };
@@ -162,7 +164,7 @@ export default function CustomNoteListPage() {
         )}
       </Flex>
 
-      <SimpleGrid columns={4} spacing={10}>
+      <Stack spacing={5}>
         <Box
           rounded={"lg"}
           bg={useColorModeValue("gray100", "gray.700")}
@@ -189,8 +191,8 @@ export default function CustomNoteListPage() {
         </Box>
 
         <NoteListBox noteList={noteList} isEditing={false} onClick={null} />
-        <NoteListBox noteList={customNoteList} isEditing={isEditing} onClick={delCustomNote} />
-      </SimpleGrid>
+        <NoteListBox noteList={customNoteList} isEditing={isEditing} onClick={deleteCustomNote} />
+      </Stack>
     </>
   );
 }

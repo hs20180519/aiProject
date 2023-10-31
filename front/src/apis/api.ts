@@ -16,6 +16,13 @@ async function get(endpoint: string) {
   return res;
 }
 
+async function getExperience(endpoint: string) {
+  console.log(`%cGET 요청`, "color: #a25cd1;");
+  const url = `${serverUrl + endpoint}`;
+  const res = await axios.get(url);
+  return res;
+}
+
 async function post(endpoint: string, data: any) {
   // JSON.stringify 함수: Javascript 객체를 JSON 형태로 변환함.
   const bodyData = JSON.stringify(data);
@@ -89,4 +96,4 @@ async function del(endpoint: string) {
 
 // 아래처럼 export한 후, import * as A 방식으로 가져오면,
 // A.get, A.post 로 쓸 수 있음.
-export { get, post, postQuery, put, del as delete, sendImage };
+export { get, getExperience, post, postQuery, put, del as delete, sendImage };

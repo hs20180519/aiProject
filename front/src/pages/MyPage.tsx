@@ -24,7 +24,7 @@ export default function SocialProfileWithImage() {
   const [toeicProgress, setToeicProgress] = useState(0); // TOEIC 진행률 상태
   const [toeicPercentage, setToeicPercentage] = useState('0.00');
   const [toeflPercentage, setToeflPercentage] = useState('0.00');
-  const [csatlPercentage, setCsatPercentage] = useState('0.00');
+  const [csatPercentage, setCsatPercentage] = useState('0.00');
   const [overallPercentage, setOverallPercentage] = useState('0.00');
 
   useEffect(() => {
@@ -50,9 +50,11 @@ export default function SocialProfileWithImage() {
         setOverallPercentage(progressData.OverallPercentage || '0.00');
         const { csat, toefl, toeic } = progressData.CategoryPercentage;
         setCsatProgress(csat);
+        setCsatPercentage(progressData.CategoryPercentage.csat || '0.00');
         setToeflProgress(toefl);
+        setToeflPercentage(progressData.CategoryPercentage.toefl || '0.00');
         setToeicProgress(toeic);
-        setToeicPercentage(progressData.CategroyPercentage.toeic || '0.00');
+        setToeicPercentage(progressData.CategoryPercentage.toeic || '0.00');
         console.log(progressData.CategoryPercentage);
       })
       .catch((progressError) => {
@@ -141,15 +143,17 @@ export default function SocialProfileWithImage() {
                 학습 진행률
               </Text>
               <Text fontSize={'xl'}>전체 학습</Text>
-              <Text>{parseFloat(overallPercentage).toFixed(2)}%</Text>
+              <Text fontSize={'xl'}>{parseFloat(overallPercentage).toFixed(2)}%</Text>
               <Text fontSize={'xl'} color={'gray.500'}>
                 <Text>CSAT 진행도</Text>
                 <Progress value={csatProgress} colorScheme="green" mb={2} />
+                <Text>{csatPercentage}%</Text>
                 <Text>TOEFL 진행도</Text>
                 <Progress value={toeflProgress} colorScheme="green" mb={2} />
+                <Text>{toeflPercentage}%</Text>
                 <Text>TOEIC 진행도</Text>
                 <Progress value={toeicProgress} colorScheme="green" mb={2} />
-                <Text>{parseFloat(toeicPercentage).toFixed(2)}%</Text>
+                <Text>{toeicPercentage}%</Text>
               </Text>
             </Stack>
           </Stack>

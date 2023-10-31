@@ -8,6 +8,8 @@ import {
   Spacer,
   Heading,
   useColorModeValue,
+  VStack,
+  StackDivider,
   useToast,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
@@ -22,13 +24,14 @@ import {
   delCustomWord,
   delCustomNote,
 } from "../../apis/customWord";
+
 import Btn from "../../components/Btn";
 import WordBox from "./Components/WordBox";
 import CustomWordBox from "./Components/CustomWordBox";
 
 const TOAST_TIMEOUT_INTERVAL = 700;
 
-type Category = "correct" | "incorrect" | "csat" | "toeic" | "toefl" | "favorite";
+type Category = "correct" | "incorrect" | "csat" | "toeic" | "toefl" | "customs";
 export interface Word {
   category: Category;
   customBookId: number;
@@ -55,7 +58,7 @@ export default function CustomNoteAddPage() {
     meaning: "",
   });
 
-  /** 추가한 단어목록 받아오는 애 */
+  /** 추가한 단어목록 받아오기 */
   const [words, setWords] = useState<Word[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,13 +69,16 @@ export default function CustomNoteAddPage() {
   /**
    * 해당 단어장의 상세정보를 가져오는 함수
    */
-  const fetchDetailBook = async () => {
+  const fetchNoteDetail = async () => {
+    console.log("------단어가져옴-------");
+    console.log(note_id);
     try {
-      const queryString = `customBookId=${note_id}`;
+      //book=customs&page=2&limit&customBookId=
+      const queryString = `book=customs&page=&limit&customBookId=${note_id}`;
       const res = await getNoteDetail(queryString);
-      console.log("-------단어장 조회조회조회죄히-------");
-      console.log(res);
+      console.log(res.data);
       if (res.status === 200) {
+        // setTitle(res.data.title);
         setWords(res.data.words);
       }
     } catch (e) {
@@ -80,7 +86,7 @@ export default function CustomNoteAddPage() {
     }
   };
 
-  /** 단어장 이름 변경 API */
+  /** 단어장 이름 변경 */
   const fetchUpdateNoteTitle = async () => {
     const data = { title };
     try {
@@ -103,6 +109,8 @@ export default function CustomNoteAddPage() {
 
   /** 단어추가 */
   const fetchWordAdd = async () => {
+    console.log("-------추가한 단어-----------");
+    console.log(customWord);
     try {
       const res = await postCustomWordAdd(`customBookId=${note_id}`, customWord);
       if (res.status === 201) {
@@ -113,7 +121,7 @@ export default function CustomNoteAddPage() {
           duration: TOAST_TIMEOUT_INTERVAL,
         });
         setCustomWord({ word: "", meaning: "" });
-        fetchDetailBook();
+        fetchNoteDetail();
         setIsItAdd(false);
       }
     } catch (e) {
@@ -126,9 +134,7 @@ export default function CustomNoteAddPage() {
     }
   };
 
-  /**
-   * 단어장 삭제
-   */
+  /** 단어장 삭제 */
   const fetchDeleteNote = async () => {
     try {
       const res = await delCustomNote(`customBookId=${note_id}`);
@@ -148,7 +154,7 @@ export default function CustomNoteAddPage() {
     }
   };
 
-  /** 단어를 수정합니다.
+  /** 단어를 수정
    * @word_id 수정할 단어의 id
    */
   const fetchEditWord = async (word_id: number, data: type.SubmitCustomWord) => {
@@ -158,14 +164,14 @@ export default function CustomNoteAddPage() {
       console.log(res);
       if (res.status === 200) {
         console.log("단어 수정완료");
-        fetchDetailBook();
+        fetchNoteDetail();
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  /** 단어를 삭제합니다.
+  /** 단어를 삭제
    * @word_id 삭제 단어의 id
    */
   const fetchDeleteWord = async (word_id: number) => {
@@ -181,7 +187,7 @@ export default function CustomNoteAddPage() {
           isClosable: true,
           duration: TOAST_TIMEOUT_INTERVAL,
         });
-        fetchDetailBook();
+        fetchNoteDetail();
       }
     } catch (e) {
       console.error(e);
@@ -189,7 +195,7 @@ export default function CustomNoteAddPage() {
   };
 
   useEffect(() => {
-    fetchDetailBook();
+    fetchNoteDetail();
   }, []);
 
   return (
@@ -224,7 +230,7 @@ export default function CustomNoteAddPage() {
                   id="title"
                   type="text"
                   placeholder="단어장 이름"
-                  value={title} // ""
+                  value={title}
                   isDisabled={disable}
                   onChange={(e) => {
                     setTitle(e.target.value);
@@ -248,9 +254,11 @@ export default function CustomNoteAddPage() {
             onClick={fetchWordAdd}
             onChange={handleChange}
           />
-          {words.map((word: Word) => (
-            <CustomWordBox word={word} onUpdate={fetchEditWord} onDelete={fetchDeleteWord} />
-          ))}
+          <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+            {words.map((word: Word) => (
+              <CustomWordBox word={word} onUpdate={fetchEditWord} onDelete={fetchDeleteWord} />
+            ))}
+          </VStack>
         </Stack>
       </Flex>
     </>

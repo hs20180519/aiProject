@@ -19,7 +19,7 @@ export const getProgress = async (userId: number): Promise<ProgressDto> => {
 
   let categoriesPercentages: any = {};
 
-  let categories: string[] = ["csat", "toefl", "toeic", "custom"];
+  let categories: string[] = ["csat", "toefl", "toeic"];
 
   for (let i = 0; i < categories.length; i++) {
     let categoryWordCount: number = await prisma.word.count({

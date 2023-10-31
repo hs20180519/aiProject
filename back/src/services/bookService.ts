@@ -54,7 +54,7 @@ export const getWordByCategory = async (
   userId: number,
   category: string,
   customBookId?: string | undefined,
-): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
+): Promise<{ words: WordDto[]; totalPages: number; currentPage: number; title: string }> => {
   if (customBookId) {
     const bookId: number = Number(customBookId);
     const customBook = await prisma.customBook.findUnique({
@@ -66,10 +66,15 @@ export const getWordByCategory = async (
     const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
     const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
-    customBook!.word.sort((a, b) => a.word.localeCompare(b.word));
+    customBook!.word.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
     const words: Word[] = customBook!.word.slice(offset.skip, offset.skip + offset.take);
 
-    return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
+    return {
+      words: plainToInstance(WordDto, words),
+      totalPages,
+      currentPage: page,
+      title: customBook!.title,
+    };
   } else {
     const totalWordCount: number = await prisma.word.count({
       where: { category: category },
@@ -84,7 +89,7 @@ export const getWordByCategory = async (
       ...offset,
     });
 
-    return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
+    return { words: plainToInstance(WordDto, words), totalPages, currentPage: page, title: "null" };
   }
 };
 export const getWordByFavorite = async (
