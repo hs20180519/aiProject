@@ -58,15 +58,24 @@ const ScriptDialog = ({
 
   const handleTooltipClick = (index: number) => {
     if (isMobile) {
-      setOpenTooltip(index);
+      if (openTooltip === index) {
+        setOpenTooltip(null); // 이미 열린 툴팁을 닫음
+      } else {
+        setOpenTooltip(index); // 새로운 툴팁을 염
+      }
     }
   };
 
-  const highlightWords = (text: string, selectedWords: Record<string, string>) => {
+  const highlightWords = (
+    text: string,
+    selectedWords: Record<string, string>,
+    dialogKey: string,
+  ) => {
     const selectedWordKeys = Object.keys(selectedWords);
     return text
       .split(" ")
       .map((word, index) => {
+        const uniqueIndex = `${dialogKey}_${index}`;
         const foundKey = selectedWordKeys.find((key) => word.includes(key));
         if (foundKey) {
           const meaning = selectedWords[foundKey];
@@ -74,7 +83,7 @@ const ScriptDialog = ({
             <TooltipWord
               word={word}
               meaning={meaning}
-              index={index}
+              index={uniqueIndex}
               isMobile={isMobile}
               openTooltip={openTooltip}
               handleTooltipClick={handleTooltipClick}
@@ -179,7 +188,7 @@ const ScriptDialog = ({
           >
             <Flex direction="column" justifyContent="space-between">
               <Text fontWeight="bold">{entry.speaker}:</Text>
-              <Text>{highlightWords(entry.message, selectedWords)}</Text>
+              <Text>{highlightWords(entry.message, selectedWords, dialogKey)}</Text>
               <Text
                 fontSize="xs"
                 color="gray.800"
