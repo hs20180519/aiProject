@@ -283,7 +283,7 @@ export default function MyPage() {
   }, [debounceFetchTerm]);
 
   const navigateToMainPage = () => {
-    navigate("/main/word");
+    navigate("/main");
   };
 
   return (
