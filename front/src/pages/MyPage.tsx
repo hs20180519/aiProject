@@ -12,28 +12,38 @@ import {
   Button,
   useColorModeValue,
 } from '@chakra-ui/react';
+// import { PieChart } from '@toast-ui/chart';
 
 export default function SocialProfileWithImage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [userImage, setUserImage] = useState('');
+  const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // API 호출: 사용자 정보 가져오기
+    // 사용자의 이름과 이메일 가져오기 (일반 로그인 사용자)
     Api.get('/user')
       .then((response) => {
-
-        // API 응답에서 이름과 이메일 추출
         const userData = response.data;
-        console.log(userData);
-
         setName(userData.name);
         setEmail(userData.email);
         setUserImage(userData.profileImage);
       })
       .catch((error) => {
-        console.error('API 호출 오류:', error);
+        console.error('사용자 정보 가져오기 오류:', error);
+      });
+
+    // 학습 진행률 가져오기
+    Api.get('/progress')
+      .then((progressResponse) => {
+        const progressData = progressResponse.data;
+        // 사용자의 학습 진행률 가져오기
+        setProgress(progressData.progress);
+
+      })
+      .catch((progressError) => {
+        console.error('학습 진행 정보 가져오기 오류:', progressError);
       });
   }, []);
 
@@ -61,7 +71,7 @@ export default function SocialProfileWithImage() {
   };
 
   const navigateToMainPage = () => {
-    navigate("/main");
+    navigate("/main/word");
   };
 
   return (
@@ -98,7 +108,7 @@ export default function SocialProfileWithImage() {
             <Stack spacing={0} align={'center'}>
               <Text fontWeight={600}>학습 진행</Text>
               <Text fontSize={'sm'} color={'gray.500'}>
-                진행 정도?? 여긴 뭐로 넣어줄까?
+                {progress}% 완료
               </Text>
             </Stack>
           </Stack>
