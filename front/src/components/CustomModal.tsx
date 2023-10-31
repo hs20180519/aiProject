@@ -18,7 +18,7 @@ const CustomModal = ({ isOpen, onClose, message }) => {
         <ModalCloseButton />
         <ModalBody>{message}</ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
+          <Button colorScheme="pink" mr={3} onClick={onClose}>
             닫기
           </Button>
         </ModalFooter>
