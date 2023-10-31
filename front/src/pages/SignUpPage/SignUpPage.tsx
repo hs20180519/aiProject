@@ -11,7 +11,6 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  HStack,
   InputRightElement,
   Stack,
   Button,
@@ -67,6 +66,8 @@ const SignUp = () => {
     }
     return ""; // 반환값이 없을 경우 빈 문자열 반환
   };
+
+  // const getNameStatus
 
   // 1. 중복 검사를 진행한다.
   const fetchEmailCheck = async () => {
@@ -158,8 +159,13 @@ const SignUp = () => {
           duration: TOAST_TIMEOUT_INTERVAL,
         });
       }
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      toast({
+        title: `회원가입 정보를 입력해주세요!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      })
     }
   };
 
@@ -205,6 +211,9 @@ const SignUp = () => {
               <FormControl id="firstName" isRequired>
                 <FormLabel>이름</FormLabel>
                 <Input type="text" name="name" value={name} onChange={handleChange} />
+                {!isNameValid && name.length !==0 &&(
+                  <Text color="tomato" fontSize={'sm'}>두 글자 이상 적어주세요.</Text>
+                )}
               </FormControl>
             <Box w="360px">
               <FormControl id="email" isRequired>
@@ -220,7 +229,6 @@ const SignUp = () => {
                     {getEmailStatus()}
                   </Text>
                 )}
-
                 <Input name="email" type="email" value={email} onChange={handleChange} />
               </FormControl>
             </Box>
@@ -269,11 +277,15 @@ const SignUp = () => {
                     value={password}
                   />
                   <InputRightElement h={"full"}>
+                  
                     <Button variant={"ghost"} onClick={() => setShowPassword((prev) => !prev)}>
                       {showPassword ? <ViewIcon /> : <ViewOffIcon />}
                     </Button>
                   </InputRightElement>
                 </InputGroup>
+                {!isPasswordValid && password.length !==0 &&(
+                  <Text color="tomato" fontSize={'sm'}>네 글자 이상 적어주세요.</Text>
+                )}
               </FormControl>
             </Box>
             <Box w="360px">
@@ -292,6 +304,9 @@ const SignUp = () => {
                     </Button>
                   </InputRightElement>
                 </InputGroup>
+                {!isPasswordSame && confirmPassword.length !==0 && (
+                  <Text color="tomato" fontSize={'sm'}>비밀번호가 올바르지 않습니다.</Text>
+                )}
               </FormControl>
             </Box>
 
@@ -302,6 +317,7 @@ const SignUp = () => {
                 colorScheme="teal"
                 color={"white"}
                 onClick={fetchRegister}
+                disabled={!isFormValid}
               >
                 회원가입
               </Button>

@@ -74,7 +74,7 @@ const LoginPage = () => {
       }
     } catch (err) {
       toast({
-        title: `아이디 또는 비밀번호가 틀렸습니다!`,
+        title: `아이디 또는 비밀번호가 올바르지 않습니다!`,
         status: "error",
         isClosable: true,
         duration: TOAST_TIMEOUT_INTERVAL,

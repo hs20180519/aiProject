@@ -48,9 +48,10 @@ export default function IntroPage() {
           </Heading>
           <Stack spacing={3}>
             <Text color={"gray.500"}>
-              영포자를 위한 영단어 학습 서비스, AI와 함께하는 문법교정까지!
+              영포자를 위한 영단어 학습 서비스,<p></p>AI와 함께하는 문법교정까지!
             </Text>
-            <Text color={"gray.500"}>꾸준한 학습을 위한 리마인드 서비스를 제공합니다.</Text>
+            <Text color={"gray.500"}>꾸준한 학습을 위한 
+            <p></p>리마인드 서비스를 제공합니다.</Text>
             <Text color={"gray.500"}>워디로 갓생살기 시작해보세요🐶</Text>
           </Stack>
           <Stack
