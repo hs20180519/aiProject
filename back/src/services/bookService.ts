@@ -31,21 +31,23 @@ export const getWordByUserId = async (
   limit: number,
   userId: number,
   correct: boolean,
-): Promise<{ words: WordProgressDto[]; totalPages: number; currentPage: number }> => {
+): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
   const totalWordCount: number = await prisma.wordProgress.count({
     where: { userId: userId, correct: correct },
   });
   const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
   const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
-  const words = await prisma.wordProgress.findMany({
+  const wordProgresses = await prisma.wordProgress.findMany({
     where: { userId: userId, correct: correct },
     orderBy: { word: { word: "asc" } },
     include: { word: true },
     ...offset,
   });
 
-  return { words: plainToInstance(WordProgressDto, words), totalPages, currentPage: page };
+  const words: Word[] = wordProgresses.map((wordProgress) => wordProgress.word);
+
+  return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
 };
 
 export const getWordByCategory = async (
