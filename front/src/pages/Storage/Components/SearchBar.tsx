@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Input, Flex, InputGroup, InputLeftAddon, IconButton } from "@chakra-ui/react";
+import { Input, Flex, IconButton } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
+
 /** 검색창 */
 const SearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearch = (searchTerm) => {
+  const handleSearch = (searchTerm: string) => {
     onSearch(searchTerm);
   };
 
@@ -21,6 +22,7 @@ const SearchBar = ({ onSearch }) => {
       <Input
         value={searchTerm}
         onChange={handleChange}
+        fontFamily={"monospace"}
         placeholder="검색할 영단어를 입력하세요"
         focusBorderColor="teal.400"
       />
