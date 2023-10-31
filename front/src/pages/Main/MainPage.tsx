@@ -82,7 +82,7 @@ const MainPage = () => {
           <Route path="rank" element={<RankFeildPage />} />
           <Route path="grammar/:word" element={<GrammarPage />} />
           <Route path="gpt_dialog" element={<GptDialogPage />} />
-          <Route path="paramTestGptWordPage" element={<ParamGptDialogPage />} />
+          <Route path="param_gpt_dialog" element={<ParamGptDialogPage />} />
           <Route path="mypage" element={<MyPage />} />
           <Route path="storage" element={<StoragePage />} />
         </Routes>
