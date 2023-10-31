@@ -60,6 +60,7 @@ export const getUserRank = async (): Promise<RankDto[]> => {
     });
     rank++;
   }
+  console.log(users);
 
   return plainToInstance(
     RankDto,
@@ -72,7 +73,7 @@ export const getUserRank = async (): Promise<RankDto[]> => {
   );
 };
 
-// export const getRankGap = async () => {
+// export const getRankGap = async ()=> {
 //   const users = await prisma.rank.findMany({
 //     select: {
 //       id: true,
