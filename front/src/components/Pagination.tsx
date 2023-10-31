@@ -1,4 +1,4 @@
-import { Stack, Button, Center, Text } from "@chakra-ui/react";
+import { Stack, Button, Center, Text, Box } from "@chakra-ui/react";
 import { FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
 interface PaginationProps {

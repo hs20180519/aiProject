@@ -14,7 +14,6 @@ const CategoryPage = ({ onSelectCategory }) => {
       onSelectCategory(selectedCategory);
     }
   };
-  console.log(selectedCategory);
 
   return (
     <Flex direction="column" align="center">

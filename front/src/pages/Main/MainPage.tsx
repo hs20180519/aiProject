@@ -75,7 +75,7 @@ const MainPage = () => {
       <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
         <Routes>
-          <Route path="word" element={<WordPage />} />
+          <Route path="" element={<WordPage />} />
           <Route path="notes" element={<NoteListPage />} />
           <Route path="note/:note_id" element={<NoteDetailPage />} />
           <Route path="note_add/:note_id" element={<AddCustomNotePage />} />
