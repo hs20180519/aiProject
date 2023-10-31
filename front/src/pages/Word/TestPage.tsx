@@ -94,6 +94,9 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
   };
 
   const handleDontKnow = () => {
+    if (!wordData) {
+    return;
+  }
     const correctAnswer = wordData.meaning;
     const newAnswer: Answer = {
       id: wordData.id,

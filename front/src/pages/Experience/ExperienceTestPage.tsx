@@ -48,11 +48,13 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
 const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperienceResultPage, setCollectAnswers }) => {
   const [wordData, setWordData] = useState<WordData[]>([]);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<Answer[]>([]);
   const [popupIsOpen, setPopupIsOpen] = useState(false);
-  const [popupIsCorrect, setPopupIsCorrect] = useState(false);
-  const [popupCorrectAnswer, setPopupCorrectAnswer] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [answerState, setAnswerState] = useState({
+    answers: [] as Answer[],
+    popupCorrectAnswer: "",
+    popupIsCorrect: false,
+  });
 
   const fetchWords = async () => {
     try {
@@ -76,9 +78,11 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
       isCorrect,
     };
 
-    setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
-    setPopupCorrectAnswer(correctAnswer);
-    setPopupIsCorrect(isCorrect);
+    setAnswerState({
+      answers: [...answerState.answers, newAnswer],
+      popupCorrectAnswer: correctAnswer,
+      popupIsCorrect: isCorrect,
+    });
     setPopupIsOpen(true);
   };
 
@@ -92,9 +96,11 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
       isCorrect: false,
     };
 
-    setAnswers((prevAnswers) => [...prevAnswers, newAnswer]);
-    setPopupCorrectAnswer(correctAnswer);
-    setPopupIsCorrect(false);
+    setAnswerState({
+      answers: [...answerState.answers, newAnswer],
+      popupCorrectAnswer: correctAnswer,
+      popupIsCorrect: false,
+    });
     setPopupIsOpen(true);
   };
 
@@ -104,7 +110,7 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
     if (currentIndex < 9) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      setCollectAnswers(answers);
+      setCollectAnswers(answerState.answers);
       setShowExperienceResultPage(true);
     }
   };
@@ -120,43 +126,46 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
 
   return (
     <Flex align="center" justify="center" height="100vh">
-      <Box maxW="xl" p={6} borderWidth={1} borderRadius="lg">
+      <Box maxW="xl" p={6} borderWidth={1} borderRadius="lg" marginX={4}>
         <Text fontSize="xl" fontWeight="bold" mb={4}>
           🐾Wordy
         </Text>
-        <Text fontSize="6xl" mb={4} textAlign="center">
+        <Text fontSize="5xl" mb={4} textAlign="center">
           {currentWord}
         </Text>
-        <Flex flexWrap="wrap">
+        <Flex flexWrap="wrap" direction="column" align="center">
           {currentChoices.map((choice) => (
-            <Button
-              variant={selectedChoice === choice ? "solid" : "outline"}
-              colorScheme="blue"
-              onClick={() => handleChoiceClick(choice)}
-              key={choice}
-              mb={4}
-              mr={4}
-              width="auto"
-            >
-              {choice}
-            </Button>
+            <Flex key={choice} my={2} justify="center">
+              <Button
+                colorScheme="teal"
+                onClick={() => handleChoiceClick(choice)}
+                size="sm"
+              >
+                {choice}
+              </Button>
+            </Flex>
           ))}
         </Flex>
-  
-        <Flex justify="space-between" align="center" mt={4}>
-          <Text fontSize="sm">
-            {currentIndex + 1}/{totalWords} {/* 현재 인덱스 번호와 총 단어 개수 */}
-          </Text>
-          <Button onClick={handleDontKnow} colorScheme="red" size="sm">
-            모르겠어요
+        <Flex justify="center" align="center">
+          <Button
+            variant="outline"
+            onClick={handleDontKnow}
+            colorScheme="orange"
+            size="sm"
+          >
+            모르겠어요🤔
           </Button>
         </Flex>
-  
+        <Flex justify="center" align="center" mt={4}>
+          <Text fontSize="sm" textAlign="center">
+            {currentIndex + 1}/{totalWords}
+          </Text>
+        </Flex>
         <PopupModal
           isOpen={popupIsOpen}
           onClose={handleModalClose}
-          isCorrect={popupIsCorrect}
-          correctAnswer={popupCorrectAnswer}
+          isCorrect={answerState.popupIsCorrect}
+          correctAnswer={answerState.popupCorrectAnswer}
         />
       </Box>
     </Flex>
