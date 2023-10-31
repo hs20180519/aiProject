@@ -31,7 +31,7 @@ export const getWordByUserId = async (
   limit: number,
   userId: number,
   correct: boolean,
-): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
+): Promise<{ words: WordDto[]; totalPages: number; currentPage: number; title: boolean }> => {
   const totalWordCount: number = await prisma.wordProgress.count({
     where: { userId: userId, correct: correct },
   });
@@ -47,7 +47,7 @@ export const getWordByUserId = async (
 
   const words: Word[] = wordProgresses.map((wordProgress) => wordProgress.word);
 
-  return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
+  return { words: plainToInstance(WordDto, words), totalPages, currentPage: page, title: correct };
 };
 
 export const getWordByCategory = async (
@@ -91,7 +91,12 @@ export const getWordByCategory = async (
       ...offset,
     });
 
-    return { words: plainToInstance(WordDto, words), totalPages, currentPage: page, title: "null" };
+    return {
+      words: plainToInstance(WordDto, words),
+      totalPages,
+      currentPage: page,
+      title: category,
+    };
   }
 };
 export const getWordByFavorite = async (
