@@ -8,9 +8,6 @@ const GrammarDialog = ({ grammar }: GrammarResponse) => {
     return null;
   }
 
-  console.log("Grammar type:", typeof grammar);
-  console.log("Is grammar an array?", Array.isArray(grammar));
-
   return (
     <VStack align="start" spacing={4}>
       {grammar.map((entry: GrammarExplanation, index: number) => {

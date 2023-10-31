@@ -24,7 +24,7 @@ async def generate_dialog_process(input_data):
             "dialog": [{{"speaker": "Person A", "message": "{{message}}"}},
              {{"speaker": "Person B", "message": "{{message}}"}}]
         }}
-        """
+        """.strip()
     dialog_human_message_prompt = HumanMessagePromptTemplate.from_template(template=dialog_human_template)
     dialog_chat_prompt = ChatPromptTemplate.from_messages(messages=[system_message_prompt, dialog_human_message_prompt])
 
@@ -71,7 +71,7 @@ async def generate_grammar_explain_process(dialog):
                 }}
             ]
         }}
-        """
+        """.strip()
     grammar_human_message_prompt = HumanMessagePromptTemplate.from_template(template=grammar_human_template)
     grammar_chat_prompt = ChatPromptTemplate.from_messages(
         messages=[system_message_prompt, grammar_human_message_prompt])
