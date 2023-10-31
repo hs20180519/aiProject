@@ -14,7 +14,7 @@ import * as type from "../../apis/types/main";
 import { useLocation } from "react-router-dom";
 
 const LinkItems: Array<type.LinkItemProps> = [
-  { id: "word", name: "단어학습", icon: FiEdit2 },
+  { id: "", name: "단어학습", icon: FiEdit2 },
   { id: "rank", name: "랭킹", icon: FiTrendingUp },
   { id: "grammar/ai", name: "문법 교정", icon: FiCodesandbox },
   { id: "gpt_dialog", name: "문장 생성", icon: FiEdit },

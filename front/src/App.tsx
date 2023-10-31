@@ -7,6 +7,7 @@ import LoginPage from "./pages/Login/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import OAuthPage from "./pages/OAuthPage";
 import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
+import ExperiencePage from "./pages/Experience/ExperiencePage";
 
 // import TestPage from "./pages/TestPage";
 import * as Api from "./apis/api";
@@ -78,6 +79,7 @@ function App() {
                 <Route path={"/login"} element={<LoginPage />} />
                 <Route path={"/signup"} element={<SignUpPage />} />
                 <Route path={"/oauth/kakao"} element={<OAuthPage />} />
+                <Route path={"/test"} element={<ExperiencePage />} />
               </Routes>
             </BrowserRouter>
           </ChakraProvider>
