@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as instance from "../../apis/api";
 import { Box, Grid } from "@chakra-ui/react";
 import WordBox from "./Components/WordBox";
-import CustomModal from "./Components/CustomModal";
+import CustomModal from "../../components/CustomModal";
 import Pagination from "../../components/Pagination";
 
 // 단어 검색 가능하게
