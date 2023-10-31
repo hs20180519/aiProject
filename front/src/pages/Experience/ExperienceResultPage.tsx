@@ -60,7 +60,7 @@ const ExperienceResultPage: React.FC<ExperienceResultPageProps> = ({ collectAnsw
         <Button
           as={RouterLink}
           to="/"
-          colorScheme="green"
+          colorScheme="teal"
           m={2}
         >
           처음으로 돌아가기

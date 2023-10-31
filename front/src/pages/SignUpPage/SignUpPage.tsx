@@ -223,7 +223,7 @@ const SignUp = () => {
                     right="24px"
                     bottom="10px"
                     fontSize="xs"
-                    color={isEmailAvailable ? "green.500" : "tomato"}
+                    color={isEmailAvailable ? "teal.500" : "tomato"}
                   >
                     {getEmailStatus()}
                   </Text>
@@ -317,7 +317,7 @@ const SignUp = () => {
             <Stack pt={6}>
               <Text align={"center"}>
                 이미 회원이신가요?{" "}
-                <ChakraLink as={ReactRouterLink} color={"green.400"} to="/login">
+                <ChakraLink as={ReactRouterLink} color={"teal.400"} to="/login">
                   로그인
                 </ChakraLink>
               </Text>

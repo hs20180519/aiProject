@@ -12,7 +12,10 @@ import {
   Button,
   useColorModeValue,
   Progress,
+  useToast
 } from '@chakra-ui/react';
+
+const TOAST_TIMEOUT_INTERVAL = 800;
 
 export default function SocialProfileWithImage() {
   const [name, setName] = useState('');
@@ -26,6 +29,7 @@ export default function SocialProfileWithImage() {
   const [toeflPercentage, setToeflPercentage] = useState('0.00');
   const [csatPercentage, setCsatPercentage] = useState('0.00');
   const [overallPercentage, setOverallPercentage] = useState('0.00');
+  const toast = useToast();
 
   useEffect(() => {
     // 사용자의 이름과 이메일 가져오기 (일반 로그인 사용자)
@@ -74,9 +78,21 @@ export default function SocialProfileWithImage() {
         .then((response) => {
           console.log('Server Response:', response);
           setUserImage(response.data);
+          toast({
+            title: "프로필 이미지가 변경 됐습니다!",
+            status: "success",
+            isClosable: true,
+            duration: TOAST_TIMEOUT_INTERVAL
+          })
         })
         .catch((error) => {
           console.error('이미지 업로드 오류:', error);
+          toast({
+            title: "프로필 이미지 업로드 오류",
+            status: "error",
+            isClosable: true,
+            duration: TOAST_TIMEOUT_INTERVAL
+          })
         });
     } else {
       console.log('No file selected.');
@@ -121,7 +137,7 @@ export default function SocialProfileWithImage() {
               mt={3}
               bg="teal.400"
               color="white"
-              _hover={{ bg: 'darkblue' }}
+              _hover={{ bg: 'green.400' }}
               cursor="pointer"
               padding="10px 20px"
               rounded="md"

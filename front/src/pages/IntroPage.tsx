@@ -22,21 +22,10 @@ export default function IntroPage() {
       </Link>
       <Image
         position="absolute"
-        mt={200}
-        left={-200}
-        transform={"rotate( 120deg )"}
-        zIndex={-9999}
-        w={400}
-        src={`${process.env.PUBLIC_URL}/images/hedgehog.png`}
-        alt={"고슴도치"}
-      />
-      <Image
-        position="absolute"
         mt={450}
-        right={28}
         zIndex={-9999}
         w={600}
-        src={`${process.env.PUBLIC_URL}/images/dogs.png`}
+        src={`${process.env.PUBLIC_URL}/images/dog.png`}
         alt="강아지들"
       />
       <Container maxW={"3xl"}>
@@ -74,7 +63,7 @@ export default function IntroPage() {
             <Link to={"/test"}>
               <Btn
                 text=" Wordy 🐾 체험하기"
-                colorScheme={"green"}
+                colorScheme={"teal"}
                 bg={"teal.500"}
                 rounded={"full"}
                 px={6}
