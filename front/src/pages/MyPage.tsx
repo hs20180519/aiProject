@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import * as Api from '../apis/api';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -22,7 +22,10 @@ import {
   Input,
   ModalFooter,
   FormControl,
+  FormLabel
 } from '@chakra-ui/react';
+import { AxiosError } from 'axios';
+import useDebounced from '../hooks/useDebounce';
 
 const TOAST_TIMEOUT_INTERVAL = 800;
 
@@ -30,6 +33,7 @@ export default function SocialProfileWithImage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [userImage, setUserImage] = useState('');
+  const [verificationCode, setVerificationCode] = useState("");
   const navigate = useNavigate();
   const [csatProgress, setCsatProgress] = useState(0);
   const [toeflProgress, setToeflProgress] = useState(0);
@@ -41,7 +45,28 @@ export default function SocialProfileWithImage() {
   const toast = useToast();
   const [isEmailPopupOpen, setEmailPopupOpen] = useState(false);
   const [newEmail, setNewEmail] = useState('');
+  const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
   const [isEmailVerificationComplete, setEmailVerificationComplete] = useState(false);
+  const [sendEmailCodeClick, setSendEmailCodeClick] = useState(false);
+  const [succededEmailCode, setSuccededEmailCode] = useState(false);
+  const debounceFetchTerm = useDebounced(email, 500);
+  const handleChange = (e) => {
+    const email = e.target;
+    setNewEmail(email);
+  };
+
+  const getEmailStatus = () => {
+    if (isEmailAvailable) {
+      return "사용 가능한 이메일";
+    }
+    if (isEmailAvailable === false) {
+      return "사용중인 이메일";
+    }
+    if (isEmailAvailable === undefined) {
+      return "올바르지 않은 형식";
+    }
+    return ""; // 반환값이 없을 경우 빈 문자열 반환
+  };
 
   useEffect(() => {
     // 사용자의 이름과 이메일 가져오기
@@ -121,7 +146,6 @@ export default function SocialProfileWithImage() {
       });
       return;
     }
-
     try {
       const emailRegistrationResponse = await Api.put('/auth', { email: newEmail });
       if (emailRegistrationResponse.status === 200) {
@@ -143,7 +167,80 @@ export default function SocialProfileWithImage() {
       });
     }
   };
+  // 1. 중복 검사
+  const fetchEmailCheck = async () => {
+    try {
+      const res = await Api.get(`/auth/check?email=${email}`);
+      setIsEmailAvailable(true);
+      if (res.status === 403) {
+        setIsEmailAvailable(false);
+      } 
+      else {
+        setIsEmailAvailable(true);
+      }
+    } catch (e) {
+      const customError = e as AxiosError;
+      console.log(customError.message);
+      setIsEmailAvailable(customError.response.status === 409 ? false : undefined);
+    }
+  };
 
+  useEffect(() => {
+    if (debounceFetchTerm) {
+      fetchEmailCheck();
+    }
+  }, [debounceFetchTerm]);
+
+  // 2. 이메일 인증 요청을 보낸다.
+  const fetchSendEmailCode = async () => {
+    try {
+      await Api.post(`/auth/register`, { email });
+      setSendEmailCodeClick(true);
+
+      // 인증 요청 메일 발송 성공 시 토스트 알람 표시
+      toast({
+        title: "이메일 인증 요청이 성공적으로 전송되었습니다.",
+        status: "success",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+    } catch (e) {
+      console.error("이메일 인증 중 오류 발생:", e);
+
+      // 인증 요청 메일 발송 실패 시 토스트 알람 표시
+      toast({
+        title: "이메일 인증 요청을 보내는 중 오류가 발생했습니다.",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+    }
+  };
+  // 3. 인증번호 인증을 진행한다.
+  const fetchCheckEmailCode = async () => {
+    try {
+      const res = await Api.post(`/auth/verify`, { email, code: verificationCode });
+      if (res.status === 200) {
+        setSuccededEmailCode(true);
+        toast({
+          title: `이메일 인증 완료!`,
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+      }
+    } catch (e) {
+      toast({
+        title: `이메일 인증 실패!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+      setSuccededEmailCode(false);
+    }
+  };
+
+  
   const navigateToMainPage = () => {
     navigate('/main/word');
   };
@@ -249,20 +346,28 @@ export default function SocialProfileWithImage() {
             {isEmailVerificationComplete ? (
               <Text color="green.500">이메일 인증이 완료되었습니다.</Text>
             ) : (
-              <FormControl>
-                <Input
-                  type="email"
-                  placeholder="새 이메일 주소"
-                  value={newEmail}
-                  onChange={(e) => setNewEmail(e.target.value)}
-                />
+                <FormControl id="email" isRequired>
+                <FormLabel>이메일</FormLabel>
+                {email.length !== 0 && (
+                  <Text
+                    position="absolute"
+                    right="24px"
+                    bottom="10px"
+                    fontSize="xs"
+                    color={isEmailAvailable ? "teal.500" : "tomato"}
+                  >
+                    {getEmailStatus()}
+                  </Text>
+                )}
+
+                <Input name="email" type="email" value={email} onChange={handleChange} />
               </FormControl>
             )}
           </ModalBody>
           <ModalFooter>
             {!isEmailVerificationComplete ? (
               <Button colorScheme="teal" onClick={handleEmailVerification}>
-                이메일 인증 요청
+                이메일 등록 요청
               </Button>
             ) : null}
           </ModalFooter>
