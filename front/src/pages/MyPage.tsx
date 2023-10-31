@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import * as Api from "../apis/api";
-import { useNavigate } from "react-router-dom";
+import * as Api from '../apis/api';
+import { useNavigate } from 'react-router-dom';
 import {
   Heading,
   Avatar,
@@ -11,21 +11,30 @@ import {
   Stack,
   Button,
   useColorModeValue,
+  Progress,
 } from '@chakra-ui/react';
-// import { PieChart } from '@toast-ui/chart';
 
 export default function SocialProfileWithImage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [userImage, setUserImage] = useState('');
-  const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
+  const [csatProgress, setCsatProgress] = useState(0); // CSAT 진행률 상태
+  const [toeflProgress, setToeflProgress] = useState(0); // TOEFL 진행률 상태
+  const [toeicProgress, setToeicProgress] = useState(0); // TOEIC 진행률 상태
+  const [toeicPercentage, setToeicPercentage] = useState('0.00');
+  const [toeflPercentage, setToeflPercentage] = useState('0.00');
+  const [csatPercentage, setCsatPercentage] = useState('0.00');
+  const [overallPercentage, setOverallPercentage] = useState('0.00');
 
   useEffect(() => {
     // 사용자의 이름과 이메일 가져오기 (일반 로그인 사용자)
     Api.get('/user')
       .then((response) => {
         const userData = response.data;
+        if (userData.email === null) {
+          //
+        }
         setName(userData.name);
         setEmail(userData.email);
         setUserImage(userData.profileImage);
@@ -38,9 +47,15 @@ export default function SocialProfileWithImage() {
     Api.get('/progress')
       .then((progressResponse) => {
         const progressData = progressResponse.data;
-        // 사용자의 학습 진행률 가져오기
-        setProgress(progressData.progress);
-
+        setOverallPercentage(progressData.OverallPercentage || '0.00');
+        const { csat, toefl, toeic } = progressData.CategoryPercentage;
+        setCsatProgress(csat);
+        setCsatPercentage(progressData.CategoryPercentage.csat || '0.00');
+        setToeflProgress(toefl);
+        setToeflPercentage(progressData.CategoryPercentage.toefl || '0.00');
+        setToeicProgress(toeic);
+        setToeicPercentage(progressData.CategoryPercentage.toeic || '0.00');
+        console.log(progressData.CategoryPercentage);
       })
       .catch((progressError) => {
         console.error('학습 진행 정보 가져오기 오류:', progressError);
@@ -49,35 +64,33 @@ export default function SocialProfileWithImage() {
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
-    console.log("Selected file:", file); // 선택한 파일 로깅
+    console.log('Selected file:', file);
 
     if (file) {
-      // 이미지 업로드 API 호출
       const formData = new FormData();
       formData.append('profileImage', file);
 
       Api.sendImage('post', '/upload/profile-image', formData)
-      .then((response) => {
-        console.log("Server Response:", response); // 서버 응답 로깅
-        // 이미지 업로드 성공 시 이미지 URL을 업데이트
-        setUserImage(response.data);
-      })
-      .catch((error) => {
-        console.error('이미지 업로드 오류:', error);
-      });
+        .then((response) => {
+          console.log('Server Response:', response);
+          setUserImage(response.data);
+        })
+        .catch((error) => {
+          console.error('이미지 업로드 오류:', error);
+        });
     } else {
-      console.log("No file selected."); // 파일이 선택되지 않았을 경우 로깅
+      console.log('No file selected.');
     }
   };
 
   const navigateToMainPage = () => {
-    navigate("/main/word");
+    navigate('/main/word');
   };
 
   return (
     <Center py={6}>
       <Box
-        maxW={'270px'}
+        maxW={'400px'}
         w={'full'}
         bg={useColorModeValue('white', 'gray.800')}
         boxShadow={'2xl'}
@@ -95,28 +108,60 @@ export default function SocialProfileWithImage() {
           />
         </Flex>
         <Box p={6}>
-          <Stack spacing={0} align={'center'} mb={5}>
-            <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
+          <Stack spacing={0} align={'center'} mb={0}>
+            <Heading fontSize={'3xl'} fontWeight={500} fontFamily={'body'}>
               {name}
             </Heading>
             <Text color={'gray.500'}>{email}</Text>
           </Stack>
-          <Stack mb={5}>
-            <input type="file" name="profileImage" onChange={handleImageUpload} />
+          <Stack mb={3} align={'center'}>
+            <Button
+              as="label"
+              htmlFor="profileImageInput"
+              mt={3}
+              bg="teal.400"
+              color="white"
+              _hover={{ bg: 'darkblue' }}
+              cursor="pointer"
+              padding="10px 20px"
+              rounded="md"
+            >
+              새 이미지 선택
+          </Button>
+            <input
+              type="file"
+              name="profileImage"
+              id="profileImageInput"
+              onChange={handleImageUpload}
+              style={{ display: 'none' }}
+              accept="image/*"
+            />
           </Stack>
-          <Stack direction={'row'} justify={'center'} spacing={6}>
-            <Stack spacing={0} align={'center'}>
-              <Text fontWeight={600}>학습 진행</Text>
-              <Text fontSize={'sm'} color={'gray.500'}>
-                {progress}% 완료
+          <Stack direction={'row'} justify={'center'} spacing={10}>
+            <Stack spacing={1} align={'center'}>
+              <Text fontWeight={600} fontSize={'xl'}>
+                학습 진행률
+              </Text>
+              <Text fontSize={'xl'}>전체 학습</Text>
+              <Text fontSize={'xl'}>{parseFloat(overallPercentage).toFixed(2)}%</Text>
+              <Text fontSize={'xl'} color={'gray.500'}>
+                <Text>CSAT 진행도</Text>
+                <Progress value={csatProgress} colorScheme="teal" mb={2} />
+                <Text>{csatPercentage}%</Text>
+                <Text>TOEFL 진행도</Text>
+                <Progress value={toeflProgress} colorScheme="teal" mb={2} />
+                <Text>{toeflPercentage}%</Text>
+                <Text>TOEIC 진행도</Text>
+                <Progress value={toeicProgress} colorScheme="teal" mb={2} />
+                <Text>{toeicPercentage}%</Text>
               </Text>
             </Stack>
           </Stack>
+          <Stack align={'Center'}>
           <Button
             onClick={navigateToMainPage}
-            w={'full'}
-            mt={8}
-            bg={useColorModeValue('green.400', 'green.400')}
+            mt={3}
+            bg={useColorModeValue('teal.400', 'teal.400')}
             color={'white'}
             rounded={'md'}
             _hover={{
@@ -126,6 +171,7 @@ export default function SocialProfileWithImage() {
           >
             학습 하러가기
           </Button>
+          </Stack>
         </Box>
       </Box>
     </Center>

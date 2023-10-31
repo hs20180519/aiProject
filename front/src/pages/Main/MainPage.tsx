@@ -28,9 +28,9 @@ import GrammarPage from "../Grammar/GramnarPage";
 import WordPage from "../Word/WordPage";
 
 // gptPage
-import GptDialogPage from "../TestGptWordPage/GptDialogPage";
+import GptDialogPage from "../GptDialogPage/GptDialogPage";
 import Loading from "../../components/Loading";
-import ParamGptDialogPage from "../TestGptWordPage/ParamGptDialogPage";
+import ParamGptDialogPage from "../GptDialogPage/ParamGptDialogPage";
 
 // mypage
 import MyPage from "../MyPage";

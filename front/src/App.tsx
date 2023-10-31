@@ -6,7 +6,6 @@ import MainPage from "./pages/Main/MainPage";
 import LoginPage from "./pages/Login/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import OAuthPage from "./pages/OAuthPage";
-import SignUpPage2 from "./pages/SignUpPage/SignUpPage2";
 import ExperiencePage from "./pages/Experience/ExperiencePage";
 
 // import TestPage from "./pages/TestPage";

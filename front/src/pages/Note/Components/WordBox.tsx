@@ -14,7 +14,6 @@ import { FaRobot, FaSortAlphaUp, FaDog, FaPencilAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import * as type from "../../../apis/types/custom";
-import BookmarkBtn from "../../../components/BookmarkBtn";
 import Btn from "../../../components/Btn";
 /** 단어와 뜻을 표시하는 상자입니다. */
 export default function WordBox({ word, isBookmarked, onUpdate, onDelete }) {
