@@ -1,18 +1,20 @@
 import { Box, Flex } from "@chakra-ui/react";
 import BookMark from "../../../components/BookMark";
 
+/** 단어 박스 */
 const WordBox = ({ word, onBookmarkClick }) => {
   return (
     <Flex
       width="100%"
-      justifyContent="center"
+      justifyContent="space-between"
       style={{
         textAlign: "center",
         backgroundColor: "white",
         height: "100px",
         border: "1px solid #ddd",
         borderRadius: "5px",
-        padding: "10px",
+        padding: "5px",
+        //marginTop: "10px",
         marginBottom: "10px",
       }}
     >
