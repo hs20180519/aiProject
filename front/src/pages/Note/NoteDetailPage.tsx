@@ -1,14 +1,33 @@
 /* eslint-diabled */
-import { Stack, Heading, HStack, useToast } from "@chakra-ui/react";
+import {
+  Stack,
+  Heading,
+  HStack,
+  Box,
+  FormControl,
+  useToast,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import Btn from "../../components/Btn";
 import { useParams } from "react-router-dom";
-import { getNoteDetail } from "../../apis/customWord";
+
 import { useState, useEffect } from "react";
-import * as Api from "../../apis/api";
+
 import WordBox from "./Components/WordBox";
 import { stringify } from "querystring";
 import Pagination from "../../components/Pagination";
 import SelectNote from "../../components/SelectNote";
 import Input from "../../components/InputFeild";
+
+import * as Api from "../../apis/api";
+import * as type from "../../apis/types/custom";
+import {
+  putCustomNoteTitle,
+  postCustomWordAdd,
+  putCustomWord,
+  getNoteDetail,
+  delCustomWord,
+} from "../../apis/customWord";
 
 const NOTE_LIST = [
   { id: "correct", title: "학습한 단어" },
@@ -25,11 +44,20 @@ export default function NoteDetailPage() {
   /**SelectNote */
   const [category, setCategory] = useState([]);
   const [customNote, setCustomNote] = useState([]);
+  const [title, setTitle] = useState("");
   const [words, setWords] = useState([]);
 
   /** Search Word */
   const [keyword, setKeyword] = useState("");
+
+  const [titleIsEditing, setTitleIsEditing] = useState(true);
+  const [isItAdd, setIsItAdd] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const [customWord, setCustomWord] = useState<type.SubmitCustomWord>({
+    word: "",
+    meaning: "",
+  });
 
   /**  Pagination */
   const limit = 5;
@@ -42,20 +70,106 @@ export default function NoteDetailPage() {
 
   /** 카테고리별 단어장 조회하는 함수입니다. */
   const fetchNoteDetail = async (page = 1) => {
-    parseInt(note_id);
-    // todo 페이지 관련 분리하기 if문으로 지금 페이지에 res !== undefined ??
     // note_id 숫자  => 내가 생성한 단어
     // note_id 문자열 => 토익, 토플, 학습단어
     try {
       const id = parseInt(note_id);
-      const url = !isNaN(id)
-        ? `customBookId=${note_id}&page=${page}`
-        : `book=${note_id}&page=${page}`;
-      const res = await getNoteDetail(url);
+      const queryString = !isNaN(id) ? `customBookId=${id}` : `book=${note_id}&page=${page}`;
+      const res = await getNoteDetail(queryString);
       console.log(res);
-      setWords(res.data.words);
-      setCurrentPage(res.data.currentPage);
-      setTotalPages(res.data.totalPages);
+
+      if (res.status === 200) {
+        setTitle(res.data.title);
+        setWords(res.data.words);
+        setCurrentPage(res.data.currentPage);
+        setTotalPages(res.data.totalPages);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  /** 단어장 이름 변경 */
+  const fetchUpdateNoteTitle = async () => {
+    const data = { title };
+    try {
+      const res = await putCustomNoteTitle(data, note_id);
+      console.log("-----단어장 이름 변경----");
+      console.log(res);
+      if (res.status === 200) {
+        toast({
+          title: `변경 완료!`,
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+        setTitleIsEditing(false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  /** 단어장에 단어추가 */
+  const fetchWordAdd = async () => {
+    try {
+      const res = await postCustomWordAdd(`customBookId=${note_id}`, customWord);
+      if (res.status === 201) {
+        toast({
+          title: "단어 추가 완료!",
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+        setCustomWord({ word: "", meaning: "" });
+        fetchNoteDetail();
+        setIsItAdd(false);
+      }
+    } catch (e) {
+      toast({
+        title: "단어 추가도중 에러가 발생했어요!",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+    }
+  };
+
+  /** 단어를 수정
+   * @word_id 수정할 단어의 id
+   */
+  const fetchEditWord = async (word_id: number, data: type.SubmitCustomWord) => {
+    try {
+      const res = await putCustomWord(`customBookId=${note_id}&wordId=${word_id}`, data);
+      console.log("---------단어수정---------");
+      console.log(res);
+      if (res.status === 200) {
+        console.log("단어 수정완료");
+        fetchNoteDetail();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  /** 단어를 삭제
+   * @word_id 삭제 단어의 id
+   */
+  const fetchDeleteWord = async (word_id: number) => {
+    const url = `customBookId=${note_id}&wordId=${word_id}`;
+    try {
+      const res = await delCustomWord(url);
+      console.log("--------단어삭제-------");
+      console.log(res);
+      if (res.status === 200) {
+        toast({
+          title: `삭제되었습니다.`,
+          status: "warning",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+        fetchNoteDetail();
+      }
     } catch (e) {
       console.error(e);
     }
@@ -118,23 +232,27 @@ export default function NoteDetailPage() {
 
   useEffect(() => {
     fetchNoteDetail();
-    console.log("------현재페이지--------");
-    console.log(currentPage);
   }, []);
 
   useEffect(() => {
     if (keyword !== "") console.log(keyword);
   }, [keyword]);
 
-  // todo 해당단어장 타이틀명으로 해딩태그 넣기
   return (
     <Stack>
       <HStack spacing={2}>
         <SelectNote onSelect={onSelect} category={category} customNote={customNote} />
         <Input placeholder="단어 검색" />
       </HStack>
-      <Heading color={"teal"}>{note_id}</Heading>
-      <WordBox words={words} isEditing={isEditing} isBookmarked={isBookmarked} />
+      <Heading color={"teal"}>{title}</Heading>
+      {words.map((word: type.WordsProps) => (
+        <WordBox
+          word={word}
+          isBookmarked={isBookmarked}
+          onUpdate={fetchEditWord}
+          onDelete={fetchDeleteWord}
+        />
+      ))}
       <Pagination
         pagingIndex={pagingIndex}
         currentPage={currentPage}

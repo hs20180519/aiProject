@@ -26,6 +26,7 @@ import Loading from "../../components/Loading";
 const NOTE_LIST = [
   { id: "correct", title: "학습한 단어" },
   { id: "incorrect", title: "틀린 단어" },
+  { id: "favorite", title: "⭐️즐겨찾기" },
 ];
 const TOAST_TIMEOUT_INTERVAL = 800;
 
