@@ -41,7 +41,7 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
       .catch((error) => {
         console.error('사용자 정보 가져오기 오류:', error);
       });
-  }, []);
+  }, [userImage]);
 
   return (
     <Flex
@@ -103,7 +103,6 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
               <MenuItem as={ReactRouterLink} to="/main/mypage">
                 {"프로필"}
               </MenuItem>
-              {/* <MenuItem>{"설정"}</MenuItem> */}
               <MenuDivider />
               <MenuItem onClick={onLogout}>{"로그아웃"}</MenuItem>
             </MenuList>

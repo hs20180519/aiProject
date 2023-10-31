@@ -22,6 +22,9 @@ export default function SocialProfileWithImage() {
   const [csatProgress, setCsatProgress] = useState(0); // CSAT 진행률 상태
   const [toeflProgress, setToeflProgress] = useState(0); // TOEFL 진행률 상태
   const [toeicProgress, setToeicProgress] = useState(0); // TOEIC 진행률 상태
+  const [toeicPercentage, setToeicPercentage] = useState('0.00');
+  const [toeflPercentage, setToeflPercentage] = useState('0.00');
+  const [csatlPercentage, setCsatPercentage] = useState('0.00');
   const [overallPercentage, setOverallPercentage] = useState('0.00');
 
   useEffect(() => {
@@ -49,6 +52,8 @@ export default function SocialProfileWithImage() {
         setCsatProgress(csat);
         setToeflProgress(toefl);
         setToeicProgress(toeic);
+        setToeicPercentage(progressData.CategroyPercentage.toeic || '0.00');
+        console.log(progressData.CategoryPercentage);
       })
       .catch((progressError) => {
         console.error('학습 진행 정보 가져오기 오류:', progressError);
@@ -144,6 +149,7 @@ export default function SocialProfileWithImage() {
                 <Progress value={toeflProgress} colorScheme="green" mb={2} />
                 <Text>TOEIC 진행도</Text>
                 <Progress value={toeicProgress} colorScheme="green" mb={2} />
+                <Text>{parseFloat(toeicPercentage).toFixed(2)}%</Text>
               </Text>
             </Stack>
           </Stack>

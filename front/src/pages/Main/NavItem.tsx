@@ -8,6 +8,7 @@ export default function NavItem({ icon, children, active, ...rest }: NavItemProp
   return (
     <Box as={"a"} href={"#"} style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
       <Flex
+        display={'flex'}
         align={"center"}
         p={"4"}
         mx={"4"}
