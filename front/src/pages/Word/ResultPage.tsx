@@ -34,7 +34,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestP
       try {
         const response = await FetchStudyWords.getLearnResult();
         const resultData = response.data;
-        setResultData(resultData.reverse());
+        setResultData(resultData);
       } catch (error) {
         console.error("Error fetching results:", error);
       }
