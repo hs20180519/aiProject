@@ -95,7 +95,7 @@ const LoginPage = () => {
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"md"} p={8}>
-          <Heading fontSize={"4xl"} textAlign={"center"} color={"teal.600"}>
+          <Heading fontSize={"4xl"} textAlign={"center"} color={"teal.400"}>
             워디 로그인
           </Heading>
           <Stack spacing={10} pt={5}>

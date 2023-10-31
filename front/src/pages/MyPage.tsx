@@ -119,7 +119,7 @@ export default function SocialProfileWithImage() {
               as="label"
               htmlFor="profileImageInput"
               mt={3}
-              bg="green.400"
+              bg="teal.400"
               color="white"
               _hover={{ bg: 'darkblue' }}
               cursor="pointer"
@@ -146,13 +146,13 @@ export default function SocialProfileWithImage() {
               <Text fontSize={'xl'}>{parseFloat(overallPercentage).toFixed(2)}%</Text>
               <Text fontSize={'xl'} color={'gray.500'}>
                 <Text>CSAT 진행도</Text>
-                <Progress value={csatProgress} colorScheme="green" mb={2} />
+                <Progress value={csatProgress} colorScheme="teal" mb={2} />
                 <Text>{csatPercentage}%</Text>
                 <Text>TOEFL 진행도</Text>
-                <Progress value={toeflProgress} colorScheme="green" mb={2} />
+                <Progress value={toeflProgress} colorScheme="teal" mb={2} />
                 <Text>{toeflPercentage}%</Text>
                 <Text>TOEIC 진행도</Text>
-                <Progress value={toeicProgress} colorScheme="green" mb={2} />
+                <Progress value={toeicProgress} colorScheme="teal" mb={2} />
                 <Text>{toeicPercentage}%</Text>
               </Text>
             </Stack>
@@ -161,7 +161,7 @@ export default function SocialProfileWithImage() {
           <Button
             onClick={navigateToMainPage}
             mt={3}
-            bg={useColorModeValue('green.400', 'green.400')}
+            bg={useColorModeValue('teal.400', 'teal.400')}
             color={'white'}
             rounded={'md'}
             _hover={{
