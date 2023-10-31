@@ -32,7 +32,7 @@ const TOAST_TIMEOUT_INTERVAL = 800;
 export default function SocialProfileWithImage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [userImage, setUserImage] = useState('');
+  const [profileImage, setProfileImage] = useState('');
   const [verificationCode, setVerificationCode] = useState("");
   const navigate = useNavigate();
   const [csatProgress, setCsatProgress] = useState(0);
@@ -78,7 +78,7 @@ export default function SocialProfileWithImage() {
         }
         setName(userData.name);
         setEmail(userData.email);
-        setUserImage(userData.profileImage);
+        setProfileImage(userData.profileImage);
       })
       .catch((error) => {
         console.error('사용자 정보 가져오기 오류:', error);
@@ -113,7 +113,7 @@ export default function SocialProfileWithImage() {
       Api.sendImage('post', '/upload/profile-image', formData)
         .then((response) => {
           console.log('Server Response:', response);
-          setUserImage(response.data);
+          setProfileImage(response.data);
           toast({
             title: "프로필 이미지가 변경 되었습니다!",
             status: "success",
@@ -217,28 +217,28 @@ export default function SocialProfileWithImage() {
     }
   };
   // 3. 인증번호 인증을 진행한다.
-  const fetchCheckEmailCode = async () => {
-    try {
-      const res = await Api.post(`/auth/verify`, { email, code: verificationCode });
-      if (res.status === 200) {
-        setSuccededEmailCode(true);
-        toast({
-          title: `이메일 인증 완료!`,
-          status: "success",
-          isClosable: true,
-          duration: TOAST_TIMEOUT_INTERVAL,
-        });
-      }
-    } catch (e) {
-      toast({
-        title: `이메일 인증 실패!`,
-        status: "error",
-        isClosable: true,
-        duration: TOAST_TIMEOUT_INTERVAL,
-      });
-      setSuccededEmailCode(false);
-    }
-  };
+      const fetchCheckEmailCode = async () => {
+        try {
+          const res = await Api.post(`/auth/verify`, { email, code: verificationCode });
+          if (res.status === 200) {
+            setSuccededEmailCode(true);
+            toast({
+              title: `이메일 인증 완료!`,
+              status: "success",
+              isClosable: true,
+              duration: TOAST_TIMEOUT_INTERVAL,
+            });
+          }
+        } catch (e) {
+          toast({
+            title: `이메일 인증 실패!`,
+            status: "error",
+            isClosable: true,
+            duration: TOAST_TIMEOUT_INTERVAL,
+          });
+          setSuccededEmailCode(false);
+        }
+      };
 
   
   const navigateToMainPage = () => {
@@ -258,8 +258,8 @@ export default function SocialProfileWithImage() {
         <Flex justify={'center'} mt={5}>
           <Avatar
             size={'xl'}
-            src={userImage}
-            key={userImage}
+            src={profileImage}
+            key={profileImage}
             css={{
               border: '2px solid white',
             }}
