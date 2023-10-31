@@ -23,19 +23,21 @@ export default function NoteListBox({ noteList, isEditing, onClick }: type.NoteL
               borderWidth="3px"
               borderRadius="lg"
             >
-              {isEditing && (
-                <Btn
-                  colorScheme="teal"
-                  value={note}
-                  onClick={onClick}
-                  text={<Icon as={FaRegTrashAlt} />}
-                  position="fix"
-                  left="30x"
-                  mt="-6"
-                ></Btn>
-              )}
+              <Btn
+                key={note.id}
+                colorScheme="teal"
+                value={note.id}
+                onClick={onClick}
+                text={<Icon as={FaRegTrashAlt} />}
+                position="absolute"
+                right={8}
+                mt="-5"
+              ></Btn>
+
               {/* <AbsoluteCenter> */}
-              <Text id={note.id}>{note.title}</Text>
+              <Text id={note.id} fontSize={"3xl"}>
+                {note.title}
+              </Text>
               {/* </AbsoluteCenter> */}
             </Box>
           ) : (
@@ -52,7 +54,9 @@ export default function NoteListBox({ noteList, isEditing, onClick }: type.NoteL
                 borderRadius="lg"
               >
                 {/* <AbsoluteCenter> */}
-                <Text id={note.id}>{note.title}</Text>
+                <Text id={note.id} fontSize={"3xl"}>
+                  {note.title}
+                </Text>
                 {/* </AbsoluteCenter> */}
               </Box>
             </Link>

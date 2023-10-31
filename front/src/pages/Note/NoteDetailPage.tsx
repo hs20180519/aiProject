@@ -32,6 +32,7 @@ import {
 const NOTE_LIST = [
   { id: "correct", title: "학습한 단어" },
   { id: "incorrect", title: "틀린 단어" },
+  { id: "favorite", title: "즐겨찾기" },
 ];
 
 const TOAST_TIMEOUT_INTERVAL = 700;
@@ -74,7 +75,9 @@ export default function NoteDetailPage() {
     // note_id 문자열 => 토익, 토플, 학습단어
     try {
       const id = parseInt(note_id);
-      const queryString = !isNaN(id) ? `customBookId=${id}` : `book=${note_id}&page=${page}`;
+      const queryString = !isNaN(id)
+        ? `book=customs&page=&limit&customBookId=${id}`
+        : `book=${note_id}&page=${page}`;
       const res = await getNoteDetail(queryString);
       console.log(res);
 
@@ -141,10 +144,8 @@ export default function NoteDetailPage() {
   const fetchEditWord = async (word_id: number, data: type.SubmitCustomWord) => {
     try {
       const res = await putCustomWord(`customBookId=${note_id}&wordId=${word_id}`, data);
-      console.log("---------단어수정---------");
-      console.log(res);
+
       if (res.status === 200) {
-        console.log("단어 수정완료");
         fetchNoteDetail();
       }
     } catch (e) {
@@ -159,8 +160,6 @@ export default function NoteDetailPage() {
     const url = `customBookId=${note_id}&wordId=${word_id}`;
     try {
       const res = await delCustomWord(url);
-      console.log("--------단어삭제-------");
-      console.log(res);
       if (res.status === 200) {
         toast({
           title: `삭제되었습니다.`,
@@ -182,7 +181,9 @@ export default function NoteDetailPage() {
     console.log(e.target.value);
   };
 
-  /** 즐겨찾기 추가 */
+  /** 즐겨찾기 추가
+   * currentPage만 가능
+   */
   const fetchBookmark = async () => {
     const data = "wordId";
     try {
@@ -245,6 +246,7 @@ export default function NoteDetailPage() {
         <Input placeholder="단어 검색" />
       </HStack>
       <Heading color={"teal"}>{title}</Heading>
+
       {words.map((word: type.WordsProps) => (
         <WordBox
           word={word}

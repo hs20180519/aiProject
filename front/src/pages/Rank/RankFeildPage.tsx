@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import RankList from "./RankItem";
+import UserRankBox from "./UserRankBox";
 import * as Api from "../../apis/api";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
@@ -20,6 +21,7 @@ export default function RankFeildPage() {
     setLoading(true);
     const res = await Api.get(`/rank`);
     const data = res?.data;
+
     if (Array.isArray(data)) {
       setUsersRank(data);
     } else {
@@ -52,14 +54,16 @@ export default function RankFeildPage() {
       <Box>
         <Heading>Wordy 랭킹</Heading>
       </Box>
+      <UserRankBox />
       <RankList rankList={usersRank} />
+
       <Pagination
         pagingIndex={pagingIndex}
         currentPage={currentPage}
         limit={limit}
         handleChangePage={handleChangePage}
         handleChangePaginIndex={handleChangePaingIndex}
-        totalPage={101}
+        totalPage={totalPages}
       />
     </>
   );

@@ -28,7 +28,7 @@ export const getUsersRankList = async (page?: number, limit?: number): Promise<R
       userId: true,
       score: true,
       user: {
-        select: { name: true, nickname: true },
+        select: { name: true, nickname: true, profileImage: true },
       },
     },
     ...offset,

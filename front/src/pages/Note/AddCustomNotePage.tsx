@@ -70,11 +70,15 @@ export default function CustomNoteAddPage() {
    * 해당 단어장의 상세정보를 가져오는 함수
    */
   const fetchNoteDetail = async () => {
+    console.log("------단어가져옴-------");
+    console.log(note_id);
     try {
-      const queryString = `customBookId=${note_id}`;
+      //book=customs&page=2&limit&customBookId=
+      const queryString = `book=customs&page=&limit&customBookId=${note_id}`;
       const res = await getNoteDetail(queryString);
-
+      console.log(res.data);
       if (res.status === 200) {
+        // setTitle(res.data.title);
         setWords(res.data.words);
       }
     } catch (e) {
@@ -105,6 +109,8 @@ export default function CustomNoteAddPage() {
 
   /** 단어추가 */
   const fetchWordAdd = async () => {
+    console.log("-------추가한 단어-----------");
+    console.log(customWord);
     try {
       const res = await postCustomWordAdd(`customBookId=${note_id}`, customWord);
       if (res.status === 201) {
