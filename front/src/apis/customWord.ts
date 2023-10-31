@@ -31,14 +31,13 @@ export const delCustomNote = async (queryParams: string) => {
   const url = `/book`;
   const queryString = new URLSearchParams(queryParams).toString();
   const fullUrl = `${url}?${queryString}`;
-  console.log(fullUrl);
   const res = await Api.delete(fullUrl);
   return res;
 };
 
 /** 커스텀 단어장 전체 삭제 */
 export const delAllCustomNote = async () => {
-  const url = `/book`;
+  const url = `/book/all`;
   const res = await Api.delete(url);
   return res;
 };

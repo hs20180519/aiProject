@@ -50,9 +50,9 @@ export default function CustomNoteListPage() {
     setLoading(true);
     try {
       const res = await getCustomNotes();
-      console.log("------노트 목록 -----");
-      console.log(res.data);
-      setCustomNoteList(res.data);
+      if (res.status === 200) {
+        setCustomNoteList(res.data);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -65,8 +65,6 @@ export default function CustomNoteListPage() {
     try {
       const res = await postCustomNote(data);
       if (res.status === 201) {
-        console.log("-------단어장 생성------");
-        console.log(res);
         if (res.status === 201) {
           toast({
             title: `단어장 생성완료!`,
@@ -101,6 +99,7 @@ export default function CustomNoteListPage() {
           isClosable: true,
           duration: TOAST_TIMEOUT_INTERVAL,
         });
+        fetchNoteList();
       }
     } catch (e) {
       console.error(e);
@@ -111,7 +110,6 @@ export default function CustomNoteListPage() {
   const fetchDelAllCustomNote = async () => {
     try {
       const res = await delAllCustomNote();
-      console.log(res);
       if (res.status === 200) {
         toast({
           title: `전체 삭제 완료`,
@@ -119,19 +117,28 @@ export default function CustomNoteListPage() {
           isClosable: true,
           duration: TOAST_TIMEOUT_INTERVAL,
         });
+        fetchNoteList();
+        setIsEditing(false);
       }
     } catch (e) {
       console.error(e);
+      toast({
+        title: `단어장 삭제중 에러가 발생하였습니다.`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+    } finally {
+      setIsEditing(false);
     }
   };
 
   /** 선택삭제 */
-  const deleteCustomNote = async (e) => {
+  const deleteCustomNote = async (note_id: string) => {
     // 모달로 삭제여부 확인
-    console.log(e);
-    const noteId = e.target.key;
-    fetchDelCustomNote(noteId);
+    fetchDelCustomNote(note_id);
   };
+
   /** 전체삭제 함수 */
   const delAllNote = () => {
     // 모달로 삭제여부 확인
@@ -139,7 +146,7 @@ export default function CustomNoteListPage() {
   };
 
   useEffect(() => {
-    fetchNoteList(); // 왜 무한 요청을 보내지..?
+    fetchNoteList();
   }, []);
 
   if (loading) return <Loading />;
@@ -153,7 +160,7 @@ export default function CustomNoteListPage() {
         <Spacer />
         {isEditing ? (
           <ButtonGroup>
-            <Btn text="전체 삭제" colorScheme="red" onClick={delAllCustomNote} />
+            <Btn text="전체 삭제" colorScheme="red" onClick={fetchDelAllCustomNote} />
             <Btn text="단어장 저장" onClick={() => setIsEditing((prev) => !prev)} />
           </ButtonGroup>
         ) : (
@@ -190,8 +197,8 @@ export default function CustomNoteListPage() {
           </AbsoluteCenter>
         </Box>
 
-        <NoteListBox noteList={noteList} isEditing={false} onClick={null} />
-        <NoteListBox noteList={customNoteList} isEditing={isEditing} onClick={deleteCustomNote} />
+        <NoteListBox noteList={noteList} isEditing={false} onDelete={null} />
+        <NoteListBox noteList={customNoteList} isEditing={isEditing} onDelete={deleteCustomNote} />
       </Stack>
     </>
   );

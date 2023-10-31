@@ -70,15 +70,13 @@ export default function CustomNoteAddPage() {
    * 해당 단어장의 상세정보를 가져오는 함수
    */
   const fetchNoteDetail = async () => {
-    console.log("------단어가져옴-------");
-    console.log(note_id);
     try {
       //book=customs&page=2&limit&customBookId=
       const queryString = `book=customs&page=&limit&customBookId=${note_id}`;
       const res = await getNoteDetail(queryString);
       console.log(res.data);
       if (res.status === 200) {
-        // setTitle(res.data.title);
+        setTitle(res.data.title);
         setWords(res.data.words);
       }
     } catch (e) {
@@ -91,8 +89,7 @@ export default function CustomNoteAddPage() {
     const data = { title };
     try {
       const res = await putCustomNoteTitle(data, note_id);
-      console.log("-----단어장 이름 변경----");
-      console.log(res);
+
       if (res.status === 200) {
         toast({
           title: `변경 완료!`,
@@ -109,8 +106,6 @@ export default function CustomNoteAddPage() {
 
   /** 단어추가 */
   const fetchWordAdd = async () => {
-    console.log("-------추가한 단어-----------");
-    console.log(customWord);
     try {
       const res = await postCustomWordAdd(`customBookId=${note_id}`, customWord);
       if (res.status === 201) {
@@ -126,8 +121,8 @@ export default function CustomNoteAddPage() {
       }
     } catch (e) {
       toast({
-        title: "단어 추가도중 에러가 발생했어요!",
-        status: "error",
+        title: "이미 추가된 단어 또는 잘못된 요청입니다.",
+        status: "warning",
         isClosable: true,
         duration: TOAST_TIMEOUT_INTERVAL,
       });
@@ -138,8 +133,6 @@ export default function CustomNoteAddPage() {
   const fetchDeleteNote = async () => {
     try {
       const res = await delCustomNote(`customBookId=${note_id}`);
-      console.log("-------단어장 삭제---------");
-      console.log(res);
       if (res.status === 200) {
         toast({
           title: "단어장 삭제완료!",
@@ -160,8 +153,6 @@ export default function CustomNoteAddPage() {
   const fetchEditWord = async (word_id: number, data: type.SubmitCustomWord) => {
     try {
       const res = await putCustomWord(`customBookId=${note_id}&wordId=${word_id}`, data);
-      console.log("---------단어수정---------");
-      console.log(res);
       if (res.status === 200) {
         console.log("단어 수정완료");
         fetchNoteDetail();
@@ -178,8 +169,7 @@ export default function CustomNoteAddPage() {
     const url = `customBookId=${note_id}&wordId=${word_id}`;
     try {
       const res = await delCustomWord(url);
-      console.log("--------단어삭제-------");
-      console.log(res);
+
       if (res.status === 200) {
         toast({
           title: `삭제되었습니다.`,
