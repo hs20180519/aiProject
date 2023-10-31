@@ -180,10 +180,6 @@ const SignUp = () => {
     });
   };
 
-  const navigateToIntroPage = () => {
-    navigate("/");
-  };
-
   useEffect(() => {
     if (debounceFetchTerm) {
       fetchEmailCheck();
@@ -198,22 +194,18 @@ const SignUp = () => {
       bg={useColorModeValue("gray.100", "gray.800")}
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-        <Stack align={"center"}>
-          <Heading fontSize={"4xl"} textAlign={"center"}>
-            워디 회원가입!
-          </Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
-            AI와 함께 쉽게 배우는 영단어✌️
-          </Text>
-        </Stack>
         <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
-          <Stack spacing={4}>
-            <Box w="360px">
+          <Heading fontSize={"3xl"} textAlign={"center"} color={"teal"}>
+              워디 회원가입!
+            </Heading>
+            <Text fontSize={"lg"} color={"teal.400"} textAlign={"center"}>
+              AI와 함께 쉽게 배우는 영단어✌️
+            </Text>
+          <Stack spacing={10} pt={5}>
               <FormControl id="firstName" isRequired>
                 <FormLabel>이름</FormLabel>
                 <Input type="text" name="name" value={name} onChange={handleChange} />
               </FormControl>
-            </Box>
             <Box w="360px">
               <FormControl id="email" isRequired>
                 <FormLabel>이메일</FormLabel>
