@@ -167,6 +167,11 @@ export const getLearnResult = async (userId: number): Promise<WordProgressDto[]>
     include: { word: true },
   });
 
-  const reversedResult = result.reverse();
-  return plainToInstance(WordProgressDto, reversedResult);
+  const sortedResult = result.sort((a, b) => {
+    const dateA = new Date(a.updatedAt);
+    const dateB = new Date(b.updatedAt);
+    return dateA.getTime() - dateB.getTime();
+  });
+
+  return plainToInstance(WordProgressDto, sortedResult);
 };
