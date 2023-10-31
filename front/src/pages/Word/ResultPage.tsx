@@ -142,7 +142,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestP
           </Button>
         </Tooltip>
         <Button
-          colorScheme="green"
+          colorScheme="teal"
           m={2}
           onClick={handleContinueLearning}
         >
