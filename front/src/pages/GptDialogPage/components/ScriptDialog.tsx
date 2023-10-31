@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Tooltip,
   Button,
@@ -9,6 +9,7 @@ import {
   VStack,
   useToast,
   Flex,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { DialogEntry } from "../../../apis/gpt_interface";
 import { simpleHash } from "../utils/gptUtils";
@@ -17,6 +18,30 @@ import GrammarDialog from "./GrammarDialog";
 import { translateText } from "../../../apis/translate";
 
 const highlightWords = (text: string, selectedWords: Record<string, string>) => {
+  const [isMobile] = useMediaQuery("(max-width: 600px)");
+  const [openTooltip, setOpenTooltip] = useState<number | null>(null);
+  const tooltipRef = React.useRef(null);
+
+  useEffect(() => {
+    if (isMobile && openTooltip !== null) {
+      const handleClickOutside = (event: Event) => {
+        if (tooltipRef.current && !tooltipRef.current.contains(event.target)) {
+          setOpenTooltip(null);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [isMobile, openTooltip]);
+
+  const handleTooltipClick = (index: number) => {
+    if (isMobile) {
+      setOpenTooltip(index);
+    }
+  };
+
   const selectedWordKeys = Object.keys(selectedWords);
   return text
     .split(" ")
@@ -25,21 +50,29 @@ const highlightWords = (text: string, selectedWords: Record<string, string>) => 
       if (foundKey) {
         const meaning = selectedWords[foundKey];
         return (
-          <Tooltip label={meaning} key={index}>
-            <Text
-              as="span"
-              fontStyle="italic"
-              fontWeight="600"
-              style={{
-                backgroundImage: "linear-gradient(transparent 60%, #F8CD07 40%)",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "100% 15px",
-                backgroundPosition: "0 100%",
-              }}
+          <div ref={tooltipRef}>
+            <Tooltip
+              label={meaning}
+              key={index}
+              isOpen={isMobile ? openTooltip === index : undefined}
+              shouldWrapChildren
             >
-              {word}
-            </Text>
-          </Tooltip>
+              <Text
+                as="span"
+                onClick={() => handleTooltipClick(index)}
+                fontStyle="italic"
+                fontWeight="600"
+                style={{
+                  backgroundImage: "linear-gradient(transparent 60%, #F8CD07 40%)",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "100% 15px",
+                  backgroundPosition: "0 100%",
+                }}
+              >
+                {word}
+              </Text>
+            </Tooltip>
+          </div>
         );
       }
       return word;
