@@ -166,5 +166,7 @@ export const getLearnResult = async (userId: number): Promise<WordProgressDto[]>
     take: 10,
     include: { word: true },
   });
-  return plainToInstance(WordProgressDto, result);
+
+  const reversedResult = result.reverse();
+  return plainToInstance(WordProgressDto, reversedResult);
 };
