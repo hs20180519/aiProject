@@ -1,4 +1,3 @@
-// InnerPage.js
 import React, { useState } from "react";
 import { Box, ChakraProvider, extendTheme } from "@chakra-ui/react";
 import CategoryPage from "./CategoryPage";
@@ -26,7 +25,10 @@ export default function WordPage() {
             setShowResultPage={setShowResultPage} // Pass setShowResultPage to TestPage
           />
         ) : showResultPage ? ( // Render ResultPage if showResultPage is true
-          <ResultPage />
+          <ResultPage 
+            setShowResultPage={setShowResultPage}
+            setShowTestPage={setShowTestPage}
+          />
         ) : (
           // Render the CategorySelection component
           <CategoryPage onSelectCategory={handleCategorySelect} />

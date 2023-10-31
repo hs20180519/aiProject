@@ -17,7 +17,12 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
-const ResultPage = () => {
+interface ResultPageProps {
+  setShowResultPage: (value: boolean) => void;
+  setShowTestPage: (value: boolean) => void; 
+}
+
+const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestPage }) => {
   const [resultData, setResultData] = useState([]);
   const [checkedWords, setCheckedWords] = useState({});
   const [checkedCount, setCheckedCount] = useState(0);
@@ -31,7 +36,7 @@ const ResultPage = () => {
       try {
         const response = await FetchStudyWords.getLearnResult();
         const resultData = response.data;
-        setResultData(resultData);
+        setResultData(resultData.reverse());
       } catch (error) {
         console.error("Error fetching results:", error);
       }
@@ -43,6 +48,17 @@ const ResultPage = () => {
   // Calculate the number of correct answers and total answers
   const totalAnswers = resultData.length;
   const correctAnswers = resultData.filter((result) => result.correct).length;
+
+  const handleContinueLearning = () => {
+    // Reset the showResultPage state to false
+    setShowResultPage(false);
+  };
+
+  const handleStopLearning = () => {
+    // Reset the showResultPage state to false
+    setShowResultPage(false);
+    setShowTestPage(false);
+  };
 
   const handleSendCheckedWords = () => {
     const selectedWords = {};
@@ -131,15 +147,16 @@ const ResultPage = () => {
           </Button>
         </Tooltip>
         <Button
-          as={RouterLink}
-          to="/main"
           colorScheme="green"
           m={2}
-          onClick={() => window.location.reload()}
+          onClick={handleContinueLearning}
         >
           단어학습 더 하기
         </Button>
-        <Button as={RouterLink} to="/main" colorScheme="red" m={2}>
+        <Button 
+          colorScheme="red" 
+          m={2} 
+          onClick={handleStopLearning}>
           학습 끝내기
         </Button>
       </Box>

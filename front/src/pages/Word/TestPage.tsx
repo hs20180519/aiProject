@@ -57,6 +57,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
     try {
       const queryParams = `${selectedCategory}=true`;
       const response = await FetchStudyWords.getStudyWord(queryParams);
+      console.log(response.data)
       const newWordData = response.data;
       setWordData(newWordData);
     } catch (error) {
