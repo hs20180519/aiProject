@@ -90,7 +90,10 @@ const ScriptDialog = ({
       }
 
       const uniqueIndex = `${dialogKey}_${regex.lastIndex}`;
-      const meaning = cleanSelectedWords[match[0]];
+
+      // Convert the matched word to lowercase before fetching the meaning
+      const lowerCaseMatch = match[0].toLowerCase();
+      const meaning = cleanSelectedWords[lowerCaseMatch];
 
       result.push(
         <TooltipWord
