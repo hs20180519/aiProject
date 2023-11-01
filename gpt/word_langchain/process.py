@@ -16,7 +16,8 @@ async def generate_dialog_process(input_data):
     dialog_human_template = \
         """Create a dialog with at least {line_count} lines so that the following words are used at least once,
          in their original form: {english_words} ({korean_meanings}). Do not use variations of these words, including tense or plurality changes.
-          For example, use 'be supposed to' as it is, not as 'were supposed to', and 'get in' as it is, not as 'got in'. Each word must be used at least once in the dialog.
+          For example, use the exact phrase 'be supposed to' as it is, not as 'are supposed to', 'is supposed to', etc.,
+           and 'get in' as it is, not as 'got in'. Each word must be used at least once in the dialog.
            Ensure that the conversation, although may sound unnatural, incorporates all the specified words exactly as
             they are. After writing the dialog, verify that each word from the list is used by checking them off one by one:
 
