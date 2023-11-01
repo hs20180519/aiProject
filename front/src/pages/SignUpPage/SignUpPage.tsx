@@ -56,13 +56,13 @@ const SignUp = () => {
 
   const getEmailStatus = () => {
     if (isEmailAvailable) {
-      return "사용 가능한 이메일";
+      return "사용 가능한 이메일입니다.";
     }
     if (isEmailAvailable === false) {
-      return "사용중인 이메일";
+      return "사용중인 이메일입니다.";
     }
     if (isEmailAvailable === undefined) {
-      return "올바르지 않은 형식";
+      return "이메일 양식에 맞춰 작성해주세요!";
     }
     return ""; // 반환값이 없을 경우 빈 문자열 반환
   };
@@ -199,15 +199,15 @@ const SignUp = () => {
       justify={"center"}
       bg={useColorModeValue("gray.100", "gray.800")}
     >
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-        <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
-          <Heading fontSize={"3xl"} textAlign={"center"} color={"teal"}>
+      <Stack spacing={8} mx={"auto"} maxW={"sm"} py={12} px={6}>
+        <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"md"} p={8}>
+          <Stack spacing={2} pt={2}>
+          <Heading fontSize={"2xl"} textAlign={"center"} color={"teal"}>
               워디 회원가입!
             </Heading>
-            <Text fontSize={"lg"} color={"teal.400"} textAlign={"center"}>
+            <Text fontSize={"sm"} color={"teal.400"} textAlign={"center"}>
               AI와 함께 쉽게 배우는 영단어✌️
             </Text>
-          <Stack spacing={10} pt={5}>
               <FormControl id="firstName" isRequired>
                 <FormLabel>이름</FormLabel>
                 <Input type="text" name="name" value={name} onChange={handleChange} />
@@ -215,12 +215,11 @@ const SignUp = () => {
                   <Text color="tomato" fontSize={'sm'}>두 글자 이상 적어주세요.</Text>
                 )}
               </FormControl>
-            <Box w="360px">
               <FormControl id="email" isRequired>
                 <FormLabel>이메일</FormLabel>
+                <Input name="email" type="email" value={email} onChange={handleChange} />
                 {email.length !== 0 && (
                   <Text
-                    position="absolute"
                     right="24px"
                     bottom="10px"
                     fontSize="xs"
@@ -229,10 +228,7 @@ const SignUp = () => {
                     {getEmailStatus()}
                   </Text>
                 )}
-                <Input name="email" type="email" value={email} onChange={handleChange} />
               </FormControl>
-            </Box>
-            <Box w="360px">
               <FormControl id="code" isRequired>
                 <FormLabel>인증번호</FormLabel>
                 <Input
@@ -264,9 +260,6 @@ const SignUp = () => {
                   )}
                 </Box>
               </FormControl>
-            </Box>
-
-            <Box w="360px">
               <FormControl id="password" isRequired>
                 <FormLabel>비밀번호</FormLabel>
                 <InputGroup>
@@ -287,8 +280,6 @@ const SignUp = () => {
                   <Text color="tomato" fontSize={'sm'}>네 글자 이상 적어주세요.</Text>
                 )}
               </FormControl>
-            </Box>
-            <Box w="360px">
               <FormControl id="password_confirm" isRequired>
                 <FormLabel>비밀번호 확인</FormLabel>
                 <InputGroup>
@@ -308,9 +299,7 @@ const SignUp = () => {
                   <Text color="tomato" fontSize={'sm'}>비밀번호가 올바르지 않습니다.</Text>
                 )}
               </FormControl>
-            </Box>
-
-            <Stack spacing={10} pt={2}>
+              <Stack spacing={10} pt={5}>
               <Button
                 loadingText="Submitting"
                 size="lg"
@@ -321,16 +310,14 @@ const SignUp = () => {
               >
                 회원가입
               </Button>
-            </Stack>
-            <Stack pt={6}>
+              </Stack>
               <Text align={"center"}>
                 이미 회원이신가요?{" "}
                 <ChakraLink as={ReactRouterLink} color={"teal.400"} to="/login">
                   로그인
                 </ChakraLink>
               </Text>
-            </Stack>
-          </Stack>
+              </Stack>
         </Box>
       </Stack>
     </Flex>
