@@ -1,18 +1,17 @@
 import { Favorite, PrismaClient, Word } from "@prisma/client";
+import * as wordInterface from "../interfaces/wordInterface";
 
 const prisma = new PrismaClient();
 
-export const addFavorite = async (userId: number, words: Word[]) => {
+export const addFavorite = async (userId: number, word: wordInterface.Word) => {
   const favoriteWords: Favorite[] = await prisma.favorite.findMany({
     where: {
       userId: userId,
-      wordId: { in: words.map((word: Word) => word.id) },
+      wordId: word.id,
     },
   });
-  return words.map((word: Word) => {
-    const isFavorite: boolean = favoriteWords.some(
-      (favoriteWord: Favorite): boolean => favoriteWord.wordId === word.id,
-    );
-    return { ...word, isFavorite };
-  });
+
+  const isFavorite: boolean = favoriteWords.length > 0;
+
+  return { ...word, isFavorite };
 };

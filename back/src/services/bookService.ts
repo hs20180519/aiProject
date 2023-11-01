@@ -3,7 +3,7 @@ import { BookDto, BooksDto } from "../dtos/bookDto";
 import { plainToInstance } from "class-transformer";
 import getPaginationParams from "../utils/getPaginationParams";
 import { WordDto } from "../dtos/wordDto";
-import { addFavorite } from "../utils/addFavorite";
+import { addFavorites } from "../utils/addFavorites";
 
 const prisma = new PrismaClient();
 
@@ -48,7 +48,7 @@ export const getWordByUserId = async (
 
   const words: Word[] = wordProgresses.map((wordProgress) => wordProgress.word);
 
-  const wordsWithFavoriteStatus = await addFavorite(userId, words);
+  const wordsWithFavoriteStatus = await addFavorites(userId, words);
 
   return {
     words: plainToInstance(WordDto, wordsWithFavoriteStatus),
@@ -79,7 +79,7 @@ export const getWordByCategory = async (
     customBook!.word.sort((a: Word, b: Word) => a.createdAt.getTime() - b.createdAt.getTime());
     const words: Word[] = customBook!.word.slice(offset.skip, offset.skip + offset.take);
 
-    const wordsWithFavoriteStatus = await addFavorite(userId, words);
+    const wordsWithFavoriteStatus = await addFavorites(userId, words);
 
     return {
       words: plainToInstance(WordDto, wordsWithFavoriteStatus),
@@ -101,7 +101,7 @@ export const getWordByCategory = async (
       ...offset,
     });
 
-    const wordsWithFavoriteStatus = await addFavorite(userId, words);
+    const wordsWithFavoriteStatus = await addFavorites(userId, words);
 
     return {
       words: plainToInstance(WordDto, wordsWithFavoriteStatus),
@@ -133,7 +133,7 @@ export const getWordByFavorite = async (
   const words: Word[] = favoriteWord.map((item) => item.word);
   words.sort((a: Word, b: Word) => a.word.localeCompare(b.word, "en", { sensitivity: "base" }));
 
-  const wordsWithFavoriteStatus = await addFavorite(userId, words);
+  const wordsWithFavoriteStatus = await addFavorites(userId, words);
 
   return {
     words: plainToInstance(WordDto, wordsWithFavoriteStatus),
@@ -323,12 +323,16 @@ export const searchWordByUserId = async (
   const words: Word[] = wordProgresses.map((wordProgress) => wordProgress.word);
 
   const searchResults: Word[] = words.filter((word: Word) => word.word === searchTerm);
+
   const rearrangedWords: Word[] = [
     ...searchResults,
     ...words.filter((word) => word.word !== searchTerm),
   ];
+
+  const wordsWithFavoriteStatus = await addFavorites(userId, rearrangedWords);
+
   return {
-    words: plainToInstance(WordDto, rearrangedWords),
+    words: plainToInstance(WordDto, wordsWithFavoriteStatus),
     totalPages,
     currentPage: page,
     title: correct,
@@ -365,8 +369,11 @@ export const searchWordByCategory = async (
     const rearrangedWords: Word[] = exactMatchWord
       ? [exactMatchWord, ...searchResults.filter((word: Word): boolean => word.word !== searchTerm)]
       : searchResults;
+
+    const wordsWithFavoriteStatus = await addFavorites(userId, rearrangedWords);
+
     return {
-      words: plainToInstance(WordDto, rearrangedWords),
+      words: plainToInstance(WordDto, wordsWithFavoriteStatus),
       totalPages,
       currentPage: page,
       title: customBook!.title,
@@ -397,8 +404,10 @@ export const searchWordByCategory = async (
       ...words.filter((word: Word): boolean => word.word !== searchTerm),
     ];
 
+    const wordsWithFavoriteStatus = await addFavorites(userId, rearrangedWords);
+
     return {
-      words: plainToInstance(WordDto, rearrangedWords),
+      words: plainToInstance(WordDto, wordsWithFavoriteStatus),
       totalPages,
       currentPage: page,
       title: category,
@@ -439,5 +448,11 @@ export const searchWordByFavorite = async (
 
   words.sort((a: Word, b: Word) => a.word.localeCompare(b.word, "en", { sensitivity: "base" }));
 
-  return { words: plainToInstance(WordDto, words), totalPages, currentPage: page };
+  const wordsWithFavoriteStatus = await addFavorites(userId, words);
+
+  return {
+    words: plainToInstance(WordDto, wordsWithFavoriteStatus),
+    totalPages,
+    currentPage: page,
+  };
 };

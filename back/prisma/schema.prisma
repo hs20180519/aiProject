@@ -1,105 +1,105 @@
 generator client {
-	provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-	provider = "mysql"
-	url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-	id           Int            @id @default(autoincrement())
-	email        String?        @unique @db.VarChar(50)
-	name         String?        @db.VarChar(30)
-	nickname     String?        @db.VarChar(15)
-	password     String?        @db.VarChar(70)
-	snsId        String?        @unique
-	provider     String?
-	profileImage String?
-	score        Int            @default(0)
-	createdAt    DateTime       @default(now())
-	updatedAt    DateTime       @updatedAt
-	manager      Boolean        @default(false)
-	customBook   CustomBook[]
-	rank         Rank[]
-	wordProgress WordProgress[]
-	Favorite     Favorite[]
+  id           Int            @id @default(autoincrement())
+  email        String?        @unique @db.VarChar(50)
+  name         String?        @db.VarChar(30)
+  nickname     String?        @db.VarChar(15)
+  password     String?        @db.VarChar(70)
+  snsId        String?        @unique
+  provider     String?
+  profileImage String?
+  score        Int            @default(0)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  manager      Boolean        @default(false)
+  customBook   CustomBook[]
+  rank         Rank[]
+  wordProgress WordProgress[]
+  Favorite     Favorite[]
 }
 
 model VerifiCode {
-	id        Int      @id @default(autoincrement())
-	email     String   @unique
-	code      String   @db.VarChar(6)
-	createdAt DateTime @default(now())
-	updatedAt DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  code      String   @db.VarChar(6)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Word {
-	id           Int            @id @default(autoincrement())
-	word         String         @unique @db.VarChar(30)
-	meaning      String         @db.VarChar(100)
-	category     String
-	createdAt    DateTime       @default(now())
-	updatedAt    DateTime       @updatedAt
-	customBookId Int?
-	customBook   CustomBook?    @relation(fields: [customBookId], references: [id], onDelete: Cascade)
-	wordProgress WordProgress[]
-	favorite     Favorite[]
-	isFavorite   Boolean?
+  id           Int            @id @default(autoincrement())
+  word         String         @unique @db.VarChar(30)
+  meaning      String         @db.VarChar(100)
+  category     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  customBookId Int?
+  customBook   CustomBook?    @relation(fields: [customBookId], references: [id], onDelete: Cascade)
+  wordProgress WordProgress[]
+  favorite     Favorite[]
+  isFavorite   Boolean?
 
-	@@index([category, customBookId])
-	@@index([customBookId], map: "Word_customBookId_fkey")
+  @@index([category, customBookId])
+  @@index([customBookId], map: "Word_customBookId_fkey")
 }
 
 model Favorite {
-	id     Int  @id @default(autoincrement())
-	userId Int
-	wordId Int
-	user   User @relation(fields: [userId], references: [id])
-	word   Word @relation(fields: [wordId], references: [id])
+  id     Int  @id @default(autoincrement())
+  userId Int
+  wordId Int
+  user   User @relation(fields: [userId], references: [id])
+  word   Word @relation(fields: [wordId], references: [id])
 
-	@@unique([userId, wordId])
+  @@unique([userId, wordId])
 }
 
 model MeaningGroup {
-	id       Int      @id @default(autoincrement())
-	meanings Json
-	createAt DateTime @default(now())
+  id       Int      @id @default(autoincrement())
+  meanings Json
+  createAt DateTime @default(now())
 }
 
 model WordProgress {
-	id        Int      @id @default(autoincrement())
-	userId    Int
-	wordId    Int
-	correct   Boolean
-	studiedAt DateTime @default(now())
-	updatedAt DateTime @updatedAt
-	user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-	word      Word     @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  wordId    Int
+  correct   Boolean
+  studiedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  word      Word     @relation(fields: [wordId], references: [id], onDelete: Cascade)
 
-	@@index([userId, wordId, correct])
-	@@index([wordId], map: "WordProgress_wordId_fkey")
+  @@index([userId, wordId, correct])
+  @@index([wordId], map: "WordProgress_wordId_fkey")
 }
 
 model CustomBook {
-	id     Int    @id @default(autoincrement())
-	userId Int
-	title  String @db.VarChar(20)
-	user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-	word   Word[]
+  id     Int    @id @default(autoincrement())
+  userId Int
+  title  String @db.VarChar(20)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  word   Word[]
 
-	@@unique([userId, id])
+  @@unique([userId, id])
 }
 
 model Rank {
-	id          Int      @id @default(autoincrement())
-	userId      Int
-	score       Int
-	currentRank Int?
-	pastRank    Int?
-	rankDate    DateTime @default(now())
-	updatedAt   DateTime @updatedAt
-	user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  score       Int
+  currentRank Int?
+  pastRank    Int?
+  rankDate    DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-	@@index([userId], map: "Rank_userId_fkey")
+  @@index([userId], map: "Rank_userId_fkey")
 }
