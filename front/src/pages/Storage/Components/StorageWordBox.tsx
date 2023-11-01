@@ -1,7 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import BookMark from "../../../components/BookMark";
 
-const WordBox = ({ word, onBookmarkClick }) => {
+const StorageWordBox = ({ word, onBookmarkClick }) => {
   return (
     <Flex
       width="100%"
@@ -37,4 +37,4 @@ const WordBox = ({ word, onBookmarkClick }) => {
   );
 };
 
-export default WordBox;
+export default StorageWordBox;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as instance from "../../apis/api";
 import { Box, Grid } from "@chakra-ui/react";
-import WordBox from "./Components/WordBox";
+import StorageWordBox from "./Components/StorageWordBox";
 import CustomModal from "../../components/CustomModal";
 import Pagination from "../../components/Pagination";
 import SearchBar from "./Components/SearchBar";
@@ -129,7 +129,7 @@ const Storage: React.FC = () => {
       <SearchBar onSearch={handleSearchClick} />
       <Grid templateColumns="repeat(2, 1fr)" gap={1}>
         {wordData.map((word) => (
-          <WordBox key={word.id} word={word} onBookmarkClick={handleBookmarkClick} />
+          <StorageWordBox key={word.id} word={word} onBookmarkClick={handleBookmarkClick} />
         ))}
       </Grid>
       <CustomModal
