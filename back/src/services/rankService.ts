@@ -37,60 +37,45 @@ export const getUsersRankList = async (page?: number, limit?: number): Promise<R
   );
 };
 
-// export const getUserRank = async (): Promise<RankDto[]> => {
-//   const users = await prisma.rank.findMany({
-//     orderBy: {
-//       score: "desc",
-//     },
-//     select: {
-//       userId: true,
-//       score: true,
-//       currentRank: true,
-//       user: {
-//         select: { name: true, nickname: true, profileImage: true },
-//       },
-//     },
-//   });
+/** 로그인한 유저의 등수을 가져오는 것 */
+export const getUserRank = async (id: number): Promise<RankDto[]> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
 
-//   let rank = 1;
-//   for (const user of users) {
-//     await prisma.rank.update({
-//       where: { userId: user.userId },
-//       data: { currentRank: rank },
-//     });
-//     rank++;
-//   }
-//   console.log(users);
+  // 조회할 유저 = user
+  const users = await prisma.rank.findMany({
+    orderBy: {
+      score: "desc",
+    },
+    select: {
+      userId: true,
+      score: true,
+      currentRank: true,
+      user: {
+        select: { name: true, nickname: true, profileImage: true },
+      },
+    },
+  });
 
-//   return plainToInstance(
-//     RankDto,
-//     users.map((user) => ({
-//       nickname: user.user.nickname,
-//       profileImage: user.user.profileImage,
-//       score: user.score,
-//       currentRank: user.currentRank,
-//     })),
-//   );
-// };
+  const rankIndex = users.findIndex((item) => item.userId === id);
 
-// export const getRankGap = async ()=> {
-//   const users = await prisma.rank.findMany({
-//     select: {
-//       id: true,
-//       currentRank: true,
-//       pastRank: true,
-//     },
-//   });
+  console.log(rankIndex);
+  // return rankIndex;
+  return plainToInstance(
+    RankDto,
+    users.map((user) => ({
+      nickname: user.user.nickname,
+      profileImage: user.user.profileImage,
+      score: user.score,
+      currentRank: user.currentRank,
+    })),
+  );
+};
 
-//   for (const user of users) {
-//     if (user.pastRank) {
-//       const gap = user?.pastRank - user?.currentRank;
-//       // You can perform actions with the gap value, or update the database as needed
-//       console.log(`User ID: ${user.id}, Rank Gap: ${gap}`);
-//     }
-//   }
-// };
-
+/** 매일 6시에 유저의 이전 랭크를 저장함 */
 export const updateRankCron = () => {
   cron.schedule("0 18 * * *", async () => {
     const users = await prisma.rank.findMany({
@@ -107,4 +92,21 @@ export const updateRankCron = () => {
       });
     }
   });
+};
+
+// pastRank - currentRank
+export const getRankGap = async (id: number) => {
+  const user = await prisma.rank.findFirst({
+    where: {
+      userId: id,
+    },
+  });
+
+  if (user) {
+    const pastRank = user.pastRank || 0;
+    const currentRank = user.currentRank || 0;
+    const rankGap = pastRank - currentRank;
+    return { pastRank: pastRank, currentRank: currentRank, rankGep: rankGap };
+  }
+  return 0;
 };
