@@ -67,6 +67,7 @@ const LoginPage = () => {
             isClosable: true,
             duration: TOAST_TIMEOUT_INTERVAL,
           });
+        console.log(userInfo.data);
           navigate("/main", { replace: true });
         } else {
           window.alert("유저 정보가 잘못되었습니다.");

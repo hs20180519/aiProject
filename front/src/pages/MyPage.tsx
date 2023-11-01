@@ -27,6 +27,7 @@ import {
 import { AxiosError } from "axios";
 import useDebounced from "../hooks/useDebounce";
 import validateEmail from "../libs/validateEmail";
+import { Event, UserState } from "../reducer";
 
 const TOAST_TIMEOUT_INTERVAL = 800;
 
@@ -38,6 +39,7 @@ type NewUserEmailInfoType = {
 export default function MyPage() {
   const toast = useToast();
   const navigate = useNavigate();
+
 
   /** 이메일 추가 모달 */
   const [isEmailPopupOpen, setEmailPopupOpen] = useState(false);
@@ -62,7 +64,7 @@ export default function MyPage() {
   /** 유저 내 정보 수정 및 조회 */
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [userImage, setUserImage] = useState("");
+  const [profileImage, setProfileImage] = useState("");
 
   /** 학습진행률 */
   const [csatProgress, setCsatProgress] = useState(0);
@@ -219,7 +221,7 @@ export default function MyPage() {
         }
         setName(userData.name);
         setEmail(userData.email);
-        setUserImage(userData.profileImage);
+        setProfileImage(userData.profileImage);
       })
       .catch((error) => {
         console.error("사용자 정보 가져오기 오류:", error);
@@ -254,8 +256,8 @@ export default function MyPage() {
       Api.sendImage("post", "/upload/profile-image", formData)
         .then((response) => {
           console.log("Server Response:", response);
-          setUserImage(response.data);
-          toast({
+          Event({ type: "CHANGE_IMAGE", payload:response.data});
+          toast({ 
             title: "프로필 이미지가 변경 되었습니다!",
             status: "success",
             isClosable: true,
@@ -299,8 +301,8 @@ export default function MyPage() {
         <Flex justify={"center"} mt={5}>
           <Avatar
             size={"xl"}
-            src={userImage}
-            key={userImage}
+            src={profileImage}
+            key={profileImage}
             css={{
               border: "2px solid white",
             }}
@@ -308,7 +310,7 @@ export default function MyPage() {
         </Flex>
         <Box p={6}>
           <Stack spacing={0} align={"center"} mb={0}>
-            <Heading fontSize={"3xl"} fontWeight={500} fontFamily={"body"}>
+            <Heading fontSize={"3xl"} fontWeight={500}>
               {name}
             </Heading>
             <Text color={"gray.500"}>{email || ""}</Text>

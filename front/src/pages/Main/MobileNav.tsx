@@ -39,7 +39,7 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
       .then((response) => {
         const userData = response.data;
         setUserName(userData.name);
-        setProfileImage(userData.profileImage || "https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256");
+        setProfileImage(userData.profileImage);
       })
       .catch((error) => {
         console.error('사용자 정보 가져오기 오류:', error);
@@ -69,7 +69,6 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
         <Text
           display={{ base: "flex", md: "none" }}
           fontSize={"2xl"}
-          fontFamily={"monospace"}
           fontWeight={"bold"}
         >
           {"🐾 Wordy\r"}

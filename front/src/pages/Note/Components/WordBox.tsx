@@ -91,7 +91,7 @@ export default function WordBox({ word, isBookmarked, onUpdate, onDelete }: Word
             <Link to={`grammar/${word.word}}`}>
               <Icon as={FaRobot} boxSize={8} />
             </Link>
-            <Text fontSize="xl" fontFamily={"monospace"} right={24}>
+            <Text fontSize="xl" right={24}>
               {word.word}
             </Text>
             <Stack direction="row" position="absolute" right={6}>

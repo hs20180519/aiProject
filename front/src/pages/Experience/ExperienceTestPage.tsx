@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@chakra-ui/react";
 import { FetchExperience } from "../../apis/experience";
+import { Link as RouterLink } from "react-router-dom";
 
 interface WordData {
   id: number;
@@ -128,7 +129,7 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
     <Flex align="center" justify="center" height="100vh">
       <Box maxW="xl" p={6} borderWidth={1} borderRadius="lg" marginX={4}>
         <Text fontSize="xl" fontWeight="bold" mb={4}>
-          🐾Wordy
+          🐾Wordy 테스트
         </Text>
         <Text fontSize="5xl" mb={4} textAlign="center">
           {currentWord}
@@ -167,6 +168,16 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
           isCorrect={answerState.popupIsCorrect}
           correctAnswer={answerState.popupCorrectAnswer}
         />
+      </Box>
+      <Box position="fixed" bottom="5" left="50%" transform="translateX(-50%)">
+          <Button
+            as={RouterLink}
+            to="/"
+            colorScheme="teal"
+            m={2}
+          >
+          처음으로 돌아가기
+          </Button>
       </Box>
     </Flex>
   );

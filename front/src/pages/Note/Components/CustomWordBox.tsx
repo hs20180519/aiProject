@@ -74,7 +74,7 @@ export default function CustomWordBox({ word, onDelete, onUpdate }: CustomWordBo
                 단어
               </Text>
               <Icon as={FaSortAlphaUp} color="gray.300" boxSize={6} mr={2} />
-              <Text fontFamily={"monospace"}>{word.word}</Text>
+              <Text>{word.word}</Text>
             </HStack>
             <HStack>
               <Text color={"gray.500"} as="b" fontSize={"l"}>
