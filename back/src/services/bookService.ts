@@ -6,11 +6,6 @@ import { WordDto } from "../dtos/wordDto";
 
 const prisma = new PrismaClient();
 
-interface ResponseBook {
-  words: WordProgressDto[];
-  totalPages: number;
-  currentPage: number;
-}
 export const createBook = async (userId: number, title: string): Promise<BookDto> => {
   const createdBook = prisma.customBook.create({
     data: {
