@@ -22,7 +22,6 @@ const SearchBar = ({ onSearch }, props) => {
       <Input
         value={searchTerm}
         onChange={handleChange}
-        fontFamily="monospace"
         placeholder={props.placeholder || "검색할 영단어를 입력하세요"}
         focusBorderColor="teal.400"
         {...props}
