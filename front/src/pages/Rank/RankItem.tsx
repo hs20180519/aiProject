@@ -14,7 +14,7 @@ const changeBackgroudColor = (index) => {
   if (index === 0) {
     return "yellow.100";
   } else if (index === 1) {
-    return "gray.200";
+    return "gray.300";
   } else if (index === 2) {
     return "orange";
   } else {

@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-import NoteListBox from "./Components/NoteListBox";
 import {
   useColorModeValue,
   Flex,
@@ -13,7 +11,11 @@ import {
   ButtonGroup,
   useToast,
 } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
+import NoteListBox from "./Components/NoteListBox";
+import ConfirmModal from "../../components/ConfirmModal";
+
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   getCustomNotes,
   postCustomNote,
@@ -37,13 +39,13 @@ export default function CustomNoteListPage() {
   const toast = useToast();
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+
+  /** 단어장 전체삭제 확인 모달 */
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [noteList, setNoteList] = useState(NOTE_LIST);
   const [customNoteList, setCustomNoteList] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [checkedItems, setCheckedItems] = useState([false, false]);
-  const allChecked = checkedItems.every(Boolean);
 
   /** 노트 목록 가져오기 */
   const fetchNoteList = async () => {
@@ -119,6 +121,7 @@ export default function CustomNoteListPage() {
         });
         fetchNoteList();
         setIsEditing(false);
+        setIsModalOpen(false);
       }
     } catch (e) {
       console.error(e);
@@ -154,13 +157,24 @@ export default function CustomNoteListPage() {
   return (
     <>
       <Flex minWidth="max-content" alignItems="center" gap="2" mb="5">
+        <ConfirmModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen((prev) => !prev)}
+          message1={"확인"}
+          message2={"단어장 목록이 전체 삭제됩니다. 삭제하시겠습니까?"}
+          onClick={fetchDelAllCustomNote}
+        />
         <Box p="2">
           <Heading size="md">내 단어장</Heading>
         </Box>
         <Spacer />
         {isEditing ? (
           <ButtonGroup>
-            <Btn text="전체 삭제" colorScheme="red" onClick={fetchDelAllCustomNote} />
+            <Btn
+              text="전체 삭제"
+              colorScheme="red"
+              onClick={() => setIsModalOpen((prev) => !prev)}
+            />
             <Btn text="단어장 저장" onClick={() => setIsEditing((prev) => !prev)} />
           </ButtonGroup>
         ) : (
