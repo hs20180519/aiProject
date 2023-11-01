@@ -71,7 +71,13 @@ const ScriptDialog = ({
     selectedWords: Record<string, string>,
     dialogKey: string,
   ) => {
-    const selectedWordKeys = Object.keys(selectedWords).sort((a, b) => b.length - a.length);
+    const cleanSelectedWords: Record<string, string> = {};
+    Object.keys(selectedWords).forEach(key => {
+      const cleanKey = key.replace(/\s*\(.*?\)\s*/g, '').trim();
+      cleanSelectedWords[cleanKey] = selectedWords[key];
+    });
+
+    const selectedWordKeys = Object.keys(cleanSelectedWords).sort((a, b) => b.length - a.length);
     const regex = new RegExp(selectedWordKeys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join("|"), 'gi');
 
     let match;
@@ -79,13 +85,12 @@ const ScriptDialog = ({
     const result = [];
 
     while ((match = regex.exec(text)) !== null) {
-      // 이전 텍스트 추가
       if (lastIndex < match.index) {
         result.push(text.slice(lastIndex, match.index));
       }
 
       const uniqueIndex = `${dialogKey}_${regex.lastIndex}`;
-      const meaning = selectedWords[match[0]];
+      const meaning = cleanSelectedWords[match[0]];
 
       result.push(
         <TooltipWord
