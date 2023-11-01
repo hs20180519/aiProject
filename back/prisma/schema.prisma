@@ -94,7 +94,7 @@ model CustomBook {
 model Rank {
   id          Int      @id @default(autoincrement())
   userId      Int
-  score       Int
+  score       Int      @default(0)
   currentRank Int?
   pastRank    Int?
   rankDate    DateTime @default(now())
