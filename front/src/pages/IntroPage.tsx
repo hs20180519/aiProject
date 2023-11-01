@@ -86,7 +86,6 @@ export default function IntroPage() {
               />
               <Text
                 fontSize={"lg"}
-                fontFamily={"Caveat"}
                 position={"absolute"}
                 right={"-75px"}
                 top={"-20px"}
