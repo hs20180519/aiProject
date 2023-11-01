@@ -15,7 +15,8 @@ const GrammarResultBox = ({ responseData }) => {
         height="250px"
         overflow="auto"
         borderColor="lightgray"
-        textAlign="left" // 텍스트를 왼쪽에 정렬
+        textAlign="left"
+        marginBottom="15px"
       >
         {responseData}
       </Box>

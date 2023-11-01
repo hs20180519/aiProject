@@ -53,7 +53,6 @@ const GrammarPage = () => {
 
   return (
     <Box
-      h="calc(90vh)"
       textAlign={"center"}
       borderTop="10px"
       marginBottom="10px"
