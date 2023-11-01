@@ -1,7 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import BookMark from "../../../components/BookMark";
 
-const WordBox = ({ word, onBookmarkClick }) => {
+const StorageWordBox = ({ word, onBookmarkClick }) => {
   return (
     <Flex
       width="100%"
@@ -22,8 +22,8 @@ const WordBox = ({ word, onBookmarkClick }) => {
       }}
     >
       <Box flex={1} style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-        <p style={{ fontSize: "17px", fontFamily: "monospace", fontWeight: "bold" }}>{word.word}</p>
-        <p style={{ color: "gray", fontFamily: "monospace" }}>{word.meaning}</p>
+        <p style={{ fontSize: "17px", fontWeight: "bold" }}>{word.word}</p>
+        <p style={{ color: "gray" }}>{word.meaning}</p>
       </Box>
       <Box>
         <BookMark
@@ -37,4 +37,4 @@ const WordBox = ({ word, onBookmarkClick }) => {
   );
 };
 
-export default WordBox;
+export default StorageWordBox;

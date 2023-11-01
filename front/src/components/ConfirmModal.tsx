@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -7,33 +6,29 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  ButtonGroup,
 } from "@chakra-ui/react";
+import Btn from "./Btn";
 import { InfoIcon } from "@chakra-ui/icons";
 
-const CustomModal = ({ isOpen, onClose, message }) => {
-  useEffect(() => {
-    if (isOpen) {
-      const timer = setTimeout(() => {
-        onClose();
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen, onClose]);
-
+export default function CunfirmModal({ isOpen, onClose, message1, message2, onClick }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xs">
       <ModalOverlay />
       <ModalContent color="teal">
         <ModalHeader>
           <InfoIcon mr={2} />
-          알림
+          {message1}
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody color="black">{message}</ModalBody>
-        <ModalFooter></ModalFooter>
+        <ModalBody color="black">{message2}</ModalBody>
+        <ModalFooter>
+          <ButtonGroup>
+            <Btn text="취소" colorScheme="red" onClick={onClose} />
+            <Btn text="확인" onClick={onClick} />
+          </ButtonGroup>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );
-};
-
-export default CustomModal;
+}
