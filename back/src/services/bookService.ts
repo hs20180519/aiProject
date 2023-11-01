@@ -4,6 +4,7 @@ import { plainToInstance } from "class-transformer";
 import getPaginationParams from "../utils/getPaginationParams";
 import { WordDto } from "../dtos/wordDto";
 import { addFavorites } from "../utils/addFavorites";
+import { FavoriteDto } from "../dtos/favoriteDto";
 
 const prisma = new PrismaClient();
 
@@ -256,14 +257,26 @@ export const deleteCustomWordInBook = async (
   });
 };
 
-export const getFavoriteWordByWordId = async (userId: number, wordId: number): Promise<WordDto> => {
+export const getWord = async (wordId: number) => {
+  return prisma.word.findFirst({
+    where: { id: wordId },
+  });
+};
+
+export const getFavoriteWordByWordId = async (
+  userId: number,
+  wordId: number,
+): Promise<FavoriteDto> => {
   const favoriteWord: Favorite | null = await prisma.favorite.findFirst({
     where: {
       userId: userId,
       wordId: wordId,
     },
+    include: {
+      word: true,
+    },
   });
-  return plainToInstance(WordDto, favoriteWord);
+  return plainToInstance(FavoriteDto, favoriteWord);
 };
 
 export const createFavoriteWord = async (userId: number, wordId: number): Promise<WordDto> => {

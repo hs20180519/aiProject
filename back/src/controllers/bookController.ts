@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "@prisma/client";
+import { Favorite, User, Word } from "@prisma/client";
 import * as bookService from "../services/bookService";
 import { BookDto, BooksDto } from "../dtos/bookDto";
 import { WordDto } from "../dtos/wordDto";
+import { FavoriteDto } from "../dtos/favoriteDto";
 
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -222,8 +223,13 @@ export const createFavoriteWordInBook = async (req: Request, res: Response, next
     const userId: number = (req.user as User).id;
     const wordId: number = Number(req.query.wordId);
 
-    const existingFavorite: WordDto = await bookService.getFavoriteWordByWordId(userId, wordId);
+    const word: Word | null = await bookService.getWord(wordId);
+    console.log(word);
+    if (word && word.category === "custom")
+      return res.status(400).json({ message: "커스텀단어는 즐겨찾기할 수 없습니다." });
+    const existingFavorite: FavoriteDto = await bookService.getFavoriteWordByWordId(userId, wordId);
     if (existingFavorite) return res.status(409).json({ message: "이미 추가한 단어입니다." });
+
     const createdFavoriteWord: WordDto = await bookService.createFavoriteWord(userId, wordId);
     return res.status(201).json(createdFavoriteWord);
   } catch (error) {
