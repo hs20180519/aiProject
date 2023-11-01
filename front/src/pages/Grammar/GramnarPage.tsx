@@ -55,8 +55,7 @@ const GrammarPage = () => {
         문법 교정기
       </Heading>
 
-      <Box>
-        {/* 줄바꿈 넣고 싶어요 */}
+      <Box whiteSpace="pre-line">
         {word == "ai"
           ? `자유롭게 영작을 해주세요. 
         wordy가 문법을 고쳐줄 거예요!`
