@@ -71,35 +71,42 @@ const ScriptDialog = ({
     selectedWords: Record<string, string>,
     dialogKey: string,
   ) => {
-    const selectedWordKeys = Object.keys(selectedWords);
-    return text
-      .split(" ")
-      .map((word, index) => {
-        const uniqueIndex = `${dialogKey}_${index}`;
-        const foundKey = selectedWordKeys.find((key) => word.includes(key));
-        if (foundKey) {
-          const meaning = selectedWords[foundKey];
-          return (
-            <TooltipWord
-              word={word}
-              meaning={meaning}
-              index={uniqueIndex}
-              isMobile={isMobile}
-              openTooltip={openTooltip}
-              handleTooltipClick={handleTooltipClick}
-              tooltipRef={tooltipRef}
-            />
-          );
-        }
-        return word;
-      })
-      .reduce((acc, curr, index) => {
-        if (index !== 0) {
-          acc.push(" ");
-        }
-        acc.push(curr);
-        return acc;
-      }, [] as React.ReactNode[]);
+    const selectedWordKeys = Object.keys(selectedWords).sort((a, b) => b.length - a.length);
+    const regex = new RegExp(selectedWordKeys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join("|"), 'gi');
+
+    let match;
+    let lastIndex = 0;
+    const result = [];
+
+    while ((match = regex.exec(text)) !== null) {
+      // 이전 텍스트 추가
+      if (lastIndex < match.index) {
+        result.push(text.slice(lastIndex, match.index));
+      }
+
+      const uniqueIndex = `${dialogKey}_${regex.lastIndex}`;
+      const meaning = selectedWords[match[0]];
+
+      result.push(
+        <TooltipWord
+          word={match[0]}
+          meaning={meaning}
+          index={uniqueIndex}
+          isMobile={isMobile}
+          openTooltip={openTooltip}
+          handleTooltipClick={handleTooltipClick}
+          tooltipRef={tooltipRef}
+        />
+      );
+
+      lastIndex = regex.lastIndex;
+    }
+
+    if (lastIndex < text.length) {
+      result.push(text.slice(lastIndex));
+    }
+
+    return result;
   };
 
   if (!dialogResult?.dialog) {
