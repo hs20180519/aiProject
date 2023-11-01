@@ -86,34 +86,50 @@ const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestP
   };
 
   return (
-    <Box background="white" boxShadow="md" p={6} rounded="md" flexGrow={1} width="100%">
-      <Text fontSize="2xl" fontWeight="bold" mb={4}>
-        단어 학습 결과 (정답 개수 {correctAnswers}개 / 총 단어 개수 {totalAnswers}개)
+    <Box background="white" boxShadow="md" p={4} rounded="md" flexGrow={1} width="100%">
+      <Text fontSize="lg" fontWeight="bold" mb={4}>
+      ✏️단어 학습 결과 <br /> (정답 개수 {correctAnswers}개 / 총 단어 개수 {totalAnswers}개)
       </Text>
-      <Box border="1px" borderRadius="md" borderColor="gray.200" overflow="auto" p="6" m="2">
+      <Box border="1px" borderRadius="md" borderColor="gray.200" overflow="auto" p="1" m="1">
         <Table>
-          <Thead>
-            <Tr>
-              <Th></Th>
-              <Th>번호</Th>
-              <Th>정답여부</Th>
-              <Th>단어</Th>
-              <Th>뜻</Th>
-            </Tr>
-          </Thead>
+        <Thead>
+        <Tr>
+          <Td></Td>
+          <Td  p="0.2rem" textAlign="center">번호</Td>
+          <Td  p="0.2rem" textAlign="center">정답여부</Td>
+          <Td  p="0">
+            <Table>
+              <Tr>
+                <Td  p="0.2rem" textAlign="center">단어</Td>
+              </Tr>
+              <Tr>
+                <Td  p="0.2rem" textAlign="center">뜻</Td>
+              </Tr>
+            </Table>
+          </Td>
+        </Tr>
+      </Thead>
           <Tbody>
             {resultData.map((result, index) => (
               <Tr key={index}>
-                <Td>
+                <Td p="0.2rem" textAlign="center">
                   <Checkbox
                     isChecked={checkedWords[result.word.word] || false}
                     onChange={() => toggleCheckbox(result.word.word)}
                   />
                 </Td>
-                <Td>{index + 1}</Td>
-                <Td>{result.correct ? "⭕" : "❌"}</Td>
-                <Td>{result.word.word}</Td>
-                <Td>{result.word.meaning}</Td>
+                <Td p="0.2rem" textAlign="center">{index + 1}</Td>
+                <Td p="0.2rem" textAlign="center">{result.correct ? "⭕" : "❌"}</Td>
+                <Td  p="0">
+              <Table>
+                <Tr>
+                <Td p="0.2rem" textAlign="center">{result.word.word}</Td>
+                </Tr>
+                <Tr>
+                <Td p="0.2rem" textAlign="center">{result.word.meaning}</Td>
+                </Tr>
+              </Table>
+            </Td>
               </Tr>
             ))}
           </Tbody>
@@ -149,7 +165,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestP
           단어학습 더 하기
         </Button>
         <Button
-          colorScheme="red"
+          colorScheme="orange"
           m={2}
           onClick={handleStopLearning}>
           학습 끝내기

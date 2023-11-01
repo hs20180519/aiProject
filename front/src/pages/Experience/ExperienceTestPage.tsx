@@ -28,7 +28,7 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
       <ModalOverlay />
-      <ModalContent display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+      <ModalContent maxW="343px" display="flex" flexDirection="column" alignItems="center" justifyContent="center">
         <ModalHeader>
           {isCorrect ? "정답" : "오답"}
         </ModalHeader>
@@ -36,7 +36,7 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
           {isCorrect ? "정답입니다!" : `틀렸습니다. 정답은: ${correctAnswer}`}
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" onClick={onClose}>
+          <Button colorScheme="teal" onClick={onClose}>
             확인
           </Button>
         </ModalFooter>
@@ -47,7 +47,6 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
 
 const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperienceResultPage, setCollectAnswers }) => {
   const [wordData, setWordData] = useState<WordData[]>([]);
-  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const [popupIsOpen, setPopupIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answerState, setAnswerState] = useState({
@@ -126,11 +125,11 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
 
   return (
     <Flex align="center" justify="center" height="100vh">
-      <Box maxW="xl" p={6} borderWidth={1} borderRadius="lg" marginX={4}>
-        <Text fontSize="xl" fontWeight="bold" mb={4}>
+      <Box width="330px" borderWidth={1} borderRadius="lg">
+        <Text fontSize="xl" fontWeight="bold" m={4}>
           🐾Wordy
         </Text>
-        <Text fontSize="5xl" mb={4} textAlign="center">
+        <Text fontSize="5xl" fontWeight="bold" mb={2} textAlign="center">
           {currentWord}
         </Text>
         <Flex flexWrap="wrap" direction="column" align="center">
@@ -139,24 +138,24 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
               <Button
                 colorScheme="teal"
                 onClick={() => handleChoiceClick(choice)}
-                size="sm"
+                size="md"
               >
                 {choice}
               </Button>
             </Flex>
           ))}
         </Flex>
-        <Flex justify="center" align="center">
+        <Flex justify="center" align="center" mt={2}>
           <Button
             variant="outline"
             onClick={handleDontKnow}
             colorScheme="orange"
-            size="sm"
+            size="md"
           >
             모르겠어요🤔
           </Button>
         </Flex>
-        <Flex justify="center" align="center" mt={4}>
+        <Flex justify="center" align="center" mt={4} mb={2}>
           <Text fontSize="sm" textAlign="center">
             {currentIndex + 1}/{totalWords}
           </Text>
