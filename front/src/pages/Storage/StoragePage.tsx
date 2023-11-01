@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import * as instance from "../../apis/api";
-import { Box, Grid } from "@chakra-ui/react";
+import { Box, Grid, useToast } from "@chakra-ui/react";
 import StorageWordBox from "./Components/StorageWordBox";
 import CustomModal from "../../components/CustomModal";
 import Pagination from "../../components/Pagination";
@@ -23,6 +23,8 @@ const Storage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [pagingIndex, setPagingIndex] = useState(1);
+  const toast = useToast();
+  const TOAST_TIMEOUT_INTERVAL = 800;
   const limit = 5; //페이지당 아이템 수
 
   // 단어 데이터 가져오는 함수
@@ -76,7 +78,7 @@ const Storage: React.FC = () => {
           );
           // 즐겨찾기가 추가되면 모달
           setIsModalOpen(true);
-          const msg = `즐겨찾기가 추가되었습니다. 단어장에서 확인해주세요 :)`;
+          const msg = `즐겨찾기가 추가되었습니다.`;
           setModalMessage(msg);
         }
       } else {
@@ -91,6 +93,12 @@ const Storage: React.FC = () => {
         }
       }
     } catch (error) {
+      toast({
+        title: "즐겨찾기 설정에 실패하였습니다.",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
       console.error("Error toggling favorite status:", error);
     }
   };
