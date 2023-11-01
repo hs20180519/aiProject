@@ -13,6 +13,8 @@ interface WordsProps {
   word: string;
   meaning: string;
   correct?: boolean;
+  category: string;
+  isFavorite: boolean;
 }
 interface SubmitCustomWord {
   word: string;
