@@ -1,8 +1,10 @@
-import { PrismaClient, Rank } from "@prisma/client";
+import { PrismaClient, Rank, Word } from "@prisma/client";
 import { createChoices } from "../utils/createChoices";
 import * as wordInterface from "../interfaces/wordInterface";
 import { WordProgressDto, WordWithChoicesDto } from "../dtos/wordDto";
 import { plainToInstance } from "class-transformer";
+import { addFavorites } from "../utils/addFavorites";
+import { addFavorite } from "../utils/addFavorite";
 
 const prisma = new PrismaClient();
 
@@ -39,41 +41,87 @@ export const getExperienceWord = async (): Promise<WordWithChoicesDto[]> => {
 };
 
 export const getWord = async (userId: number): Promise<WordWithChoicesDto> => {
-  const wordResult: wordInterface.Word[] = await prisma.$queryRaw`
-      SELECT * FROM Word 
-      WHERE NOT EXISTS(
-              SELECT * FROM WordProgress 
-              WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId}
-            ) 
-      ORDER BY RAND() LIMIT 1`;
-  const word: wordInterface.Word = wordResult[0];
-  return await createChoices(word);
+  const wordsCount: number = await prisma.word.count({
+    where: {
+      NOT: {
+        wordProgress: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+    },
+  });
+
+  const skip: number = Math.floor(Math.random() * wordsCount);
+
+  const word: Word | null = await prisma.word.findFirst({
+    where: {
+      NOT: {
+        wordProgress: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+    },
+    skip: skip,
+  });
+
+  if (!word) throw new Error(`사용자 ID ${userId}에 대해 단어를 찾을 수 없습니다.`);
+
+  const wordWithFavoriteStatus = await addFavorite(userId, word);
+  return await createChoices(wordWithFavoriteStatus);
 };
 
 export const getWordsByUserId = async (
   userId: number,
   isCorrect: boolean,
 ): Promise<WordWithChoicesDto> => {
-  const wordResult: wordInterface.Word[] = await prisma.$queryRaw`
-    SELECT Word.* FROM Word 
-    INNER JOIN WordProgress ON Word.id=WordProgress.wordId
-    WHERE WordProgress.userId=${userId} AND WordProgress.correct=${isCorrect}
-    ORDER BY RAND() LIMIT 1`;
+  const wordsCount: number = await prisma.word.count({
+    where: {
+      wordProgress: {
+        some: {
+          userId: userId,
+          correct: isCorrect,
+        },
+      },
+    },
+  });
 
-  if (!wordResult)
+  const skip: number = Math.floor(Math.random() * wordsCount);
+
+  const word: Word | null = await prisma.word.findFirst({
+    where: {
+      wordProgress: {
+        some: {
+          userId: userId,
+          correct: isCorrect,
+        },
+      },
+    },
+    skip: skip,
+  });
+
+  if (!word)
     throw new Error(
       `사용자 ID ${userId}에 대해 ${isCorrect} 상태가 올바른 단어를 찾을 수 없습니다.`,
     );
 
-  let word: wordInterface.Word = wordResult[0];
+  const additionalMeanings: Word[] = await prisma.word.findMany({
+    where: {
+      meaning: {
+        not: word.meaning,
+      },
+    },
+    take: 3,
+  });
 
-  const additionalMeanings: any[] = await prisma.$queryRaw`
-     SELECT meaning FROM Word WHERE meaning != '${word.meaning}' ORDER BY RAND() LIMIT 3
-   `;
+  const choices: string[] = additionalMeanings.map((obj: Word) => obj.meaning).concat(word.meaning);
 
-  let choices: string[] = [...additionalMeanings.map((obj) => obj.meaning), word.meaning];
+  const wordWithFavoriteStatus = await addFavorite(userId, word);
 
-  return plainToInstance(WordWithChoicesDto, { ...word, choices });
+  return plainToInstance(WordWithChoicesDto, { ...wordWithFavoriteStatus, choices });
 };
 
 export const getWordsByCategory = async (
@@ -81,42 +129,58 @@ export const getWordsByCategory = async (
   category: string,
   customBookId?: string,
 ): Promise<WordWithChoicesDto> => {
-  let wordResult: wordInterface.Word[];
-
   const bookId: number = Number(customBookId);
 
-  if (customBookId) {
-    wordResult = await prisma.$queryRaw`
-     SELECT * FROM Word 
-WHERE customBookId = ${bookId} AND (
-  NOT EXISTS (
-    SELECT * FROM WordProgress 
-    WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId}
-  ) OR
-  EXISTS (
-    SELECT * FROM WordProgress 
-    WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId} AND WordProgress.correct=false
-  )
-) 
-ORDER BY RAND() LIMIT 1`;
-  } else {
-    wordResult = await prisma.$queryRaw`
-      SELECT * FROM Word 
-      WHERE category = ${category} AND (
-        NOT EXISTS (
-          SELECT * FROM WordProgress 
-          WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId}
-        ) OR
-        NOT EXISTS (
-          SELECT * FROM WordProgress 
-          WHERE WordProgress.wordId=Word.id AND WordProgress.userId=${userId} AND WordProgress.correct=true
-        )
-      ) 
-      ORDER BY RAND() LIMIT 1`;
-  }
-  const word: wordInterface.Word = wordResult[0];
+  const whereClause = customBookId
+    ? {
+        customBookId: bookId,
+        NOT: {
+          wordProgress: {
+            some: {
+              userId: userId,
+              correct: true,
+            },
+          },
+        },
+      }
+    : {
+        category: category,
+        OR: [
+          {
+            NOT: {
+              wordProgress: {
+                some: {
+                  userId: userId,
+                },
+              },
+            },
+          },
+          {
+            wordProgress: {
+              some: {
+                userId: userId,
+                correct: false,
+              },
+            },
+          },
+        ],
+      };
 
-  return await createChoices(word);
+  const wordsCount: number = await prisma.word.count({
+    where: whereClause,
+  });
+
+  const skip: number = Math.floor(Math.random() * wordsCount);
+
+  const word: Word | null = await prisma.word.findFirst({
+    where: whereClause,
+    skip: skip,
+  });
+
+  if (!word) throw new Error(`카테고리 ${category}에 대해 단어를 찾을 수 없습니다.`);
+  const wordWithFavoriteStatus = await addFavorite(userId, word);
+
+  return await createChoices(wordWithFavoriteStatus);
 };
 
 export const saveLearn = async (

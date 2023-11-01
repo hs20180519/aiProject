@@ -45,6 +45,7 @@ model Word {
   customBook   CustomBook?    @relation(fields: [customBookId], references: [id], onDelete: Cascade)
   wordProgress WordProgress[]
   favorite     Favorite[]
+  isFavorite   Boolean?
 
   @@index([category, customBookId])
   @@index([customBookId], map: "Word_customBookId_fkey")
