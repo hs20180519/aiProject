@@ -4,6 +4,7 @@ import { InputDialogData } from "../../apis/gpt_interface";
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
 import { FetchStudyWords } from "../../apis/studyWord";
+import { useNavigate } from "react-router-dom";
 
 const GptDialogPage = () => {
   const [selectedWords, setSelectedWords] = useState({});
@@ -15,6 +16,8 @@ const GptDialogPage = () => {
   const toast = useToast();
 
   const [dynamicWordList, setDynamicWordList] = useState({});
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -150,13 +153,22 @@ const GptDialogPage = () => {
               생성된 문장의 단어를 클릭하거나 마우스 커서를 올리면 뜻을 확인 할 수 있습니다
             </Text>
             {scriptResult ? (
-              <ScriptDialog
-                dialogResult={JSON.parse(scriptResult)}
-                isGrammarLoading={isGrammarLoading}
-                setGrammarLoading={setGrammarLoading}
-                isScriptLoading={isScriptLoading}
-                selectedWords={selectedWords}
-              />
+              <>
+                <ScriptDialog
+                  dialogResult={JSON.parse(scriptResult)}
+                  isGrammarLoading={isGrammarLoading}
+                  setGrammarLoading={setGrammarLoading}
+                  isScriptLoading={isScriptLoading}
+                  selectedWords={selectedWords}
+                />
+                <Box textAlign="center">
+                  <Button colorScheme="teal"
+                          mt={4}
+                          onClick={() => window.location.reload()}>
+                    처음으로 돌아가기
+                  </Button>
+                </Box>
+              </>
             ) : null}
           </Box>
         </Box>

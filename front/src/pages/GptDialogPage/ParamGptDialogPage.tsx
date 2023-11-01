@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Text, Box, Flex, Spinner, useToast, Tag, Center } from "@chakra-ui/react";
+import { Button, Text, Box, Flex, Spinner, useToast, Tag, Center } from "@chakra-ui/react";
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ParamGptDialogPage = () => {
   const location = useLocation();
@@ -13,6 +14,8 @@ const ParamGptDialogPage = () => {
   const [isGrammarLoading, setGrammarLoading] = useState(false);
 
   const toast = useToast();
+
+  const navigate = useNavigate();
 
   const handleGetScript = useCallback(async () => {
     setScriptLoading(true);
@@ -95,6 +98,12 @@ const ParamGptDialogPage = () => {
               isScriptLoading={isScriptLoading}
               selectedWords={receivedWords}
             />
+            <Box textAlign="center">
+            <Button colorScheme="teal"
+                    m={4}
+                    onClick={() => navigate("/main")}>학습 페이지로 돌아가기
+            </Button>
+            </Box>
           </Box>
         ) : null}
       </Box>
