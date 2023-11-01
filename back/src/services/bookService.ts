@@ -1,4 +1,4 @@
-import { CustomBook, Favorite, Prisma, PrismaClient, Word } from "@prisma/client";
+import { CustomBook, Favorite, PrismaClient, Word } from "@prisma/client";
 import { BookDto, BooksDto } from "../dtos/bookDto";
 import { plainToInstance } from "class-transformer";
 import getPaginationParams from "../utils/getPaginationParams";
