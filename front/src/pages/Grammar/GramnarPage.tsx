@@ -35,7 +35,6 @@ const GrammarPage = () => {
 
   return (
     <VStack
-      fontFamily="monospace"
       h="calc(90vh)"
       spacing={8}
       p={8}
@@ -46,9 +45,9 @@ const GrammarPage = () => {
       backgroundColor="white"
     >
       <Heading
+        fontFamily="kakao"
         as="h1"
         size="xl"
-        fontFamily="monospace"
         sx={{
           "@keyframes fly": {
             "0%": { transform: "translateY(0)" },
@@ -70,7 +69,7 @@ const GrammarPage = () => {
         wordy가 문법을 고쳐줄 거예요!`
           : `${word}가 포함된 문장을 입력해주세요!`}
       </Box>
-      <HStack width="70%" fontFamily="monospace">
+      <HStack width="70%">
         <Input
           size="lg"
           value={inputText}
@@ -90,7 +89,6 @@ const GrammarPage = () => {
       <VStack align="start" spacing={4} width="70%">
         <Box fontSize={"15px"}>교정된 문장 :</Box>
         <Box
-          fontFamily="monospace"
           fontSize="18px"
           border="1px"
           p={6}
