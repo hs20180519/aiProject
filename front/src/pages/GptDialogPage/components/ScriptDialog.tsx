@@ -11,7 +11,7 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import { DialogEntry, GrammarResponse } from "../../../apis/gpt_interface";
-import { simpleHash } from "../utils/gptUtils";
+import { cleanKey, createRegex, simpleHash } from "../utils/gptUtils";
 import { FetchGpt } from "../../../apis/gpt";
 import GrammarDialog from "./GrammarDialog";
 import { translateText } from "../../../apis/translate";
@@ -71,30 +71,36 @@ const ScriptDialog = ({
     selectedWords: Record<string, string>,
     dialogKey: string,
   ) => {
-    const cleanSelectedWords: Record<string, string> = {};
-    Object.keys(selectedWords).forEach(key => {
-      const cleanKey = key.replace(/\s*\(.*?\)\s*/g, '').trim();
-      cleanSelectedWords[cleanKey] = selectedWords[key];
-    });
+    // 모든 키를 순회하면서 괄호와 공백을 제거한 키를 생성한 다음 원래의 뜻과 매핑하여 저장
+    const cleanSelectedWords = Object.fromEntries(
+      Object.entries(selectedWords).map(([key, value]) => [cleanKey(key), value]),
+    );
 
-    const selectedWordKeys = Object.keys(cleanSelectedWords).sort((a, b) => b.length - a.length);
-    const regex = new RegExp(selectedWordKeys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join("|"), 'gi');
+    // 긴 단어가 짧은 단어에 포함되어 있을 경우, 긴 단어를 먼저 찾아 정확하게 하이라이트하기 위해 정렬
+    const sortedKeys = Object.keys(cleanSelectedWords).sort((a, b) => b.length - a.length);
+
+    // 정규 표현식 객체 생성 단계
+    const regex = createRegex(sortedKeys);
 
     let match;
     let lastIndex = 0;
     const result = [];
 
+    // 정규 표현식과 일치하는 단어를 찾는 반복문
+    // regex.exec(text)는 text에서 regex와 일치하는 첫 번째 문자열을 찾는다.
     while ((match = regex.exec(text)) !== null) {
+      // 찾은 단어가 문장 중간에 있다면 그 앞에 있는 문자열을 result에 추가
       if (lastIndex < match.index) {
         result.push(text.slice(lastIndex, match.index));
       }
 
+      // 고유 인덱스를 생성 (다이얼로그 키와 마지막 인덱스를 결합)
       const uniqueIndex = `${dialogKey}_${regex.lastIndex}`;
 
-      // Convert the matched word to lowercase before fetching the meaning
-      const lowerCaseMatch = match[0].toLowerCase();
-      const meaning = cleanSelectedWords[lowerCaseMatch];
+      // 찾은 단어를 소문자로 변환 후 뜻을 가져온다
+      const meaning = cleanSelectedWords[match[0].toLowerCase()];
 
+      // 하이라이트가 포함된 툴팁 컴포넌트를 result에 추가
       result.push(
         <TooltipWord
           word={match[0]}
@@ -104,12 +110,14 @@ const ScriptDialog = ({
           openTooltip={openTooltip}
           handleTooltipClick={handleTooltipClick}
           tooltipRef={tooltipRef}
-        />
+        />,
       );
 
+      // 마지막 인덱스를 업데이트
       lastIndex = regex.lastIndex;
     }
 
+    // 마지막으로 남은 문자열을 result에 추가
     if (lastIndex < text.length) {
       result.push(text.slice(lastIndex));
     }
