@@ -149,8 +149,8 @@ const ScriptDialog = ({
         setGrammarResult,
         dialogKey,
         setLoadingEntryKey,
-        "Grammar fetch successful.",
-        "Grammar fetch failed.",
+        "문법 설명이 생성되었습니다",
+        "문법 설명이 실패했습니다",
       );
     },
     [handleApiFetch],
@@ -163,8 +163,8 @@ const ScriptDialog = ({
         setTranslationResult,
         dialogKey,
         setLoadingTranslationKey,
-        "Translation successful.",
-        "Translation failed.",
+        "번역이 완료되었습니다",
+        "번역이 실패했습니다",
       );
     },
     [handleApiFetch],

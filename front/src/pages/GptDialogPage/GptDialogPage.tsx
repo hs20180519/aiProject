@@ -75,7 +75,7 @@ const GptDialogPage = () => {
       const apiResult = await FetchGpt.getScript(updatedDialogParams);
 
       toast({
-        title: "Script fetch successful.",
+        title: "대화문 생성이 완료되었습니다",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -83,7 +83,7 @@ const GptDialogPage = () => {
       setScriptResult(JSON.stringify(apiResult));
     } catch (error) {
       toast({
-        title: "Script fetch failed.",
+        title: "대화문 생성에 실패했습니다",
         description: `Error: ${error.message || error}`,
         status: "error",
         duration: 5000,

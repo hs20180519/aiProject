@@ -2,8 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Button, Text, Box, Flex, Spinner, useToast, Tag, Center } from "@chakra-ui/react";
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ParamGptDialogPage = () => {
   const location = useLocation();
@@ -28,7 +27,7 @@ const ParamGptDialogPage = () => {
       const apiResult = await FetchGpt.getScript(updatedDialogParams);
 
       toast({
-        title: "Script fetch successful.",
+        title: "대화문 생성이 완료되었습니다",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -37,7 +36,7 @@ const ParamGptDialogPage = () => {
       setScriptResult(JSON.stringify(apiResult));
     } catch (error) {
       toast({
-        title: "Script fetch failed.",
+        title: "대화문 생성에 실패했습니다",
         description: `Error: ${error.message || error}`,
         status: "error",
         duration: 5000,
