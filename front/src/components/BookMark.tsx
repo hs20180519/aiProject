@@ -5,8 +5,7 @@ import { PiStarFill, PiStarDuotone } from "react-icons/pi";
  * favorite true -> 꽉찬 별,
  * favorite false -> 빈 별 */
 
-// 머하려구여보? 버튼 못생겨서
-const BookMark = ({ favorite, onClick }, props) => {
+const BookMark = ({ favorite, onClick }) => {
   return (
     <Button onClick={onClick} padding={0} variant="ghost">
       <Icon as={favorite ? PiStarFill : PiStarDuotone} boxSize={4} color={"yellow.400"} />

@@ -13,6 +13,7 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { FaRobot, FaSortAlphaUp, FaDog, FaPencilAlt } from "react-icons/fa";
+import ConfirmModal from "../../../components/ConfirmModal";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import * as type from "../../../apis/types/custom";
@@ -22,6 +23,7 @@ import BookMark from "../../../components/BookMark";
 interface WordBoxProps {
   word: type.WordsProps;
   isBookmarked: boolean;
+  handleBookmark: (word_id: number) => void | Promise<void>;
   onUpdate: (word_id: number, data: type.SubmitCustomWord) => void | Promise<void>;
   onDelete: (word_id: number) => void | Promise<void>;
   isCustom: boolean;
@@ -31,6 +33,7 @@ interface WordBoxProps {
 export default function WordBox({
   word,
   isBookmarked,
+  handleBookmark,
   onUpdate,
   onDelete,
   isCustom,
@@ -38,6 +41,9 @@ export default function WordBox({
   const [isEditing, setIsEditing] = useState(false);
   const [updateWord, setUpdateWord] = useState(word.word);
   const [updateMeaning, setUpdateMeaning] = useState(word.meaning);
+
+  /** 단어장 삭제 확인 모달 */
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleUpdate = () => {
     onUpdate(word.id, { word: updateWord, meaning: updateMeaning });
@@ -51,6 +57,13 @@ export default function WordBox({
 
   return (
     <>
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen((prev) => !prev)}
+        message1={"확인"}
+        message2={"삭제하시겠습니까?"}
+        onClick={handleDelete}
+      />
       {!isEditing ? (
         <Box
           fontWeight="semibold"
@@ -88,7 +101,7 @@ export default function WordBox({
                     <Icon as={FaPencilAlt} boxSize={3} />
                   </Button>
                 ) : (
-                  <BookMark favorite={true} onClick={null} />
+                  <BookMark favorite={isBookmarked} onClick={handleBookmark} />
                 )}
               </Flex>
             </Box>
@@ -126,7 +139,7 @@ export default function WordBox({
           </Stack>
           <ButtonGroup mt={1} right={13} position={"absolute"}>
             <Btn text="저장" onClick={handleUpdate} />
-            <Btn text="삭제" colorScheme="red" onClick={handleDelete} />
+            <Btn text="삭제" colorScheme="red" onClick={() => setIsModalOpen((prev) => !prev)} />
           </ButtonGroup>
         </Box>
       )}

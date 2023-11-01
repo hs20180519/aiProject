@@ -20,7 +20,6 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import WordBox from "./Components/WordBox";
-import { stringify } from "querystring";
 import Pagination from "../../components/Pagination";
 import SelectNote from "../../components/SelectNote";
 import SearchBar from "../Storage/Components/SearchBar";
@@ -58,7 +57,7 @@ export default function NoteDetailPage() {
 
   /** 단어장 타이틀 변경 */
   const [disable, setDisable] = useState(false);
-  const [titleIsEditing, setTitleIsEditing] = useState(true);
+  const [isTitleEditing, setIsTitleEditing] = useState(false);
 
   /** 단어 추가 및 변경 */
   const [isItAdd, setIsItAdd] = useState(false);
@@ -74,7 +73,7 @@ export default function NoteDetailPage() {
     meaning: "",
   });
 
-  /**  Pagination */
+  /**  페이지네이션 */
   const limit = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -132,7 +131,7 @@ export default function NoteDetailPage() {
           isClosable: true,
           duration: TOAST_TIMEOUT_INTERVAL,
         });
-        setTitleIsEditing(false);
+        setIsTitleEditing(false);
       }
     } catch (e) {
       console.error(e);
@@ -199,6 +198,7 @@ export default function NoteDetailPage() {
           duration: TOAST_TIMEOUT_INTERVAL,
         });
         fetchNoteDetail();
+        setIsEditing(false);
       }
     } catch (e) {
       console.error(e);
@@ -211,11 +211,12 @@ export default function NoteDetailPage() {
     fetchCustomNotes();
   };
 
-  /** 즐겨찾기 추가
+  /**
+   * 즐겨찾기 추가
    * currentPage만 가능
    */
-  const fetchBookmark = async () => {
-    const data = "wordId";
+  const fetchBookmark = async (word_id: number) => {
+    const data = word_id;
     try {
       const res = await Api.post("/favorite", data);
       if (res.status === 201) {
@@ -232,12 +233,11 @@ export default function NoteDetailPage() {
     }
   };
 
-  // delete api 새로 만들기
   /** 즐겨찾기 삭제 */
-  const fetchDelBookmark = async () => {
-    const data = "wordId";
+  const fetchDelBookmark = async (word_id: number) => {
+    const data = word_id;
     try {
-      const res = await Api.delete("/favorite");
+      const res = await Api.delete(`book/favorite?wordId=${data}`);
       if (res.status === 200) {
         setIsBookmarked(false);
         toast({
@@ -252,6 +252,18 @@ export default function NoteDetailPage() {
     }
   };
 
+  /** 즐겨찾기 핸들러 */
+  const handleChangeBookmark = (word_id: number) => {
+    try {
+      if (!isBookmarked) {
+        fetchBookmark(word_id);
+      } else if (isBookmarked) {
+        fetchDelBookmark(word_id);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
   /** 페이지네이션 핸들링 */
   const handleChangePage = async (page: number) => {
     console.log();
@@ -315,7 +327,7 @@ export default function NoteDetailPage() {
       <SearchBar onSearch={handleSearchClick} />
       <Flex minWidth="max-content" alignItems="center" gap="2" mb="5">
         <Stack direction={"row"}>
-          {isEditing ? (
+          {isTitleEditing ? (
             <Input
               id="title"
               type="text"
@@ -331,19 +343,21 @@ export default function NoteDetailPage() {
           )}
           {isCustom ? (
             <>
-              {isEditing ? (
+              {isTitleEditing ? (
                 <Btn
                   size="m"
                   variant="ghost"
                   text="저장"
-                  onClick={() => setIsEditing((prev) => !prev)}
+                  onClick={() => {
+                    fetchUpdateNoteTitle();
+                  }}
                 />
               ) : (
                 <Btn
                   size="m"
                   variant="ghost"
                   text={<Icon as={FaPencilAlt} boxSize={3} />}
-                  onClick={() => setIsEditing((prev) => !prev)}
+                  onClick={() => setIsTitleEditing((prev) => !prev)}
                 />
               )}
             </>
@@ -408,6 +422,7 @@ export default function NoteDetailPage() {
         <WordBox
           word={word}
           isBookmarked={isBookmarked}
+          handleBookmark={handleChangeBookmark}
           onUpdate={fetchEditWord}
           onDelete={fetchDeleteWord}
           isCustom={isCustom}
