@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 interface ResultPageProps {
   setShowResultPage: (value: boolean) => void;
-  setShowTestPage: (value: boolean) => void; 
+  setShowTestPage: (value: boolean) => void;
 }
 
 const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestPage }) => {
@@ -34,7 +34,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestP
       try {
         const response = await FetchStudyWords.getLearnResult();
         const resultData = response.data;
-        setResultData(resultData.reverse());
+        setResultData(resultData);
       } catch (error) {
         console.error("Error fetching results:", error);
       }
@@ -62,7 +62,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestP
         selectedWords[result.word.word] = result.word.meaning;
       }
     }
-    navigate("/main/paramTestGptWordPage", { state: { receivedWords: selectedWords } });
+    navigate("/main/param_gpt_dialog", { state: { receivedWords: selectedWords } });
   };
 
   const toggleCheckbox = (word) => {
@@ -142,15 +142,15 @@ const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestP
           </Button>
         </Tooltip>
         <Button
-          colorScheme="green"
+          colorScheme="teal"
           m={2}
           onClick={handleContinueLearning}
         >
           단어학습 더 하기
         </Button>
-        <Button 
-          colorScheme="red" 
-          m={2} 
+        <Button
+          colorScheme="red"
+          m={2}
           onClick={handleStopLearning}>
           학습 끝내기
         </Button>

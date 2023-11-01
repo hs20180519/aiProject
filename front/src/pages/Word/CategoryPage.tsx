@@ -34,7 +34,7 @@ const CategoryPage = ({ onSelectCategory }) => {
       </Stack>
       <Button
         onClick={handleApplyCategory}
-        colorScheme="green"
+        colorScheme="teal"
         mt={4}
         isDisabled={!selectedCategory}
       >

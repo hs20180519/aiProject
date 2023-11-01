@@ -22,21 +22,10 @@ export default function IntroPage() {
       </Link>
       <Image
         position="absolute"
-        mt={200}
-        left={-200}
-        transform={"rotate( 120deg )"}
-        zIndex={-9999}
-        w={400}
-        src={`${process.env.PUBLIC_URL}/images/hedgehog.png`}
-        alt={"고슴도치"}
-      />
-      <Image
-        position="absolute"
         mt={450}
-        right={28}
         zIndex={-9999}
         w={600}
-        src={`${process.env.PUBLIC_URL}/images/dogs.png`}
+        src={`${process.env.PUBLIC_URL}/images/dog.png`}
         alt="강아지들"
       />
       <Container maxW={"3xl"}>
@@ -59,9 +48,10 @@ export default function IntroPage() {
           </Heading>
           <Stack spacing={3}>
             <Text color={"gray.500"}>
-              영포자를 위한 영단어 학습 서비스, AI와 함께하는 문법교정까지!
+              영포자를 위한 영단어 학습 서비스,<p></p>AI와 함께하는 문법교정까지!
             </Text>
-            <Text color={"gray.500"}>꾸준한 학습을 위한 리마인드 서비스를 제공합니다.</Text>
+            <Text color={"gray.500"}>꾸준한 학습을 위한 
+            <p></p>리마인드 서비스를 제공합니다.</Text>
             <Text color={"gray.500"}>워디로 갓생살기 시작해보세요🐶</Text>
           </Stack>
           <Stack
@@ -74,7 +64,7 @@ export default function IntroPage() {
             <Link to={"/test"}>
               <Btn
                 text=" Wordy 🐾 체험하기"
-                colorScheme={"green"}
+                colorScheme={"teal"}
                 bg={"teal.500"}
                 rounded={"full"}
                 px={6}

@@ -29,47 +29,63 @@ const ExperienceResultPage: React.FC<ExperienceResultPageProps> = ({ collectAnsw
   const correctAnswers = collectAnswers.filter((result) => result.isCorrect).length;
 
   return (
-    <Box background="white" boxShadow="md" p={6} rounded="md" flexGrow={1} width="100%">
-      <Text fontSize="2xl" fontWeight="bold" mb={4}>
-        단어 학습 결과 (정답 개수 {correctAnswers}개 / 총 단어 개수 {totalAnswers}개)
-      </Text>
-      <Box border="1px" borderRadius="md" borderColor="gray.200" overflow="auto" p="6" m="2">
-        <Table>
-          <Thead>
-            <Tr>
-              <Th>번호</Th>
-              <Th>정답여부</Th>
-              <Th>단어</Th>
-              <Th>뜻</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {collectAnswers.map((result, index) => (
-              <Tr key={index}>
-                <Td>{index + 1}</Td>
-                <Td>{result.isCorrect ? "⭕" : "❌"}</Td>
-                <Td>{result.word}</Td>
-                <Td>{result.correctAnswer}</Td>
+    <Box background="white" boxShadow="md" p={4} rounded="md" flexGrow={1} width="100%">
+  <Text fontSize="lg" fontWeight="bold" mb={4}>
+    🐾단어 학습 결과 <br /> (정답 개수 {correctAnswers}개 / 총 단어 개수 {totalAnswers}개)
+  </Text>
+  <Box border="1px" borderRadius="md" borderColor="gray.200" overflow="auto" p="1" m="1">
+    <Table>
+      <Thead>
+        <Tr>
+          <Td  p="0.2rem" textAlign="center">번호</Td>
+          <Td  p="0.2rem" textAlign="center">정답여부</Td>
+          <Td  p="0">
+            <Table>
+              <Tr>
+                <Td  p="0.2rem" textAlign="center">단어</Td>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </Box>
+              <Tr>
+                <Td  p="0.2rem" textAlign="center">뜻</Td>
+              </Tr>
+            </Table>
+          </Td>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {collectAnswers.map((result, index) => (
+          <Tr key={index}>
+            <Td  p="0.2rem" textAlign="center">{index + 1}</Td>
+            <Td  p="0.2rem" textAlign="center">{result.isCorrect ? "⭕" : "❌"}</Td>
+            <Td  p="0">
+              <Table>
+                <Tr>
+                  <Td  p="0.2rem" textAlign="center">{result.word}</Td>
+                </Tr>
+                <Tr>
+                  <Td  p="0.2rem" textAlign="center">{result.correctAnswer}</Td>
+                </Tr>
+              </Table>
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  </Box>
 
-      <Box textAlign="center">
-        <Button
-          as={RouterLink}
-          to="/"
-          colorScheme="green"
-          m={2}
-        >
-          처음으로 돌아가기
-        </Button>
-        <Button as={RouterLink} to="/signup" colorScheme="red" m={2}>
-          회원가입 하러가기
-        </Button>
-      </Box>
-    </Box>
+  <Box textAlign="center">
+    <Button
+      as={RouterLink}
+      to="/"
+      colorScheme="teal"
+      m={2}
+    >
+      처음으로 돌아가기
+    </Button>
+    <Button as={RouterLink} to="/signup" colorScheme="orange" m={2}>
+      회원가입 하러가기
+    </Button>
+  </Box>
+</Box>
   );
 };
 

@@ -17,7 +17,7 @@ import WordBox from "./Components/WordBox";
 import { stringify } from "querystring";
 import Pagination from "../../components/Pagination";
 import SelectNote from "../../components/SelectNote";
-import Input from "../../components/InputFeild";
+import SearchBar from "../Storage/Components/SearchBar";
 
 import * as Api from "../../apis/api";
 import * as type from "../../apis/types/custom";
@@ -46,10 +46,10 @@ export default function NoteDetailPage() {
   const [category, setCategory] = useState([]);
   const [customNote, setCustomNote] = useState([]);
   const [title, setTitle] = useState("");
-  const [words, setWords] = useState([]);
+  const [words, setWords] = useState<type.WordsProps[]>([]);
 
   /** Search Word */
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState(true);
 
   const [titleIsEditing, setTitleIsEditing] = useState(true);
   const [isItAdd, setIsItAdd] = useState(false);
@@ -222,10 +222,37 @@ export default function NoteDetailPage() {
     }
   };
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchClick = async (q: string) => {
+    if (q.trim() === "") {
+      fetchNoteDetail();
+      // 검색어가 없을 때 기존 데이터를 보여줌
+      setKeyword(false);
+      setSearchTerm("");
+    } else {
+      try {
+        console.log("단어 검색 api완성 후 연결예정");
+        // // 검색어가 있는 경우 검색 결과 페이지를 가져오도록 요청
+        // const response = await instance.get(`/storage/search?q=${q}&limit=8`);
+        // if (response.data && Array.isArray(response.data.words)) {
+        //   setWords(response.data.words);
+        //   setKeyword(true);
+        //   setTotalPages(response.data.totalPages);
+        //   setPagingIndex(1);
+        //   setSearchTerm(q);
+        // }
+      } catch (error) {
+        console.error("Error searching for words:", error);
+      }
+    }
+  };
+
   /** 페이지네이션 핸들링 */
   const handleChangePage = (page: number) => {
     fetchNoteDetail(page);
   };
+
   const handleChangePaingIndex = (pagingIndex: number) => {
     const range = pagingIndex === 1 ? 0 : (pagingIndex - 1) * limit;
     setPagingIndex(pagingIndex);
@@ -235,16 +262,11 @@ export default function NoteDetailPage() {
     fetchNoteDetail();
   }, []);
 
-  useEffect(() => {
-    if (keyword !== "") console.log(keyword);
-  }, [keyword]);
-
   return (
     <Stack>
-      <HStack spacing={2}>
-        <SelectNote onSelect={onSelect} category={category} customNote={customNote} />
-        <Input placeholder="단어 검색" />
-      </HStack>
+      <SelectNote onSelect={onSelect} category={category} customNote={customNote} />
+      <SearchBar onSearch={handleSearchClick} />
+
       <Heading color={"teal"}>{title}</Heading>
 
       {words.map((word: type.WordsProps) => (

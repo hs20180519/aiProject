@@ -17,18 +17,21 @@ import {
 } from "@chakra-ui/react";
 import { FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
 import { Link as ReactRouterLink } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Api from "../../apis/api";
+import { UserProps } from "../../reducer"
+
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
   onLogout: () => void;
   nickname: string;
+  profileImage?: UserProps | null;
 }
 
 export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...rest }: MobileProps) {
   const [userName, setUserName] = useState("");
-  const [userImage, setUserImage] = useState("https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256");
+  const [profileImage, setProfileImage] = useState("https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256");
 
   useEffect(() => {
     // 사용자 정보 가져오는 API 호출
@@ -36,12 +39,12 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
       .then((response) => {
         const userData = response.data;
         setUserName(userData.name);
-        setUserImage(userData.profileImage || "https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256");
+        setProfileImage(userData.profileImage || "https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256");
       })
       .catch((error) => {
         console.error('사용자 정보 가져오기 오류:', error);
       });
-  }, [userImage]);
+  }, [profileImage]);
 
   return (
     <Flex
@@ -74,14 +77,14 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
       </ChakraLink>
 
       <HStack spacing={{ base: "0", md: "6" }}>
-        <IconButton size={"lg"} variant={"ghost"} aria-label={"open menu"} icon={<FiBell />} />
+        {/* <IconButton size={"lg"} variant={"ghost"} aria-label={"open menu"} icon={<FiBell />} /> */}
         <Flex alignItems={"center"}>
           <Menu>
             <MenuButton py={2} transition={"all 0.3s"} _focus={{ boxShadow: "none" }}>
               <HStack>
                 <Avatar
                   size={"sm"}
-                  src={userImage}
+                  src={profileImage}
                 />
                 <VStack
                   display={{ base: "none", md: "flex" }}

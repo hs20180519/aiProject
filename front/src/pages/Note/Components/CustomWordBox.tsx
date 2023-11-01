@@ -1,4 +1,15 @@
-import { Box, ButtonGroup, Input, Stack, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  ButtonGroup,
+  Input,
+  Stack,
+  HStack,
+  Text,
+  useColorModeValue,
+  Icon,
+} from "@chakra-ui/react";
+import { FaDog, FaSortAlphaUp } from "react-icons/fa";
+
 import { useState } from "react";
 import Btn from "../../../components/Btn";
 import { Word } from "../AddCustomNotePage";
@@ -58,8 +69,20 @@ export default function CustomWordBox({ word, onDelete, onUpdate }: CustomWordBo
           position={"relative"}
         >
           <Stack spacing={4}>
-            <Text>단어: {word.word}</Text>
-            <Text>뜻: {word.meaning}</Text>
+            <HStack>
+              <Text color={"gray.500"} as="b" fontSize={"l"}>
+                단어
+              </Text>
+              <Icon as={FaSortAlphaUp} color="gray.300" boxSize={6} mr={2} />
+              <Text fontFamily={"monospace"}>{word.word}</Text>
+            </HStack>
+            <HStack>
+              <Text color={"gray.500"} as="b" fontSize={"l"}>
+                의미
+              </Text>
+              <Icon as={FaDog} color="gray.300" boxSize={6} mr={2} />
+              <Text>{word.meaning}</Text>
+            </HStack>
           </Stack>
           <Box position={"absolute"} right="12px" bottom="12px">
             <Btn text="단어 편집" onClick={() => setIsEditing((prev) => !prev)} />

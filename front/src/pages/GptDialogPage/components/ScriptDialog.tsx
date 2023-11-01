@@ -1,6 +1,5 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
-  Tooltip,
   Button,
   Text,
   Box,
@@ -9,49 +8,14 @@ import {
   VStack,
   useToast,
   Flex,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import { DialogEntry } from "../../../apis/gpt_interface";
+import { DialogEntry, GrammarResponse } from "../../../apis/gpt_interface";
 import { simpleHash } from "../utils/gptUtils";
 import { FetchGpt } from "../../../apis/gpt";
 import GrammarDialog from "./GrammarDialog";
 import { translateText } from "../../../apis/translate";
-
-const highlightWords = (text: string, selectedWords: Record<string, string>) => {
-  const selectedWordKeys = Object.keys(selectedWords);
-  return text
-    .split(" ")
-    .map((word, index) => {
-      const foundKey = selectedWordKeys.find((key) => word.includes(key));
-      if (foundKey) {
-        const meaning = selectedWords[foundKey];
-        return (
-          <Tooltip label={meaning} key={index}>
-            <Text
-              as="span"
-              fontStyle="italic"
-              fontWeight="600"
-              style={{
-                backgroundImage: "linear-gradient(transparent 60%, #F8CD07 40%)",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "100% 15px",
-                backgroundPosition: "0 100%",
-              }}
-            >
-              {word}
-            </Text>
-          </Tooltip>
-        );
-      }
-      return word;
-    })
-    .reduce((acc, curr, index) => {
-      if (index !== 0) {
-        acc.push(" ");
-      }
-      acc.push(curr);
-      return acc;
-    }, [] as React.ReactNode[]);
-};
+import TooltipWord from "./TooltipWord";
 
 const ScriptDialog = ({
   dialogResult,
@@ -60,71 +24,150 @@ const ScriptDialog = ({
   isScriptLoading,
   selectedWords,
 }) => {
-  const [grammarResult, setGrammarResult] = useState<Record<string, string>>({});
+  const [grammarResult, setGrammarResult] = useState<Record<string, GrammarResponse>>({});
   const [loadingEntryKey, setLoadingEntryKey] = useState<string | null>(null);
   const toast = useToast();
 
   const [loadingTranslationKey, setLoadingTranslationKey] = useState<string | null>(null);
-  const [translationResult, setTranslationResult] = useState<Record<string, string>>({});
-
-  const handleGetGrammar = useCallback(
-    async (dialog: DialogEntry[], dialogKey: string) => {
-      setLoadingEntryKey(dialogKey);
-      setGrammarLoading(true);
-      try {
-        const apiResult = await FetchGpt.getGrammar({ dialog });
-        setGrammarResult((prev) => ({ ...prev, [dialogKey]: JSON.stringify(apiResult) }));
-        toast({
-          title: "Grammar fetch successful.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      } catch (error) {
-        toast({
-          title: "Grammar fetch failed.",
-          description: `Error: ${error.message || error}`,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      } finally {
-        setLoadingEntryKey(null);
-        setGrammarLoading(false);
+  const [translationResult, setTranslationResult] = useState<
+    Record<
+      string,
+      {
+        translatedText: string;
       }
-    },
-    [setGrammarLoading, toast],
-  );
+    >
+  >({});
+
+  const [isMobile] = useMediaQuery("(max-width: 600px)");
+  const [openTooltip, setOpenTooltip] = useState<number | null>(null);
+  const tooltipRef = React.useRef(null);
+
+  useEffect(() => {
+    if (isMobile && openTooltip !== null) {
+      const handleClickOutside = (event: Event) => {
+        if (tooltipRef.current && !tooltipRef.current.contains(event.target)) {
+          setOpenTooltip(null);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [isMobile, openTooltip]);
+
+  const handleTooltipClick = (index: number) => {
+    if (isMobile) {
+      if (openTooltip === index) {
+        setOpenTooltip(null); // 이미 열린 툴팁을 닫음
+      } else {
+        setOpenTooltip(index); // 새로운 툴팁을 염
+      }
+    }
+  };
+
+  const highlightWords = (
+    text: string,
+    selectedWords: Record<string, string>,
+    dialogKey: string,
+  ) => {
+    const selectedWordKeys = Object.keys(selectedWords);
+    return text
+      .split(" ")
+      .map((word, index) => {
+        const uniqueIndex = `${dialogKey}_${index}`;
+        const foundKey = selectedWordKeys.find((key) => word.includes(key));
+        if (foundKey) {
+          const meaning = selectedWords[foundKey];
+          return (
+            <TooltipWord
+              word={word}
+              meaning={meaning}
+              index={uniqueIndex}
+              isMobile={isMobile}
+              openTooltip={openTooltip}
+              handleTooltipClick={handleTooltipClick}
+              tooltipRef={tooltipRef}
+            />
+          );
+        }
+        return word;
+      })
+      .reduce((acc, curr, index) => {
+        if (index !== 0) {
+          acc.push(" ");
+        }
+        acc.push(curr);
+        return acc;
+      }, [] as React.ReactNode[]);
+  };
 
   if (!dialogResult?.dialog) {
     return null;
   }
 
-  const handleGetTranslation = useCallback(
-    async (dialog: DialogEntry, dialogKey: string) => {
-      setLoadingTranslationKey(dialogKey);
+  const handleApiFetch = useCallback(
+    async function handleApiFetchFunction<T>(
+      apiCall: () => Promise<T>,
+      setResult: React.Dispatch<React.SetStateAction<Record<string, T>>>,
+      dialogKey: string,
+      setLoadingKey: React.Dispatch<React.SetStateAction<string | null>>,
+      successMessage: string,
+      errorMessage: string,
+    ) {
+      setLoadingKey(dialogKey);
+      setGrammarLoading(true);
       try {
-        const apiResult = await translateText(dialog.message);
-        setTranslationResult((prev) => ({ ...prev, [dialogKey]: apiResult.translatedText }));
+        const apiResult = await apiCall();
+        setResult((prev) => ({ ...prev, [dialogKey]: apiResult }));
         toast({
-          title: "Translation successful.",
+          title: successMessage,
           status: "success",
           duration: 3000,
           isClosable: true,
         });
       } catch (error) {
         toast({
-          title: "Translation failed.",
-          description: `Error: ${error.message || error}`,
+          title: errorMessage,
+          description: `Something went wrong. Please try again.`,
           status: "error",
           duration: 5000,
           isClosable: true,
         });
       } finally {
-        setLoadingTranslationKey(null);
+        setLoadingKey(null);
+        setGrammarLoading(false);
       }
     },
-    [toast],
+    [toast, setGrammarLoading],
+  );
+
+  const handleGetGrammar = useCallback(
+    (dialog: DialogEntry[], dialogKey: string) => {
+      handleApiFetch(
+        () => FetchGpt.getGrammar({ dialog }),
+        setGrammarResult,
+        dialogKey,
+        setLoadingEntryKey,
+        "Grammar fetch successful.",
+        "Grammar fetch failed.",
+      );
+    },
+    [handleApiFetch],
+  );
+
+  const handleGetTranslation = useCallback(
+    (dialog: DialogEntry, dialogKey: string) => {
+      handleApiFetch(
+        () => translateText(dialog.message),
+        setTranslationResult,
+        dialogKey,
+        setLoadingTranslationKey,
+        "Translation successful.",
+        "Translation failed.",
+      );
+    },
+    [handleApiFetch],
   );
 
   return (
@@ -132,7 +175,7 @@ const ScriptDialog = ({
       {dialogResult.dialog.map((entry: DialogEntry, index: number) => {
         const dialogKey = `${simpleHash(`${entry.speaker}_${entry.message}`)}_${index}`;
         const currentGrammarResult = grammarResult[dialogKey]
-          ? JSON.parse(grammarResult[dialogKey])
+          ? grammarResult[dialogKey].grammar
           : null;
         return (
           <Box
@@ -145,7 +188,7 @@ const ScriptDialog = ({
           >
             <Flex direction="column" justifyContent="space-between">
               <Text fontWeight="bold">{entry.speaker}:</Text>
-              <Text>{highlightWords(entry.message, selectedWords)}</Text>
+              <Text>{highlightWords(entry.message, selectedWords, dialogKey)}</Text>
               <Text
                 fontSize="xs"
                 color="gray.800"
@@ -155,7 +198,8 @@ const ScriptDialog = ({
                 pl={2}
                 ml={0}
               >
-                {translationResult[dialogKey] ?? translationResult[dialogKey]}
+                {translationResult[dialogKey]?.translatedText ??
+                  translationResult[dialogKey]?.translatedText}
               </Text>
             </Flex>
             <Box textAlign="right">
@@ -179,7 +223,7 @@ const ScriptDialog = ({
               </Button>
             </Box>
             <Spacer mt={6} />
-            {currentGrammarResult && <GrammarDialog grammar={currentGrammarResult.grammar} />}
+            {currentGrammarResult && <GrammarDialog grammar={currentGrammarResult} />}
           </Box>
         );
       })}
