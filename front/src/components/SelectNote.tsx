@@ -1,4 +1,5 @@
 import { Select } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 export default function SelectNote({ onSelect, category, customNote }) {
   return (
@@ -11,10 +12,14 @@ export default function SelectNote({ onSelect, category, customNote }) {
       w={"100%"}
     >
       {category.map((category) => (
-        <option value={category.id}>{category.title}</option>
+        <Link to={`main/note/${category.title}`}>
+          <option value={category.id}>{category.title}</option>
+        </Link>
       ))}
       {customNote.map((custom) => (
-        <option value={custom.id}>{custom.title}</option>
+        <Link to={`main/note/${custom.id}`}>
+          <option value={custom.id}>{custom.title}</option>
+        </Link>
       ))}
     </Select>
   );

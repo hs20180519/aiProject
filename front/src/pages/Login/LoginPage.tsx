@@ -19,7 +19,6 @@ import {
   Text,
   useColorModeValue,
   useToast,
-  Center,
 } from "@chakra-ui/react";
 
 interface LoginProps {
