@@ -37,7 +37,12 @@ const Storage: React.FC = () => {
         setCurrentPage(pageNumber);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      toast({
+        title: "단어 데이터를 불러오는데 실패하였습니다.",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
     }
   };
 
@@ -56,7 +61,12 @@ const Storage: React.FC = () => {
         fetchWordData(pageNumber);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      toast({
+        title: "페이지 변경에 실패하였습니다.",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
     }
   };
 
@@ -99,7 +109,6 @@ const Storage: React.FC = () => {
         isClosable: true,
         duration: TOAST_TIMEOUT_INTERVAL,
       });
-      console.error("Error toggling favorite status:", error);
     }
   };
   const handleSearchClick = async (q: string) => {
@@ -120,7 +129,12 @@ const Storage: React.FC = () => {
           setSearchTerm(q);
         }
       } catch (error) {
-        console.error("Error searching for words:", error);
+        toast({
+          title: "검색에 실패하였습니다.",
+          status: "error",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
       }
     }
   };
