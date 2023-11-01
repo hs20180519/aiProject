@@ -322,7 +322,7 @@ export const searchWordByCategory = async (
   limit: number,
   userId: number,
   category: string,
-  searchTerm?: string,
+  searchTerm: string,
   customBookId?: string | undefined,
 ): Promise<{ words: WordDto[]; totalPages: number; currentPage: number; title: string }> => {
   if (customBookId) {
@@ -336,15 +336,17 @@ export const searchWordByCategory = async (
     const totalPages: number = Math.ceil(totalCustomWordCount / (limit ?? 10));
     const offset: { take: number; skip: number } = getPaginationParams(page, limit);
 
-    customBook!.word.sort((a: Word, b: Word) => a.createdAt.getTime() - b.createdAt.getTime());
     const words: Word[] = customBook!.word.slice(offset.skip, offset.skip + offset.take);
 
-    const searchResults: Word[] = words.filter((word: Word): boolean => word.word === searchTerm);
-    const rearrangedWords: Word[] = [
-      ...searchResults,
-      ...words.filter((word: Word): boolean => word.word !== searchTerm),
-    ];
-
+    const searchResults: Word[] = words.filter((word: Word): boolean =>
+      word.word.includes(searchTerm),
+    );
+    const exactMatchWord: Word | undefined = searchResults.find(
+      (word: Word): boolean => word.word === searchTerm,
+    );
+    const rearrangedWords: Word[] = exactMatchWord
+      ? [exactMatchWord, ...searchResults.filter((word: Word): boolean => word.word !== searchTerm)]
+      : searchResults;
     return {
       words: plainToInstance(WordDto, rearrangedWords),
       totalPages,
