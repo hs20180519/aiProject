@@ -360,15 +360,6 @@
         ],
         "summary": "학습 종료 결과",
         "description": "학습 종료시 학습 단어 결과 반환. query?userId=",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -678,6 +669,58 @@
           },
           {
             "name": "all",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/book/search": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "단어장 검색",
+        "description": "쿼리별 단어장 검색 (서버사이드 페이징)  * ?book={correct, incorrect, csat, toeic, toefl, favorite, custom}&customBookId=\"\"&q=\"검색할거\" ",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "book",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customBookId",
             "in": "query",
             "schema": {
               "type": "string"

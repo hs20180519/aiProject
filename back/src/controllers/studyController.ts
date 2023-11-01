@@ -93,7 +93,7 @@ export const getLearnResult = async (req: Request, res: Response, next: NextFunc
    * }]
    */
   try {
-    const userId: number = Number(req.query.userId);
+    const userId: number = (req.user as User).id;
     const result: WordProgressDto[] = await studyService.getLearnResult(userId);
     return res.status(200).json(result);
   } catch (error) {
