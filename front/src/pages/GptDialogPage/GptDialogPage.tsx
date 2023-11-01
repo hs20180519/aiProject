@@ -4,7 +4,6 @@ import { InputDialogData } from "../../apis/gpt_interface";
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
 import { FetchStudyWords } from "../../apis/studyWord";
-import { useNavigate } from "react-router-dom";
 
 const GptDialogPage = () => {
   const [selectedWords, setSelectedWords] = useState({});
@@ -16,8 +15,6 @@ const GptDialogPage = () => {
   const toast = useToast();
 
   const [dynamicWordList, setDynamicWordList] = useState({});
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchWords = async () => {
