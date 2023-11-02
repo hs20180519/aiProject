@@ -16,6 +16,7 @@ export interface MobileProps extends FlexProps {
   onOpen: () => void;
   onLogout: () => void;
   nickname: string;
+  profileImage: string;
 }
 
 export interface SidebarProps extends BoxProps {

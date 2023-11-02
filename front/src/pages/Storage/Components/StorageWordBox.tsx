@@ -1,4 +1,4 @@
-import { Box, Flex, Text, useColorModeValue, Stack } from "@chakra-ui/react";
+import { Box, Flex, Text, useColorModeValue, Stack, Center } from "@chakra-ui/react";
 import BookMark from "../../../components/BookMark";
 
 const StorageWordBox = ({ word, onBookmarkClick }) => {
@@ -11,14 +11,14 @@ const StorageWordBox = ({ word, onBookmarkClick }) => {
       position={"relative"}
       alignItems={"center"}
     >
-      <Stack>
-        <Box textAlign="center" ml={"49px"}>
+      <Center w="169px">
+        <Box textAlign="center">
           <Text fontSize="17px" fontWeight="bold">
             {word.word}
           </Text>
           <Text color={"gray"}>{word.meaning}</Text>
         </Box>
-        <Box position={"absolute"} right={"0px"} mt={"-25"}>
+        <Box position={"absolute"} right={"-1px"} mt={"-60px"}>
           <BookMark
             favorite={word.isFavorite}
             onClick={() => {
@@ -26,10 +26,9 @@ const StorageWordBox = ({ word, onBookmarkClick }) => {
             }}
           />
         </Box>
-      </Stack>
+      </Center>
     </Flex>
   );
 };
 
 export default StorageWordBox;
-//position={"absolute"} right={"1px"}

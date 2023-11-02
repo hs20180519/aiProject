@@ -9,6 +9,7 @@ import {
   ModalFooter,
 } from "@chakra-ui/react";
 import { FetchStudyWords } from "../../apis/studyWord";
+import { useParams } from "react-router-dom";
 
 interface WordData {
   id: number;
@@ -46,7 +47,8 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
   );
 };
 
-const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage }) => {
+const StudyCustomTestPage = () => {
+  const { note_id } = useParams();
   const [wordData, setWordData] = useState<WordData>();
   const [popupIsOpen, setPopupIsOpen] = useState(false);
   const [popupIsCorrect, setPopupIsCorrect] = useState(false);
@@ -55,8 +57,11 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
 
   const fetchWords = async () => {
     try {
-      const queryParams = `${selectedCategory}=true`;
-      const response = await FetchStudyWords.getStudyWord(queryParams);
+      const id = parseInt(note_id);
+      const queryString = `?book=custom&customBookId=${note_id}`;
+      const response = await FetchStudyWords.getStudyCustomWord(queryString);
+      console.log("--------단어 목록 조회------");
+      console.log(response);
       const newWordData = response.data;
       setWordData(newWordData);
     } catch (error) {
@@ -102,7 +107,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
     setPopupIsOpen(false);
 
     if (currentIndex === 9) {
-      setShowResultPage(true);
+      //   setShowResultPage(true);
     } else {
       fetchWords();
     }
@@ -114,7 +119,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
 
   useEffect(() => {
     fetchWords();
-  }, [selectedCategory]);
+  }, []);
 
   const currentWordSet = wordData;
   const currentWord = currentWordSet?.word;
@@ -132,7 +137,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
       justifyContent="center"
     >
       <Text fontSize="xl" fontWeight="bold">
-        ✏️단어학습 ({selectedCategory.toUpperCase()})
+        {/* ✏️단어학습 ({selectedCategory.toUpperCase()}) */}
       </Text>
       <Flex
         minH="438px"
@@ -176,4 +181,4 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
   );
 };
 
-export default TestPage;
+export default StudyCustomTestPage;

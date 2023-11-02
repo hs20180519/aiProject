@@ -159,14 +159,16 @@ const Storage: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         message={modalMessage}
       />
-      <Pagination
-        pagingIndex={pagingIndex}
-        currentPage={currentPage}
-        limit={limit}
-        totalPage={totalPages}
-        handleChangePage={handlePageChange}
-        handleChangePaginIndex={handleChangePagingIndex}
-      />
+      <Box paddingTop="15px">
+        <Pagination
+          pagingIndex={pagingIndex}
+          currentPage={currentPage}
+          limit={limit}
+          totalPage={totalPages}
+          handleChangePage={handlePageChange}
+          handleChangePaginIndex={handleChangePagingIndex}
+        />
+      </Box>
     </Box>
   );
 };

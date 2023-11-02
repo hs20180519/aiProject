@@ -203,10 +203,10 @@ const SignUp = () => {
         <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"md"} p={8}>
           <Stack spacing={2}>
           <Heading fontSize={"2xl"} textAlign={"center"} color={"teal"}>
-              워디 회원가입!
+              워디 회원가입
             </Heading>
             <Text fontSize={"sm"} color={"teal.400"} textAlign={"center"}>
-              AI와 함께 쉽게 배우는 영단어✌️
+              AI와 함께 쉽게 배우는 영단어 ✌️
             </Text>
               <FormControl id="firstName" isRequired>
                 <FormLabel>이름</FormLabel>
