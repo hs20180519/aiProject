@@ -29,7 +29,6 @@ export const getUsersRankList = async (page?: number, limit?: number): Promise<R
     RankDto,
     rankList.map((rankInfo, index) => ({
       ...rankInfo,
-      ...rankInfo.user,
       rank: index + 1,
       currentPage: offset.skip + 1,
       totalPage: totalPages,
@@ -37,13 +36,23 @@ export const getUsersRankList = async (page?: number, limit?: number): Promise<R
   );
 };
 
-/** 로그인한 유저의 등수을 가져오는 것 */
-export const getUserRank = async (id: number): Promise<RankDto[]> => {
+/** 로그인한 유저의 등수와 점수 가져오기 */
+export const getUserRank = async (id: number): Promise<any> => {
   const user = await prisma.user.findUnique({
     where: {
       id,
     },
   });
+
+  if (!user) throw new Error("유저를 찾을 수 없습니다.");
+
+  const rank = await prisma.rank.findFirst({
+    where: {
+      userId: id,
+    },
+  });
+
+  if (!rank) throw new Error("랭크 데이터를 찾을 수 없습니다.");
 
   // 조회할 유저 = user
   const users = await prisma.rank.findMany({
@@ -62,17 +71,10 @@ export const getUserRank = async (id: number): Promise<RankDto[]> => {
 
   const rankIndex = users.findIndex((item) => item.userId === id);
 
-  console.log(rankIndex);
-  // return rankIndex;
-  return plainToInstance(
-    RankDto,
-    users.map((user) => ({
-      nickname: user.user.nickname,
-      profileImage: user.user.profileImage,
-      score: user.score,
-      currentRank: user.currentRank,
-    })),
-  );
+  return {
+    rank: rankIndex + 1,
+    score: rank.score,
+  };
 };
 
 /** 매일 6시에 유저의 이전 랭크를 저장함 */
