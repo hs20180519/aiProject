@@ -14,12 +14,26 @@ const GrammarPage = () => {
   const TOAST_TIMEOUT_INTERVAL = 800;
   const apiUrl = process.env.REACT_APP_GPT_SVR_URL;
 
+  const isKorean = (text: string) => {
+    const koreanPattern = /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]+$/;
+    return koreanPattern.test(text);
+  };
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputText(e.target.value); // 입력 필드의 내용을 상태에 업데이트
-    if (inputText.length > 255) {
+    const text = e.target.value;
+    setInputText(text); // 입력 필드의 내용을 상태에 업데이트
+    if (text.length > 255) {
       toast({
         title: "Input Length Exceeded",
         description: "입력은 256자를 초과할 수 없습니다.",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+    }
+    if (isKorean(text)) {
+      toast({
+        title: "Input Error",
+        description: "한글은 교정할 수 없습니다.",
         status: "error",
         isClosable: true,
         duration: TOAST_TIMEOUT_INTERVAL,
@@ -69,7 +83,7 @@ const GrammarPage = () => {
         {word == "ai"
           ? `자유롭게 영작을 해주세요. 
         wordy가 문법을 고쳐줄 거예요!`
-          : `${word}가 포함된 문장을 입력해주세요!`}
+          : `${word} 이(가) 포함된 문장을 입력해주세요!`}
       </Box>
 
       <GrammarInputBox
