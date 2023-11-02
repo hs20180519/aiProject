@@ -22,7 +22,6 @@ import BookMark from "../../../components/BookMark";
 
 interface WordBoxProps {
   word: type.WordsProps;
-  isBookmarked: boolean;
   handleBookmark: (word_id: number) => void | Promise<void>;
   onUpdate: (word_id: number, data: type.SubmitCustomWord) => void | Promise<void>;
   onDelete: (word_id: number) => void | Promise<void>;
@@ -32,7 +31,6 @@ interface WordBoxProps {
 /** 단어와 뜻을 표시하는 상자입니다. */
 export default function WordBox({
   word,
-  isBookmarked,
   handleBookmark,
   onUpdate,
   onDelete,
@@ -41,6 +39,7 @@ export default function WordBox({
   const [isEditing, setIsEditing] = useState(false);
   const [updateWord, setUpdateWord] = useState(word.word);
   const [updateMeaning, setUpdateMeaning] = useState(word.meaning);
+  const [isBookmarked, setIsBookmarked] = useState(word.isFavorite);
 
   /** 단어장 삭제 확인 모달 */
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -81,7 +80,7 @@ export default function WordBox({
         >
           <Flex alignItems={"center"} h={"100%"}>
             <Link to={`/main/grammar/${word.word}`}>
-              <Flex alignItems={"center"} height={"100%"}>
+              <Flex alignItems={"center"} h={"100%"}>
                 <Icon as={FaRobot} boxSize={8} marginRight={"6px"} />
                 <Text fontSize="xl" fontFamily={"monospace"} right={24}>
                   {word.word}

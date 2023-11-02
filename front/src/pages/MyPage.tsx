@@ -27,6 +27,7 @@ import {
 import { AxiosError } from "axios";
 import useDebounced from "../hooks/useDebounce";
 import validateEmail from "../libs/validateEmail";
+import { Event, UserState } from "../reducer";
 
 const TOAST_TIMEOUT_INTERVAL = 800;
 
@@ -38,6 +39,7 @@ type NewUserEmailInfoType = {
 export default function MyPage() {
   const toast = useToast();
   const navigate = useNavigate();
+
 
   /** 이메일 추가 모달 */
   const [isEmailPopupOpen, setEmailPopupOpen] = useState(false);
@@ -62,7 +64,7 @@ export default function MyPage() {
   /** 유저 내 정보 수정 및 조회 */
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [userImage, setUserImage] = useState("");
+  const [profileImage, setProfileImage] = useState("");
 
   /** 학습진행률 */
   const [csatProgress, setCsatProgress] = useState(0);
@@ -219,7 +221,7 @@ export default function MyPage() {
         }
         setName(userData.name);
         setEmail(userData.email);
-        setUserImage(userData.profileImage);
+        setProfileImage(userData.profileImage);
       })
       .catch((error) => {
         console.error("사용자 정보 가져오기 오류:", error);
@@ -254,8 +256,8 @@ export default function MyPage() {
       Api.sendImage("post", "/upload/profile-image", formData)
         .then((response) => {
           console.log("Server Response:", response);
-          setUserImage(response.data);
-          toast({
+          // Event({ type: "CHANGE_IMAGE", payload:response.data});
+          toast({ 
             title: "프로필 이미지가 변경 되었습니다!",
             status: "success",
             isClosable: true,
@@ -287,7 +289,7 @@ export default function MyPage() {
   };
 
   return (
-    <Center py={6}>
+    <Center py={1}>
       <Box
         maxW={"400px"}
         w={"full"}
@@ -296,19 +298,19 @@ export default function MyPage() {
         rounded={"md"}
         overflow={"hidden"}
       >
-        <Flex justify={"center"} mt={5}>
+        <Flex justify={"center"} mt={3}>
           <Avatar
             size={"xl"}
-            src={userImage}
-            key={userImage}
+            src={profileImage}
+            key={profileImage}
             css={{
               border: "2px solid white",
             }}
           />
         </Flex>
-        <Box p={6}>
-          <Stack spacing={0} align={"center"} mb={0}>
-            <Heading fontSize={"3xl"} fontWeight={500} fontFamily={"body"}>
+        <Box p={3}>
+          <Stack align={"center"}>
+            <Heading fontSize={"xl"} fontWeight={700}>
               {name}
             </Heading>
             <Text color={"gray.500"}>{email || ""}</Text>
@@ -318,16 +320,16 @@ export default function MyPage() {
               </Button>
             )}
           </Stack>
-          <Stack mb={3} align={"center"}>
+          <Stack mb={2} align={"center"} mt={2}>
             <Button
               as="label"
               htmlFor="profileImageInput"
-              mt={3}
+              mt={1}
               bg="teal.400"
               color="white"
               _hover={{ bg: "green.400" }}
               cursor="pointer"
-              padding="10px 20px"
+              padding="10px 10px"
               rounded="md"
             >
               새 이미지 선택
@@ -342,29 +344,27 @@ export default function MyPage() {
             />
           </Stack>
           <Stack direction={"row"} justify={"center"} spacing={10}>
-            <Stack spacing={1} align={"center"}>
+            <Stack spacing={1} align={"center"} mt={1}>
               <Text fontWeight={600} fontSize={"xl"}>
                 학습 진행률
               </Text>
-              <Text fontSize={"xl"}>전체 학습</Text>
-              <Text fontSize={"xl"}>{parseFloat(overallPercentage).toFixed(2)}%</Text>
-              <Text fontSize={"xl"} color={"gray.500"}>
-                <Text>CSAT 진행도</Text>
+              <Text fontSize={"md"} fontWeight={"600"}>전체 학습 : {parseFloat(overallPercentage).toFixed(2)}%</Text>
+              <Text fontSize={"md"} color={"gray.500"}>
+                <Stack mt={2}>
+                <Text fontWeight={"600"}>CSAT 진행도 : {csatPercentage}%</Text>
                 <Progress value={csatProgress} colorScheme="teal" mb={2} />
-                <Text>{csatPercentage}%</Text>
-                <Text>TOEFL 진행도</Text>
+                <Text fontWeight={"600"}>TOEFL 진행도 : {toeflPercentage}%</Text>
                 <Progress value={toeflProgress} colorScheme="teal" mb={2} />
-                <Text>{toeflPercentage}%</Text>
-                <Text>TOEIC 진행도</Text>
+                <Text fontWeight={"600"}>TOEIC 진행도 : {toeicPercentage}%</Text>
                 <Progress value={toeicProgress} colorScheme="teal" mb={2} />
-                <Text>{toeicPercentage}%</Text>
+                </Stack>
               </Text>
             </Stack>
           </Stack>
           <Stack align={"Center"}>
             <Button
               onClick={navigateToMainPage}
-              mt={3}
+              mt={2}
               bg={useColorModeValue("teal.400", "teal.400")}
               color={"white"}
               rounded={"md"}
