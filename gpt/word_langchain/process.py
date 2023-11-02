@@ -36,7 +36,7 @@ async def generate_dialog_process(input_data):
     dialog_variable_dict = {name: value for name, value in zip(dialog_names, dialog_input_variables)}
 
     dialog_result = generate_dialog(dialog_llm_chain, dialog_variable_dict, selected_word_dict)
-    return dialog_result, selected_word_dict
+    return dialog_result
 
 
 async def generate_grammar_explain_process(dialog):
