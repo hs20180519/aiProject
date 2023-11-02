@@ -15,8 +15,9 @@ async def generate_dialog_process(input_data):
     korean_meanings = ', '.join(selected_word_dict.values())
     dialog_human_template = \
         """Create a dialog with at least {line_count} lines so that the following words are used at least once,
-         in their original form: {english_words} ({korean_meanings}). Do not use variations of these words.
-          For example, use 'get in' as it is, not as 'got in'. Each word must be used at least once in the dialog.
+         in their original form: {english_words} ({korean_meanings}). Do not use variations of these words, including tense or plurality changes.
+          For example, use the exact phrase 'be supposed to' as it is, not as 'are supposed to', 'is supposed to', etc.,
+           and 'get in' as it is, not as 'got in'. Each word must be used at least once in the dialog.
            Ensure that the conversation, although may sound unnatural, incorporates all the specified words exactly as
             they are. After writing the dialog, verify that each word from the list is used by checking them off one by one:
 
@@ -42,19 +43,19 @@ async def generate_grammar_explain_process(dialog):
     grammar_human_template = \
         """
         In each sentence, pick three grammatical structures at the B2 level or higher and explain them concisely in Korean.
-                
+
         Dialog to explain: {dialog}
 
         Please answer only in the following format.
         {{
             "grammar": [
                 {{
-                    "message": "phrases to explain", 
+                    "message": "phrases to explain",
                     "explain":  "Provide a grammatical explanation here in Korean"
                 }}
             ]
         }}
-        
+
         ex)
         {{
             "grammar": [
