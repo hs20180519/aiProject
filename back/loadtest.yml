@@ -8,6 +8,5 @@ scenarios:
   - flow:
       - get:
           url: '/api/study/experience' # 부하테스트 해볼 API 앤드포인트
-#          url: '/api/study/experience'
 
 # back 경로에서 artillery run loadtest.yml

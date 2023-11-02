@@ -59,6 +59,7 @@ export const validateEditUser = (req: Request, res: Response, next: NextFunction
   const schema = Joi.object({
     name: Joi.string().min(2).max(15).regex(namePattern).optional(),
     nickname: Joi.string().min(2).max(15).regex(namePattern).optional(),
+    email: Joi.string().regex(emailPattern).optional(),
     profileImage: Joi.any().optional(),
   });
   const { error } = schema.validate(req.body);
