@@ -1,4 +1,4 @@
-import { PrismaClient, Rank, Word } from "@prisma/client";
+import { PrismaClient, Rank, Word, WordProgress } from "@prisma/client";
 import { createChoices } from "../utils/createChoices";
 import * as wordInterface from "../interfaces/wordInterface";
 import { WordProgressDto, WordWithChoicesDto } from "../dtos/wordDto";
@@ -188,7 +188,6 @@ export const saveLearn = async (
   wordId: number,
   correct: boolean,
 ): Promise<void> => {
-  console.log(userId, wordId, correct);
   await prisma.wordProgress.create({
     data: {
       userId,
@@ -231,11 +230,13 @@ export const getLearnResult = async (userId: number): Promise<WordProgressDto[]>
     include: { word: true },
   });
 
-  const sortedResult = result.sort((a, b) => {
-    const dateA = new Date(a.updatedAt);
-    const dateB = new Date(b.updatedAt);
-    return dateA.getTime() - dateB.getTime();
-  });
+  const sortedResult = result.sort(
+    (a: WordProgress & { word: Word }, b: WordProgress & { word: Word }) => {
+      const dateA: Date = new Date(a.updatedAt);
+      const dateB: Date = new Date(b.updatedAt);
+      return dateA.getTime() - dateB.getTime();
+    },
+  );
 
   return plainToInstance(WordProgressDto, sortedResult);
 };

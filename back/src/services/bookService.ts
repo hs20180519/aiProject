@@ -1,4 +1,4 @@
-import { CustomBook, Favorite, PrismaClient, Word } from "@prisma/client";
+import { CustomBook, Favorite, PrismaClient, Word, WordProgress } from "@prisma/client";
 import { BookDto, BooksDto } from "../dtos/bookDto";
 import { plainToInstance } from "class-transformer";
 import getPaginationParams from "../utils/getPaginationParams";
@@ -131,7 +131,7 @@ export const getWordByFavorite = async (
     ...offset,
   });
 
-  const words: Word[] = favoriteWord.map((item) => item.word);
+  const words: Word[] = favoriteWord.map((item: Favorite & { word: Word }) => item.word);
   words.sort((a: Word, b: Word) => a.word.localeCompare(b.word, "en", { sensitivity: "base" }));
 
   const wordsWithFavoriteStatus = await addFavorites(userId, words);
@@ -333,13 +333,15 @@ export const searchWordByUserId = async (
     ...offset,
   });
 
-  const words: Word[] = wordProgresses.map((wordProgress) => wordProgress.word);
+  const words: Word[] = wordProgresses.map(
+    (wordProgress: WordProgress & { word: Word }) => wordProgress.word,
+  );
 
-  const searchResults: Word[] = words.filter((word: Word) => word.word === searchTerm);
+  const searchResults: Word[] = words.filter((word: Word): boolean => word.word === searchTerm);
 
   const rearrangedWords: Word[] = [
     ...searchResults,
-    ...words.filter((word) => word.word !== searchTerm),
+    ...words.filter((word: Word): boolean => word.word !== searchTerm),
   ];
 
   const wordsWithFavoriteStatus = await addFavorites(userId, rearrangedWords);
@@ -436,7 +438,7 @@ export const searchWordByFavorite = async (
 ): Promise<{ words: WordDto[]; totalPages: number; currentPage: number }> => {
   const totalWordCount: number = await prisma.favorite.count({ where: { userId } });
   const totalPages: number = Math.ceil(totalWordCount / (limit ?? 10));
-  const offset = getPaginationParams(page, limit);
+  const offset: { skip: number; take: number } = getPaginationParams(page, limit);
 
   const favoriteWords: (Favorite & { word: Word })[] = await prisma.favorite.findMany({
     where: {
@@ -453,7 +455,9 @@ export const searchWordByFavorite = async (
 
   let words: Word[] = favoriteWords.map((item: Favorite & { word: Word }) => item.word);
 
-  const exactMatchIndex = words.findIndex((word) => word.word === searchTerm);
+  const exactMatchIndex: number = words.findIndex(
+    (word: Word): boolean => word.word === searchTerm,
+  );
   if (exactMatchIndex !== -1) {
     const exactMatchWord = words.splice(exactMatchIndex, 1)[0];
     words = [exactMatchWord, ...words];

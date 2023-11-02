@@ -131,7 +131,7 @@ export const deleteCustomBook = async (req: Request, res: Response, next: NextFu
 
 export const deleteAllCustomBook = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = (req.user as User).id;
+    const userId: number = (req.user as User).id;
     await bookService.deleteAllCustomBook(userId);
     return res.status(200).json({ message: "모든 커스텀 단어장이 삭제되었습니다." });
   } catch (error) {
