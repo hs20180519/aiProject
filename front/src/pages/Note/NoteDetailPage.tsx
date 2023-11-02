@@ -217,6 +217,7 @@ export default function NoteDetailPage() {
    */
   const fetchBookmark = async (word_id: number) => {
     const data = word_id;
+    console.log(word_id); //todo 여기서부터
     try {
       const res = await Api.post("/favorite", data);
       if (res.status === 201) {
@@ -421,7 +422,6 @@ export default function NoteDetailPage() {
       {words.map((word: type.WordsProps) => (
         <WordBox
           word={word}
-          isBookmarked={isBookmarked}
           handleBookmark={handleChangeBookmark}
           onUpdate={fetchEditWord}
           onDelete={fetchDeleteWord}
