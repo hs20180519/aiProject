@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Box, Flex, Text, Stack } from "@chakra-ui/react";
 
 const CategoryPage = ({ onSelectCategory }) => {
-  const categories = ["csat", "toeic", "toefl", "ielts"];
+  const categories = ["csat", "toeic", "toefl"];
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const handleCategorySelect = (category) => {
