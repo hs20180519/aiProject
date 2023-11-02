@@ -17,16 +17,6 @@ export type UserState = {
   // profileImage: UserProps | null;
 };
 
-// 처음 로그인시 유저 프롭스가 들어옴
-// 프로필 사진은 어디서 들고 오나?
-// 로그인 api 호출시 어떤 값이 들어는지? 
-// 거기에 유저 이미지가 있나용? 없으면 추가
-// 그 후 usereducer에 추가 (이미함)
-
-// 로그인 유저 이미지가 뭘로 떨어지는지?
-// profile로 떨어지고 있나 아님 다른 명칭으로?
-// 
-
 export type Event =
   | { type: "LOGIN_SUCCESS"; payload: UserProps } // 로그인 성공
   | { type: "LOGOUT" } // 로그아웃

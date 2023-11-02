@@ -28,14 +28,9 @@ import {
 import { AxiosError } from "axios";
 import useDebounced from "../hooks/useDebounce";
 import validateEmail from "../libs/validateEmail";
-import { UserProps } from "../reducer";
 import { DispatchContext, UserStateContext } from "../App";
 
 const TOAST_TIMEOUT_INTERVAL = 800;
-
-interface MyPage extends FlexProps {
-  profileImage: UserProps | null; 
-}
 
 type NewUserEmailInfoType = {
   newEmail: string;
