@@ -14,14 +14,10 @@ import {
   Td,
   Text,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-interface ResultPageProps {
-  setShowResultPage: (value: boolean) => void;
-  setShowTestPage: (value: boolean) => void;
-}
-
-const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestPage }) => {
+const StudyCustomResultPage = () => {
+  const { note_id } = useParams();
   const [resultData, setResultData] = useState([]);
   const [checkedWords, setCheckedWords] = useState({});
   const [checkedCount, setCheckedCount] = useState(0);
@@ -48,12 +44,11 @@ const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestP
   const correctAnswers = resultData.filter((result) => result.correct).length;
 
   const handleContinueLearning = () => {
-    setShowResultPage(false);
+    navigate("/main/custom")
   };
 
   const handleStopLearning = () => {
-    setShowResultPage(false);
-    setShowTestPage(false);
+    navigate("/main")
   };
 
   const handleSendCheckedWords = () => {
@@ -176,4 +171,4 @@ const ResultPage: React.FC<ResultPageProps> = ({ setShowResultPage, setShowTestP
   );
 };
 
-export default ResultPage;
+export default StudyCustomResultPage;
