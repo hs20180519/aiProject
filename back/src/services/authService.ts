@@ -21,7 +21,9 @@ export const getVerifyCodeByEmail = async (email: string) => {
 };
 
 export const sendVerificationCode = async (email: string): Promise<void> => {
-  const verificationCode: string = Math.floor(Math.random() * 1000000).toString();
+  const verificationCode: string = Math.floor(
+    Math.random() * (999999 - 100000 + 1) + 100000,
+  ).toString();
   await sendMail(email, verificationCode);
   await prisma.verifiCode.create({
     data: {
@@ -33,7 +35,9 @@ export const sendVerificationCode = async (email: string): Promise<void> => {
 };
 
 export const resendVerificationCode = async (email: string): Promise<void> => {
-  const verificationCode: string = Math.floor(Math.random() * 1000000).toString();
+  const verificationCode: string = Math.floor(
+    Math.random() * (999999 - 100000 + 1) + 100000,
+  ).toString();
   await sendMail(email, verificationCode);
   await prisma.verifiCode.update({
     where: { email },

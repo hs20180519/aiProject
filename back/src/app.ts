@@ -22,13 +22,14 @@ import helmet from "helmet";
 import { limiter } from "./config/limiter";
 import { local, jwt } from "./passport";
 import { startScheduler } from "./services/remindService";
+import { updateRankCron } from "./services/rankService";
 
 const app: express.Application = express();
 
 app.use(cors());
 
 app.use((req, res, next) => {
-  res.setHeader('Cross-Origin-Opener-Policy', 'unsafe-none');
+  res.setHeader("Cross-Origin-Opener-Policy", "unsafe-none");
   next();
 });
 
@@ -40,11 +41,13 @@ app.use(limiter);
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(express.static(path.join(__dirname, "../public"), {
-  setHeaders: (res) => {
-    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  }
-}));
+app.use(
+  express.static(path.join(__dirname, "../public"), {
+    setHeaders: (res) => {
+      res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    },
+  }),
+);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile, { explorer: true }));
 app.use(
@@ -86,5 +89,6 @@ app.use("/api/storage", storageRouter);
 app.use(errorLogger);
 
 startScheduler();
+updateRankCron();
 
 export default app;
