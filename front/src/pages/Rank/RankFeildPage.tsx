@@ -75,7 +75,7 @@ export default function RankFeildPage() {
         <Heading color={"teal.600"}>Wordy 랭킹🏅</Heading>
         <Text
           color={"gray.600"}
-        >{`${userRankInfo.nickname}님의 현재 점수는 ${userRankInfo.score}점입니다`}</Text>
+        >{`${userRankInfo.name}님의 현재 점수는 ${userRankInfo.score}점입니다`}</Text>
       </Stack>
       <RankList rankList={usersRank} />
 
