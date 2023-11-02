@@ -94,8 +94,8 @@ const LoginPage = () => {
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"md"} p={8}>
-          <Heading fontSize={"4xl"} textAlign={"center"} color={"teal.400"}>
-            워디 로그인
+          <Heading fontSize={"3xl"} textAlign={"center"} color={"teal.400"}>
+          워디 로그인 🐶
           </Heading>
           <Stack spacing={10} pt={5}>
             <form onSubmit={handleSubmit}>
@@ -139,19 +139,19 @@ const LoginPage = () => {
               </Stack>
             </form>
           </Stack>
-          <Stack spacing={10} pt={3}>
-            <Text fontSize="sm" color="gray.600">
-              아직 회원이 아니시라면?{" "}
-              <Button as="a" href="/SignUp" colorScheme="teal" variant="link" size="xl">
+          <Stack pt={2}>
+            <Flex gap={1} fontSize="sm" alignItems={"center"} lineHeight={"100%"}>
+            <Text color="gray.600">아직 회원이 아니시라면?</Text>
+            <Button as="a" href="/SignUp" colorScheme="teal" variant="link" size="xl">
                 회원가입
               </Button>
-              <Stack spacing={10} pt={5}>
+            </Flex>
+              <Stack spacing={5} pt={2}>
                 <KakaoLoginButton />
               </Stack>
-              <Stack spacing={10} pt={3}>
+              <Stack spacing={5} pt={2}>
                 <Button onClick={navigateToIntroPage}>처음 화면으로 이동</Button>
               </Stack>
-            </Text>
           </Stack>
         </Box>
       </Stack>
