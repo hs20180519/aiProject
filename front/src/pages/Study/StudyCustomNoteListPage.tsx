@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import SelectCustomBox from "./component/SelectCustomBox";
 import { getCustomNotes } from "../../apis/customWord";
 import Loading from "../../components/Loading";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text, Icon, HStack } from "@chakra-ui/react";
+import { TbBeta } from "react-icons/tb";
 export default function StudyCustomNoteListPage() {
   const [loading, setLoading] = useState(false);
   const [customNoteList, setCustomNoteList] = useState([]);
@@ -34,5 +35,14 @@ export default function StudyCustomNoteListPage() {
       </Flex>
     );
 
-  return <SelectCustomBox noteList={customNoteList} />;
+  return (
+    <>
+      <HStack>
+        <Icon as={TbBeta} color={"teal"} />
+        <Text>Beta.V</Text>
+        <Text color={"tomato"}>정답 처리된 단어는 표시되지 않습니다.</Text>
+      </HStack>
+      <SelectCustomBox noteList={customNoteList} />
+    </>
+  );
 }

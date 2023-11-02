@@ -38,6 +38,7 @@ import MyPage from "../MyPage";
 // storage
 import StoragePage from "../Storage/StoragePage";
 import StudyCustomTestPage from "../Study/StudyCustomTestPage";
+import GoBack from "../../components/GoBack";
 
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -73,7 +74,8 @@ const MainPage = () => {
         position={"fixed"}
       />
       <Header isOpen={isOpen} onClose={onClose} />
-      <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout}/>
+      <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
+      <GoBack />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
         <Routes>
           <Route path="" element={<WordPage />} />
