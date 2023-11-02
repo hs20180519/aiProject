@@ -25,6 +25,7 @@ import GrammarPage from "../Grammar/GramnarPage";
 
 // inner = study
 import WordPage from "../Word/WordPage";
+import StudyCustomNoteListPage from "../Study/StudyCustomNoteListPage";
 
 // gptPage
 import GptDialogPage from "../GptDialogPage/GptDialogPage";
@@ -36,6 +37,7 @@ import MyPage from "../MyPage";
 
 // storage
 import StoragePage from "../Storage/StoragePage";
+import StudyCustomTestPage from "../Study/StudyCustomTestPage";
 
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -75,6 +77,8 @@ const MainPage = () => {
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
         <Routes>
           <Route path="" element={<WordPage />} />
+          <Route path="custom" element={<StudyCustomNoteListPage />} />
+          <Route path="custom/:note_id" element={<StudyCustomTestPage />} />
           <Route path="notes" element={<NoteListPage />} />
           <Route path="note/:note_id" element={<NoteDetailPage />} />
           <Route path="note_add/:note_id" element={<AddCustomNotePage />} />

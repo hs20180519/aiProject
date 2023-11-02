@@ -22,7 +22,8 @@ import BookMark from "../../../components/BookMark";
 
 interface WordBoxProps {
   word: type.WordsProps;
-  handleBookmark: (word_id: number) => void | Promise<void>;
+  onAddBookmark: (word_id: number) => void | Promise<void>;
+  onDelBookmark: (word_id: number) => void | Promise<void>;
   onUpdate: (word_id: number, data: type.SubmitCustomWord) => void | Promise<void>;
   onDelete: (word_id: number) => void | Promise<void>;
   isCustom: boolean;
@@ -31,7 +32,8 @@ interface WordBoxProps {
 /** 단어와 뜻을 표시하는 상자입니다. */
 export default function WordBox({
   word,
-  handleBookmark,
+  onAddBookmark,
+  onDelBookmark,
   onUpdate,
   onDelete,
   isCustom,
@@ -39,19 +41,28 @@ export default function WordBox({
   const [isEditing, setIsEditing] = useState(false);
   const [updateWord, setUpdateWord] = useState(word.word);
   const [updateMeaning, setUpdateMeaning] = useState(word.meaning);
-  const [isBookmarked, setIsBookmarked] = useState(word.isFavorite);
 
   /** 단어장 삭제 확인 모달 */
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  /** 단어 업데이트 핸들러 */
   const handleUpdate = () => {
     onUpdate(word.id, { word: updateWord, meaning: updateMeaning });
     setIsEditing(false);
   };
 
+  /** 단어삭제 핸들러 */
   const handleDelete = () => {
     onDelete(word.id);
     setIsEditing(false);
+  };
+
+  const handleBookmark = () => {
+    if (word.isFavorite) {
+      onDelBookmark(word.id);
+    } else {
+      onAddBookmark(word.id);
+    }
   };
 
   return (
@@ -100,7 +111,7 @@ export default function WordBox({
                     <Icon as={FaPencilAlt} boxSize={3} />
                   </Button>
                 ) : (
-                  <BookMark favorite={isBookmarked} onClick={handleBookmark} />
+                  <BookMark favorite={word.isFavorite} onClick={handleBookmark} />
                 )}
               </Flex>
             </Box>

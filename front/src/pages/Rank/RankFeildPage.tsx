@@ -10,8 +10,10 @@ export default function RankFeildPage() {
   const [loading, setLoading] = useState(false);
   const [usersRank, setUsersRank] = useState([]);
   const [userRankInfo, setUserRankInfo] = useState({
+    name: "",
     nickname: "",
     score: 0,
+    rank: 0,
   });
 
   // Pagination
@@ -37,10 +39,14 @@ export default function RankFeildPage() {
   /** 로그인한 유저 랭킹 조회 */
   const fetchUserRank = async () => {
     const res = await Api.get(`/user`);
+    const res2 = await Api.get(`/rank/userRank`);
+    console.log(res2);
     console.log(res);
     setUserRankInfo({
+      name: res.data.name,
       nickname: res.data.nickname,
-      score: res.data.score,
+      score: res2.data.score,
+      rank: res2.data.rank,
     });
   };
   /** 페이지네이션 핸들링 */

@@ -23,7 +23,7 @@ import {
   delAllCustomNote,
 } from "../../apis/customWord";
 import Btn from "../../components/Btn";
-
+import * as type from "../../apis/types/custom";
 import Loading from "../../components/Loading";
 
 const NOTE_LIST = [
@@ -44,7 +44,7 @@ export default function CustomNoteListPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [noteList, setNoteList] = useState(NOTE_LIST);
-  const [customNoteList, setCustomNoteList] = useState([]);
+  const [customNoteList, setCustomNoteList] = useState<type.NoteProps[]>([]);
   const [isEditing, setIsEditing] = useState(false);
 
   /** 노트 목록 가져오기 */
@@ -53,6 +53,7 @@ export default function CustomNoteListPage() {
     try {
       const res = await getCustomNotes();
       if (res.status === 200) {
+        console.log(res.data);
         setCustomNoteList(res.data);
       }
     } catch (e) {
