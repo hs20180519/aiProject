@@ -27,8 +27,8 @@ export default function NoteListBox({ noteList, isEditing, onDelete }: NoteListB
               bg={useColorModeValue("white", "gray.700")}
               boxShadow={"lg"}
               alignItems="center"
-              p={8}
-              height="120px"
+              p={7}
+              height="90px"
               borderWidth="3px"
               borderRadius="lg"
             >
@@ -39,12 +39,12 @@ export default function NoteListBox({ noteList, isEditing, onDelete }: NoteListB
                 onClick={() => onDelete(note.id)}
                 text={<Icon as={FaRegTrashAlt} />}
                 position="absolute"
-                right={8}
+                right={7}
                 mt="-5"
               ></Btn>
 
               {/* <AbsoluteCenter> */}
-              <Text id={note.id} fontSize={"3xl"}>
+              <Text id={note.id} fontSize={"xl"}>
                 {note.title}
               </Text>
               {/* </AbsoluteCenter> */}
@@ -57,13 +57,13 @@ export default function NoteListBox({ noteList, isEditing, onDelete }: NoteListB
                 bg={useColorModeValue("white", "gray.700")}
                 boxShadow={"lg"}
                 alignItems="center"
-                p={8}
-                height="120px"
+                p={7}
+                height="90px"
                 borderWidth="3px"
                 borderRadius="lg"
               >
                 {/* <AbsoluteCenter> */}
-                <Text id={note.id} fontSize={"3xl"}>
+                <Text id={note.id} fontSize={"xl"}>
                   {note.title}
                 </Text>
                 {/* </AbsoluteCenter> */}
