@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent, useContext } from "react";
 import * as Api from "../apis/api";
 import { useNavigate } from "react-router-dom";
 import {
@@ -23,13 +23,19 @@ import {
   ModalFooter,
   FormControl,
   FormLabel,
+  FlexProps
 } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import useDebounced from "../hooks/useDebounce";
 import validateEmail from "../libs/validateEmail";
-import { Event, UserState } from "../reducer";
+import { UserProps } from "../reducer";
+import { DispatchContext, UserStateContext } from "../App";
 
 const TOAST_TIMEOUT_INTERVAL = 800;
+
+interface MyPage extends FlexProps {
+  profileImage: UserProps | null; 
+}
 
 type NewUserEmailInfoType = {
   newEmail: string;
@@ -39,6 +45,8 @@ type NewUserEmailInfoType = {
 export default function MyPage() {
   const toast = useToast();
   const navigate = useNavigate();
+  const dispatch = useContext(DispatchContext);
+  const { user } = useContext(UserStateContext);
 
 
   /** 이메일 추가 모달 */
@@ -64,7 +72,7 @@ export default function MyPage() {
   /** 유저 내 정보 수정 및 조회 */
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [profileImage, setProfileImage] = useState("");
+  const [profileImage, setProfileImage] = useState("https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256");
 
   /** 학습진행률 */
   const [csatProgress, setCsatProgress] = useState(0);
@@ -256,7 +264,7 @@ export default function MyPage() {
       Api.sendImage("post", "/upload/profile-image", formData)
         .then((response) => {
           console.log("Server Response:", response);
-          // Event({ type: "CHANGE_IMAGE", payload:response.data});
+          dispatch({type: "CHANGE_IMAGE", payload:response.data})
           toast({ 
             title: "프로필 이미지가 변경 되었습니다!",
             status: "success",
@@ -301,8 +309,8 @@ export default function MyPage() {
         <Flex justify={"center"} mt={3}>
           <Avatar
             size={"xl"}
-            src={profileImage}
-            key={profileImage}
+            src={user.profileImage}
+            key={user.profileImage}
             css={{
               border: "2px solid white",
             }}
@@ -441,7 +449,7 @@ export default function MyPage() {
           <ModalFooter>
             {!isEmailVerificationComplete ? (
               <Button colorScheme="teal" onClick={fetchUpdateEmail}>
-                이메일 등록 요청
+                이메일 등록
               </Button>
             ) : null}
           </ModalFooter>

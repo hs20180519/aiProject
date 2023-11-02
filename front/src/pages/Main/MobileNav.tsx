@@ -15,36 +15,21 @@ import {
   FlexProps,
   Link as ChakraLink,
 } from "@chakra-ui/react";
-import { FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
+import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { Link as ReactRouterLink } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import * as Api from "../../apis/api";
-import { UserProps } from "../../reducer"
+import { UserStateContext } from "../../App";
 
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
   onLogout: () => void;
   nickname: string;
-  profileImage?: UserProps | null;
 }
 
 export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...rest }: MobileProps) {
-  const [userName, setUserName] = useState("");
-  const [profileImage, setProfileImage] = useState("https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256");
-
-  useEffect(() => {
-    // 사용자 정보 가져오는 API 호출
-    Api.get('/user')
-      .then((response) => {
-        const userData = response.data;
-        setUserName(userData.name);
-        setProfileImage(userData.profileImage);
-      })
-      .catch((error) => {
-        console.error('사용자 정보 가져오기 오류:', error);
-      });
-  }, [profileImage]);
+  const { user } = useContext(UserStateContext);
 
   return (
     <Flex
@@ -83,7 +68,7 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
               <HStack>
                 <Avatar
                   size={"sm"}
-                  src={profileImage}
+                  src={user.profileImage}
                 />
                 <VStack
                   display={{ base: "none", md: "flex" }}
@@ -91,7 +76,7 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
                   spacing={"1px"}
                   ml={"2"}
                 >
-                  <Text fontSize={"sm"}>{userName || nickname}</Text>
+                  <Text fontSize={"sm"}>{user.name || nickname}</Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
                   <FiChevronDown />

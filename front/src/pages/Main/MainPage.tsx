@@ -1,6 +1,5 @@
-import { Center, Box, Flex, useColorModeValue, useDisclosure } from "@chakra-ui/react";
-import { FiEdit2, FiTrendingUp, FiCodesandbox, FiStar, FiDatabase, FiUser } from "react-icons/fi";
-import { useState, useContext, useEffect } from "react";
+import { Box, useColorModeValue, useDisclosure } from "@chakra-ui/react";
+import { useContext, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import * as type from "../../apis/types/main";
@@ -72,7 +71,7 @@ const MainPage = () => {
         position={"fixed"}
       />
       <Header isOpen={isOpen} onClose={onClose} />
-      <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
+      <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout}/>
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
         <Routes>
           <Route path="" element={<WordPage />} />
