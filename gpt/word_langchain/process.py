@@ -14,15 +14,16 @@ async def generate_dialog_process(input_data):
     english_words = ', '.join(selected_word_dict.keys())
     korean_meanings = ', '.join(selected_word_dict.values())
     dialog_human_template = \
-        """Create a dialog with at least {line_count} lines so that the following words are used at least once:
-         {english_words} ({korean_meanings}). Each word must be used at least once in the dialog. Ensure that the 
-        conversation, although may sound unnatural, incorporates all the specified words. After writing the dialog, 
-        verify that each word from the list is used by checking them off one by one:
-        
+        """Create a dialog with at least {line_count} lines so that the following words are used at least once,
+         in their original form: {english_words} ({korean_meanings}). Do not use variations of these words.
+          For example, use 'get in' as it is, not as 'got in'. Each word must be used at least once in the dialog.
+           Ensure that the conversation, although may sound unnatural, incorporates all the specified words exactly as
+            they are. After writing the dialog, verify that each word from the list is used by checking them off one by one:
+
         Please answer only in the following format.
         {{
             "dialog": [{{"speaker": "Person A", "message": "{{message}}"}},
-             {{"speaker": "Person B", "message": "{{message}}"}}]
+                       {{"speaker": "Person B", "message": "{{message}}"}}]
         }}
         """.strip()
     dialog_human_message_prompt = HumanMessagePromptTemplate.from_template(template=dialog_human_template)

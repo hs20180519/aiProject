@@ -2,19 +2,24 @@
 import {
   Stack,
   Heading,
-  HStack,
-  Box,
-  FormControl,
-  useToast,
   useColorModeValue,
+  Box,
+  Spacer,
+  useToast,
+  Icon,
+  Flex,
+  FormControl,
+  InputGroup,
+  InputLeftElement,
+  Input,
 } from "@chakra-ui/react";
 import Btn from "../../components/Btn";
+import { FaPencilAlt, FaSortAlphaUp, FaDog } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 
 import { useState, useEffect } from "react";
 
 import WordBox from "./Components/WordBox";
-import { stringify } from "querystring";
 import Pagination from "../../components/Pagination";
 import SelectNote from "../../components/SelectNote";
 import SearchBar from "../Storage/Components/SearchBar";
@@ -22,6 +27,7 @@ import SearchBar from "../Storage/Components/SearchBar";
 import * as Api from "../../apis/api";
 import * as type from "../../apis/types/custom";
 import {
+  getCustomNotes,
   putCustomNoteTitle,
   postCustomWordAdd,
   putCustomWord,
@@ -42,34 +48,53 @@ export default function NoteDetailPage() {
   const { note_id } = useParams();
   const toast = useToast();
 
-  /**SelectNote */
-  const [category, setCategory] = useState([]);
+  /** 단어장 변경 Selector */
+  const [category, setCategory] = useState(NOTE_LIST);
   const [customNote, setCustomNote] = useState([]);
-  const [title, setTitle] = useState("");
+
+  /** 해당 단어장 목록 조회 */
   const [words, setWords] = useState<type.WordsProps[]>([]);
 
-  /** Search Word */
-  const [keyword, setKeyword] = useState(true);
+  /** 단어장 타이틀 변경 */
+  const [disable, setDisable] = useState(false);
+  const [isTitleEditing, setIsTitleEditing] = useState(false);
 
-  const [titleIsEditing, setTitleIsEditing] = useState(true);
+  /** 단어 추가 및 변경 */
   const [isItAdd, setIsItAdd] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
+  /** 단어 검색 */
+  const [searchTerm, setSearchTerm] = useState("");
+  const [keyword, setKeyword] = useState(false);
+
+  const [title, setTitle] = useState("");
   const [customWord, setCustomWord] = useState<type.SubmitCustomWord>({
     word: "",
     meaning: "",
   });
 
-  /**  Pagination */
+  /**  페이지네이션 */
   const limit = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pagingIndex, setPagingIndex] = useState(1);
 
-  /** bookmard */
+  const [isCustom, setIsCustom] = useState(!isNaN(parseInt(note_id)));
+
+  /** bookmark */
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-  /** 카테고리별 단어장 조회하는 함수입니다. */
+  /** 커스텀 단어장 목록 가져오기 */
+  const fetchCustomNotes = async () => {
+    try {
+      const res = await getCustomNotes();
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  /** 카테고리별 단어장 조회 */
   const fetchNoteDetail = async (page = 1) => {
     // note_id 숫자  => 내가 생성한 단어
     // note_id 문자열 => 토익, 토플, 학습단어
@@ -106,7 +131,7 @@ export default function NoteDetailPage() {
           isClosable: true,
           duration: TOAST_TIMEOUT_INTERVAL,
         });
-        setTitleIsEditing(false);
+        setIsTitleEditing(false);
       }
     } catch (e) {
       console.error(e);
@@ -136,6 +161,11 @@ export default function NoteDetailPage() {
         duration: TOAST_TIMEOUT_INTERVAL,
       });
     }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCustomWord({ ...customWord, [name]: value });
   };
 
   /** 단어를 수정
@@ -168,24 +198,25 @@ export default function NoteDetailPage() {
           duration: TOAST_TIMEOUT_INTERVAL,
         });
         fetchNoteDetail();
+        setIsEditing(false);
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  // todo 카테고리가 바뀌었을 때 다른 데이터를 가져오려면 어떻게하지?
-  // 컴포넌트로 나눠야하나?
   /** 단어장 이동하는 함수 */
   const onSelect = (e) => {
     console.log(e.target.value);
+    fetchCustomNotes();
   };
 
-  /** 즐겨찾기 추가
+  /**
+   * 즐겨찾기 추가
    * currentPage만 가능
    */
-  const fetchBookmark = async () => {
-    const data = "wordId";
+  const fetchBookmark = async (word_id: number) => {
+    const data = word_id;
     try {
       const res = await Api.post("/favorite", data);
       if (res.status === 201) {
@@ -202,12 +233,11 @@ export default function NoteDetailPage() {
     }
   };
 
-  // delete api 새로 만들기
   /** 즐겨찾기 삭제 */
-  const fetchDelBookmark = async () => {
-    const data = "wordId";
+  const fetchDelBookmark = async (word_id: number) => {
+    const data = word_id;
     try {
-      const res = await Api.delete("/favorite");
+      const res = await Api.delete(`book/favorite?wordId=${data}`);
       if (res.status === 200) {
         setIsBookmarked(false);
         toast({
@@ -222,35 +252,64 @@ export default function NoteDetailPage() {
     }
   };
 
-  const [searchTerm, setSearchTerm] = useState("");
+  /** 즐겨찾기 핸들러 */
+  const handleChangeBookmark = (word_id: number) => {
+    try {
+      if (!isBookmarked) {
+        fetchBookmark(word_id);
+      } else if (isBookmarked) {
+        fetchDelBookmark(word_id);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  /** 페이지네이션 핸들링 */
+  const handleChangePage = async (page: number) => {
+    console.log();
+    try {
+      const id = parseInt(note_id);
+      const queryString = !isNaN(id)
+        ? `/book/search/?book=customs&page=${page}&limit&customBookId=${id}&p=${searchTerm}`
+        : `/book/search/?book=${note_id}&page=${page}$customBookId=&q=${searchTerm}`;
+      if (keyword) {
+        const res = await Api.get(queryString);
+        if (res.data && Array.isArray(res.data.words)) {
+          setWords(res.data.words);
+          setCurrentPage(page);
+        }
+      } else {
+        fetchNoteDetail(page);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  /** 단어검색 api */
   const handleSearchClick = async (q: string) => {
     if (q.trim() === "") {
       fetchNoteDetail();
-      // 검색어가 없을 때 기존 데이터를 보여줌
       setKeyword(false);
       setSearchTerm("");
     } else {
       try {
-        console.log("단어 검색 api완성 후 연결예정");
-        // // 검색어가 있는 경우 검색 결과 페이지를 가져오도록 요청
-        // const response = await instance.get(`/storage/search?q=${q}&limit=8`);
-        // if (response.data && Array.isArray(response.data.words)) {
-        //   setWords(response.data.words);
-        //   setKeyword(true);
-        //   setTotalPages(response.data.totalPages);
-        //   setPagingIndex(1);
-        //   setSearchTerm(q);
-        // }
+        const id = parseInt(note_id);
+        const queryString = !isNaN(id)
+          ? `/book/search/?book=customs&customBookId=${id}&p=${q}`
+          : `/book/search/?book=${note_id}&customBookId=&q=${q}`;
+        const res = await Api.get(queryString);
+        if (res.data && Array.isArray(res.data.words)) {
+          setWords(res.data.words);
+          setKeyword(true);
+          setTotalPages(res.data.totalPages);
+          setPagingIndex(1);
+          setSearchTerm(q);
+        }
       } catch (error) {
         console.error("Error searching for words:", error);
       }
     }
-  };
-
-  /** 페이지네이션 핸들링 */
-  const handleChangePage = (page: number) => {
-    fetchNoteDetail(page);
   };
 
   const handleChangePaingIndex = (pagingIndex: number) => {
@@ -266,15 +325,107 @@ export default function NoteDetailPage() {
     <Stack>
       <SelectNote onSelect={onSelect} category={category} customNote={customNote} />
       <SearchBar onSearch={handleSearchClick} />
-
-      <Heading color={"teal"}>{title}</Heading>
-
+      <Flex minWidth="max-content" alignItems="center" gap="2" mb="5">
+        <Stack direction={"row"}>
+          {isTitleEditing ? (
+            <Input
+              id="title"
+              type="text"
+              placeholder={title}
+              value={title}
+              isDisabled={disable}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
+            />
+          ) : (
+            <Heading color={"teal"}>{title}</Heading>
+          )}
+          {isCustom ? (
+            <>
+              {isTitleEditing ? (
+                <Btn
+                  size="m"
+                  variant="ghost"
+                  text="저장"
+                  onClick={() => {
+                    fetchUpdateNoteTitle();
+                  }}
+                />
+              ) : (
+                <Btn
+                  size="m"
+                  variant="ghost"
+                  text={<Icon as={FaPencilAlt} boxSize={3} />}
+                  onClick={() => setIsTitleEditing((prev) => !prev)}
+                />
+              )}
+            </>
+          ) : (
+            <></>
+          )}
+        </Stack>
+        <Spacer />
+        {isCustom ? (
+          <Btn
+            text={isItAdd ? "추가 완료" : "단어 추가"}
+            onClick={() => setIsItAdd((prev) => !prev)}
+          />
+        ) : (
+          <></>
+        )}
+      </Flex>
+      {isItAdd ? (
+        <Box
+          rounded={"lg"}
+          bg={useColorModeValue("white", "gray.700")}
+          boxShadow={"lg"}
+          p={8}
+          w="360px"
+        >
+          <Stack spacing={4}>
+            <FormControl id="word">
+              <InputGroup>
+                <InputLeftElement pointerEvents="none">
+                  <Icon as={FaSortAlphaUp} color="gray.300" boxSize={6} />
+                </InputLeftElement>
+                <Input
+                  type="text"
+                  placeholder="추가할 단어"
+                  value={customWord.word}
+                  name="word"
+                  onChange={handleChange}
+                />
+              </InputGroup>
+            </FormControl>
+            <FormControl id="mean">
+              <InputGroup>
+                <InputLeftElement pointerEvents="none">
+                  <Icon as={FaDog} color="gray.300" boxSize={6} />
+                </InputLeftElement>
+                <Input
+                  type="text"
+                  placeholder="단어의 뜻, 의미"
+                  value={customWord.meaning}
+                  name="meaning"
+                  onChange={handleChange}
+                />
+              </InputGroup>
+            </FormControl>
+            <Btn text="단어 추가" onClick={fetchWordAdd} variant="solid" type="submit" />
+          </Stack>
+        </Box>
+      ) : (
+        <></>
+      )}
       {words.map((word: type.WordsProps) => (
         <WordBox
           word={word}
           isBookmarked={isBookmarked}
+          handleBookmark={handleChangeBookmark}
           onUpdate={fetchEditWord}
           onDelete={fetchDeleteWord}
+          isCustom={isCustom}
         />
       ))}
       <Pagination

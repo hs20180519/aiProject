@@ -38,8 +38,7 @@ async def generate_dialog_endpoint(request: Request, input_data: InputDialogData
 
     logging.info(f'{dialog_result}')
 
-    return {"word": selected_word_dict,
-            "dialog": dialog_result.dialog}
+    return dialog_result
 
 
 @router.post(path="/explain-grammar",
@@ -53,9 +52,9 @@ async def explain_grammar_endpoint(request: Request, dialog: InputGrammarData):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Fail in explain_grammar_endpoint {e}")
 
-    logging.info(f'{grammar_response_content}')
+    logging.info(f'{grammar_response_content.grammar}')
 
-    return {"grammar": grammar_response_content.grammar}
+    return grammar_response_content
 
 
 @router.post(path="/translate-text",
@@ -70,4 +69,4 @@ async def translate_text_endpoint(request: Request, translation_request: Transla
 
     logging.info(f'Translated Text: {translated_text}')
 
-    return {"translatedText": translated_text}
+    return TranslationResponse(translatedText=translated_text)

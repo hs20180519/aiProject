@@ -71,35 +71,50 @@ const ScriptDialog = ({
     selectedWords: Record<string, string>,
     dialogKey: string,
   ) => {
-    const selectedWordKeys = Object.keys(selectedWords);
-    return text
-      .split(" ")
-      .map((word, index) => {
-        const uniqueIndex = `${dialogKey}_${index}`;
-        const foundKey = selectedWordKeys.find((key) => word.includes(key));
-        if (foundKey) {
-          const meaning = selectedWords[foundKey];
-          return (
-            <TooltipWord
-              word={word}
-              meaning={meaning}
-              index={uniqueIndex}
-              isMobile={isMobile}
-              openTooltip={openTooltip}
-              handleTooltipClick={handleTooltipClick}
-              tooltipRef={tooltipRef}
-            />
-          );
-        }
-        return word;
-      })
-      .reduce((acc, curr, index) => {
-        if (index !== 0) {
-          acc.push(" ");
-        }
-        acc.push(curr);
-        return acc;
-      }, [] as React.ReactNode[]);
+    const cleanSelectedWords: Record<string, string> = {};
+    Object.keys(selectedWords).forEach(key => {
+      const cleanKey = key.replace(/\s*\(.*?\)\s*/g, '').trim();
+      cleanSelectedWords[cleanKey] = selectedWords[key];
+    });
+
+    const selectedWordKeys = Object.keys(cleanSelectedWords).sort((a, b) => b.length - a.length);
+    const regex = new RegExp(selectedWordKeys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join("|"), 'gi');
+
+    let match;
+    let lastIndex = 0;
+    const result = [];
+
+    while ((match = regex.exec(text)) !== null) {
+      if (lastIndex < match.index) {
+        result.push(text.slice(lastIndex, match.index));
+      }
+
+      const uniqueIndex = `${dialogKey}_${regex.lastIndex}`;
+
+      // Convert the matched word to lowercase before fetching the meaning
+      const lowerCaseMatch = match[0].toLowerCase();
+      const meaning = cleanSelectedWords[lowerCaseMatch];
+
+      result.push(
+        <TooltipWord
+          word={match[0]}
+          meaning={meaning}
+          index={uniqueIndex}
+          isMobile={isMobile}
+          openTooltip={openTooltip}
+          handleTooltipClick={handleTooltipClick}
+          tooltipRef={tooltipRef}
+        />
+      );
+
+      lastIndex = regex.lastIndex;
+    }
+
+    if (lastIndex < text.length) {
+      result.push(text.slice(lastIndex));
+    }
+
+    return result;
   };
 
   if (!dialogResult?.dialog) {
@@ -149,8 +164,8 @@ const ScriptDialog = ({
         setGrammarResult,
         dialogKey,
         setLoadingEntryKey,
-        "Grammar fetch successful.",
-        "Grammar fetch failed.",
+        "문법 설명이 생성되었습니다",
+        "문법 설명이 실패했습니다",
       );
     },
     [handleApiFetch],
@@ -163,8 +178,8 @@ const ScriptDialog = ({
         setTranslationResult,
         dialogKey,
         setLoadingTranslationKey,
-        "Translation successful.",
-        "Translation failed.",
+        "번역이 완료되었습니다",
+        "번역이 실패했습니다",
       );
     },
     [handleApiFetch],

@@ -71,7 +71,6 @@ export default function CustomNoteAddPage() {
    */
   const fetchNoteDetail = async () => {
     try {
-      //book=customs&page=2&limit&customBookId=
       const queryString = `book=customs&page=&limit&customBookId=${note_id}`;
       const res = await getNoteDetail(queryString);
       console.log(res.data);

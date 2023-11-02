@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { ListProps, Box, Stack, Avatar, Text } from "@chakra-ui/react";
 
 interface RankListProps extends ListProps {
@@ -11,6 +10,17 @@ export interface RankItemProps {
   score: number;
   profileImage: string;
 }
+const changeBackgroudColor = (index) => {
+  if (index === 0) {
+    return "yellow.100";
+  } else if (index === 1) {
+    return "gray.300";
+  } else if (index === 2) {
+    return "orange";
+  } else {
+    return "white";
+  }
+};
 
 const RankItem = ({ rankList }: RankListProps) => {
   return (
@@ -18,16 +28,17 @@ const RankItem = ({ rankList }: RankListProps) => {
       {rankList.map((rank: RankItemProps, index: number) => (
         <Box
           key={rank.id}
-          bg={rank.id <= 3 ? "yellow.100" : "white"}
+          bg={changeBackgroudColor(index)}
           fontWeight="semibold"
           rounded={"lg"}
           boxShadow={"lg"}
           borderRadius="full"
           alignItems="center"
+          h={30}
           p={8}
-          mt={3}
+          mt={2}
         >
-          <Stack direction="row">
+          <Stack direction="row" mt={-3}>
             <Text color={"teal.400"}>{index + 1}등</Text>
             <Avatar
               size={"sm"}
@@ -49,4 +60,5 @@ const RankItem = ({ rankList }: RankListProps) => {
     </>
   );
 };
+
 export default RankItem;
