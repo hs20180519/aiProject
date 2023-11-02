@@ -2,12 +2,11 @@ from pydantic import BaseModel, Field
 
 
 class GrammarExplanation(BaseModel):
-    message: str = Field(title="문장", examples=["That's great! It's supposed to be a luxurious experience"])
+    message: str = Field(title="문장", examples=["It's incredible"])
     explain: str = Field(title="문법 설명", examples=[
-        "This sentence is a declarative sentence in the present simple tense. The phrase 'That's great!' is an "
-        "exclamation expressing enthusiasm. The pronoun 'It' is followed by the copula verb 'is' and the adjective "
-        "'supposed'. The phrase 'to be a luxurious experience' functions as an infinitive phrase indicating the "
-        "nature of the experience."])
+        "'It's incredible'은 'it is'의 축약형으로, 놀라운 것을 나타내는 표현입니다."
+        " 이는 어떤 사실이나 현상이 매우 놀라움을 나타내며, 주로 주장이나 설명에 사용됩니다."
+    ])
 
 
 class GrammarResponse(BaseModel):
@@ -19,44 +18,16 @@ class GrammarResponse(BaseModel):
                 {
                     "grammar": [
                         {
-                            "message": "Hey, have you heard about the new cruise ship that's setting sail next month?",
-                            "explain": "This sentence is a simple interrogative sentence in the present perfect tense. The subject 'you' is followed by the auxiliary verb 'have' and the past participle 'heard'. The phrase 'about the new cruise ship' functions as a prepositional phrase modifying the verb 'heard'. The relative clause 'that's setting sail next month' provides additional information about the cruise ship."
+                            "message": "Absolutely!",
+                            "explain": "'Absolutely!'는 강한 동의를 나타내는 표현으로, 주로 긍정적인 의견이나 주장에 사용됩니다. 이는 확신을 강조하거나 상대방의 의견을 강력하게 지지하는 뜻을 가집니다."
                         },
                         {
-                            "message": "Yes, I have! I'm actually planning to go aboard it.",
-                            "explain": "This sentence is a declarative sentence in the present continuous tense. The subject 'I' is followed by the auxiliary verb 'am' and the present participle 'planning'. The phrase 'to go aboard it' functions as an infinitive phrase indicating the purpose of the planning."
+                            "message": "It's incredible",
+                            "explain": "'It's incredible'은 'it is'의 축약형으로, 놀라운 것을 나타내는 표현입니다. 이는 어떤 사실이나 현상이 매우 놀라움을 나타내며, 주로 주장이나 설명에 사용됩니다."
                         },
                         {
-                            "message": "That's great! It's supposed to be a luxurious experience.",
-                            "explain": "This sentence is a declarative sentence in the present simple tense. The phrase 'That's great!' is an exclamation expressing enthusiasm. The pronoun 'It' is followed by the copula verb 'is' and the adjective 'supposed'. The phrase 'to be a luxurious experience' functions as an infinitive phrase indicating the nature of the experience."
-                        },
-                        {
-                            "message": "Absolutely! I've been saving up for this trip for months.",
-                            "explain": "This sentence is an affirmative sentence in the present perfect continuous tense. The adverb 'Absolutely!' emphasizes agreement. The subject 'I' is followed by the auxiliary verb 'have' and the present participle 'been'. The phrase 'for this trip' functions as a prepositional phrase indicating the purpose of the saving."
-                        },
-                        {
-                            "message": "What if something goes wrong? Will they abort the trip?",
-                            "explain": "The first sentence is an interrogative sentence in the present simple tense. The phrase 'What if' introduces a hypothetical situation. The subject 'something' is followed by the verb 'goes' and the adjective 'wrong'. The second sentence is an interrogative sentence in the future simple tense. The subject 'they' is followed by the auxiliary verb 'will' and the base form of the verb 'abort'."
-                        },
-                        {
-                            "message": "I hope not! I've been looking forward to it.",
-                            "explain": "This sentence is an affirmative sentence in the present simple tense. The pronoun 'I' is followed by the verb 'hope' and the adverb 'not'. The phrase 'I've been looking forward to it' is in the present perfect continuous tense, indicating an ongoing action. The phrase 'to it' functions as an infinitive phrase indicating the object of the looking forward."
-                        },
-                        {
-                            "message": "Well, I guess we'll just have to trust that everything will go smoothly.",
-                            "explain": "This sentence is a declarative sentence in the future simple tense. The adverb 'Well' indicates a pause or hesitation. The pronoun 'I' is followed by the verb 'guess' and the pronoun 'we'. The auxiliary verb 'will' is followed by the base form of the verb 'have' and the infinitive 'to trust'. The relative clause 'that everything will go smoothly' provides additional information about the trust."
-                        },
-                        {
-                            "message": "Definitely. I'm really excited about exploring the different destinations we'll visit.",
-                            "explain": "This sentence is an affirmative sentence in the present continuous tense. The adverb 'Definitely' emphasizes agreement. The pronoun 'I' is followed by the auxiliary verb 'am' and the present participle 'excited'. The phrase 'about exploring the different destinations' functions as a prepositional phrase modifying the verb 'excited'. The pronoun 'we' is followed by the auxiliary verb 'will' and the base form of the verb 'visit'."
-                        },
-                        {
-                            "message": "Me too! I can't wait to learn more about the cultures and history of those places.",
-                            "explain": "This sentence is an affirmative sentence in the present simple tense. The pronoun 'Me' is followed by the adverb 'too'. The pronoun 'I' is followed by the auxiliary verb 'can't' and the base form of the verb 'wait'. The phrase 'to learn more about the cultures and history of those places' functions as an infinitive phrase indicating the object of the waiting."
-                        },
-                        {
-                            "message": "It's going to be an amazing adventure!",
-                            "explain": "This sentence is a declarative sentence in the future continuous tense. The pronoun 'It' is followed by the copula verb 'is' and the present participle 'going'. The phrase 'to be an amazing adventure' functions as an infinitive phrase indicating the nature of the adventure."
+                            "message": "how the bond between atoms can determine the properties of a substance",
+                            "explain": "'how'는 어떻게 또는 어떤 방식으로를 나타내는 부사로, 문장에서 동사나 형용사를 수정하거나 물음을 나타내는 역할을 합니다. 'the bond between atoms can determine the properties of a substance'는 명사구로, 원자 간의 결합이 물질의 특성을 결정할 수 있다는 것을 나타냅니다."
                         }
                     ]
                 }
