@@ -11,24 +11,22 @@ const StorageWordBox = ({ word, onBookmarkClick }) => {
       position={"relative"}
       alignItems={"center"}
     >
-      <Stack>
-        <Center w="169px">
-          <Box textAlign="center">
-            <Text fontSize="17px" fontWeight="bold">
-              {word.word}
-            </Text>
-            <Text color={"gray"}>{word.meaning}</Text>
-          </Box>
-          <Box position={"absolute"} right={"-1px"} mt={"-60px"}>
-            <BookMark
-              favorite={word.isFavorite}
-              onClick={() => {
-                onBookmarkClick(word.id, word.isFavorite);
-              }}
-            />
-          </Box>
-        </Center>
-      </Stack>
+      <Center w="169px">
+        <Box textAlign="center">
+          <Text fontSize="17px" fontWeight="bold">
+            {word.word}
+          </Text>
+          <Text color={"gray"}>{word.meaning}</Text>
+        </Box>
+        <Box position={"absolute"} right={"-1px"} mt={"-60px"}>
+          <BookMark
+            favorite={word.isFavorite}
+            onClick={() => {
+              onBookmarkClick(word.id, word.isFavorite);
+            }}
+          />
+        </Box>
+      </Center>
     </Flex>
   );
 };
