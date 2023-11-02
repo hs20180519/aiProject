@@ -199,9 +199,9 @@ const SignUp = () => {
       justify={"center"}
       bg={useColorModeValue("gray.100", "gray.800")}
     >
-      <Stack spacing={8} mx={"auto"} maxW={"sm"} py={12} px={6}>
+      <Stack mx={"auto"} maxW={"auto"} py={4}>
         <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"md"} p={8}>
-          <Stack spacing={2} pt={2}>
+          <Stack spacing={2}>
           <Heading fontSize={"2xl"} textAlign={"center"} color={"teal"}>
               워디 회원가입!
             </Heading>

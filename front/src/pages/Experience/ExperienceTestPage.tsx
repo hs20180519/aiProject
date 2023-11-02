@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@chakra-ui/react";
 import { FetchExperience } from "../../apis/experience";
+import { Link as RouterLink } from "react-router-dom";
 
 interface WordData {
   id: number;
@@ -166,6 +167,16 @@ const ExperienceTestPage: React.FC<ExperienceTestPageProps> = ({ setShowExperien
           isCorrect={answerState.popupIsCorrect}
           correctAnswer={answerState.popupCorrectAnswer}
         />
+      </Box>
+      <Box position="fixed" bottom="5" left="50%" transform="translateX(-50%)">
+          <Button
+            as={RouterLink}
+            to="/"
+            colorScheme="teal"
+            m={2}
+          >
+          처음으로 돌아가기
+          </Button>
       </Box>
     </Flex>
   );
