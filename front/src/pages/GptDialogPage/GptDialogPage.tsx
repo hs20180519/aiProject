@@ -72,7 +72,7 @@ const GptDialogPage = () => {
       const apiResult = await FetchGpt.getScript(updatedDialogParams);
 
       toast({
-        title: "Script fetch successful.",
+        title: "대화문 생성이 완료되었습니다",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -80,7 +80,7 @@ const GptDialogPage = () => {
       setScriptResult(JSON.stringify(apiResult));
     } catch (error) {
       toast({
-        title: "Script fetch failed.",
+        title: "대화문 생성에 실패했습니다",
         description: `Error: ${error.message || error}`,
         status: "error",
         duration: 5000,
@@ -150,13 +150,22 @@ const GptDialogPage = () => {
               생성된 문장의 단어를 클릭하거나 마우스 커서를 올리면 뜻을 확인 할 수 있습니다
             </Text>
             {scriptResult ? (
-              <ScriptDialog
-                dialogResult={JSON.parse(scriptResult)}
-                isGrammarLoading={isGrammarLoading}
-                setGrammarLoading={setGrammarLoading}
-                isScriptLoading={isScriptLoading}
-                selectedWords={selectedWords}
-              />
+              <>
+                <ScriptDialog
+                  dialogResult={JSON.parse(scriptResult)}
+                  isGrammarLoading={isGrammarLoading}
+                  setGrammarLoading={setGrammarLoading}
+                  isScriptLoading={isScriptLoading}
+                  selectedWords={selectedWords}
+                />
+                <Box textAlign="center">
+                  <Button colorScheme="teal"
+                          mt={4}
+                          onClick={() => window.location.reload()}>
+                    처음으로 돌아가기
+                  </Button>
+                </Box>
+              </>
             ) : null}
           </Box>
         </Box>

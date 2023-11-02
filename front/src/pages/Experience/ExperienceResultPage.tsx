@@ -7,7 +7,6 @@ import {
   Thead,
   Tbody,
   Tr,
-  Th,
   Td,
   Text,
 } from "@chakra-ui/react";
@@ -31,7 +30,7 @@ const ExperienceResultPage: React.FC<ExperienceResultPageProps> = ({ collectAnsw
   return (
     <Box background="white" boxShadow="md" p={4} rounded="md" flexGrow={1} width="100%">
   <Text fontSize="lg" fontWeight="bold" mb={4}>
-    🐾단어 학습 결과 <br /> (정답 개수 {correctAnswers}개 / 총 단어 개수 {totalAnswers}개)
+    🐾체험 학습 결과 <br /> (정답 개수 {correctAnswers}개 / 총 단어 개수 {totalAnswers}개)
   </Text>
   <Box border="1px" borderRadius="md" borderColor="gray.200" overflow="auto" p="1" m="1">
     <Table>

@@ -23,10 +23,22 @@ def check_words_in_dialog(word_list, dialog):
     logging.info(f"Dialog: {dialog}")
     dialog_content = ' '.join([item.message for item in dialog.dialog]).lower()
     logging.info(f"Dialog content: {dialog_content}")
+
     for word in word_list:
-        # 이 표현식은 변수 word로 시작하고 그 뒤에 소문자가 올 수 있는 단어를 찾는다.
-        # 예: word = "cat"이면 "cat", "cats", "catty" 등을 찾는다.
-        pattern = re.compile(rf'\b{word.lower()}[a-z]*\b')
+        # 만약 단어가 4개 이상의 부분으로 이루어져 있다면, 그냥 패스
+        if len(word.split()) >= 4:
+            logging.info(f"Skipping word: {word}")
+            continue
+
+        # '(n)'과 같은 부분을 제거
+        clean_word = re.sub(r'\s?\(.*?\)', '', word).lower()
+
+        # 공백이나 특수문자가 포함된 단어/표현의 경우 \b 경계를 사용하지 않습니다.
+        if ' ' in clean_word or any(not c.isalnum() for c in clean_word):
+            pattern = re.compile(re.escape(clean_word))
+        else:
+            pattern = re.compile(rf'\b{clean_word}[a-z]*\b')
+
         match = pattern.search(dialog_content)
         logging.info(f"Searching for word: {word}, Match found: {match}")
 

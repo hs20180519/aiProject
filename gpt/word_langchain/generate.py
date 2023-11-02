@@ -7,7 +7,7 @@ from langchain.output_parsers import PydanticOutputParser
 from models.dialog_schema import DialogResponse
 from word_langchain.utils import check_words_in_dialog
 
-DEFAULT_RETRIES = 10
+DEFAULT_RETRIES = 3
 
 
 def create_llm_chain(prompt, llm, verbose=True):
