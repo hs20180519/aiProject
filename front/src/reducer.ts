@@ -14,7 +14,7 @@ export interface UserProps {
 
 export type UserState = {
   user: UserProps | null; // Props 타입을 사용자 정보로 사용하며 null인 경우 로그아웃 상태
-  profileImage: UserProps | null;
+  // profileImage: UserProps | null;
 };
 
 // 처음 로그인시 유저 프롭스가 들어옴
@@ -30,7 +30,7 @@ export type UserState = {
 export type Event =
   | { type: "LOGIN_SUCCESS"; payload: UserProps } // 로그인 성공
   | { type: "LOGOUT" } // 로그아웃
-  | { type: "CHANGE_IMAGE"; payload: UserProps };
+  | { type: "CHANGE_IMAGE"; payload: string };
 export type DispatchEvent = Dispatch<Event>;
 
 export function loginReducer(userState: UserState, action: Event): UserState {
@@ -49,10 +49,12 @@ export function loginReducer(userState: UserState, action: Event): UserState {
       };
     case "CHANGE_IMAGE":
       console.log("전역 상태 프로필 이미지 변경");
-      return{
-        ...userState,
+      return {
+        user: {
+        ...userState.user,
         profileImage: action.payload,
-      };
+      }
+    };
     default:
       return userState;
   }

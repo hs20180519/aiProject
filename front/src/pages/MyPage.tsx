@@ -230,6 +230,7 @@ export default function MyPage() {
         setName(userData.name);
         setEmail(userData.email);
         setProfileImage(userData.profileImage);
+        console.log(user);
       })
       .catch((error) => {
         console.error("사용자 정보 가져오기 오류:", error);
