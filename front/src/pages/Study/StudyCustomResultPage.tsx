@@ -14,10 +14,9 @@ import {
   Td,
   Text,
 } from "@chakra-ui/react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const StudyCustomResultPage = () => {
-  const { note_id } = useParams();
   const [resultData, setResultData] = useState([]);
   const [checkedWords, setCheckedWords] = useState({});
   const [checkedCount, setCheckedCount] = useState(0);
