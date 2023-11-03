@@ -71,14 +71,14 @@ export default function CustomWordBox({ word, onDelete, onUpdate }: CustomWordBo
         >
           <Stack spacing={4}>
             <HStack>
-              <Text color={"gray.500"} as="b" fontSize={"l"}>
+              <Text color={"gray.500"} as="b" fontSize={"l"} fontFamily={"Elice DX Neolli"}>
                 단어
               </Text>
               <Icon as={FaSortAlphaUp} color="gray.300" boxSize={6} mr={2} />
               <Text>{word.word}</Text>
             </HStack>
             <HStack>
-              <Text color={"gray.500"} as="b" fontSize={"l"}>
+              <Text color={"gray.500"} as="b" fontSize={"l"} fontFamily={"Elice DX Neolli"}>
                 의미
               </Text>
               <Icon as={FaDog} color="gray.300" boxSize={6} mr={2} />

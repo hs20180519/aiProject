@@ -145,7 +145,13 @@ const LoginPage = () => {
             </form>
           </Stack>
           <Stack pt={2}>
-            <Flex gap={1} fontSize="sm" alignItems={"center"} lineHeight={"100%"}>
+            <Flex
+              gap={1}
+              fontSize="sm"
+              alignItems={"center"}
+              lineHeight={"100%"}
+              fontFamily={"Elice DX Neolli"}
+            >
               <Text color="gray.600">아직 회원이 아니시라면?</Text>
               <Button
                 colorScheme="teal"
