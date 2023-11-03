@@ -48,11 +48,11 @@ const MainPage = () => {
   const dispatch = useContext(DispatchContext);
 
   // 메인페이지가 마운트 될 시 유저가 없으면 로그인 페이지로 리다이렉트
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate("/login");
+  //   }
+  // }, [user]);
 
   const handleClickLogout = () => {
     // 1. 세션 스토리지에서 토큰을 삭제한다.
