@@ -12,6 +12,8 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
+  Button,
+  Text,
 } from "@chakra-ui/react";
 import Btn from "../../components/Btn";
 import { FaPencilAlt, FaSortAlphaUp, FaDog } from "react-icons/fa";
@@ -87,7 +89,6 @@ export default function NoteDetailPage() {
   const fetchCustomNotes = async () => {
     try {
       const res = await getCustomNotes();
-      console.log(res);
     } catch (e) {
       console.error(e);
     }
@@ -100,11 +101,9 @@ export default function NoteDetailPage() {
     try {
       const id = parseInt(note_id);
       const queryString = !isNaN(id)
-        ? `book=customs&page=&limit&customBookId=${id}`
+        ? `book=customs&page=${page}&limit&customBookId=${id}`
         : `book=${note_id}&page=${page}`;
       const res = await getNoteDetail(queryString);
-      console.log(res);
-
       if (res.status === 200) {
         setTitle(res.data.title);
         setWords(res.data.words);
@@ -121,8 +120,6 @@ export default function NoteDetailPage() {
     const data = { title };
     try {
       const res = await putCustomNoteTitle(data, note_id);
-      console.log("-----단어장 이름 변경----");
-      console.log(res);
       if (res.status === 200) {
         toast({
           title: `변경 완료!`,
@@ -211,8 +208,6 @@ export default function NoteDetailPage() {
   const fetchAddBookmark = async (word_id: number) => {
     try {
       const res = await Api.post(`/book/favorite?wordId=${word_id}`);
-      console.log("-----------즐겨찾기 추가----------");
-      console.log(res);
       if (res.status === 201) {
         setIsModalOpen(true);
         setModalMessage("즐겨찾기 추가 완료!");
@@ -239,15 +234,15 @@ export default function NoteDetailPage() {
 
   /** 페이지네이션 핸들링 */
   const handleChangePage = async (page: number) => {
-    console.log();
     try {
       const id = parseInt(note_id);
       const queryString = !isNaN(id)
-        ? `/book/search/?book=customs&page=${page}&limit=10&customBookId=${id}&q=${searchTerm}`
+        ? `/book/search/?book=customs&page=${page}&limit=&customBookId=${id}&q=${searchTerm}`
         : `/book/search/?book=${note_id}&page=${page}$customBookId=&q=${searchTerm}`;
       if (keyword) {
         const res = await Api.get(queryString);
         if (res.data && Array.isArray(res.data.words)) {
+          setTitle(res.data.title);
           setWords(res.data.words);
           setCurrentPage(page);
         }
@@ -357,10 +352,14 @@ export default function NoteDetailPage() {
         </Stack>
         <Spacer />
         {isCustom ? (
-          <Btn
-            text={isItAdd ? "추가 완료" : "단어 추가"}
+          <Button
+            colorScheme="teal"
             onClick={() => setIsItAdd((prev) => !prev)}
-          />
+            position={"absolute"}
+            right={"11px"}
+          >
+            {isItAdd ? "추가 완료" : "단어 추가"}
+          </Button>
         ) : (
           <></>
         )}
@@ -371,7 +370,7 @@ export default function NoteDetailPage() {
           bg={useColorModeValue("white", "gray.700")}
           boxShadow={"lg"}
           p={8}
-          w="360px"
+          w="343px"
         >
           <Stack spacing={4}>
             <FormControl id="word">
@@ -408,8 +407,10 @@ export default function NoteDetailPage() {
       ) : (
         <></>
       )}
+      <Text color={"tomato"}>로봇🤖 아이콘을 눌러 AI와 함께 영작 연습을 해보세요!</Text>
       {words.map((word: type.WordsProps) => (
         <WordBox
+          key={word.id}
           word={word}
           onAddBookmark={fetchAddBookmark}
           onDelBookmark={fetchDelBookmark}
@@ -426,6 +427,7 @@ export default function NoteDetailPage() {
         handleChangePaginIndex={handleChangePaingIndex}
         totalPage={totalPages}
       />
+
       <CustomModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

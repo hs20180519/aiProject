@@ -18,9 +18,9 @@ export default function WordPage() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Box minH="80vh" display="flex" alignItems="center" justifyContent="center">
+      <Box display="flex" alignItems="center" justifyContent="center">
         {showTestPage && !showResultPage ? (
-          <TestPage selectedCategory={selectedCategory} setShowResultPage={setShowResultPage} />
+          <TestPage selectedCategory={selectedCategory} setShowResultPage={setShowResultPage} setShowTestPage={setShowTestPage} />
         ) : showResultPage ? (
           <ResultPage setShowResultPage={setShowResultPage} setShowTestPage={setShowTestPage} />
         ) : (

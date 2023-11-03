@@ -41,10 +41,11 @@ const CategoryPage = ({ onSelectCategory }) => {
       justifyContent="center"
     >
       <Flex direction="column" align="center">
-        <Text fontSize="3xl" mb={4} textAlign="center">
-          단어 학습
-          <br />
-          카테고리 선택
+        <Text fontSize="xl" mb={0} textAlign="center">
+          단어 학습하기
+        </Text>
+        <Text fontSize="l" color={"gray"} mb={2} textAlign="center">
+          학습할 단어장을 선택해주세요!
         </Text>
         <Stack spacing={3}>
           {categories.map((category) => (
@@ -73,6 +74,5 @@ const CategoryPage = ({ onSelectCategory }) => {
     </Box>
   );
 };
-
 
 export default CategoryPage;
