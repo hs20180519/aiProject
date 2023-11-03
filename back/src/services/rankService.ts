@@ -84,24 +84,24 @@ export const getUserRank = async (id: number): Promise<any> => {
   };
 };
 
-/** 매일 6시에 유저의 이전 랭크를 저장함 */
-export const updateRankCron = () => {
-  cron.schedule("0 18 * * *", async () => {
-    const users = await prisma.rank.findMany({
-      select: {
-        userId: true,
-        currentRank: true,
-      },
-    });
+// /** 매일 6시에 유저의 이전 랭크를 저장함 */
+// export const updateRankCron = () => {
+//   cron.schedule("0 18 * * *", async () => {
+//     const users = await prisma.rank.findMany({
+//       select: {
+//         userId: true,
+//         currentRank: true,
+//       },
+//     });
 
-    for (const user of users) {
-      await prisma.rank.update({
-        where: { userId: user.userId },
-        data: { pastRank: user.currentRank },
-      });
-    }
-  });
-};
+//     for (const user of users) {
+//       await prisma.rank.update({
+//         where: { userId: user.userId },
+//         data: { pastRank: user.currentRank },
+//       });
+//     }
+//   });
+// };
 
 // pastRank - currentRank
 export const getRankGap = async (id: number) => {
