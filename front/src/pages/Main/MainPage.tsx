@@ -41,6 +41,8 @@ import StudyCustomTestPage from "../Study/StudyCustomTestPage";
 import StudyCustomResultPage from "../Study/StudyCustomResultPage";
 import GoBack from "../../components/GoBack";
 
+import withUser from "../../hoc/withUser";
+
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
@@ -98,4 +100,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default withUser(MainPage);
