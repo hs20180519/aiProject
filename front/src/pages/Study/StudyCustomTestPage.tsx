@@ -9,6 +9,8 @@ import {
   ModalFooter,
 } from "@chakra-ui/react";
 import { FetchStudyWords } from "../../apis/studyWord";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface WordData {
   id: number;
@@ -16,11 +18,6 @@ interface WordData {
   meaning: string;
   category: string;
   choices: string[];
-}
-
-interface TestPageProps {
-  selectedCategory: string;
-  setShowResultPage: (value: boolean) => void;
 }
 
 const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer, stopStudy }) => {
@@ -34,8 +31,8 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer, stopStudy }) =>
         alignItems="center"
         justifyContent="center"
       >
-        <ModalHeader>{stopStudy ? "⛔알림" : (isCorrect ? "정답" : "오답")}</ModalHeader>
-        <ModalBody>{stopStudy ? "학습할 단어가 없습니다. 처음으로 돌아갑니다." : (isCorrect ? "정답입니다!" : `틀렸습니다. 정답은: ${correctAnswer}`)}</ModalBody>
+        <ModalHeader>{stopStudy ? "🎉축하합니다." : (isCorrect ? "정답" : "오답")}</ModalHeader>
+        <ModalBody>{stopStudy ? "정답을 모두 맞추어 더 이상 학습할 단어가 없습니다. 처음으로 이동합니다." : (isCorrect ? "정답입니다!" : `틀렸습니다. 정답은: ${correctAnswer}`)}</ModalBody>
         <ModalFooter>
           <Button colorScheme="teal" onClick={onClose}>
             확인
@@ -46,27 +43,22 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer, stopStudy }) =>
   );
 };
 
-const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage }) => {
+const StudyCustomTestPage = () => {
+  const { note_id } = useParams();
   const [wordData, setWordData] = useState<WordData>();
   const [popupIsOpen, setPopupIsOpen] = useState(false);
   const [popupIsCorrect, setPopupIsCorrect] = useState(false);
   const [popupCorrectAnswer, setPopupCorrectAnswer] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [stopStudy, setStopStudy] = useState(false);
-
-  const categoryDescriptions = {
-    csat: "CSAT",
-    toeic: "TOEIC",
-    toefl: "TOEFL",
-    correct: "🐶학습한 단어",
-    incorrect: "📃틀린 단어",
-    favorite: "⭐즐겨찾기",
-  };
+  
+  const navigate = useNavigate();
 
   const fetchWords = async () => {
     try {
-      const queryParams = `book=${selectedCategory}`;
-      const response = await FetchStudyWords.getStudyWord(queryParams);
+      const id = parseInt(note_id);
+      const queryString = `?book=custom&customBookId=${note_id}`;
+      const response = await FetchStudyWords.getStudyCustomWord(queryString);
       const newWordData = response.data;
       setWordData(newWordData);
     } catch (error) {
@@ -114,9 +106,9 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
     setPopupIsOpen(false);
 
     if (stopStudy) {
-      window.location.reload();
+      navigate("/main");
     } else if (currentIndex === 9) {
-      setShowResultPage(true);
+      navigate("result");
     } else {
       fetchWords();
     }
@@ -128,7 +120,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
 
   useEffect(() => {
     fetchWords();
-  }, [selectedCategory]);
+  }, []);
 
   const currentWordSet = wordData;
   const currentWord = currentWordSet?.word;
@@ -146,7 +138,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
       justifyContent="center"
     >
       <Text fontSize="xl" fontWeight="bold">
-        ✏️단어학습 ({categoryDescriptions[selectedCategory]})
+        {/* ✏️단어학습 ({selectedCategory.toUpperCase()}) */}
       </Text>
       <Flex
         minH="438px"
@@ -191,4 +183,4 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
   );
 };
 
-export default TestPage;
+export default StudyCustomTestPage;

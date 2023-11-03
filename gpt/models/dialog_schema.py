@@ -13,11 +13,6 @@ class DialogResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                    "word": {
-                        "aboard": "배로",
-                        "abort": "중단하다",
-                        "about": "-에 대하여"
-                    },
                     "dialog": [
                         {
                             "speaker": "Person A",

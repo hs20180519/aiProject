@@ -23,12 +23,12 @@ import {
   delAllCustomNote,
 } from "../../apis/customWord";
 import Btn from "../../components/Btn";
-
+import * as type from "../../apis/types/custom";
 import Loading from "../../components/Loading";
 
 const NOTE_LIST = [
-  { id: "correct", title: "학습한 단어" },
-  { id: "incorrect", title: "틀린 단어" },
+  { id: "correct", title: "🐶학습한 단어" },
+  { id: "incorrect", title: "📃틀린 단어" },
   { id: "favorite", title: "⭐️즐겨찾기" },
 ];
 const TOAST_TIMEOUT_INTERVAL = 800;
@@ -44,7 +44,7 @@ export default function CustomNoteListPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [noteList, setNoteList] = useState(NOTE_LIST);
-  const [customNoteList, setCustomNoteList] = useState([]);
+  const [customNoteList, setCustomNoteList] = useState<type.NoteProps[]>([]);
   const [isEditing, setIsEditing] = useState(false);
 
   /** 노트 목록 가져오기 */
@@ -53,6 +53,7 @@ export default function CustomNoteListPage() {
     try {
       const res = await getCustomNotes();
       if (res.status === 200) {
+        console.log(res.data);
         setCustomNoteList(res.data);
       }
     } catch (e) {
@@ -185,7 +186,7 @@ export default function CustomNoteListPage() {
         )}
       </Flex>
 
-      <Stack spacing={5}>
+      <Stack spacing={2}>
         <Box
           rounded={"lg"}
           bg={useColorModeValue("gray100", "gray.700")}

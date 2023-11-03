@@ -22,8 +22,8 @@ import BookMark from "../../../components/BookMark";
 
 interface WordBoxProps {
   word: type.WordsProps;
-  isBookmarked: boolean;
-  handleBookmark: (word_id: number) => void | Promise<void>;
+  onAddBookmark: (word_id: number) => void | Promise<void>;
+  onDelBookmark: (word_id: number) => void | Promise<void>;
   onUpdate: (word_id: number, data: type.SubmitCustomWord) => void | Promise<void>;
   onDelete: (word_id: number) => void | Promise<void>;
   isCustom: boolean;
@@ -32,8 +32,8 @@ interface WordBoxProps {
 /** 단어와 뜻을 표시하는 상자입니다. */
 export default function WordBox({
   word,
-  isBookmarked,
-  handleBookmark,
+  onAddBookmark,
+  onDelBookmark,
   onUpdate,
   onDelete,
   isCustom,
@@ -45,14 +45,24 @@ export default function WordBox({
   /** 단어장 삭제 확인 모달 */
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  /** 단어 업데이트 핸들러 */
   const handleUpdate = () => {
     onUpdate(word.id, { word: updateWord, meaning: updateMeaning });
     setIsEditing(false);
   };
 
+  /** 단어삭제 핸들러 */
   const handleDelete = () => {
     onDelete(word.id);
     setIsEditing(false);
+  };
+
+  const handleBookmark = () => {
+    if (word.isFavorite) {
+      onDelBookmark(word.id);
+    } else {
+      onAddBookmark(word.id);
+    }
   };
 
   return (
@@ -81,7 +91,7 @@ export default function WordBox({
         >
           <Flex alignItems={"center"} h={"100%"}>
             <Link to={`/main/grammar/${word.word}`}>
-              <Flex alignItems={"center"} height={"100%"}>
+              <Flex alignItems={"center"} h={"100%"}>
                 <Icon as={FaRobot} boxSize={8} marginRight={"6px"} />
                 <Text fontSize="xl" fontFamily={"monospace"} right={24}>
                   {word.word}
@@ -101,7 +111,7 @@ export default function WordBox({
                     <Icon as={FaPencilAlt} boxSize={3} />
                   </Button>
                 ) : (
-                  <BookMark favorite={isBookmarked} onClick={handleBookmark} />
+                  <BookMark favorite={word.isFavorite} onClick={handleBookmark} />
                 )}
               </Flex>
             </Box>

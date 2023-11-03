@@ -1,10 +1,11 @@
-import { PrismaClient, Rank, Word, WordProgress } from "@prisma/client";
+import { Favorite, PrismaClient, Rank, Word, WordProgress } from "@prisma/client";
 import { createChoices } from "../utils/createChoices";
 import * as wordInterface from "../interfaces/wordInterface";
 import { WordProgressDto, WordWithChoicesDto } from "../dtos/wordDto";
 import { plainToInstance } from "class-transformer";
 import { addFavorites } from "../utils/addFavorites";
 import { addFavorite } from "../utils/addFavorite";
+import { FavoriteDto } from "../dtos/favoriteDto";
 
 const prisma = new PrismaClient();
 
@@ -180,6 +181,33 @@ export const getWordsByCategory = async (
   if (!word) throw new Error(`카테고리 ${category}에 대해 단어를 찾을 수 없습니다.`);
   const wordWithFavoriteStatus = await addFavorite(userId, word);
 
+  return await createChoices(wordWithFavoriteStatus);
+};
+
+export const getWordByFavorite = async (userId: number) => {
+  const wordsCount: number = await prisma.favorite.count({
+    where: {
+      userId: userId,
+    },
+  });
+
+  if (wordsCount === 0) throw new Error("즐겨찾기에 단어가 없습니다.");
+
+  const skip: number = Math.floor(Math.random() * wordsCount);
+
+  const favorite = await prisma.favorite.findFirst({
+    where: {
+      userId: userId,
+    },
+    skip: skip,
+    include: {
+      word: true,
+    },
+  });
+
+  if (!favorite) throw new Error("즐겨찾기 단어를 선택할 수 없습니다.");
+
+  const wordWithFavoriteStatus = await addFavorite(userId, favorite.word);
   return await createChoices(wordWithFavoriteStatus);
 };
 

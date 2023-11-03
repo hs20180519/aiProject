@@ -22,8 +22,9 @@ export default function IntroPage() {
       </Link>
       <Image
         position="absolute"
-        mt={412}
+        mt={420}
         w={600}
+        left={1}
         src={`${process.env.PUBLIC_URL}/images/dog.png`}
         alt="강아지들"
       />

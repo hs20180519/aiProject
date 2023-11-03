@@ -6,7 +6,7 @@ interface NavItemProps extends type.NavItemProps {
 }
 export default function NavItem({ icon, children, active, ...rest }: NavItemProps) {
   return (
-    <Box as={"a"} href={"#"} style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
+    <Box style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
       <Flex
         display={'flex'}
         align={"center"}

@@ -9,7 +9,10 @@ const prisma = new PrismaClient();
 
 //todo 페이징
 /** 유저 학습 점수와 닉네임을 점수 내림차순으로 가져옴 */
-export const getUsersRankList = async (page?: number, limit?: number): Promise<RankDto[]> => {
+export const getUsersRankList = async (
+  page?: number,
+  limit?: number,
+): Promise<{ totalPage: number; currentPage: number | undefined; users: RankDto[] }> => {
   const totalRankCount: number = await prisma.rank.count();
   const totalPages: number = Math.ceil(totalRankCount / (limit ?? 10));
   const offset: { skip: number; take: number } = getPaginationParams(page, limit);
@@ -25,15 +28,19 @@ export const getUsersRankList = async (page?: number, limit?: number): Promise<R
     ...offset,
   });
 
-  return plainToInstance(
-    RankDto,
-    rankList.map((rankInfo, index) => ({
-      ...rankInfo,
-      rank: index + 1,
-      currentPage: offset.skip + 1,
-      totalPage: totalPages,
-    })),
-  );
+  const mappedData = rankList.map((rankInfo, index) => ({
+    score: rankInfo.score,
+    name: rankInfo.user.name,
+    nickname: rankInfo.user.nickname,
+    profileImage: rankInfo.user.profileImage,
+    rank: index + 1,
+  }));
+
+  return {
+    users: plainToInstance(RankDto, mappedData),
+    currentPage: page,
+    totalPage: totalPages,
+  };
 };
 
 /** 로그인한 유저의 등수와 점수 가져오기 */

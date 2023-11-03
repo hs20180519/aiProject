@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import React, { useReducer, useEffect, useState, createContext } from "react";
-import InrtoPage from "./pages/IntroPage";
+import IntroPage from "./pages/IntroPage";
 import MainPage from "./pages/Main/MainPage";
 import LoginPage from "./pages/Login/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
@@ -74,7 +74,7 @@ function App() {
           <ChakraProvider theme={theme}>
             <BrowserRouter>
               <Routes>
-                <Route path={"/"} element={<InrtoPage />} />
+                <Route path={"/"} element={<IntroPage />} />
                 <Route path={"/main/*"} element={<MainPage />} />
                 <Route path={"/login"} element={<LoginPage />} />
                 <Route path={"/signup"} element={<SignUpPage />} />

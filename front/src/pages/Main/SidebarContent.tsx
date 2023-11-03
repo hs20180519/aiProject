@@ -51,7 +51,7 @@ export default function SidebarContent({ onClose, ...rest }: type.SidebarProps) 
     >
       <Flex h={"20"} alignItems={"center"} mx={"8"} justifyContent={"space-between"}>
         <Link to="/main">
-          <Text fontSize={"2xl"} fontFamily={"monospace"} fontWeight={"bold"}>
+          <Text fontSize={"2xl"} fontWeight={"bold"}>
             {"🐾Wordy\r"}
           </Text>
         </Link>

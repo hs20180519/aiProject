@@ -67,8 +67,6 @@ const SignUp = () => {
     return ""; // 반환값이 없을 경우 빈 문자열 반환
   };
 
-  // const getNameStatus
-
   // 1. 중복 검사를 진행한다.
   const fetchEmailCheck = async () => {
     try {
@@ -139,6 +137,15 @@ const SignUp = () => {
 
   // 4. 회원가입을 진행한다.
   const fetchRegister = async () => {
+    if (!isFormValid) {
+      toast({
+        title: `회원가입 정보를 입력해주세요!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+      return;
+    }
     try {
       const res = await Api.post("/auth/signup", { name, email, password });
       if (res.status === 201) {
@@ -199,14 +206,14 @@ const SignUp = () => {
       justify={"center"}
       bg={useColorModeValue("gray.100", "gray.800")}
     >
-      <Stack spacing={8} mx={"auto"} maxW={"sm"} py={12} px={6}>
+      <Stack mx={"auto"} maxW={"auto"} py={4}>
         <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"md"} p={8}>
-          <Stack spacing={2} pt={2}>
+          <Stack spacing={2}>
           <Heading fontSize={"2xl"} textAlign={"center"} color={"teal"}>
-              워디 회원가입!
+              워디 회원가입
             </Heading>
             <Text fontSize={"sm"} color={"teal.400"} textAlign={"center"}>
-              AI와 함께 쉽게 배우는 영단어✌️
+              AI와 함께 쉽게 배우는 영단어 ✌️
             </Text>
               <FormControl id="firstName" isRequired>
                 <FormLabel>이름</FormLabel>
@@ -306,7 +313,6 @@ const SignUp = () => {
                 colorScheme="teal"
                 color={"white"}
                 onClick={fetchRegister}
-                disabled={!isFormValid}
               >
                 회원가입
               </Button>

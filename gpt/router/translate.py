@@ -4,6 +4,8 @@ import os
 import requests
 from dotenv import load_dotenv
 
+from models.translation_schema import TranslationResponse
+
 load_dotenv()
 
 client_id = os.environ.get("REACT_APP_TRANS_ID")
@@ -31,7 +33,7 @@ async def translate_text(query):
         if response.status_code == 200:
             translated_text = json.loads(response.text)["message"]["result"]["translatedText"]
             print(f"Translation successful: {translated_text}")
-            return translated_text
+            return TranslationResponse(translatedText=translated_text)
         else:
             print(f"Unexpected response code: {response.status_code}")
             return json.dumps({"error": f"Error code: {response.status_code}"})

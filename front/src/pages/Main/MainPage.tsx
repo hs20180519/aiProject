@@ -1,6 +1,5 @@
-import { Center, Box, Flex, useColorModeValue, useDisclosure } from "@chakra-ui/react";
-import { FiEdit2, FiTrendingUp, FiCodesandbox, FiStar, FiDatabase, FiUser } from "react-icons/fi";
-import { useState, useContext, useEffect } from "react";
+import { Box, useColorModeValue, useDisclosure } from "@chakra-ui/react";
+import { useContext, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import * as type from "../../apis/types/main";
@@ -26,6 +25,7 @@ import GrammarPage from "../Grammar/GramnarPage";
 
 // inner = study
 import WordPage from "../Word/WordPage";
+import StudyCustomNoteListPage from "../Study/StudyCustomNoteListPage";
 
 // gptPage
 import GptDialogPage from "../GptDialogPage/GptDialogPage";
@@ -37,6 +37,9 @@ import MyPage from "../MyPage";
 
 // storage
 import StoragePage from "../Storage/StoragePage";
+import StudyCustomTestPage from "../Study/StudyCustomTestPage";
+import StudyCustomResultPage from "../Study/StudyCustomResultPage";
+import GoBack from "../../components/GoBack";
 
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -45,11 +48,11 @@ const MainPage = () => {
   const dispatch = useContext(DispatchContext);
 
   // 메인페이지가 마운트 될 시 유저가 없으면 로그인 페이지로 리다이렉트
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate("/login");
+  //   }
+  // }, [user]);
 
   const handleClickLogout = () => {
     // 1. 세션 스토리지에서 토큰을 삭제한다.
@@ -73,9 +76,13 @@ const MainPage = () => {
       />
       <Header isOpen={isOpen} onClose={onClose} />
       <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
+      <GoBack />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
         <Routes>
           <Route path="" element={<WordPage />} />
+          <Route path="custom" element={<StudyCustomNoteListPage />} />
+          <Route path="custom/:note_id" element={<StudyCustomTestPage />} />
+          <Route path="custom/:note_id/result" element={<StudyCustomResultPage />} />
           <Route path="notes" element={<NoteListPage />} />
           <Route path="note/:note_id" element={<NoteDetailPage />} />
           <Route path="note_add/:note_id" element={<AddCustomNotePage />} />

@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Text, Box, Flex, Spinner, useToast, Tag, Center } from "@chakra-ui/react";
+import { Button, Text, Box, Flex, Spinner, useToast, Tag, Center } from "@chakra-ui/react";
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
 import { useLocation } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 const ParamGptDialogPage = () => {
   const location = useLocation();
@@ -14,7 +15,10 @@ const ParamGptDialogPage = () => {
 
   const toast = useToast();
 
+  const [isScriptError, setScriptError] = useState(false);
+
   const handleGetScript = useCallback(async () => {
+    setScriptError(false);
     setScriptLoading(true);
     try {
       const updatedDialogParams = {
@@ -25,7 +29,7 @@ const ParamGptDialogPage = () => {
       const apiResult = await FetchGpt.getScript(updatedDialogParams);
 
       toast({
-        title: "Script fetch successful.",
+        title: "대화문 생성이 완료되었습니다",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -33,8 +37,10 @@ const ParamGptDialogPage = () => {
 
       setScriptResult(JSON.stringify(apiResult));
     } catch (error) {
+      setScriptError(true);
+
       toast({
-        title: "Script fetch failed.",
+        title: "대화문 생성에 실패했습니다",
         description: `Error: ${error.message || error}`,
         status: "error",
         duration: 5000,
@@ -61,13 +67,7 @@ const ParamGptDialogPage = () => {
             </Text>
             <Text mt="2">
               {Object.keys(receivedWords).map((word, index) => (
-                <Tag
-                  key={index}
-                  size="md"
-                  variant="solid"
-                  colorScheme="teal"
-                  m={1}
-                >
+                <Tag key={index} size="md" variant="solid" colorScheme="teal" m={1}>
                   {word}
                 </Tag>
               ))}
@@ -86,6 +86,13 @@ const ParamGptDialogPage = () => {
             <Spinner />
           </Flex>
         ) : null}
+        {isScriptError ? (
+          <Box textAlign="center" mt={4}>
+            <Button colorScheme="red" onClick={handleGetScript}>
+              요청 다시보내기
+            </Button>
+          </Box>
+        ) : null}
         {scriptResult ? (
           <Box m="8">
             <ScriptDialog
@@ -95,6 +102,11 @@ const ParamGptDialogPage = () => {
               isScriptLoading={isScriptLoading}
               selectedWords={receivedWords}
             />
+            <Box textAlign="center">
+              <Button as={RouterLink} to="/" colorScheme="teal" m={2}>
+                처음으로 돌아가기
+              </Button>
+            </Box>
           </Box>
         ) : null}
       </Box>
