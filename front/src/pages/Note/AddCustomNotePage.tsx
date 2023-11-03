@@ -202,7 +202,7 @@ export default function CustomNoteAddPage() {
       >
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
-            <Heading fontSize={"4xl"} color={"gray.500"}>
+            <Heading fontSize={"4xl"} color={"gray.500"} fontFamily={"Elice DX Neolli"}>
               단어 추가하기
             </Heading>
           </Stack>

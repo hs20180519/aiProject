@@ -34,6 +34,7 @@ const RankItem = ({ rankList, currentPage }: RankListProps) => {
         <Box
           key={rank.id}
           bg={changeBackgroudColor(index)}
+          fontFamily={"Elice DX Neolli"}
           fontWeight="semibold"
           rounded={"lg"}
           boxShadow={"lg"}

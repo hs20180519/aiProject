@@ -24,6 +24,7 @@ export default function NoteListBox({ noteList, isEditing, onDelete }: NoteListB
           {isEditing ? (
             <Box
               fontWeight="semibold"
+              fontFamily={"Elice DX Neolli"}
               rounded={"lg"}
               bg={useColorModeValue("white", "gray.700")}
               boxShadow={"lg"}
@@ -43,7 +44,7 @@ export default function NoteListBox({ noteList, isEditing, onDelete }: NoteListB
                 right={7}
                 mt="-5"
               ></Btn>
-              <Text id={note.id} fontSize={"xl"}>
+              <Text id={note.id} fontSize={"xl"} fontFamily={"Elice DX Neolli"}>
                 {note.title}
               </Text>
             </Box>
@@ -51,6 +52,7 @@ export default function NoteListBox({ noteList, isEditing, onDelete }: NoteListB
             <Link to={`/main/note/${note.id}`}>
               <Box
                 fontWeight="semibold"
+                fontFamily={"Elice DX Neolli"}
                 rounded={"lg"}
                 bg={useColorModeValue("white", "gray.700")}
                 boxShadow={"lg"}
@@ -60,7 +62,7 @@ export default function NoteListBox({ noteList, isEditing, onDelete }: NoteListB
                 borderWidth="3px"
                 borderRadius="lg"
               >
-                <Text id={note.id} fontSize={"xl"}>
+                <Text id={note.id} fontSize={"xl"} fontFamily={"Elice DX Neolli"}>
                   {note.title}
                 </Text>
               </Box>
