@@ -30,6 +30,7 @@ export default function RankFeildPage() {
 
     if (Array.isArray(data)) {
       setUsersRank(data);
+      setTotalPages(res.data[0].totalPage);
     } else {
       setUsersRank([]);
     }
@@ -40,10 +41,6 @@ export default function RankFeildPage() {
   const fetchUserRank = async () => {
     const res = await Api.get(`/user`);
     const res2 = await Api.get(`/rank/userRank`);
-    console.log("데이터확인1111111");
-    console.log(res2);
-    console.log("데이터확인222222");
-    console.log(res);
     setUserRankInfo({
       name: res.data.name,
       nickname: res.data.nickname,
