@@ -419,16 +419,14 @@ export default function NoteDetailPage() {
           isCustom={isCustom}
         />
       ))}
-      {isCustom ? (
-        <Pagination
-          pagingIndex={pagingIndex}
-          currentPage={currentPage}
-          limit={limit}
-          handleChangePage={handleChangePage}
-          handleChangePaginIndex={handleChangePaingIndex}
-          totalPage={totalPages}
-        />
-      ) : null}
+      <Pagination
+        pagingIndex={pagingIndex}
+        currentPage={currentPage}
+        limit={limit}
+        handleChangePage={handleChangePage}
+        handleChangePaginIndex={handleChangePaingIndex}
+        totalPage={totalPages}
+      />
 
       <CustomModal
         isOpen={isModalOpen}
