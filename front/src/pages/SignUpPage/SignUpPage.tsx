@@ -157,6 +157,17 @@ const SignUp = () => {
       });
       return;
     }
+
+    if (!succededEmailCode) {
+      toast({
+        title: `이메일 인증 코드가 일치하지 않습니다!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+      return;
+    }
+  
     try {
       const res = await Api.post("/auth/signup", { name, email, password });
       if (res.status === 201) {
