@@ -22,14 +22,7 @@ export default function SelectBox<T>({ list }: SelectBoxProps) {
   };
 
   return (
-    <Select
-      bg="teal.400"
-      color="white"
-      placeholder="단어장 선택하기"
-      onChange={handleSelect}
-      mr={15}
-      w={"100%"}
-    >
+    <Select bg="teal.400" placeholder="단어장 선택하기" onChange={handleSelect} mr={15} w={"100%"}>
       <option value={"correct"}>{"🐶학습한 단어"}</option>
       <option value={"incorrect"}>{"📃틀린 단어"}</option>
       <option value={"favorite"}>{"⭐️즐겨찾기"}</option>
