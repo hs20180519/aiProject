@@ -116,13 +116,24 @@ const SignUp = () => {
     try {
       const res = await Api.post(`/auth/verify`, { email, code: verificationCode });
       if (res.status === 200) {
-        setSuccededEmailCode(true);
+        // 인증 코드가 일치할 때만 성공 메시지 표시
         toast({
           title: `이메일 인증 완료!`,
           status: "success",
           isClosable: true,
           duration: TOAST_TIMEOUT_INTERVAL,
         });
+        // 인증 성공 시 `setSuccededEmailCode`로 상태 설정
+        setSuccededEmailCode(true);
+      } else {
+        toast({
+          title: `이메일 인증 코드가 일치하지 않습니다!`,
+          status: "error",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+        // 인증 실패 시 회원가입 방지
+        setSuccededEmailCode(false);
       }
     } catch (e) {
       toast({
@@ -131,6 +142,7 @@ const SignUp = () => {
         isClosable: true,
         duration: TOAST_TIMEOUT_INTERVAL,
       });
+      // 인증 실패 시 회원가입 방지
       setSuccededEmailCode(false);
     }
   };
@@ -146,6 +158,17 @@ const SignUp = () => {
       });
       return;
     }
+  
+    if (!succededEmailCode) {
+      toast({
+        title: `이메일 인증 코드가 일치하지 않습니다!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+      return;
+    }
+  
     try {
       const res = await Api.post("/auth/signup", { name, email, password });
       if (res.status === 201) {
@@ -172,7 +195,7 @@ const SignUp = () => {
         status: "error",
         isClosable: true,
         duration: TOAST_TIMEOUT_INTERVAL,
-      })
+      });
     }
   };
 
@@ -313,6 +336,7 @@ const SignUp = () => {
                 colorScheme="teal"
                 color={"white"}
                 onClick={fetchRegister}
+                isDisabled={!isFormValid}
               >
                 회원가입
               </Button>

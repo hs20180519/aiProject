@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import React, { useReducer, useEffect, useState, createContext } from "react";
+import React, { useReducer, createContext } from "react";
 import IntroPage from "./pages/IntroPage";
 import MainPage from "./pages/Main/MainPage";
 import LoginPage from "./pages/Login/LoginPage";
