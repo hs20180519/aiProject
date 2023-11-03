@@ -142,7 +142,7 @@ const LoginPage = () => {
           <Stack pt={2}>
             <Flex gap={1} fontSize="sm" alignItems={"center"} lineHeight={"100%"}>
             <Text color="gray.600">아직 회원이 아니시라면?</Text>
-            <Button as="a" href="/SignUp" colorScheme="teal" variant="link" size="xl">
+            <Button colorScheme="teal" variant="link" size="xl" onClick={() => navigate("/SignUp")}>
                 회원가입
               </Button>
             </Flex>

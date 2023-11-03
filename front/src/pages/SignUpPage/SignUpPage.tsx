@@ -137,6 +137,15 @@ const SignUp = () => {
 
   // 4. 회원가입을 진행한다.
   const fetchRegister = async () => {
+    if (!isFormValid) {
+      toast({
+        title: `회원가입 정보를 입력해주세요!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+      return;
+    }
     try {
       const res = await Api.post("/auth/signup", { name, email, password });
       if (res.status === 201) {
@@ -304,7 +313,6 @@ const SignUp = () => {
                 colorScheme="teal"
                 color={"white"}
                 onClick={fetchRegister}
-                disabled={!isFormValid}
               >
                 회원가입
               </Button>
