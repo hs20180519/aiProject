@@ -7,7 +7,8 @@ export const getUsersRankList = async (req: Request, res: Response, next: NextFu
   try {
     const page: number = req.query.page ? Number(req.query.page) : 1;
     const limit: number = req.query.page ? Number(req.query.limit) : 10;
-    const rankList: RankDto[] = await rankService.getUsersRankList(page, limit);
+    const rankList: { totalPage: number; currentPage: number | undefined; users: RankDto[] } =
+      await rankService.getUsersRankList(page, limit);
 
     if (!rankList) res.status(400).json({ message: `유저 순위 목록을 가져올 수 없습니다.` });
     return res.status(200).json(rankList);
