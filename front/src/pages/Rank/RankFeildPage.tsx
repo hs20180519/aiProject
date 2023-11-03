@@ -17,7 +17,7 @@ export default function RankFeildPage() {
   });
 
   // Pagination
-  const limit = 3;
+  const limit = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pagingIndex, setPagingIndex] = useState(1);
@@ -25,12 +25,13 @@ export default function RankFeildPage() {
   /** 전체 유저 랭킹 조회 */
   const fetchUsersRanks = async (page = 1) => {
     setLoading(true);
-    const res = await Api.get(`/rank`);
-    const data = res?.data;
-
+    const res = await Api.get(`/rank?page=${page}&limt=100`);
+    const data = res.data.users;
+    console.log(res);
     if (Array.isArray(data)) {
       setUsersRank(data);
-      setTotalPages(res.data[0].totalPage);
+      setCurrentPage(page);
+      setTotalPages(res.data.totalPage);
     } else {
       setUsersRank([]);
     }
@@ -49,8 +50,18 @@ export default function RankFeildPage() {
     });
   };
   /** 페이지네이션 핸들링 */
-  const handleChangePage = (page: number) => {
-    fetchUsersRanks(page);
+  const handleChangePage = async (page: number) => {
+    try {
+      const queryString = `/rank?page=${page}&limit=100`;
+      const res = await Api.get(queryString);
+      if (res.status === 200) {
+        fetchUsersRanks(page);
+      } else {
+        console.log("잘못된 요청입니다.");
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
   const handleChangePaingIndex = (pagingIndex: number) => {
     const range = pagingIndex === 1 ? 0 : (pagingIndex - 1) * limit;
@@ -67,15 +78,14 @@ export default function RankFeildPage() {
   }, []);
 
   if (loading) return <Loading />;
-  console.log("왜없지");
-  console.log(userRankInfo);
+
   return (
     <>
       <Stack>
         <Heading color={"teal.600"}>Wordy 랭킹🏅</Heading>
         <Text
           color={"gray.600"}
-        >{`${userRankInfo.name}님의 현재 점수는 ${userRankInfo.score}점입니다`}</Text>
+        >{`${userRankInfo.name}님의 현재 등수는 ${userRankInfo.rank}등입니다`}</Text>
       </Stack>
       <RankList rankList={usersRank} />
 
