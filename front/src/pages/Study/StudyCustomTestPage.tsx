@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { FetchStudyWords } from "../../apis/studyWord";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface WordData {
   id: number;
@@ -19,12 +20,7 @@ interface WordData {
   choices: string[];
 }
 
-interface TestPageProps {
-  selectedCategory: string;
-  setShowResultPage: (value: boolean) => void;
-}
-
-const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
+const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer, stopStudy }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
       <ModalOverlay />
@@ -35,8 +31,8 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
         alignItems="center"
         justifyContent="center"
       >
-        <ModalHeader>{isCorrect ? "정답" : "오답"}</ModalHeader>
-        <ModalBody>{isCorrect ? "정답입니다!" : `틀렸습니다. 정답은: ${correctAnswer}`}</ModalBody>
+        <ModalHeader>{stopStudy ? "🎉축하합니다." : (isCorrect ? "정답" : "오답")}</ModalHeader>
+        <ModalBody>{stopStudy ? "정답을 모두 맞추어 더 이상 학습할 단어가 없습니다. 처음으로 이동합니다." : (isCorrect ? "정답입니다!" : `틀렸습니다. 정답은: ${correctAnswer}`)}</ModalBody>
         <ModalFooter>
           <Button colorScheme="teal" onClick={onClose}>
             확인
@@ -54,6 +50,9 @@ const StudyCustomTestPage = () => {
   const [popupIsCorrect, setPopupIsCorrect] = useState(false);
   const [popupCorrectAnswer, setPopupCorrectAnswer] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [stopStudy, setStopStudy] = useState(false);
+  
+  const navigate = useNavigate();
 
   const fetchWords = async () => {
     try {
@@ -65,6 +64,8 @@ const StudyCustomTestPage = () => {
       const newWordData = response.data;
       setWordData(newWordData);
     } catch (error) {
+      setStopStudy(true);
+      setPopupIsOpen(true);
       console.error("Error fetching words:", error);
     }
   };
@@ -106,8 +107,10 @@ const StudyCustomTestPage = () => {
   const handleModalClose = () => {
     setPopupIsOpen(false);
 
-    if (currentIndex === 9) {
-      //   setShowResultPage(true);
+    if (stopStudy) {
+      navigate("/main");
+    } else if (currentIndex === 9) {
+      navigate("result");
     } else {
       fetchWords();
     }
@@ -169,6 +172,7 @@ const StudyCustomTestPage = () => {
             onClose={handleModalClose}
             isCorrect={popupIsCorrect}
             correctAnswer={popupCorrectAnswer}
+            stopStudy={stopStudy}
           />
         </Box>
       </Flex>

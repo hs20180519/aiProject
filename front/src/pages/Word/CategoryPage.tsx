@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 
 const CategoryPage = ({ onSelectCategory }) => {
   const navigate = useNavigate();
-  const categories = ["csat", "toeic", "toefl", "ielts"];
+  const categories = ["csat", "toeic", "toefl"];
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const handleCategorySelect = (category) => {

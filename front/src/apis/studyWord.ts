@@ -12,9 +12,10 @@ export class FetchStudyWords {
    * ['custom'] = {  type: 'boolean' }
    */
   static async getStudyWord(queryParams: string) {
-    const url = `/study/`;
+    const url = `/study`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
+    console.log(fullUrl)
     return instance.get(fullUrl);
   }
 
