@@ -7,7 +7,7 @@ import LoginPage from "./pages/Login/LoginPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 import OAuthPage from "./pages/OAuthPage";
 import ExperiencePage from "./pages/Experience/ExperiencePage";
-import "./styles/App.css";
+import "./styles/app.css";
 
 // import TestPage from "./pages/TestPage";
 import { loginReducer, DispatchEvent, UserState } from "./reducer";
