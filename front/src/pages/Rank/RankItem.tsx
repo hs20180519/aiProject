@@ -2,34 +2,39 @@ import { ListProps, Box, Stack, Avatar, Text } from "@chakra-ui/react";
 
 interface RankListProps extends ListProps {
   rankList: RankItemProps[];
+  currentPage: number;
 }
 
 export interface RankItemProps {
   id: number;
   name: string;
   nickname: string;
+  rank: number;
   score: number;
   profileImage: string;
 }
+
 const changeBackgroudColor = (index) => {
-  if (index === 0) {
-    return "orange";
-  } else if (index === 1) {
-    return "gray.300";
-  } else if (index === 2) {
-    return "yellow.100";
-  } else {
-    return "white";
+  switch (index) {
+    case 0:
+      return "orange";
+    case 1:
+      return "gray.300";
+    case 2:
+      return "yellow.100";
+    default:
+      return "white";
   }
 };
 
-const RankItem = ({ rankList }: RankListProps) => {
+const RankItem = ({ rankList, currentPage }: RankListProps) => {
   return (
     <>
       {rankList.map((rank: RankItemProps, index: number) => (
         <Box
           key={rank.id}
           bg={changeBackgroudColor(index)}
+          fontFamily={"Elice DX Neolli"}
           fontWeight="semibold"
           rounded={"lg"}
           boxShadow={"lg"}
@@ -40,7 +45,7 @@ const RankItem = ({ rankList }: RankListProps) => {
           mt={2}
         >
           <Stack direction="row" mt={-3}>
-            <Text color={"teal.400"}>{index + 1}등</Text>
+            <Text color={"teal.400"}>{index + 1 + 10 * (currentPage - 1)}등</Text>
             <Avatar
               size={"sm"}
               ml={2}

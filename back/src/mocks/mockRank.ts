@@ -8,7 +8,7 @@ const createMockData = async (): Promise<void> => {
   for (let user of users) {
     const rank: Rank = await prisma.rank.create({
       data: {
-        score: Math.floor(Math.random() * 100),
+        score: Math.floor(Math.random() * 10000),
         userId: user.id,
       },
     });

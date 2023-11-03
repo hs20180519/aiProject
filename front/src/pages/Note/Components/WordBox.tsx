@@ -77,6 +77,7 @@ export default function WordBox({
       {!isEditing ? (
         <Box
           fontWeight="semibold"
+          fontFamily={"Elice DX Neolli"}
           rounded={"lg"}
           bg={useColorModeValue("white", "gray.700")}
           boxShadow={"lg"}
@@ -93,14 +94,14 @@ export default function WordBox({
             <Link to={`/main/grammar/${word.word}`}>
               <Flex alignItems={"center"} h={"100%"}>
                 <Icon as={FaRobot} boxSize={8} marginRight={"6px"} />
-                <Text fontSize="xl" fontFamily={"monospace"} right={24}>
+                <Text fontSize="xl" right={24} fontFamily={"Elice DX Neolli"}>
                   {word.word}
                 </Text>
               </Flex>
             </Link>
             <Spacer />
             <Box>
-              <Text fontSize="xl" color={"gray.400"}>
+              <Text fontSize="xl" color={"gray.400"} fontFamily={"Elice DX Neolli"}>
                 {word.meaning}
               </Text>
             </Box>
@@ -120,6 +121,7 @@ export default function WordBox({
       ) : (
         <Box
           fontWeight="semibold"
+          fontFamily={"Elice DX Neolli"}
           rounded={"lg"}
           bg={useColorModeValue("white", "gray.700")}
           boxShadow={"lg"}

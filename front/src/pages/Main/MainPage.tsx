@@ -2,8 +2,6 @@ import { Box, useColorModeValue, useDisclosure } from "@chakra-ui/react";
 import { useContext, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
-import * as type from "../../apis/types/main";
-
 // global component
 import SidebarContent from "./SidebarContent";
 import Header from "./Header";
@@ -41,18 +39,13 @@ import StudyCustomTestPage from "../Study/StudyCustomTestPage";
 import StudyCustomResultPage from "../Study/StudyCustomResultPage";
 import GoBack from "../../components/GoBack";
 
+import withUser from "../../hoc/withUser";
+
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const { user } = useContext(UserStateContext);
   const dispatch = useContext(DispatchContext);
-
-  // 메인페이지가 마운트 될 시 유저가 없으면 로그인 페이지로 리다이렉트
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigate("/login");
-  //   }
-  // }, [user]);
 
   const handleClickLogout = () => {
     // 1. 세션 스토리지에서 토큰을 삭제한다.
@@ -98,4 +91,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default withUser(MainPage);

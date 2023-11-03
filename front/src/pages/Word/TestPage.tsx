@@ -21,6 +21,7 @@ interface WordData {
 interface TestPageProps {
   selectedCategory: string;
   setShowResultPage: (value: boolean) => void;
+  setShowTestPage: (value: boolean) => void;
 }
 
 const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer, stopStudy }) => {
@@ -46,7 +47,7 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer, stopStudy }) =>
   );
 };
 
-const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage }) => {
+const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage, setShowTestPage }) => {
   const [wordData, setWordData] = useState<WordData>();
   const [popupIsOpen, setPopupIsOpen] = useState(false);
   const [popupIsCorrect, setPopupIsCorrect] = useState(false);
@@ -114,7 +115,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
     setPopupIsOpen(false);
 
     if (stopStudy) {
-      window.location.reload();
+      setShowTestPage(false);
     } else if (currentIndex === 9) {
       setShowResultPage(true);
     } else {

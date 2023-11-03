@@ -13,7 +13,6 @@ export default function StudyCustomNoteListPage() {
     try {
       const res = await getCustomNotes();
       if (res.status === 200) {
-        console.log(res.data);
         setCustomNoteList(res.data);
       }
     } catch (e) {
