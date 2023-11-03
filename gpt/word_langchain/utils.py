@@ -25,9 +25,13 @@ def check_words_in_dialog(word_list, dialog):
     logging.info(f"Dialog content: {dialog_content}")
 
     for word in word_list:
-        # 만약 단어가 4개 이상의 부분으로 이루어져 있다면, 그냥 패스
         if len(word.split()) >= 4:
             logging.info(f"Skipping word: {word}")
+            continue
+
+        # 슬래시('/')를 포함하는 표현은 체크에서 제외
+        if '/' in word or ' ' in word:
+            logging.info(f"Skipping phrase with special characters or spaces: {word}")
             continue
 
         # '(n)'과 같은 부분을 제거
