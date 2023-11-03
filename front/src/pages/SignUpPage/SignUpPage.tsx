@@ -67,8 +67,6 @@ const SignUp = () => {
     return ""; // 반환값이 없을 경우 빈 문자열 반환
   };
 
-  // const getNameStatus
-
   // 1. 중복 검사를 진행한다.
   const fetchEmailCheck = async () => {
     try {
@@ -140,7 +138,7 @@ const SignUp = () => {
   // 4. 회원가입을 진행한다.
   const fetchRegister = async () => {
     try {
-      const res = await Api.post("/auth/signup", { name, email, password });
+      const res = await Api.post("/auth/signup", { name, email, password, confirmPassword, verificationCode });
       if (res.status === 201) {
         toast({
           title: `회원가입이 완료되었습니다.`,
