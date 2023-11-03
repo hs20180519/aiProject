@@ -93,6 +93,7 @@ export default function IntroPage() {
                 right={"-75px"}
                 top={"-20px"}
                 transform={"rotate(10deg)"}
+                fontFamily={"Elice DX Neolli"}
               >
                 눌러보개!
               </Text>

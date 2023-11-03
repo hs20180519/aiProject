@@ -205,6 +205,7 @@ export default function CustomNoteListPage() {
               px="5"
               colorScheme="teal"
               fontSize="lg"
+              fontFamily={"Elice DX Neolli"}
               letterSpacing="center"
             >
               ✚ 새 단어장
