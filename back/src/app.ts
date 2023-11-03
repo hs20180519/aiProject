@@ -22,7 +22,6 @@ import helmet from "helmet";
 import { limiter } from "./config/limiter";
 import { local, jwt } from "./passport";
 import { startScheduler } from "./services/remindService";
-import { updateRankCron } from "./services/rankService";
 
 const app: express.Application = express();
 
@@ -89,6 +88,5 @@ app.use("/api/storage", storageRouter);
 app.use(errorLogger);
 
 startScheduler();
-updateRankCron();
 
 export default app;
