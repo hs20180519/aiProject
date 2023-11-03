@@ -3,6 +3,7 @@ import { Button, Text, Box, Flex, Spinner, useToast, Tag, Center } from "@chakra
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 const ParamGptDialogPage = () => {
   const location = useLocation();
@@ -63,13 +64,7 @@ const ParamGptDialogPage = () => {
             </Text>
             <Text mt="2">
               {Object.keys(receivedWords).map((word, index) => (
-                <Tag
-                  key={index}
-                  size="md"
-                  variant="solid"
-                  colorScheme="teal"
-                  m={1}
-                >
+                <Tag key={index} size="md" variant="solid" colorScheme="teal" m={1}>
                   {word}
                 </Tag>
               ))}
@@ -98,10 +93,9 @@ const ParamGptDialogPage = () => {
               selectedWords={receivedWords}
             />
             <Box textAlign="center">
-            <Button colorScheme="teal"
-                    m={4}
-                    onClick={() => navigate("/main")}>학습 페이지로 돌아가기
-            </Button>
+              <Button as={RouterLink} to="/" colorScheme="teal" m={2}>
+                처음으로 돌아가기
+              </Button>
             </Box>
           </Box>
         ) : null}
