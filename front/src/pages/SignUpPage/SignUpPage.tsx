@@ -138,7 +138,7 @@ const SignUp = () => {
   // 4. 회원가입을 진행한다.
   const fetchRegister = async () => {
     try {
-      const res = await Api.post("/auth/signup", { name, email, password, verificationCode });
+      const res = await Api.post("/auth/signup", { name, email, password });
       if (res.status === 201) {
         toast({
           title: `회원가입이 완료되었습니다.`,
