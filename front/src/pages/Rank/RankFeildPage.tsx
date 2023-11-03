@@ -4,9 +4,13 @@ import RankList from "./RankItem";
 import * as Api from "../../apis/api";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
-import { Box, Heading, Stack, Text } from "@chakra-ui/react";
+import { Box, Heading, Stack, Text, useToast } from "@chakra-ui/react";
+
+const TOAST_TIMEOUT_INTERVAL = 700;
 
 export default function RankFeildPage() {
+  const toast = useToast();
+
   const [loading, setLoading] = useState(false);
   const [usersRank, setUsersRank] = useState([]);
   const [userRankInfo, setUserRankInfo] = useState({
@@ -17,9 +21,9 @@ export default function RankFeildPage() {
   });
 
   // Pagination
-  const limit = 5;
+  const limit = 3;
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(10);
   const [pagingIndex, setPagingIndex] = useState(1);
 
   /** 전체 유저 랭킹 조회 */
@@ -27,11 +31,9 @@ export default function RankFeildPage() {
     setLoading(true);
     const res = await Api.get(`/rank?page=${page}&limt=100`);
     const data = res.data.users;
-    console.log(res);
     if (Array.isArray(data)) {
       setUsersRank(data);
       setCurrentPage(page);
-      setTotalPages(res.data.totalPage);
     } else {
       setUsersRank([]);
     }
@@ -49,15 +51,23 @@ export default function RankFeildPage() {
       rank: res2.data.rank,
     });
   };
+
   /** 페이지네이션 핸들링 */
   const handleChangePage = async (page: number) => {
     try {
-      const queryString = `/rank?page=${page}&limit=100`;
+      const queryString = `/rank?page=${page}&limit=10`;
       const res = await Api.get(queryString);
       if (res.status === 200) {
         fetchUsersRanks(page);
+        setCurrentPage(page);
       } else {
-        console.log("잘못된 요청입니다.");
+        fetchUsersRanks(page);
+        toast({
+          title: "페이지 변경에 실패하였습니다.",
+          status: "error",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
       }
     } catch (e) {
       console.error(e);
@@ -73,7 +83,12 @@ export default function RankFeildPage() {
       fetchUsersRanks();
       fetchUserRank();
     } else {
-      console.log("랭킹 유저가 없습니다.");
+      toast({
+        title: "랭킹 유저가 없습니다.",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
     }
   }, []);
 
@@ -89,7 +104,7 @@ export default function RankFeildPage() {
           color={"gray.600"}
         >{`${userRankInfo.name}님의 현재 등수는 ${userRankInfo.rank}등입니다`}</Text>
       </Stack>
-      <RankList rankList={usersRank} />
+      <RankList rankList={usersRank} currentPage={currentPage} />
 
       <Pagination
         pagingIndex={pagingIndex}
@@ -97,7 +112,7 @@ export default function RankFeildPage() {
         limit={limit}
         handleChangePage={handleChangePage}
         handleChangePaginIndex={handleChangePaingIndex}
-        totalPage={totalPages}
+        totalPage={10}
       />
     </>
   );

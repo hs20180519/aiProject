@@ -2,6 +2,7 @@ import { ListProps, Box, Stack, Avatar, Text } from "@chakra-ui/react";
 
 interface RankListProps extends ListProps {
   rankList: RankItemProps[];
+  currentPage: number;
 }
 
 export interface RankItemProps {
@@ -26,8 +27,7 @@ const changeBackgroudColor = (index) => {
   }
 };
 
-const RankItem = ({ rankList }: RankListProps) => {
-  console.log(rankList);
+const RankItem = ({ rankList, currentPage }: RankListProps) => {
   return (
     <>
       {rankList.map((rank: RankItemProps, index: number) => (
@@ -44,7 +44,7 @@ const RankItem = ({ rankList }: RankListProps) => {
           mt={2}
         >
           <Stack direction="row" mt={-3}>
-            <Text color={"teal.400"}>{rank.rank}등</Text>
+            <Text color={"teal.400"}>{index + 1 + 10 * (currentPage - 1)}등</Text>
             <Avatar
               size={"sm"}
               ml={2}
