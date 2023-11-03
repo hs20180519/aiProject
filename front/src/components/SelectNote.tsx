@@ -33,7 +33,9 @@ export default function SelectBox<T>({ list }: SelectBoxProps) {
         {"⭐️ 즐겨찾기"}
       </option>
       {list.map((note: any) => (
-        <option value={note.id}>{note.title}</option>
+        <option key={note.id} value={note.id}>
+          {note.title}
+        </option>
       ))}
     </Select>
   );

@@ -101,7 +101,7 @@ export default function NoteDetailPage() {
     try {
       const id = parseInt(note_id);
       const queryString = !isNaN(id)
-        ? `book=customs&page=&limit&customBookId=${id}`
+        ? `book=customs&page=${page}&limit&customBookId=${id}`
         : `book=${note_id}&page=${page}`;
       const res = await getNoteDetail(queryString);
       if (res.status === 200) {
@@ -419,16 +419,14 @@ export default function NoteDetailPage() {
           isCustom={isCustom}
         />
       ))}
-      {isCustom ? (
-        <Pagination
-          pagingIndex={pagingIndex}
-          currentPage={currentPage}
-          limit={limit}
-          handleChangePage={handleChangePage}
-          handleChangePaginIndex={handleChangePaingIndex}
-          totalPage={totalPages}
-        />
-      ) : null}
+      <Pagination
+        pagingIndex={pagingIndex}
+        currentPage={currentPage}
+        limit={limit}
+        handleChangePage={handleChangePage}
+        handleChangePaginIndex={handleChangePaingIndex}
+        totalPage={totalPages}
+      />
 
       <CustomModal
         isOpen={isModalOpen}

@@ -1,8 +1,5 @@
-@font-face {
-  font-family: "kakao";
-  src: url("../font/KakaoRegular.ttf");
-}
+@import url("https://font.elice.io/css?family=Elice+DX+Neolli");
 
 html body {
-  font-family: "kakao";
+  font-family: "Elice DX Neolli", sans-serif;
 }
