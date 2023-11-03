@@ -21,7 +21,7 @@ async function getExperience(endpoint: string) {
   return res;
 }
 
-async function post(endpoint: string, data: any) {
+async function post(endpoint: string, data?: any) {
   // JSON.stringify 함수: Javascript 객체를 JSON 형태로 변환함.
   const bodyData = JSON.stringify(data);
 

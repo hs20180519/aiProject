@@ -21,7 +21,7 @@ import { useState, useEffect } from "react";
 
 import WordBox from "./Components/WordBox";
 import Pagination from "../../components/Pagination";
-import SelectNote from "../../components/SelectNote";
+import SelectBox from "../../components/SelectNote";
 import SearchBar from "../Storage/Components/SearchBar";
 
 import * as Api from "../../apis/api";
@@ -34,6 +34,7 @@ import {
   getNoteDetail,
   delCustomWord,
 } from "../../apis/customWord";
+import CustomModal from "../../components/CustomModal";
 
 const NOTE_LIST = [
   { id: "correct", title: "학습한 단어" },
@@ -47,10 +48,6 @@ const TOAST_TIMEOUT_INTERVAL = 700;
 export default function NoteDetailPage() {
   const { note_id } = useParams();
   const toast = useToast();
-
-  /** 단어장 변경 Selector */
-  const [category, setCategory] = useState(NOTE_LIST);
-  const [customNote, setCustomNote] = useState([]);
 
   /** 해당 단어장 목록 조회 */
   const [words, setWords] = useState<type.WordsProps[]>([]);
@@ -73,6 +70,9 @@ export default function NoteDetailPage() {
     meaning: "",
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
   /**  페이지네이션 */
   const limit = 5;
   const [currentPage, setCurrentPage] = useState(1);
@@ -81,8 +81,7 @@ export default function NoteDetailPage() {
 
   const [isCustom, setIsCustom] = useState(!isNaN(parseInt(note_id)));
 
-  /** bookmark */
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [noteList, setNoteList] = useState([]);
 
   /** 커스텀 단어장 목록 가져오기 */
   const fetchCustomNotes = async () => {
@@ -205,29 +204,19 @@ export default function NoteDetailPage() {
     }
   };
 
-  /** 단어장 이동하는 함수 */
-  const onSelect = (e) => {
-    console.log(e.target.value);
-    fetchCustomNotes();
-  };
-
   /**
    * 즐겨찾기 추가
    * currentPage만 가능
    */
-  const fetchBookmark = async (word_id: number) => {
-    const data = word_id;
-    console.log(word_id); //todo 여기서부터
+  const fetchAddBookmark = async (word_id: number) => {
     try {
-      const res = await Api.post("/favorite", data);
+      const res = await Api.post(`/book/favorite?wordId=${word_id}`);
+      console.log("-----------즐겨찾기 추가----------");
+      console.log(res);
       if (res.status === 201) {
-        setIsBookmarked(true);
-        toast({
-          title: `즐겨찾기 추가완료!`,
-          status: "success",
-          isClosable: true,
-          duration: TOAST_TIMEOUT_INTERVAL,
-        });
+        setIsModalOpen(true);
+        setModalMessage("즐겨찾기 추가 완료!");
+        fetchNoteDetail();
       }
     } catch (e) {
       console.error(e);
@@ -236,42 +225,25 @@ export default function NoteDetailPage() {
 
   /** 즐겨찾기 삭제 */
   const fetchDelBookmark = async (word_id: number) => {
-    const data = word_id;
     try {
-      const res = await Api.delete(`book/favorite?wordId=${data}`);
+      const res = await Api.delete(`/book/favorite?wordId=${word_id}`);
       if (res.status === 200) {
-        setIsBookmarked(false);
-        toast({
-          title: `즐겨찾기 단어 삭제 완료!`,
-          status: "success",
-          isClosable: true,
-          duration: TOAST_TIMEOUT_INTERVAL,
-        });
+        setIsModalOpen(true);
+        setModalMessage("즐겨찾기 삭제 완료!");
+        fetchNoteDetail();
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  /** 즐겨찾기 핸들러 */
-  const handleChangeBookmark = (word_id: number) => {
-    try {
-      if (!isBookmarked) {
-        fetchBookmark(word_id);
-      } else if (isBookmarked) {
-        fetchDelBookmark(word_id);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
   /** 페이지네이션 핸들링 */
   const handleChangePage = async (page: number) => {
     console.log();
     try {
       const id = parseInt(note_id);
       const queryString = !isNaN(id)
-        ? `/book/search/?book=customs&page=${page}&limit&customBookId=${id}&p=${searchTerm}`
+        ? `/book/search/?book=customs&page=${page}&limit=10&customBookId=${id}&q=${searchTerm}`
         : `/book/search/?book=${note_id}&page=${page}$customBookId=&q=${searchTerm}`;
       if (keyword) {
         const res = await Api.get(queryString);
@@ -297,7 +269,7 @@ export default function NoteDetailPage() {
       try {
         const id = parseInt(note_id);
         const queryString = !isNaN(id)
-          ? `/book/search/?book=customs&customBookId=${id}&p=${q}`
+          ? `/book/search/?book=customs&customBookId=${id}&q=${q}`
           : `/book/search/?book=${note_id}&customBookId=&q=${q}`;
         const res = await Api.get(queryString);
         if (res.data && Array.isArray(res.data.words)) {
@@ -313,18 +285,35 @@ export default function NoteDetailPage() {
     }
   };
 
+  /** 노트 목록 가져오기 */
+  const fetchNoteList = async () => {
+    try {
+      const res = await getCustomNotes();
+      if (res.status === 200) {
+        setNoteList(res.data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleChangePaingIndex = (pagingIndex: number) => {
     const range = pagingIndex === 1 ? 0 : (pagingIndex - 1) * limit;
     setPagingIndex(pagingIndex);
   };
 
   useEffect(() => {
-    fetchNoteDetail();
+    fetchNoteList();
   }, []);
+
+  useEffect(() => {
+    fetchNoteDetail();
+    setIsCustom(!isNaN(parseInt(note_id)));
+  }, [note_id]);
 
   return (
     <Stack>
-      <SelectNote onSelect={onSelect} category={category} customNote={customNote} />
+      <SelectBox list={noteList} />
       <SearchBar onSearch={handleSearchClick} />
       <Flex minWidth="max-content" alignItems="center" gap="2" mb="5">
         <Stack direction={"row"}>
@@ -422,7 +411,8 @@ export default function NoteDetailPage() {
       {words.map((word: type.WordsProps) => (
         <WordBox
           word={word}
-          handleBookmark={handleChangeBookmark}
+          onAddBookmark={fetchAddBookmark}
+          onDelBookmark={fetchDelBookmark}
           onUpdate={fetchEditWord}
           onDelete={fetchDeleteWord}
           isCustom={isCustom}
@@ -435,6 +425,11 @@ export default function NoteDetailPage() {
         handleChangePage={handleChangePage}
         handleChangePaginIndex={handleChangePaingIndex}
         totalPage={totalPages}
+      />
+      <CustomModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        message={modalMessage}
       />
     </Stack>
   );

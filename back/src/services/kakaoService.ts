@@ -5,9 +5,10 @@ import { KakaoAuthToken } from "../interfaces/kakaoInterface";
 class KakaoService {
   key: string;
   redirectUri: string;
+
   constructor() {
     this.key = process.env.KAKAO_ID!;
-    this.redirectUri = "http://localhost:3000/oauth/kakao";
+    this.redirectUri = process.env.REDIRECT_URI!;
   }
 
   /**

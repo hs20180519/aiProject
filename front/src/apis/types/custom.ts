@@ -1,9 +1,9 @@
-interface NoteTitleProps {
+interface NoteProps {
   id: string;
   title: string;
 }
 interface NoteListProps {
-  noteList: NoteTitleProps[];
+  noteList: NoteProps[];
   isEditing: boolean;
   onClick: (e) => Promise<void>;
 }
@@ -21,4 +21,4 @@ interface SubmitCustomWord {
   meaning: string;
 }
 
-export type { NoteTitleProps, NoteListProps, WordsProps, SubmitCustomWord };
+export type { NoteProps, NoteListProps, WordsProps, SubmitCustomWord };

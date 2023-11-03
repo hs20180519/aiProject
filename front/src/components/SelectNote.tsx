@@ -1,25 +1,40 @@
+/* eslint-disable */
+import { ChangeEvent, useState } from "react";
 import { Select } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function SelectNote({ onSelect, category, customNote }) {
+import * as type from "../apis/types/custom";
+
+interface SelectBoxProps {
+  list: type.NoteProps[];
+}
+
+export default function SelectBox<T>({ list }: SelectBoxProps) {
+  const navigate = useNavigate();
+  const [selected, setSelected] = useState("");
+
+  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelected(e.target.value);
+    if (e.target.value !== "") {
+      navigate(`/main/note/${e.target.value}`);
+    }
+  };
+
   return (
     <Select
-      bg="teal.300"
+      bg="teal.400"
       color="white"
       placeholder="단어장 선택하기"
-      onChange={onSelect}
+      onChange={handleSelect}
       mr={15}
       w={"100%"}
     >
-      {category.map((category) => (
-        <Link to={`main/note/${category.title}`}>
-          <option value={category.id}>{category.title}</option>
-        </Link>
-      ))}
-      {customNote.map((custom) => (
-        <Link to={`main/note/${custom.id}`}>
-          <option value={custom.id}>{custom.title}</option>
-        </Link>
+      <option value={"correct"}>{"🐶학습한 단어"}</option>
+      <option value={"incorrect"}>{"📃틀린 단어"}</option>
+      <option value={"favorite"}>{"⭐️즐겨찾기"}</option>
+      {list.map((note: any) => (
+        <option value={note.id}>{note.title}</option>
       ))}
     </Select>
   );

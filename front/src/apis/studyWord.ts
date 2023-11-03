@@ -12,7 +12,15 @@ export class FetchStudyWords {
    * ['custom'] = {  type: 'boolean' }
    */
   static async getStudyWord(queryParams: string) {
-    const url = `/study/`;
+    const url = `/study`;
+    const queryString = new URLSearchParams(queryParams).toString();
+    const fullUrl = `${url}?${queryString}`;
+    console.log(fullUrl)
+    return instance.get(fullUrl);
+  }
+
+  static async getStudyCustomWord(queryParams: string) {
+    const url = `/study`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
     return instance.get(fullUrl);
@@ -27,20 +35,19 @@ export class FetchStudyWords {
 
   /** 학습 결과 조회
    * 마지막 학습 시점에서 학습한 10개의 단어와 정답 유무 반환 */
-  static async getLearnResult(){
+  static async getLearnResult() {
     const url = `/study/result`;
     return instance.get(url);
   }
 
   /** 학습 결과 조회 (GPT 전용) */
-  static async getLearnResultWithGpt(queryParams: string){
+  static async getLearnResultWithGpt(queryParams: string) {
     const url = `/study/result`;
     const queryString = new URLSearchParams(queryParams).toString();
     const fullUrl = `${url}?${queryString}`;
     const response = await instance.get(fullUrl);
     return response.data;
   }
-
 
   /** 단어 목록 조회 */
   static async getExperienceEdu() {
