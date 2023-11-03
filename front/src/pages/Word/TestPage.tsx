@@ -23,7 +23,7 @@ interface TestPageProps {
   setShowResultPage: (value: boolean) => void;
 }
 
-const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
+const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer, stopStudy }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
       <ModalOverlay />
@@ -34,8 +34,8 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
         alignItems="center"
         justifyContent="center"
       >
-        <ModalHeader>{isCorrect ? "정답" : "오답"}</ModalHeader>
-        <ModalBody>{isCorrect ? "정답입니다!" : `틀렸습니다. 정답은: ${correctAnswer}`}</ModalBody>
+        <ModalHeader>{stopStudy ? "⛔알림" : (isCorrect ? "정답" : "오답")}</ModalHeader>
+        <ModalBody>{stopStudy ? "학습할 단어가 없습니다. 처음으로 돌아갑니다." : (isCorrect ? "정답입니다!" : `틀렸습니다. 정답은: ${correctAnswer}`)}</ModalBody>
         <ModalFooter>
           <Button colorScheme="teal" onClick={onClose}>
             확인
@@ -52,6 +52,16 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
   const [popupIsCorrect, setPopupIsCorrect] = useState(false);
   const [popupCorrectAnswer, setPopupCorrectAnswer] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [stopStudy, setStopStudy] = useState(false);
+
+  const categoryDescriptions = {
+    csat: "CSAT",
+    toeic: "TOEIC",
+    toefl: "TOEFL",
+    correct: "🐶학습한 단어",
+    incorrect: "📃틀린 단어",
+    favorite: "⭐즐겨찾기",
+  };
 
   const fetchWords = async () => {
     try {
@@ -60,6 +70,8 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
       const newWordData = response.data;
       setWordData(newWordData);
     } catch (error) {
+      setStopStudy(true);
+      setPopupIsOpen(true);
       console.error("Error fetching words:", error);
     }
   };
@@ -101,7 +113,9 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
   const handleModalClose = () => {
     setPopupIsOpen(false);
 
-    if (currentIndex === 9) {
+    if (stopStudy) {
+      window.location.reload();
+    } else if (currentIndex === 9) {
       setShowResultPage(true);
     } else {
       fetchWords();
@@ -132,7 +146,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
       justifyContent="center"
     >
       <Text fontSize="xl" fontWeight="bold">
-        ✏️단어학습 ({selectedCategory.toUpperCase()})
+        ✏️단어학습 ({categoryDescriptions[selectedCategory]})
       </Text>
       <Flex
         minH="438px"
@@ -164,6 +178,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
             onClose={handleModalClose}
             isCorrect={popupIsCorrect}
             correctAnswer={popupCorrectAnswer}
+            stopStudy={stopStudy}
           />
         </Box>
       </Flex>
