@@ -61,6 +61,7 @@ export default function CustomWordBox({ word, onDelete, onUpdate }: CustomWordBo
         </>
       ) : (
         <Box
+          key={word.id}
           rounded={"lg"}
           bg={useColorModeValue("white", "gray.700")}
           boxShadow={"lg"}
