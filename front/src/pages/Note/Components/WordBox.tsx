@@ -93,7 +93,7 @@ export default function WordBox({
             <Link to={`/main/grammar/${word.word}`}>
               <Flex alignItems={"center"} h={"100%"}>
                 <Icon as={FaRobot} boxSize={8} marginRight={"6px"} />
-                <Text fontSize="xl" fontFamily={"monospace"} right={24}>
+                <Text fontSize="xl" right={24}>
                   {word.word}
                 </Text>
               </Flex>

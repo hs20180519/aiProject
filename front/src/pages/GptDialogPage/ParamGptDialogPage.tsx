@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Button, Text, Box, Flex, Spinner, useToast, Tag, Center } from "@chakra-ui/react";
 import { FetchGpt } from "../../apis/gpt";
 import ScriptDialog from "./components/ScriptDialog";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 
 const ParamGptDialogPage = () => {
@@ -15,9 +15,10 @@ const ParamGptDialogPage = () => {
 
   const toast = useToast();
 
-  const navigate = useNavigate();
+  const [isScriptError, setScriptError] = useState(false);
 
   const handleGetScript = useCallback(async () => {
+    setScriptError(false);
     setScriptLoading(true);
     try {
       const updatedDialogParams = {
@@ -36,6 +37,8 @@ const ParamGptDialogPage = () => {
 
       setScriptResult(JSON.stringify(apiResult));
     } catch (error) {
+      setScriptError(true);
+
       toast({
         title: "대화문 생성에 실패했습니다",
         description: `Error: ${error.message || error}`,
@@ -82,6 +85,13 @@ const ParamGptDialogPage = () => {
             </Text>
             <Spinner />
           </Flex>
+        ) : null}
+        {isScriptError ? (
+          <Box textAlign="center" mt={4}>
+            <Button colorScheme="red" onClick={handleGetScript}>
+              요청 다시보내기
+            </Button>
+          </Box>
         ) : null}
         {scriptResult ? (
           <Box m="8">

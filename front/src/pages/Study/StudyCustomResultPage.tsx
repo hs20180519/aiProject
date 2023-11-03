@@ -10,7 +10,6 @@ import {
   Thead,
   Tbody,
   Tr,
-  Th,
   Td,
   Text,
 } from "@chakra-ui/react";
