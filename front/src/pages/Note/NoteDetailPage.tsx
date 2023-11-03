@@ -242,6 +242,7 @@ export default function NoteDetailPage() {
       if (keyword) {
         const res = await Api.get(queryString);
         if (res.data && Array.isArray(res.data.words)) {
+          setTitle(res.data.title);
           setWords(res.data.words);
           setCurrentPage(page);
         }
@@ -409,6 +410,7 @@ export default function NoteDetailPage() {
       <Text color={"tomato"}>로봇🤖 아이콘을 눌러 AI와 함께 영작 연습을 해보세요!</Text>
       {words.map((word: type.WordsProps) => (
         <WordBox
+          key={word.id}
           word={word}
           onAddBookmark={fetchAddBookmark}
           onDelBookmark={fetchDelBookmark}
@@ -417,14 +419,17 @@ export default function NoteDetailPage() {
           isCustom={isCustom}
         />
       ))}
-      <Pagination
-        pagingIndex={pagingIndex}
-        currentPage={currentPage}
-        limit={limit}
-        handleChangePage={handleChangePage}
-        handleChangePaginIndex={handleChangePaingIndex}
-        totalPage={totalPages}
-      />
+      {isCustom ? (
+        <Pagination
+          pagingIndex={pagingIndex}
+          currentPage={currentPage}
+          limit={limit}
+          handleChangePage={handleChangePage}
+          handleChangePaginIndex={handleChangePaingIndex}
+          totalPage={totalPages}
+        />
+      ) : null}
+
       <CustomModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
