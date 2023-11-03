@@ -82,7 +82,9 @@ export default function RankFeildPage() {
   return (
     <>
       <Stack>
-        <Heading color={"teal.600"}>Wordy 랭킹🏅</Heading>
+        <Heading color={"teal.600"} fontFamily={"Elice DX Neolli"}>
+          Wordy 랭킹🏅
+        </Heading>
         <Text
           color={"gray.600"}
         >{`${userRankInfo.name}님의 현재 등수는 ${userRankInfo.rank}등입니다`}</Text>

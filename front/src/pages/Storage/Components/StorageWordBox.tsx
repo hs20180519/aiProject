@@ -13,7 +13,7 @@ const StorageWordBox = ({ word, onBookmarkClick }) => {
     >
       <Center w="169px">
         <Box textAlign="center">
-          <Text fontSize="17px" fontWeight="bold">
+          <Text fontSize="17px" fontFamily="Elice DX Neolli" fontWeight="bold">
             {word.word}
           </Text>
           <Text color={"gray"}>{word.meaning}</Text>
