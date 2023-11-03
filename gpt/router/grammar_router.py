@@ -1,8 +1,7 @@
-from fastapi import HTTPException, APIRouter, FastAPI, status
+from fastapi import HTTPException, APIRouter, status
 from pydantic import BaseModel
 from transformers import pipeline
 
-app = FastAPI()
 gec_pipe = pipeline(model="hs2019125/gec-fine-tuned")
 
 router = APIRouter(
