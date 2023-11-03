@@ -59,8 +59,6 @@ const StudyCustomTestPage = () => {
       const id = parseInt(note_id);
       const queryString = `?book=custom&customBookId=${note_id}`;
       const response = await FetchStudyWords.getStudyCustomWord(queryString);
-      console.log("--------단어 목록 조회------");
-      console.log(response);
       const newWordData = response.data;
       setWordData(newWordData);
     } catch (error) {

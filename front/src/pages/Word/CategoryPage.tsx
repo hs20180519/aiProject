@@ -4,7 +4,18 @@ import { useNavigate } from "react-router";
 
 const CategoryPage = ({ onSelectCategory }) => {
   const navigate = useNavigate();
-  const categories = ["csat", "toeic", "toefl"];
+
+  // Define category descriptions
+  const categoryDescriptions = {
+    csat: "CSAT",
+    toeic: "TOEIC",
+    toefl: "TOEFL",
+    correct: "🐶학습한 단어",
+    incorrect: "📃틀린 단어",
+    favorite: "⭐즐겨찾기",
+  };
+
+  const categories = ["csat", "toeic", "toefl", "correct", "incorrect", "favorite"];
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const handleCategorySelect = (category) => {
@@ -43,7 +54,7 @@ const CategoryPage = ({ onSelectCategory }) => {
               colorScheme="teal"
               onClick={() => handleCategorySelect(category)}
             >
-              {category.toUpperCase()}
+              {categoryDescriptions[category]}
             </Button>
           ))}
           <Button colorScheme="teal" onClick={() => navigate("/main/custom")}>
@@ -62,5 +73,6 @@ const CategoryPage = ({ onSelectCategory }) => {
     </Box>
   );
 };
+
 
 export default CategoryPage;
