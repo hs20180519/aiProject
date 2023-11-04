@@ -1,12 +1,12 @@
 config:
   target: 'http://localhost:8000'
-#  target: 'http://34.64.215.129:5002'
+#  target: 'http://kdt-ai-8-team01-1.elicecoding.com'
   phases:
     - duration: 10 # 몇 초간
-      arrivalRate: 15 # 초당 몇번 ({duration}초 동안 {(duration)*(arrivalRate)}번 요청)
+      arrivalRate: 30 # 초당 몇번 ({duration}초 동안 {(duration)*(arrivalRate)}번 요청)
 scenarios:
   - flow:
       - get:
-          url: '/study/experience' # 부하테스트 해볼 API 앤드포인트
+          url: '/api/study/experience' # 부하테스트 해볼 API 앤드포인트
 
 # back 경로에서 artillery run loadtest.yml

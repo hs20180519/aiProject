@@ -23,6 +23,10 @@ export class WordDto {
   @IsNumber()
   @IsOptional()
   customBookId?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  isFavorite?: boolean;
 }
 
 export class WordWithChoicesDto {

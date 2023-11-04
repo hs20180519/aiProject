@@ -8,6 +8,8 @@ export class RankDto {
   @Exclude()
   id!: number;
 
+  rank?: number;
+
   @IsNumber()
   @IsNotEmpty()
   @Exclude()
@@ -15,9 +17,6 @@ export class RankDto {
 
   @IsNumber()
   score!: number;
-
-  @Exclude()
-  user!: User;
 
   currentPages?: number;
   totalPage?: number;

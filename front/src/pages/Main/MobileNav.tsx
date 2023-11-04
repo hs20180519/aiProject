@@ -15,8 +15,11 @@ import {
   FlexProps,
   Link as ChakraLink,
 } from "@chakra-ui/react";
-import { FiMenu, FiBell, FiChevronDown } from "react-icons/fi";
+import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { Link as ReactRouterLink } from "react-router-dom";
+import React, { useContext } from "react";
+import { UserStateContext } from "../../App";
+
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
@@ -25,6 +28,8 @@ interface MobileProps extends FlexProps {
 }
 
 export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...rest }: MobileProps) {
+  const { user } = useContext(UserStateContext);
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -48,7 +53,6 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
         <Text
           display={{ base: "flex", md: "none" }}
           fontSize={"2xl"}
-          fontFamily={"monospace"}
           fontWeight={"bold"}
         >
           {"🐾 Wordy\r"}
@@ -56,16 +60,13 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
       </ChakraLink>
 
       <HStack spacing={{ base: "0", md: "6" }}>
-        <IconButton size={"lg"} variant={"ghost"} aria-label={"open menu"} icon={<FiBell />} />
         <Flex alignItems={"center"}>
           <Menu>
             <MenuButton py={2} transition={"all 0.3s"} _focus={{ boxShadow: "none" }}>
               <HStack>
                 <Avatar
                   size={"sm"}
-                  src={
-                    "https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256"
-                  }
+                  src={user.profileImage}
                 />
                 <VStack
                   display={{ base: "none", md: "flex" }}
@@ -73,10 +74,7 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
                   spacing={"1px"}
                   ml={"2"}
                 >
-                  <Text fontSize={"sm"}>{nickname}</Text>
-                  <Text fontSize={"xs"} color={"gray.600"}>
-                    {"1팀\r"}
-                  </Text>
+                  <Text fontSize={"sm"}>{user.name || nickname}</Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
                   <FiChevronDown />
@@ -87,8 +85,9 @@ export default function MobileNav({ onOpen, nickname = "워디35", onLogout, ...
               bg={useColorModeValue("white", "gray.900")}
               borderColor={useColorModeValue("gray.200", "gray.700")}
             >
-              <MenuItem as={ReactRouterLink} to="/main/mypage">{"프로필"}</MenuItem>
-              {/* <MenuItem>{"설정"}</MenuItem> */}
+              <MenuItem as={ReactRouterLink} to="/main/mypage">
+                {"프로필"}
+              </MenuItem>
               <MenuDivider />
               <MenuItem onClick={onLogout}>{"로그아웃"}</MenuItem>
             </MenuList>

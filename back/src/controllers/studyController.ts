@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import * as studyService from "../services/studyService";
 import { User } from "@prisma/client";
 import { WordProgressDto, WordWithChoicesDto } from "../dtos/wordDto";
+import * as bookService from "../services/bookService";
+import { getWordByFavorite } from "../services/studyService";
 
 export const experience = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -39,6 +41,7 @@ export const getWords = async (req: Request, res: Response, next: NextFunction) 
       toeic: () => studyService.getWordsByCategory(userId, "toeic"),
       toefl: () => studyService.getWordsByCategory(userId, "toefl"),
       custom: () => studyService.getWordsByCategory(userId, "custom", customBookId),
+      favorite: () => studyService.getWordByFavorite(userId),
     };
 
     let words;
@@ -74,7 +77,6 @@ export const saveLearn = async (req: Request, res: Response, next: NextFunction)
     const correct: boolean = Boolean(req.query.correct === "true");
 
     if (correct) await studyService.updateScore(userId);
-    console.log(correct);
     await studyService.saveLearn(userId, wordId, correct);
     return res.status(201).json({ message: "저장되었습니다." });
   } catch (error) {
@@ -93,11 +95,11 @@ export const getLearnResult = async (req: Request, res: Response, next: NextFunc
    * }]
    */
   try {
-    const userId: number = Number(req.query.userId);
+    const userId: number = (req.user as User).id;
     const result: WordProgressDto[] = await studyService.getLearnResult(userId);
     return res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    next(error);
+    return next(error);
   }
 };

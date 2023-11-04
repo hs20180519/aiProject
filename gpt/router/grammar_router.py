@@ -1,16 +1,17 @@
-from fastapi import HTTPException, APIRouter, FastAPI, status
+from fastapi import HTTPException, APIRouter, status
 from pydantic import BaseModel
 from transformers import pipeline
 
-app = FastAPI()
 gec_pipe = pipeline(model="hs2019125/gec-fine-tuned")
 
 router = APIRouter(
     prefix="/python/api/grammar"
 )
 
+
 class Sentence(BaseModel):
     sentence: str
+
 
 @router.post('/correct')
 async def correct_text(sentence: Sentence):
@@ -19,7 +20,7 @@ async def correct_text(sentence: Sentence):
         if len(sentence.sentence) > 256:
             raise ValueError('256자 이상의 문장은 교정이 불가능합니다.')
 
-        if len(sentence.sentence)==0:
+        if len(sentence.sentence) == 0:
             raise ValueError('문장이 입력되지 않았습니다.')
 
         corrected_sentence = gec_pipe(sentence.sentence, max_length=256, num_beams=5)[0]['generated_text']

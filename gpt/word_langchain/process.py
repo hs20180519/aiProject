@@ -14,17 +14,19 @@ async def generate_dialog_process(input_data):
     english_words = ', '.join(selected_word_dict.keys())
     korean_meanings = ', '.join(selected_word_dict.values())
     dialog_human_template = \
-        """Create a dialog with at least {line_count} lines so that the following words are used at least once:
-         {english_words} ({korean_meanings}). Each word must be used at least once in the dialog. Ensure that the 
-        conversation, although may sound unnatural, incorporates all the specified words. After writing the dialog, 
-        verify that each word from the list is used by checking them off one by one:
-        
+        """Create a dialog with at least {line_count} lines so that the following words are used at least once,
+         in their original form: {english_words} ({korean_meanings}). Do not use variations of these words, including tense or plurality changes.
+          For example, use the exact phrase 'be supposed to' as it is, not as 'are supposed to', 'is supposed to', etc.,
+           and 'get in' as it is, not as 'got in'. Each word must be used at least once in the dialog.
+           Ensure that the conversation, although may sound unnatural, incorporates all the specified words exactly as
+            they are. After writing the dialog, verify that each word from the list is used by checking them off one by one:
+
         Please answer only in the following format.
         {{
             "dialog": [{{"speaker": "Person A", "message": "{{message}}"}},
-             {{"speaker": "Person B", "message": "{{message}}"}}]
+                       {{"speaker": "Person B", "message": "{{message}}"}}]
         }}
-        """
+        """.strip()
     dialog_human_message_prompt = HumanMessagePromptTemplate.from_template(template=dialog_human_template)
     dialog_chat_prompt = ChatPromptTemplate.from_messages(messages=[system_message_prompt, dialog_human_message_prompt])
 
@@ -34,26 +36,26 @@ async def generate_dialog_process(input_data):
     dialog_variable_dict = {name: value for name, value in zip(dialog_names, dialog_input_variables)}
 
     dialog_result = generate_dialog(dialog_llm_chain, dialog_variable_dict, selected_word_dict)
-    return dialog_result, selected_word_dict
+    return dialog_result
 
 
 async def generate_grammar_explain_process(dialog):
     grammar_human_template = \
         """
         In each sentence, pick three grammatical structures at the B2 level or higher and explain them concisely in Korean.
-                
+
         Dialog to explain: {dialog}
 
         Please answer only in the following format.
         {{
             "grammar": [
                 {{
-                    "message": "phrases to explain", 
+                    "message": "phrases to explain",
                     "explain":  "Provide a grammatical explanation here in Korean"
                 }}
             ]
         }}
-        
+
         ex)
         {{
             "grammar": [
@@ -71,7 +73,7 @@ async def generate_grammar_explain_process(dialog):
                 }}
             ]
         }}
-        """
+        """.strip()
     grammar_human_message_prompt = HumanMessagePromptTemplate.from_template(template=grammar_human_template)
     grammar_chat_prompt = ChatPromptTemplate.from_messages(
         messages=[system_message_prompt, grammar_human_message_prompt])

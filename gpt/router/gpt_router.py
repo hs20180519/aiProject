@@ -6,8 +6,10 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 from models.dialog_schema import DialogResponse
-from models.gpt_request_scema import InputDialogData, InputGrammarData
+from models.gpt_request_schema import InputDialogData, InputGrammarData
 from models.grammar_schema import GrammarResponse
+from models.translation_schema import TranslationResponse, TranslationRequest
+from router.translate import translate_text
 from word_langchain.process import generate_dialog_process, generate_grammar_explain_process
 
 router = APIRouter(
@@ -29,15 +31,14 @@ limiter = Limiter(key_func=get_remote_address)
 @limiter.limit("3/second")
 async def generate_dialog_endpoint(request: Request, input_data: InputDialogData):
     try:
-        dialog_result, selected_word_dict = await generate_dialog_process(input_data)
+        dialog_result = await generate_dialog_process(input_data)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Fail in generate_dialog_endpoint {e}")
 
     logging.info(f'{dialog_result}')
 
-    return {"word": selected_word_dict,
-            "dialog": dialog_result.dialog}
+    return dialog_result
 
 
 @router.post(path="/explain-grammar",
@@ -46,11 +47,26 @@ async def generate_dialog_endpoint(request: Request, input_data: InputDialogData
 @limiter.limit("3/second")
 async def explain_grammar_endpoint(request: Request, dialog: InputGrammarData):
     try:
-        grammar_response_content = await generate_grammar_explain_process(dialog)
+        grammar_result = await generate_grammar_explain_process(dialog)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Fail in explain_grammar_endpoint {e}")
 
-    logging.info(f'{grammar_response_content}')
+    logging.info(f'{grammar_result.grammar}')
 
-    return {"grammar": grammar_response_content.grammar}
+    return grammar_result
+
+
+@router.post(path="/translate-text",
+             response_model=TranslationResponse)
+@limiter.limit("3/second")
+async def translate_text_endpoint(request: Request, translation_request: TranslationRequest):
+    try:
+        translated_result = await translate_text(query=translation_request)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail=f"Fail in translate_text_endpoint {e}")
+
+    logging.info(f'Translated Text: {translated_result}')
+
+    return translated_result

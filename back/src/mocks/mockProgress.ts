@@ -33,7 +33,7 @@ const createMockData = async (): Promise<void> => {
 
   for (let user of users) {
     /* 여기서 원하는 학습 횟수를 설정하세요. */
-    let learningCountPerUser: number = 1000;
+    let learningCountPerUser: number = 200;
 
     /* 유저마다 랜덤 단어 학습 */
     await learnRandomWords(user, learningCountPerUser);

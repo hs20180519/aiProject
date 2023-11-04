@@ -21,7 +21,9 @@ export const getVerifyCodeByEmail = async (email: string) => {
 };
 
 export const sendVerificationCode = async (email: string): Promise<void> => {
-  const verificationCode: string = Math.floor(Math.random() * 1000000).toString();
+  const verificationCode: string = Math.floor(
+    Math.random() * (999999 - 100000 + 1) + 100000,
+  ).toString();
   await sendMail(email, verificationCode);
   await prisma.verifiCode.create({
     data: {
@@ -33,7 +35,9 @@ export const sendVerificationCode = async (email: string): Promise<void> => {
 };
 
 export const resendVerificationCode = async (email: string): Promise<void> => {
-  const verificationCode: string = Math.floor(Math.random() * 1000000).toString();
+  const verificationCode: string = Math.floor(
+    Math.random() * (999999 - 100000 + 1) + 100000,
+  ).toString();
   await sendMail(email, verificationCode);
   await prisma.verifiCode.update({
     where: { email },
@@ -71,13 +75,14 @@ export const createUser = async (userData: authInterface.UserCreationData): Prom
 };
 
 export const editUser = async (userId: number, updatedData: Partial<User>): Promise<UserDto> => {
-  const updatedUser: User = await prisma.user.update({
+  const upsertedUser: User = await prisma.user.upsert({
     where: { id: userId },
-    data: updatedData,
+    update: updatedData,
+    create: updatedData,
   });
-  if (!updatedUser) throw new Error("유저 정보를 찾을 수 없습니다.");
+  if (!upsertedUser) throw new Error("유저 정보를 찾을 수 없습니다.");
 
-  return plainToClass(UserDto, updatedUser);
+  return plainToClass(UserDto, upsertedUser);
 };
 
 export const deleteUser = async (userId: number): Promise<null | UserDto> => {

@@ -6,8 +6,9 @@ interface NavItemProps extends type.NavItemProps {
 }
 export default function NavItem({ icon, children, active, ...rest }: NavItemProps) {
   return (
-    <Box as={"a"} href={"#"} style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
+    <Box style={{ textDecoration: "none" }} _focus={{ boxShadow: "none" }}>
       <Flex
+        display={'flex'}
         align={"center"}
         p={"4"}
         mx={"4"}
@@ -15,7 +16,7 @@ export default function NavItem({ icon, children, active, ...rest }: NavItemProp
         role={"group"}
         cursor={"pointer"}
         _hover={{
-          bg: "cyan.400",
+          bg: "teal.400",
           color: "white",
         }}
         {...rest}

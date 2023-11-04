@@ -1,86 +1,221 @@
-import { useState, useEffect } from "react";
-import NoteListBox from "./Components/NoteListBox";
 import {
   useColorModeValue,
   Flex,
   Spacer,
   Box,
   Heading,
-  Button,
   Badge,
   SimpleGrid,
+  Stack,
   AbsoluteCenter,
+  ButtonGroup,
+  useToast,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import * as Api from "../../apis/customWord";
+import NoteListBox from "./Components/NoteListBox";
+import ConfirmModal from "../../components/ConfirmModal";
+
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  getCustomNotes,
+  postCustomNote,
+  delCustomNote,
+  delAllCustomNote,
+} from "../../apis/customWord";
+import Btn from "../../components/Btn";
+import * as type from "../../apis/types/custom";
+import Loading from "../../components/Loading";
 
 const NOTE_LIST = [
-  { id: "correct", title: "학습한 단어" },
-  { id: "incorrect", title: "틀린 단어" },
+  { id: "correct", title: "🐶학습한 단어" },
+  { id: "incorrect", title: "📃틀린 단어" },
+  { id: "favorite", title: "⭐️즐겨찾기" },
 ];
+const TOAST_TIMEOUT_INTERVAL = 800;
 
 /** 유저가 저장한 단어장 목록을 보여주는 페이지입니다. */
 export default function CustomNoteListPage() {
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  const [loading, setLoading] = useState(false);
+
+  /** 단어장 전체삭제 확인 모달 */
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [noteList, setNoteList] = useState(NOTE_LIST);
-  const [customNoteList, setCustomNoteList] = useState([]);
+  const [customNoteList, setCustomNoteList] = useState<type.NoteProps[]>([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [checkedItems, setCheckedItems] = useState([false, false]);
-  const allChecked = checkedItems.every(Boolean);
 
   /** 노트 목록 가져오기 */
-  async function fetchNoteList() {
-    const res = await Api.getCustomNotes();
-    console.log(res.data);
-    setCustomNoteList(res.data);
-  }
+  const fetchNoteList = async () => {
+    setLoading(true);
+    try {
+      const res = await getCustomNotes();
+      if (res.status === 200) {
+        console.log(res.data);
+        setCustomNoteList(res.data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    setLoading(false);
+  };
+
+  /** 타이틀 저장시 유저 커스텀 단어장 생성 */
+  const fetchNewCustomNote = async () => {
+    const data = { title: "빈 단어장" };
+    try {
+      const res = await postCustomNote(data);
+      if (res.status === 201) {
+        if (res.status === 201) {
+          toast({
+            title: `단어장 생성완료!`,
+            status: "success",
+            isClosable: true,
+            duration: TOAST_TIMEOUT_INTERVAL,
+          });
+          navigate(`/main/note_add/${res.data.id}`);
+        }
+      } else if (res.status === 400) {
+        toast({
+          title: `잘못된 요청입니다.`,
+          status: "error",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  /** 단어장 선택 삭제하기 */
+  const fetchDelCustomNote = async (note_id) => {
+    try {
+      const res = await delCustomNote(`customBookId=${note_id}`);
+      console.dir(res);
+      if (res.status === 200) {
+        toast({
+          title: `삭제되었습니다.`,
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+        fetchNoteList();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  /** 단어장 전체 삭제 */
+  const fetchDelAllCustomNote = async () => {
+    try {
+      const res = await delAllCustomNote();
+      if (res.status === 200) {
+        toast({
+          title: `전체 삭제 완료`,
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+        fetchNoteList();
+        setIsEditing(false);
+        setIsModalOpen(false);
+      }
+    } catch (e) {
+      console.error(e);
+      toast({
+        title: `단어장 삭제중 에러가 발생하였습니다.`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+    } finally {
+      setIsEditing(false);
+    }
+  };
+
+  /** 선택삭제 */
+  const deleteCustomNote = async (note_id: string) => {
+    // 모달로 삭제여부 확인
+    fetchDelCustomNote(note_id);
+  };
+
+  /** 전체삭제 함수 */
+  const delAllNote = () => {
+    // 모달로 삭제여부 확인
+    fetchDelAllCustomNote();
+  };
 
   useEffect(() => {
     fetchNoteList();
   }, []);
+
+  if (loading) return <Loading />;
+
   return (
     <>
       <Flex minWidth="max-content" alignItems="center" gap="2" mb="5">
+        <ConfirmModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen((prev) => !prev)}
+          message1={"확인"}
+          message2={"단어장 목록이 전체 삭제됩니다. 삭제하시겠습니까?"}
+          onClick={fetchDelAllCustomNote}
+        />
         <Box p="2">
           <Heading size="md">내 단어장</Heading>
         </Box>
         <Spacer />
-        <Button
-          colorScheme={isEditing ? "red" : "teal"}
-          onClick={() => setIsEditing((prev) => !prev)}
-        >
-          {isEditing ? "단어장 삭제" : "단어장 편집"}
-        </Button>
+        {isEditing ? (
+          <ButtonGroup>
+            <Btn
+              text="전체 삭제"
+              colorScheme="red"
+              onClick={() => setIsModalOpen((prev) => !prev)}
+            />
+            <Btn text="단어장 저장" onClick={() => setIsEditing((prev) => !prev)} />
+          </ButtonGroup>
+        ) : (
+          <Btn
+            text={isEditing ? "편집 완료" : "단어장 편집"}
+            onClick={() => setIsEditing((prev) => !prev)}
+          />
+        )}
       </Flex>
 
-      <SimpleGrid columns={4} spacing={10}>
-        <Link to={`/main/note_add`}>
-          <Box
-            rounded={"lg"}
-            bg={useColorModeValue("gray100", "gray.700")}
-            boxShadow={"lg"}
-            p={8}
-            position="relative"
-            h="120px"
-            borderWidth="3px"
-            borderRadius="lg"
-          >
-            <AbsoluteCenter>
-              <Badge
-                borderRadius="full"
-                px="5"
-                colorScheme="teal"
-                fontSize="lg"
-                letterSpacing="center"
-              >
-                ✚ 새 단어장
-              </Badge>
-            </AbsoluteCenter>
-          </Box>
-        </Link>
+      <Stack spacing={2}>
+        <Box
+          rounded={"lg"}
+          bg={useColorModeValue("gray100", "gray.700")}
+          boxShadow={"lg"}
+          p={8}
+          position="relative"
+          h="120px"
+          borderWidth="3px"
+          borderRadius="lg"
+          onClick={fetchNewCustomNote}
+          cursor={"pointer"}
+        >
+          <AbsoluteCenter>
+            <Badge
+              borderRadius="full"
+              px="5"
+              colorScheme="teal"
+              fontSize="lg"
+              fontFamily={"Elice DX Neolli"}
+              letterSpacing="center"
+            >
+              ✚ 새 단어장
+            </Badge>
+          </AbsoluteCenter>
+        </Box>
 
-        <NoteListBox noteList={noteList} isEditing={isEditing} />
-        <NoteListBox noteList={customNoteList} isEditing={isEditing} />
-      </SimpleGrid>
+        <NoteListBox noteList={noteList} isEditing={false} onDelete={null} />
+        <NoteListBox noteList={customNoteList} isEditing={isEditing} onDelete={deleteCustomNote} />
+      </Stack>
     </>
   );
 }

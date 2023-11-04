@@ -6,4 +6,5 @@ export interface Word {
   customBookId?: number | null;
   createdAt?: Date;
   updatedAt?: Date;
+  favorite?: boolean;
 }

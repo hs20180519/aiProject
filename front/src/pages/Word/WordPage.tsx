@@ -1,4 +1,3 @@
-// InnerPage.js
 import React, { useState } from "react";
 import { Box, ChakraProvider, extendTheme } from "@chakra-ui/react";
 import CategoryPage from "./CategoryPage";
@@ -19,16 +18,12 @@ export default function WordPage() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Box minH="80vh" display="flex" alignItems="center" justifyContent="center">
-        {showTestPage && !showResultPage ? ( // Render TestPage or ResultPage based on state
-          <TestPage
-            selectedCategory={selectedCategory}
-            setShowResultPage={setShowResultPage} // Pass setShowResultPage to TestPage
-          />
-        ) : showResultPage ? ( // Render ResultPage if showResultPage is true
-          <ResultPage />
+      <Box display="flex" alignItems="center" justifyContent="center">
+        {showTestPage && !showResultPage ? (
+          <TestPage selectedCategory={selectedCategory} setShowResultPage={setShowResultPage} setShowTestPage={setShowTestPage} />
+        ) : showResultPage ? (
+          <ResultPage setShowResultPage={setShowResultPage} setShowTestPage={setShowTestPage} />
         ) : (
-          // Render the CategorySelection component
           <CategoryPage onSelectCategory={handleCategorySelect} />
         )}
       </Box>

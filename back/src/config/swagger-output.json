@@ -360,15 +360,6 @@
         ],
         "summary": "학습 종료 결과",
         "description": "학습 종료시 학습 단어 결과 반환. query?userId=",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -638,6 +629,10 @@
     },
     "/api/book/favorite": {
       "post": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "즐겨찾기 추가 ?wordId=",
         "description": "",
         "parameters": [
           {
@@ -651,8 +646,96 @@
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
           }
-        }
+        },
+        "security": []
+      },
+      "delete": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "즐겨찾기 단어 삭제. ?wordId&all / all=\"true\" 요청 시 유저의 모든 즐겨찾기 단어 삭제",
+        "description": "",
+        "parameters": [
+          {
+            "name": "wordId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "all",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/book/search": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "summary": "단어장 검색",
+        "description": "쿼리별 단어장 검색 (서버사이드 페이징)  * ?book={correct, incorrect, csat, toeic, toefl, favorite, custom}&customBookId=\"\"&q=\"검색할거\" ",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "book",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customBookId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
       }
     },
     "/api/progress/": {
@@ -702,48 +785,28 @@
         }
       }
     },
-    "/api/rank/{userId}": {
+    "/api/rank/userRank": {
       "get": {
         "description": "",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
           },
-          "400": {
-            "description": "Bad Request"
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
     },
-    "/api/rank/gap/{userId}": {
+    "/api/rank/rankGap": {
       "get": {
         "description": "",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
           },
-          "400": {
-            "description": "Bad Request"
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -764,7 +827,38 @@
             }
           },
           {
-            "name": "llimit",
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/storage/search": {
+      "get": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "단어 검색(커스텀 단어 제외)",
+        "description": "서버사이드 페이징. 검색쿼리에 포함된 모든 단어 조회, 정확히 일치하는 단어는 첫 번째 인덱스로 재배치 후 반환",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
             "in": "query",
             "schema": {
               "type": "string"

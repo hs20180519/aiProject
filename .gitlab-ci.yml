@@ -40,6 +40,8 @@ backend_build:
     - docker push daechanjo/$IMAGE_TAG
   tags:
     - back_b
+  only:
+    - develop
 
 backend_deploy:
   stage: backend_deploy
@@ -51,3 +53,5 @@ backend_deploy:
     - 'ssh -p $SSH_PORT $SSH_USER@$SSH_SERVER "docker-compose up --build --detach"'
   tags:
     - back_d
+  only:
+    - develop

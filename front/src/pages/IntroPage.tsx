@@ -4,32 +4,30 @@ import {
   Heading,
   Container,
   Text,
-  Button,
   Stack,
   Icon,
   useColorModeValue,
   createIcon,
+  Image,
 } from "@chakra-ui/react";
-import styled from "@emotion/styled";
+import Btn from "../components/Btn";
 
 export default function IntroPage() {
   return (
-    <StyledContainer>
+    <>
       <Link to={"/login"}>
-        <StyledLoginHeader>
-          <Button
-            colorScheme={"green"}
-            bg={"teal.500"}
-            rounded={"full"}
-            px={6}
-            _hover={{
-              bg: "teal.400",
-            }}
-          >
-            {"로그인"}
-          </Button>
-        </StyledLoginHeader>
+        <div style={{ position: "fixed", top: 24, right: 24 }}>
+          <Btn rounded={"full"} px={6} text="로그인" />
+        </div>
       </Link>
+      <Image
+        position="absolute"
+        mt={420}
+        w={600}
+        left={1}
+        src={`${process.env.PUBLIC_URL}/images/dog.png`}
+        alt="강아지들"
+      />
       <Container maxW={"3xl"}>
         <Stack
           as={Box}
@@ -40,17 +38,20 @@ export default function IntroPage() {
           <Heading
             fontWeight={600}
             fontSize={{ base: "2xl", sm: "4xl", md: "6xl" }}
+            fontFamily={"Elice DX Neolli"}
             lineHeight={"110%"}
           >
-            AI와 함께하는 영어학습 워디!
+            AI와 함께하는
             <br />
             <Text as={"span"} color={"teal.400"}>
-              단어학습 Wordy
+              영어 학습 Wordy🐾
             </Text>
           </Heading>
           <Stack spacing={3}>
             <Text color={"gray.500"}>
-              영포자를 위한 영단어 학습 서비스, AI와 함께하는 문법교정까지!
+              영포자를 위한 영단어 학습 서비스,
+              <br />
+              AI와 함께하는 문법교정까지!
             </Text>
             <Text color={"gray.500"}>꾸준한 학습을 위한 리마인드 서비스를 제공합니다.</Text>
             <Text color={"gray.500"}>워디로 갓생살기 시작해보세요🐶</Text>
@@ -63,22 +64,19 @@ export default function IntroPage() {
             position={"relative"}
           >
             <Link to={"/test"}>
-              <Button
-                colorScheme={"green"}
+              <Btn
+                text=" Wordy 🐾 체험하기"
+                colorScheme={"teal"}
                 bg={"teal.500"}
                 rounded={"full"}
                 px={6}
                 _hover={{
                   bg: "teal.400",
                 }}
-              >
-                Wordy 🐾 체험하기
-              </Button>
+              />
             </Link>
             <Link to={"/signup"}>
-              <Button variant={"link"} colorScheme={"blue"} size={"sm"}>
-                회원가입
-              </Button>
+              <Btn text="회원가입" variant={"link"} colorScheme={"blue"} size={"sm"} />
             </Link>
             <Box>
               <Icon
@@ -86,24 +84,25 @@ export default function IntroPage() {
                 color={useColorModeValue("gray.800", "gray.300")}
                 w={71}
                 position={"absolute"}
-                right={-71}
+                right={-45}
                 top={"10px"}
               />
               <Text
                 fontSize={"lg"}
-                fontFamily={"Caveat"}
                 position={"absolute"}
-                right={"-125px"}
-                top={"-15px"}
+                right={"-75px"}
+                top={"-20px"}
                 transform={"rotate(10deg)"}
+                fontFamily={"Elice DX Neolli"}
               >
-                Wordy와 함께 단어공부!
+                눌러보개!
               </Text>
             </Box>
           </Stack>
+          <Stack direction="row"></Stack>
         </Stack>
       </Container>
-    </StyledContainer>
+    </>
   );
 }
 
@@ -119,14 +118,3 @@ const Arrow = createIcon({
     />
   ),
 });
-
-const StyledContainer = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
-const StyledLoginHeader = styled.div`
-  position: fixed;
-  top: 24px;
-  right: 24px;
-`;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent, useContext } from "react";
 import * as Api from "../apis/api";
 import { useNavigate } from "react-router-dom";
 import {
@@ -6,109 +6,451 @@ import {
   Avatar,
   Box,
   Center,
-  Image,
   Flex,
   Text,
   Stack,
   Button,
   useColorModeValue,
-} from '@chakra-ui/react';
+  Progress,
+  useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  Input,
+  ModalFooter,
+  FormControl,
+  FormLabel,
+  FlexProps
+} from "@chakra-ui/react";
+import { AxiosError } from "axios";
+import useDebounced from "../hooks/useDebounce";
+import validateEmail from "../libs/validateEmail";
+import { DispatchContext, UserStateContext } from "../App";
 
-export default function SocialProfileWithImage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [userImage, setUserImage] = useState('');
+const TOAST_TIMEOUT_INTERVAL = 800;
+
+type NewUserEmailInfoType = {
+  newEmail: string;
+  verificationCode: string;
+};
+
+export default function MyPage() {
+  const toast = useToast();
   const navigate = useNavigate();
+  const dispatch = useContext(DispatchContext);
+  const { user } = useContext(UserStateContext);
+
+
+  /** 이메일 추가 모달 */
+  const [isEmailPopupOpen, setEmailPopupOpen] = useState(false);
+
+  const [newUserEmailInfo, setNewUserEmailInfo] = useState<NewUserEmailInfoType>({
+    newEmail: "",
+    verificationCode: "",
+  });
+
+  /** 유저 이메일 추가용 */
+  const { newEmail, verificationCode } = newUserEmailInfo;
+
+  /** 소셜 로그인 유저 이메일 추가 */
+  const debounceFetchTerm = useDebounced(newEmail, 500);
+  const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
+  const [sendEmailCodeClick, setSendEmailCodeClick] = useState(false);
+  const [succededEmailCode, setSuccededEmailCode] = useState(false);
+
+  /** 소셜 로그인 유저 이메일 추가 완료시 모달 닫기용 */
+  const [isEmailVerificationComplete, setIsEmailVerificationComplete] = useState(false);
+
+  /** 유저 내 정보 수정 및 조회 */
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [profileImage, setProfileImage] = useState("https://i.seadn.io/gae/7B0qai02OdHA8P_EOVK672qUliyjQdQDGNrACxs7WnTgZAkJa_wWURnIFKeOh5VTf8cfTqW3wQpozGedaC9mteKphEOtztls02RlWQ?auto=format&dpr=1&w=256");
+
+  /** 학습진행률 */
+  const [csatProgress, setCsatProgress] = useState(0);
+  const [toeflProgress, setToeflProgress] = useState(0);
+  const [toeicProgress, setToeicProgress] = useState(0);
+  const [toeicPercentage, setToeicPercentage] = useState("0.00");
+  const [toeflPercentage, setToeflPercentage] = useState("0.00");
+  const [csatPercentage, setCsatPercentage] = useState("0.00");
+  const [overallPercentage, setOverallPercentage] = useState("0.00");
+
+  /** 이메일 중복성 검사 info 함수 */
+  const getEmailStatus = () => {
+    if (isEmailAvailable) {
+      return "사용 가능한 이메일";
+    }
+    if (isEmailAvailable === false) {
+      return "사용중인 이메일";
+    }
+    if (isEmailAvailable === undefined) {
+      return "올바르지 않은 형식";
+    }
+    return ""; // 반환값이 없을 경우 빈 문자열 반환
+  };
+
+  /** 이메일 중복 검사 진행 */
+  const fetchEmailCheck = async () => {
+    console.log("-------넘어오나~~~~---------");
+    try {
+      const res = await Api.get(`/auth/check?email=${newEmail}`);
+      console.log("-------이메일 중복 검사중--------");
+      console.log(res);
+      setIsEmailAvailable(true);
+      if (res.status === 403 || res.status === 409) {
+        setIsEmailAvailable(false);
+      } else if (res.status === 400) {
+        console.log("이메일이 없습니다.");
+      } else {
+        setIsEmailAvailable(true);
+      }
+    } catch (e) {
+      const customError = e as AxiosError;
+      console.log(customError.message);
+      setIsEmailAvailable(customError.response.status === 409 ? false : undefined);
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewUserEmailInfo({ ...newUserEmailInfo, [name]: value });
+  };
+
+  /** 2. 이메일 인증 요청을 보내기 */
+  const fetchSendEmailCode = async () => {
+    try {
+      await Api.post(`/auth/register`, { email: newEmail });
+      setSendEmailCodeClick(true);
+
+      // 인증 요청 메일 발송 성공 시 토스트 알람 표시
+      toast({
+        title: "이메일 인증 요청이 성공적으로 전송되었습니다.",
+        status: "success",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+    } catch (e) {
+      console.error("이메일 인증 중 오류 발생:", e);
+
+      // 인증 요청 메일 발송 실패 시 토스트 알람 표시
+      toast({
+        title: "이메일 인증 요청을 보내는 중 오류가 발생했습니다.",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+    }
+  };
+
+  /** 3. 인증번호 인증 */
+  const fetchCheckEmailCode = async () => {
+    try {
+      const res = await Api.post(`/auth/verify`, { email: newEmail, code: verificationCode });
+      if (res.status === 200) {
+        setSuccededEmailCode(true);
+        toast({
+          title: `이메일 인증 완료!`,
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+      }
+    } catch (e) {
+      toast({
+        title: `이메일 인증 실패!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+      setSuccededEmailCode(false);
+    }
+  };
+
+  /** 4. 소셜로그인 유저 이메일 등록 */
+  const fetchUpdateEmail = async () => {
+    if (!newEmail) {
+      toast({
+        title: "이메일을 입력해주세요.",
+        status: "warning",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+      return;
+    }
+    try {
+      const res = await Api.put("/auth", { email: newEmail });
+      if (res.status === 200) {
+        toast({
+          title: "이메일이 성공적으로 등록되었습니다.",
+          status: "success",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+      }
+      setIsEmailVerificationComplete(true);
+    } catch (error) {
+      console.error("이메일 등록 오류:", error);
+      toast({
+        title: "이메일 등록 오류",
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+    }
+  };
+
+  /** 이메일 입력했나 안했나 체크 */
+  const isEmailValid = validateEmail(newEmail);
+  const isVerificationCodeValid = verificationCode.length > 0;
+
+  const isFormValid = isEmailValid && isVerificationCodeValid;
 
   useEffect(() => {
-    // API 호출: 사용자 정보 가져오기
-    Api.get('/user')
+    if (debounceFetchTerm) {
+      fetchEmailCheck();
+    }
+  }, [debounceFetchTerm]);
+
+  useEffect(() => {
+    // 사용자의 이름과 이메일 가져오기
+    Api.get("/user")
       .then((response) => {
-        // API 응답에서 이름과 이메일 추출
         const userData = response.data;
+        if (userData.email === null) {
+          setEmailPopupOpen(true); // 이메일이 등록되어 있지 않으면 팝업 띄우기
+        }
         setName(userData.name);
         setEmail(userData.email);
-        setUserImage(userData.image); // 이미지 URL 또는 해당 키에 맞게 업데이트
+        setProfileImage(userData.profileImage);
+        console.log(user);
       })
       .catch((error) => {
-        console.error('API 호출 오류:', error);
+        console.error("사용자 정보 가져오기 오류:", error);
+      });
+
+    // 학습 진행률 가져오기
+    Api.get("/progress")
+      .then((progressResponse) => {
+        const progressData = progressResponse.data;
+        setOverallPercentage(progressData.OverallPercentage || "0.00");
+        const { csat, toefl, toeic } = progressData.CategoryPercentage;
+        setCsatProgress(csat);
+        setCsatPercentage(progressData.CategoryPercentage.csat || "0.00");
+        setToeflProgress(toefl);
+        setToeflPercentage(progressData.CategoryPercentage.toefl || "0.00");
+        setToeicProgress(toeic);
+        setToeicPercentage(progressData.CategoryPercentage.toeic || "0.00");
+      })
+      .catch((progressError) => {
+        console.error("학습 진행 정보 가져오기 오류:", progressError);
       });
   }, []);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+    console.log("Selected file:", file);
+
     if (file) {
-      // 이미지 업로드 API 호출
       const formData = new FormData();
-      formData.append('image', file);
-      Api.post('/upload/profile-image', formData)
+      formData.append("profileImage", file);
+
+      Api.sendImage("post", "/upload/profile-image", formData)
         .then((response) => {
-          // 이미지 업로드 성공 시 이미지 URL을 업데이트
-          setUserImage(response.data.imageUrl);
+          console.log("Server Response:", response);
+          dispatch({type: "CHANGE_IMAGE", payload:response.data})
+          toast({ 
+            title: "프로필 이미지가 변경 되었습니다!",
+            status: "success",
+            isClosable: true,
+            duration: TOAST_TIMEOUT_INTERVAL,
+          });
         })
         .catch((error) => {
-          console.error('이미지 업로드 오류:', error);
+          console.error("이미지 업로드 오류:", error);
+          toast({
+            title: "프로필 이미지 업로드 오류",
+            status: "error",
+            isClosable: true,
+            duration: TOAST_TIMEOUT_INTERVAL,
+          });
         });
+    } else {
+      console.log("No file selected.");
     }
   };
+
+  useEffect(() => {
+    if (debounceFetchTerm) {
+      fetchEmailCheck();
+    }
+  }, [debounceFetchTerm]);
 
   const navigateToMainPage = () => {
     navigate("/main");
   };
 
   return (
-    <Center py={6}>
+    <Center py={1}>
       <Box
-        maxW={'270px'}
-        w={'full'}
-        bg={useColorModeValue('white', 'gray.800')}
-        boxShadow={'2xl'}
-        rounded={'md'}
-        overflow={'hidden'}
+        maxW={"400px"}
+        w={"full"}
+        bg={useColorModeValue("white", "gray.800")}
+        boxShadow={"2xl"}
+        rounded={"md"}
+        overflow={"hidden"}
       >
-        <Flex justify={'center'} mt={5}>
+        <Flex justify={"center"} mt={3}>
           <Avatar
-            size={'xl'}
-            src={userImage}
+            size={"xl"}
+            src={user.profileImage}
+            key={user.profileImage}
             css={{
-              border: '2px solid white',
+              border: "2px solid white",
             }}
           />
         </Flex>
-        <Box p={6}>
-          <Stack spacing={0} align={'center'} mb={5}>
-            <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
+        <Box p={3}>
+          <Stack align={"center"}>
+            <Heading fontSize={"xl"} fontWeight={700}>
               {name}
             </Heading>
-            <Text color={'gray.500'}>{email}</Text>
+            <Text color={"gray.500"}>{email || ""}</Text>
+            {!email && (
+              <Button onClick={() => setEmailPopupOpen(true)} colorScheme="teal" size="sm">
+                이메일 등록
+              </Button>
+            )}
           </Stack>
-          <Stack mb={5}>
-            <input type="file" onChange={handleImageUpload} />
+          <Stack mb={2} align={"center"} mt={2}>
+            <Button
+              as="label"
+              htmlFor="profileImageInput"
+              mt={1}
+              bg="teal.400"
+              color="white"
+              _hover={{ bg: "green.400" }}
+              cursor="pointer"
+              padding="10px 10px"
+              rounded="md"
+            >
+              새 이미지 선택
+            </Button>
+            <input
+              type="file"
+              name="profileImage"
+              id="profileImageInput"
+              onChange={handleImageUpload}
+              style={{ display: "none" }}
+              accept="image/*"
+            />
           </Stack>
-          <Stack direction={'row'} justify={'center'} spacing={6}>
-            <Stack spacing={0} align={'center'}>
-              <Text fontWeight={600}>학습 진행</Text>
-              <Text fontSize={'sm'} color={'gray.500'}>
-                진행 정도?? 여긴 뭐로 넣어줄까?
+          <Stack direction={"row"} justify={"center"} spacing={10}>
+            <Stack spacing={1} align={"center"} mt={1}>
+              <Text fontWeight={600} fontSize={"xl"}>
+                학습 진행률
+              </Text>
+              <Text fontSize={"md"} fontWeight={"600"}>전체 학습 : {parseFloat(overallPercentage).toFixed(2)}%</Text>
+              <Text fontSize={"md"} color={"gray.500"}>
+                <Stack mt={2}>
+                <Text fontWeight={"600"}>CSAT 진행도 : {csatPercentage}%</Text>
+                <Progress value={csatProgress} colorScheme="teal" mb={2} />
+                <Text fontWeight={"600"}>TOEFL 진행도 : {toeflPercentage}%</Text>
+                <Progress value={toeflProgress} colorScheme="teal" mb={2} />
+                <Text fontWeight={"600"}>TOEIC 진행도 : {toeicPercentage}%</Text>
+                <Progress value={toeicProgress} colorScheme="teal" mb={2} />
+                </Stack>
               </Text>
             </Stack>
           </Stack>
-          <Button
-            onClick={navigateToMainPage}
-            w={'full'}
-            mt={8}
-            bg={useColorModeValue('green.400', 'green.400')}
-            color={'white'}
-            rounded={'md'}
-            _hover={{
-              transform: 'translateY(-2px)',
-              boxShadow: 'lg',
-            }}
-          >
-            학습 하러가기
-          </Button>
+          <Stack align={"Center"}>
+            <Button
+              onClick={navigateToMainPage}
+              mt={2}
+              bg={useColorModeValue("teal.400", "teal.400")}
+              color={"white"}
+              rounded={"md"}
+              _hover={{
+                transform: "translateY(-2px)",
+                boxShadow: "lg",
+              }}
+            >
+              학습 하러 가기
+            </Button>
+          </Stack>
         </Box>
       </Box>
+      <Modal isOpen={isEmailPopupOpen} onClose={() => setEmailPopupOpen(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>이메일 변경</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {isEmailVerificationComplete ? (
+              <Text color="green.500">이메일 인증이 완료되었습니다.</Text>
+            ) : (
+              <>
+                <FormControl id="email" isRequired>
+                  <FormLabel>이메일</FormLabel>
+                  {newEmail.length !== 0 && (
+                    <Text
+                      position="absolute"
+                      right="24px"
+                      bottom="10px"
+                      fontSize="xs"
+                      color={isEmailAvailable ? "teal.500" : "tomato"}
+                    >
+                      {getEmailStatus()}
+                    </Text>
+                  )}
+                  <Input name="newEmail" type="email" value={newEmail} onChange={handleChange} />
+                </FormControl>
+
+                <FormControl id="code" isRequired>
+                  <FormLabel>인증번호</FormLabel>
+                  <Input
+                    type="text"
+                    name="verificationCode"
+                    value={verificationCode}
+                    onChange={handleChange}
+                  />
+                  <Box position="absolute" right="0" top="45%">
+                    {!succededEmailCode ? (
+                      <Button
+                        fontSize={"sm"}
+                        border={"none"}
+                        bg={"none"}
+                        onClick={!sendEmailCodeClick ? fetchSendEmailCode : fetchCheckEmailCode}
+                      >
+                        {!sendEmailCodeClick ? "인증번호 전송" : "확인"}
+                      </Button>
+                    ) : (
+                      <Button
+                        fontSize={"sm"}
+                        border={"none"}
+                        bg={"none"}
+                        disabled={true}
+                        color={"teal.500"}
+                      >
+                        인증완료
+                      </Button>
+                    )}
+                  </Box>
+                </FormControl>
+              </>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            {!isEmailVerificationComplete ? (
+              <Button colorScheme="teal" onClick={fetchUpdateEmail}>
+                이메일 등록
+              </Button>
+            ) : null}
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Center>
   );
 }

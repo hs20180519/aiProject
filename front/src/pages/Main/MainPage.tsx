@@ -1,9 +1,6 @@
-import { Center, Box, Flex, useColorModeValue, useDisclosure } from "@chakra-ui/react";
-import { FiEdit2, FiTrendingUp, FiCodesandbox, FiStar, FiDatabase, FiUser } from "react-icons/fi";
-import { useState, useContext, useEffect } from "react";
+import { Box, useColorModeValue, useDisclosure } from "@chakra-ui/react";
+import { useContext, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-
-import * as type from "../../apis/types/main";
 
 // global component
 import SidebarContent from "./SidebarContent";
@@ -26,30 +23,29 @@ import GrammarPage from "../Grammar/GramnarPage";
 
 // inner = study
 import WordPage from "../Word/WordPage";
+import StudyCustomNoteListPage from "../Study/StudyCustomNoteListPage";
 
 // gptPage
-import TestGptWordPage from "../TestGptWordPage/TestGptWordPage";
+import GptDialogPage from "../GptDialogPage/GptDialogPage";
 import Loading from "../../components/Loading";
-import ParamTestGptWordPage from "../TestGptWordPage/ParamTestGptWordPage";
+import ParamGptDialogPage from "../GptDialogPage/ParamGptDialogPage";
 
 // mypage
 import MyPage from "../MyPage";
 
 // storage
 import StoragePage from "../Storage/StoragePage";
+import StudyCustomTestPage from "../Study/StudyCustomTestPage";
+import StudyCustomResultPage from "../Study/StudyCustomResultPage";
+import GoBack from "../../components/GoBack";
+
+import withUser from "../../hoc/withUser";
 
 const MainPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const { user } = useContext(UserStateContext);
   const dispatch = useContext(DispatchContext);
-
-  // 메인페이지가 마운트 될 시 유저가 없으면 로그인 페이지로 리다이렉트
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user]);
 
   const handleClickLogout = () => {
     // 1. 세션 스토리지에서 토큰을 삭제한다.
@@ -66,25 +62,33 @@ const MainPage = () => {
 
   return (
     <Box minH={"100vh"} bg={useColorModeValue("gray.100", "gray.900")}>
-      <SidebarContent onClose={onClose} display={{ base: "none", md: "block" }} />
+      <SidebarContent
+        onClose={onClose}
+        display={{ base: "none", md: "block" }}
+        position={"fixed"}
+      />
       <Header isOpen={isOpen} onClose={onClose} />
       <MobileNav onOpen={onOpen} nickname={user.nickname} onLogout={handleClickLogout} />
+      <GoBack />
       <Box ml={{ base: 0, md: 60 }} p={"4"}>
         <Routes>
-          <Route path="word" element={<WordPage />} />
+          <Route path="" element={<WordPage />} />
+          <Route path="custom" element={<StudyCustomNoteListPage />} />
+          <Route path="custom/:note_id" element={<StudyCustomTestPage />} />
+          <Route path="custom/:note_id/result" element={<StudyCustomResultPage />} />
           <Route path="notes" element={<NoteListPage />} />
           <Route path="note/:note_id" element={<NoteDetailPage />} />
-          <Route path="note_add" element={<AddCustomNotePage />} />
+          <Route path="note_add/:note_id" element={<AddCustomNotePage />} />
           <Route path="rank" element={<RankFeildPage />} />
           <Route path="grammar/:word" element={<GrammarPage />} />
-          <Route path="test_word" element={<TestGptWordPage />} />
+          <Route path="gpt_dialog" element={<GptDialogPage />} />
+          <Route path="param_gpt_dialog" element={<ParamGptDialogPage />} />
           <Route path="mypage" element={<MyPage />} />
           <Route path="storage" element={<StoragePage />} />
-          <Route path="paramTestGptWordPage" element={<ParamTestGptWordPage />} />
         </Routes>
       </Box>
     </Box>
   );
 };
 
-export default MainPage;
+export default withUser(MainPage);

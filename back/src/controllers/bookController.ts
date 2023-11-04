@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "@prisma/client";
+import { Favorite, User, Word } from "@prisma/client";
 import * as bookService from "../services/bookService";
 import { BookDto, BooksDto } from "../dtos/bookDto";
 import { WordDto } from "../dtos/wordDto";
+import { FavoriteDto } from "../dtos/favoriteDto";
 
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
   /**
@@ -57,7 +58,6 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
     const userId: number = (req.user as User).id;
     const category: string = String(req.query.book);
     const customBookId: string = String(req.query.customBookId);
-
     const queryServiceMap: {
       [key: string]: (userId: number, customBookId?: string) => Promise<any>;
     } = {
@@ -66,8 +66,8 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
       csat: (userId: number) => bookService.getWordByCategory(page, limit, userId, "csat"),
       toeic: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toeic"),
       toefl: (userId: number) => bookService.getWordByCategory(page, limit, userId, "toefl"),
-      favorite: (userId: number) => bookService.getWordByCategory(page, limit, userId, "favorite"),
-      custom: (userId: number, customBookId: string | undefined) =>
+      favorite: (userId: number) => bookService.getWordByFavorite(page, limit, userId),
+      customs: (userId: number, customBookId: string | undefined) =>
         bookService.getWordByCategory(page, limit, userId, "custom", customBookId),
     };
 
@@ -131,7 +131,7 @@ export const deleteCustomBook = async (req: Request, res: Response, next: NextFu
 
 export const deleteAllCustomBook = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = (req.user as User).id;
+    const userId: number = (req.user as User).id;
     await bookService.deleteAllCustomBook(userId);
     return res.status(200).json({ message: "모든 커스텀 단어장이 삭제되었습니다." });
   } catch (error) {
@@ -149,7 +149,6 @@ export const createCustomWordInBook = async (req: Request, res: Response, next: 
    * }]
    */
   try {
-    const userId: number = (req.user as User).id;
     const customBookId: number = Number(req.query.customBookId);
     const { word, meaning } = req.body;
 
@@ -157,7 +156,6 @@ export const createCustomWordInBook = async (req: Request, res: Response, next: 
       customBookId,
       word,
       meaning,
-      userId,
     );
     return res.status(201).json(createdCustomWordInBook);
   } catch (error) {
@@ -214,12 +212,95 @@ export const deleteCustomWordInBook = async (req: Request, res: Response, next: 
 };
 
 export const createFavoriteWordInBook = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Book']
+   * #swagger.summary = '즐겨찾기 추가 ?wordId='
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
   try {
     const userId: number = (req.user as User).id;
     const wordId: number = Number(req.query.wordId);
 
+    const word: Word | null = await bookService.getWord(wordId);
+    console.log(word);
+    if (word && word.category === "custom")
+      return res.status(400).json({ message: "커스텀단어는 즐겨찾기할 수 없습니다." });
+    const existingFavorite: FavoriteDto = await bookService.getFavoriteWordByWordId(userId, wordId);
+    if (existingFavorite) return res.status(409).json({ message: "이미 추가한 단어입니다." });
+
     const createdFavoriteWord: WordDto = await bookService.createFavoriteWord(userId, wordId);
     return res.status(201).json(createdFavoriteWord);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
+export const deleteFavoriteWord = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Book']
+   * #swagger.summary = '즐겨찾기 단어 삭제. ?wordId&all / all="true" 요청 시 유저의 모든 즐겨찾기 단어 삭제'
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
+  try {
+    const userId: number = (req.user as User).id;
+    const wordId: number = Number(req.query.wordId);
+    const all: boolean = Boolean(req.query.all === "true");
+
+    if (all) await bookService.deleteAllFavoriteWord(userId);
+    else await bookService.deleteFavoriteWord(userId, wordId);
+
+    return res.status(200).json({ message: "즐겨찾기 단어 삭제 완료" });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
+export const searchBook = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * #swagger.tags = ['Book']
+   * #swagger.summary = '단어장 검색'
+   * #swagger.description = '쿼리별 단어장 검색 (서버사이드 페이징)
+   * ?book={correct, incorrect, csat, toeic, toefl, favorite, custom}&customBookId=""&q="검색할거" '
+   * #swagger.security = [{
+   *   "bearerAuth": []
+   * }]
+   */
+  try {
+    const page: number = req.query.page ? Number(req.query.page) : 1;
+    const limit: number = req.query.limit ? Number(req.query.limit) : 10;
+    const userId: number = (req.user as User).id;
+    const searchTerm: string = String(req.query.q);
+    const category: string = String(req.query.book);
+    const customBookId: string = String(req.query.customBookId);
+    const queryServiceMap: {
+      [key: string]: (userId: number, customBookId?: string, searchTerm?: string) => Promise<any>;
+    } = {
+      correct: (userId: number) =>
+        bookService.searchWordByUserId(page, limit, userId, true, searchTerm),
+      incorrect: (userId: number) =>
+        bookService.searchWordByUserId(page, limit, userId, false, searchTerm),
+      csat: (userId: number) =>
+        bookService.searchWordByCategory(page, limit, userId, "csat", searchTerm),
+      toeic: (userId: number) =>
+        bookService.searchWordByCategory(page, limit, userId, "toeic", searchTerm),
+      toefl: (userId: number) =>
+        bookService.searchWordByCategory(page, limit, userId, "toefl", searchTerm),
+      favorite: (userId: number) =>
+        bookService.searchWordByFavorite(page, limit, userId, searchTerm),
+      customs: (userId: number, customBookId: string | undefined) =>
+        bookService.searchWordByCategory(page, limit, userId, "custom", searchTerm, customBookId),
+    };
+
+    if (category && queryServiceMap[category]) {
+      const words = await queryServiceMap[category](userId, customBookId, searchTerm);
+      return res.status(200).json(words);
+    }
   } catch (error) {
     console.error(error);
     return next(error);

@@ -11,7 +11,6 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  HStack,
   InputRightElement,
   Stack,
   Button,
@@ -51,20 +50,19 @@ const SignUp = () => {
 
   const navigate = useNavigate();
   const [isEmailAvailable, setIsEmailAvailable] = useState<boolean>(false);
-  const [hasEmailCode, setHasEmailCode] = useState<string | null>(null);
   const debounceFetchTerm = useDebounced(email, 500);
   const [sendEmailCodeClick, setSendEmailCodeClick] = useState(false);
   const [succededEmailCode, setSuccededEmailCode] = useState(false);
 
   const getEmailStatus = () => {
     if (isEmailAvailable) {
-      return "사용 가능한 이메일";
+      return "사용 가능한 이메일입니다.";
     }
     if (isEmailAvailable === false) {
-      return "사용중인 이메일";
+      return "사용중인 이메일입니다.";
     }
     if (isEmailAvailable === undefined) {
-      return "올바르지 않은 형식";
+      return "이메일 양식에 맞춰 작성해주세요!";
     }
     return ""; // 반환값이 없을 경우 빈 문자열 반환
   };
@@ -76,8 +74,6 @@ const SignUp = () => {
       setIsEmailAvailable(true);
       if (res.status === 403) {
         setIsEmailAvailable(false);
-      } else if (res.status === 400 || res.status === 409) {
-        setIsEmailAvailable(undefined);
       } else {
         setIsEmailAvailable(true);
       }
@@ -119,13 +115,24 @@ const SignUp = () => {
     try {
       const res = await Api.post(`/auth/verify`, { email, code: verificationCode });
       if (res.status === 200) {
-        setSuccededEmailCode(true);
+        // 인증 코드가 일치할 때만 성공 메시지 표시
         toast({
           title: `이메일 인증 완료!`,
           status: "success",
           isClosable: true,
           duration: TOAST_TIMEOUT_INTERVAL,
         });
+        // 인증 성공 시 `setSuccededEmailCode`로 상태 설정
+        setSuccededEmailCode(true);
+      } else {
+        toast({
+          title: `이메일 인증 코드가 일치하지 않습니다!`,
+          status: "error",
+          isClosable: true,
+          duration: TOAST_TIMEOUT_INTERVAL,
+        });
+        // 인증 실패 시 회원가입 방지
+        setSuccededEmailCode(false);
       }
     } catch (e) {
       toast({
@@ -134,12 +141,33 @@ const SignUp = () => {
         isClosable: true,
         duration: TOAST_TIMEOUT_INTERVAL,
       });
+      // 인증 실패 시 회원가입 방지
       setSuccededEmailCode(false);
     }
   };
 
   // 4. 회원가입을 진행한다.
   const fetchRegister = async () => {
+    if (!isFormValid) {
+      toast({
+        title: `회원가입 정보를 입력해주세요!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+      return;
+    }
+
+    if (!succededEmailCode) {
+      toast({
+        title: `이메일 인증 코드가 일치하지 않습니다!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
+      return;
+    }
+  
     try {
       const res = await Api.post("/auth/signup", { name, email, password });
       if (res.status === 201) {
@@ -160,8 +188,13 @@ const SignUp = () => {
           duration: TOAST_TIMEOUT_INTERVAL,
         });
       }
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      toast({
+        title: `회원가입 정보를 입력해주세요!`,
+        status: "error",
+        isClosable: true,
+        duration: TOAST_TIMEOUT_INTERVAL,
+      });
     }
   };
 
@@ -182,10 +215,6 @@ const SignUp = () => {
     });
   };
 
-  const navigateToIntroPage = () => {
-    navigate("/");
-  };
-
   useEffect(() => {
     if (debounceFetchTerm) {
       fetchEmailCheck();
@@ -199,131 +228,139 @@ const SignUp = () => {
       justify={"center"}
       bg={useColorModeValue("gray.100", "gray.800")}
     >
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-        <Stack align={"center"}>
-          <Heading fontSize={"4xl"} textAlign={"center"}>
-            워디 회원가입!
-          </Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
-            AI와 함께 쉽게 배우는 영단어✌️
-          </Text>
-        </Stack>
-        <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
-          <Stack spacing={4}>
-            <Box w="360px">
-              <FormControl id="firstName" isRequired>
-                <FormLabel>이름</FormLabel>
-                <Input type="text" name="name" value={name} onChange={handleChange} />
-              </FormControl>
-            </Box>
-            <Box w="360px">
-              <FormControl id="email" isRequired>
-                <FormLabel>이메일</FormLabel>
-                {email.length !== 0 && (
-                  <Text
-                    position="absolute"
-                    right="24px"
-                    bottom="10px"
-                    fontSize="xs"
-                    color={isEmailAvailable ? "green.500" : "tomato"}
+      <Stack mx={"auto"} maxW={"auto"} py={4}>
+        <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"md"} p={8}>
+          <Stack spacing={2}>
+            <Heading
+              fontSize={"2xl"}
+              textAlign={"center"}
+              color={"teal"}
+              fontFamily={"Elice DX Neolli"}
+            >
+              워디 회원가입
+            </Heading>
+            <Text
+              fontSize={"sm"}
+              color={"teal.400"}
+              textAlign={"center"}
+              fontFamily={"Elice DX Neolli"}
+            >
+              AI와 함께 쉽게 배우는 영단어 ✌️
+            </Text>
+            <FormControl id="firstName" isRequired>
+              <FormLabel>이름</FormLabel>
+              <Input type="text" name="name" value={name} onChange={handleChange} />
+              {!isNameValid && name.length !== 0 && (
+                <Text color="tomato" fontSize={"sm"}>
+                  두 글자 이상 적어주세요.
+                </Text>
+              )}
+            </FormControl>
+            <FormControl id="email" isRequired>
+              <FormLabel>이메일</FormLabel>
+              <Input name="email" type="email" value={email} onChange={handleChange} />
+              {email.length !== 0 && (
+                <Text
+                  right="24px"
+                  bottom="10px"
+                  fontSize="xs"
+                  color={isEmailAvailable ? "teal.500" : "tomato"}
+                >
+                  {getEmailStatus()}
+                </Text>
+              )}
+            </FormControl>
+            <FormControl id="code" isRequired>
+              <FormLabel>인증번호</FormLabel>
+              <Input
+                type="text"
+                name="verificationCode"
+                value={verificationCode}
+                onChange={handleChange}
+              />
+              <Box position="absolute" right="0" top="45%">
+                {!succededEmailCode ? (
+                  <Button
+                    fontSize={"sm"}
+                    border={"none"}
+                    bg={"none"}
+                    onClick={!sendEmailCodeClick ? fetchSendEmailCode : fetchCheckEmailCode}
                   >
-                    {getEmailStatus()}
-                  </Text>
+                    {!sendEmailCodeClick ? "인증번호 전송" : "확인"}
+                  </Button>
+                ) : (
+                  <Button
+                    fontSize={"sm"}
+                    border={"none"}
+                    bg={"none"}
+                    disabled={true}
+                    color={"teal.500"}
+                  >
+                    인증완료
+                  </Button>
                 )}
-
-                <Input name="email" type="email" value={email} onChange={handleChange} />
-              </FormControl>
-            </Box>
-            <Box w="360px">
-              <FormControl id="code" isRequired>
-                <FormLabel>인증번호</FormLabel>
+              </Box>
+            </FormControl>
+            <FormControl id="password" isRequired>
+              <FormLabel>비밀번호</FormLabel>
+              <InputGroup>
                 <Input
-                  type="text"
-                  name="verificationCode"
-                  value={verificationCode}
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  onChange={handleChange}
+                  value={password}
+                />
+                <InputRightElement h={"full"}>
+                  <Button variant={"ghost"} onClick={() => setShowPassword((prev) => !prev)}>
+                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              {!isPasswordValid && password.length !== 0 && (
+                <Text color="tomato" fontSize={"sm"}>
+                  네 글자 이상 적어주세요.
+                </Text>
+              )}
+            </FormControl>
+            <FormControl id="password_confirm" isRequired>
+              <FormLabel>비밀번호 확인</FormLabel>
+              <InputGroup>
+                <Input
+                  value={confirmPassword}
+                  name="confirmPassword"
+                  type={showPassword ? "text" : "password"}
                   onChange={handleChange}
                 />
-                <Box position="absolute" right="0" top="45%">
-                  {!succededEmailCode ? (
-                    <Button
-                      fontSize={"sm"}
-                      border={"none"}
-                      bg={"none"}
-                      onClick={!sendEmailCodeClick ? fetchSendEmailCode : fetchCheckEmailCode}
-                    >
-                      {!sendEmailCodeClick ? "인증번호 전송" : "확인"}
-                    </Button>
-                  ) : (
-                    <Button
-                      fontSize={"sm"}
-                      border={"none"}
-                      bg={"none"}
-                      disabled={true}
-                      color={"teal.500"}
-                    >
-                      인증완료
-                    </Button>
-                  )}
-                </Box>
-              </FormControl>
-            </Box>
-
-            <Box w="360px">
-              <FormControl id="password" isRequired>
-                <FormLabel>비밀번호</FormLabel>
-                <InputGroup>
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    onChange={handleChange}
-                    value={password}
-                  />
-                  <InputRightElement h={"full"}>
-                    <Button variant={"ghost"} onClick={() => setShowPassword((prev) => !prev)}>
-                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-              </FormControl>
-            </Box>
-            <Box w="360px">
-              <FormControl id="password_confirm" isRequired>
-                <FormLabel>비밀번호 확인</FormLabel>
-                <InputGroup>
-                  <Input
-                    value={confirmPassword}
-                    name="confirmPassword"
-                    type={showPassword ? "text" : "password"}
-                    onChange={handleChange}
-                  />
-                  <InputRightElement h={"full"}>
-                    <Button variant={"ghost"} onClick={() => setShowPassword((prev) => !prev)}>
-                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-              </FormControl>
-            </Box>
-
-            <Stack spacing={10} pt={2}>
+                <InputRightElement h={"full"}>
+                  <Button variant={"ghost"} onClick={() => setShowPassword((prev) => !prev)}>
+                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              {!isPasswordSame && confirmPassword.length !== 0 && (
+                <Text color="tomato" fontSize={"sm"}>
+                  비밀번호가 올바르지 않습니다.
+                </Text>
+              )}
+            </FormControl>
+            <Stack spacing={10} pt={5}>
               <Button
                 loadingText="Submitting"
                 size="lg"
                 colorScheme="teal"
                 color={"white"}
                 onClick={fetchRegister}
+                isDisabled={!isFormValid}
               >
                 회원가입
               </Button>
             </Stack>
-            <Stack pt={6}>
-              <Text align={"center"}>
-                이미 회원이신가요?{" "}
-                <ChakraLink as={ReactRouterLink} color={"green.400"} to="/login">
-                  로그인
-                </ChakraLink>
-              </Text>
-            </Stack>
+            <Text align={"center"}>
+              이미 회원이신가요?{" "}
+              <ChakraLink as={ReactRouterLink} color={"teal.400"} to="/login">
+                로그인
+              </ChakraLink>
+            </Text>
           </Stack>
         </Box>
       </Stack>

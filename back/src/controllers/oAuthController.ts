@@ -4,8 +4,8 @@ import * as OAuthService from "../services/oAuthService";
 import { PrismaClient, User } from "@prisma/client";
 import generateJwt from "../utils/generateJwt";
 
-const secretKey = process.env.JWT_SECRET_KEY!;
-const tokenExpires = process.env.JWT_TOKEN_EXPIRES!;
+const secretKey: string = process.env.JWT_SECRET_KEY!;
+const tokenExpires: string = process.env.JWT_TOKEN_EXPIRES!;
 
 const prisma = new PrismaClient();
 

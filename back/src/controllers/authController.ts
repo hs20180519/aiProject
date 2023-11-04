@@ -12,7 +12,6 @@ export const checkEmail = async (req: Request, res: Response, next: NextFunction
    */
   try {
     const email: string = req.query.email as string;
-    console.log(email);
     if (email) {
       const existingUserEmail: User | null = await authService.getUserByEmail(email);
       if (existingUserEmail)
@@ -103,6 +102,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       token: authReq.token, // todo postman 편의성을 위해 추가. 개발 종료시점에서 삭제
       user: authReq.user.name,
       nickname: authReq.user.nickname,
+      profileImage: authReq.user.profileImage,
     };
     return res.cookie("token", authReq.token).status(200).json(loginUser);
   } catch (error) {

@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@chakra-ui/react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "@chakra-ui/react";
 import { FetchStudyWords } from "../../apis/studyWord";
 
 interface WordData {
@@ -13,29 +20,25 @@ interface WordData {
 
 interface TestPageProps {
   selectedCategory: string;
-  setShowResultPage: (value: boolean) => void; 
+  setShowResultPage: (value: boolean) => void;
+  setShowTestPage: (value: boolean) => void;
 }
 
-interface Answer {
-  id: number;
-  userAnswer: string;
-  correctAnswer: string;
-  isCorrect: boolean;
-}
-
-const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
+const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer, stopStudy }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
       <ModalOverlay />
-      <ModalContent display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-        <ModalHeader>
-          {isCorrect ? "정답" : "오답"}
-        </ModalHeader>
-        <ModalBody>
-          {isCorrect ? "정답입니다!" : `틀렸습니다. 정답은: ${correctAnswer}`}
-        </ModalBody>
+      <ModalContent
+        maxW="343px"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <ModalHeader>{stopStudy ? "⛔알림" : (isCorrect ? "정답" : "오답")}</ModalHeader>
+        <ModalBody>{stopStudy ? "학습할 단어가 없습니다. 처음으로 돌아갑니다." : (isCorrect ? "정답입니다!" : `틀렸습니다. 정답은: ${correctAnswer}`)}</ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" onClick={onClose}>
+          <Button colorScheme="teal" onClick={onClose}>
             확인
           </Button>
         </ModalFooter>
@@ -44,23 +47,33 @@ const PopupModal = ({ isOpen, onClose, isCorrect, correctAnswer }) => {
   );
 };
 
-const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage }) => {
+const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage, setShowTestPage }) => {
   const [wordData, setWordData] = useState<WordData>();
-  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<Answer>();
   const [popupIsOpen, setPopupIsOpen] = useState(false);
   const [popupIsCorrect, setPopupIsCorrect] = useState(false);
   const [popupCorrectAnswer, setPopupCorrectAnswer] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [stopStudy, setStopStudy] = useState(false);
+
+  const categoryDescriptions = {
+    csat: "CSAT",
+    toeic: "TOEIC",
+    toefl: "TOEFL",
+    correct: "🐶학습한 단어",
+    incorrect: "📃틀린 단어",
+    favorite: "⭐즐겨찾기",
+  };
 
   const fetchWords = async () => {
     try {
-      const queryParams = `${selectedCategory}=true`;
+      const queryParams = `book=${selectedCategory}`;
       const response = await FetchStudyWords.getStudyWord(queryParams);
       const newWordData = response.data;
       setWordData(newWordData);
     } catch (error) {
-      console.error('Error fetching words:', error);
+      setStopStudy(true);
+      setPopupIsOpen(true);
+      console.error("Error fetching words:", error);
     }
   };
 
@@ -71,7 +84,7 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
         correct: isCorrect,
       });
     } catch (error) {
-      console.error('Error saving learn: ', error)
+      console.error("Error saving learn: ", error);
     }
   };
 
@@ -79,44 +92,31 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
     const userAnswer = choice;
     const correctAnswer = wordData.meaning;
     const isCorrect = userAnswer === correctAnswer;
-    const newAnswer: Answer = {
-      id: wordData.id,
-      userAnswer,
-      correctAnswer,
-      isCorrect,
-    };
-
-    setAnswers(newAnswer);
 
     setPopupCorrectAnswer(correctAnswer);
     setPopupIsCorrect(isCorrect);
     setPopupIsOpen(true);
-
     saveLearn(wordData, isCorrect);
   };
 
   const handleDontKnow = () => {
+    if (!wordData) {
+      return;
+    }
     const correctAnswer = wordData.meaning;
-    const newAnswer: Answer = {
-      id: wordData.id,
-      userAnswer: null,
-      correctAnswer,
-      isCorrect: false,
-    };
-
-    setAnswers(newAnswer);
 
     setPopupCorrectAnswer(correctAnswer);
     setPopupIsCorrect(false);
     setPopupIsOpen(true);
-
     saveLearn(wordData, false);
   };
 
   const handleModalClose = () => {
     setPopupIsOpen(false);
-    
-    if (currentIndex === 9) {
+
+    if (stopStudy) {
+      setShowTestPage(false);
+    } else if (currentIndex === 9) {
       setShowResultPage(true);
     } else {
       fetchWords();
@@ -137,47 +137,58 @@ const TestPage: React.FC<TestPageProps> = ({ selectedCategory, setShowResultPage
   const totalWords = 10;
 
   return (
-    <Flex align="center" justify="center" height="100vh">
-      <Box maxW="xl" p={6} borderWidth={1} borderRadius="lg">
-        <Text fontSize="xl" fontWeight="bold" mb={4}>
-          🐾Wordy
-        </Text>
-        <Text fontSize="6xl" mb={4} textAlign="center">
-          {currentWord}
-        </Text>
-        <Flex flexWrap="wrap">
-          {currentChoices.map((choice) => (
-            <Button
-              variant={selectedChoice === choice ? "solid" : "outline"}
-              colorScheme="blue"
-              onClick={() => handleChoiceClick(choice)}
-              key={choice}
-              mb={4}
-              mr={4}
-              width="auto"
-            >
-              {choice}
-            </Button>
-          ))}
-        </Flex>
-  
-        <Flex justify="space-between" align="center" mt={4}>
-          <Text fontSize="sm">
-            {currentIndex + 1}/{totalWords} {/* 현재 인덱스 번호와 총 단어 개수 */}
+    <Box
+      minH="555px"
+      background="white"
+      borderWidth={1}
+      borderRadius="lg"
+      p={4}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Text fontSize="xl" fontWeight="bold">
+        ✏️단어학습 ({categoryDescriptions[selectedCategory]})
+      </Text>
+      <Flex
+        minH="438px"
+        margin="16px 0"
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Box>
+          <Text width="309px" fontSize="5xl" fontWeight="bold" mb={2} textAlign="center">
+            {currentWord}
           </Text>
-          <Button onClick={handleDontKnow} colorScheme="red" size="sm">
-            모르겠어요
-          </Button>
-        </Flex>
-  
-        <PopupModal
-          isOpen={popupIsOpen}
-          onClose={handleModalClose}
-          isCorrect={popupIsCorrect}
-          correctAnswer={popupCorrectAnswer}
-        />
-      </Box>
-    </Flex>
+          <Flex flexWrap="wrap" direction="column" align="center">
+            {currentChoices.map((choice) => (
+              <Flex key={choice} my={2} justify="center">
+                <Button colorScheme="teal" onClick={() => handleChoiceClick(choice)} size="md">
+                  {choice}
+                </Button>
+              </Flex>
+            ))}
+          </Flex>
+          <Flex justify="center" align="center" mt={2}>
+            <Button variant="outline" onClick={handleDontKnow} colorScheme="orange" size="md">
+              모르겠어요🤔
+            </Button>
+          </Flex>
+          <PopupModal
+            isOpen={popupIsOpen}
+            onClose={handleModalClose}
+            isCorrect={popupIsCorrect}
+            correctAnswer={popupCorrectAnswer}
+            stopStudy={stopStudy}
+          />
+        </Box>
+      </Flex>
+      <Flex justify="center" align="center">
+        <Text fontSize="sm" textAlign="center">
+          {currentIndex + 1}/{totalWords}
+        </Text>
+      </Flex>
+    </Box>
   );
 };
 
