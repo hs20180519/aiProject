@@ -12,7 +12,7 @@ AI를 통해 학습 중인 단어의 예시 스크립트 및 문법, 단어 정�
 
 ## 실행 방법
 
-- 각 폴더별 (front/back) README에서 확인가능합니다.
+- 각 폴더별 ([front](./front/README.md),[back](./back/README.md)) README에서 확인가능합니다.
 - 프로젝트 실행 시 궁금한 사항은 이슈에 남겨주세요.
 
 ## 기술 스택
