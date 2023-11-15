@@ -10,6 +10,11 @@ AI를 통해 학습 중인 단어의 예시 스크립트 및 문법, 단어 정�
 
 학습에 어려움이 있는 누구나 학습한 단어로 만들어진 예문을 통해 반복학습을 해보세요!
 
+## 실행 방법
+
+- 각 폴더별 (front/back) README에서 확인가능합니다.
+- 프로젝트 실행 시 궁금한 사항은 이슈에 남겨주세요.
+
 ## 기술 스택
 
 <img alt="JavaScript" src ="https://img.shields.io/badge/JavaScript-F7DF1E.svg?&style=for-the-badge&logo=JavaScript&logoColor=black"/> <img alt="typescript" src ="https://img.shields.io/badge/typescript-3178C6.svg?&style=for-the-badge&logo=typescript&logoColor=white"/> <img alt="react" src ="https://img.shields.io/badge/react-61DAFB.svg?&style=for-the-badge&logo=react&logoColor=white"/>

@@ -1,13 +1,24 @@
 # dotenv
 
 - `.env` 파일 설정
-
+## 배포 서버 기준
+- 2023년 12월 3일까지만 사용가능
+```
+REACT_APP_SERVER_URL="https://kdt-ai-8-team01-1.elicecoding.com/"
+REACT_APP_SERVER_URL_API="https://kdt-ai-8-team01-1.elicecoding.com/api"
+REACT_APP_GPT_SVR_URL="https://kdt-ai-8-team01-1.elicecoding.com/python/api"
+REDIRECT_URI="https://kdt-ai-8-team01-1.elicecoding.com/oauth/kakao"
+REACT_APP_GPT_TOKEN="elice-ai-8-1-team" 
+```
+## 로컬 서버 기준
 ```
 REACT_APP_SERVER_URL="REACT_APP_SERVER_URL"
 REACT_APP_SERVER_URL_API="REACT_APP_SERVER_URL_API"
 REACT_APP_GPT_SVR_URL="REACT_APP_GPT_SVR_URL"
 REACT_APP_GPT_TOKEN="REACT_APP_GPT_TOKEN"
+REDIRECT_URI="http://localhost:3000/oauth/kakao"
 ```
+- 카카오 로그인 사용할 경우 [해당 kakao develop](https://developers.kakao.com/) 에서 서비스 등록 후 백엔드 dotenv에서 `KAKAO_ID="KAKAO_ID"` 등록 후 사용할 것.
 
 # 초기 패키지 설치
 
