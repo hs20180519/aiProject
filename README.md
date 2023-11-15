@@ -1,5 +1,7 @@
 # AI와 함께하는 단어학습 Wordy!🐾
 
+\*wiki에서 자세한 프로젝트 설명을 확인하실 수 있습니다
+
 ## 프로젝트 주제
 
 AI를 통해 학습 중인 단어의 예시 스크립트 및 문법, 단어 정리, 복습 단어 카드 서비스
@@ -10,7 +12,28 @@ AI를 통해 학습 중인 단어의 예시 스크립트 및 문법, 단어 정�
 
 ## 기술 스택
 
-<img alt="Html" src ="https://img.shields.io/badge/HTML5-E34F26.svg?&style=for-the-badge&logo=HTML5&logoColor=white"/> <img alt="JavaScript" src ="https://img.shields.io/badge/JavaScript-F7DF1E.svg?&style=for-the-badge&logo=JavaScript&logoColor=black"/> <img alt="react" src ="https://img.shields.io/badge/react-61DAFB.svg?&style=for-the-badge&logo=react&logoColor=white"/> <img alt="node.js" src ="https://img.shields.io/badge/node.js-339933.svg?&style=for-the-badge&logo=node.js&logoColor=white"/> <img alt="express" src ="https://img.shields.io/badge/express-000000.svg?&style=for-the-badge&logo=express&logoColor=white"/> <img alt="Prisma" src ="https://img.shields.io/badge/prisma-2D3748.svg?&style=for-the-badge&logo=mysql&logoColor=white"/> <img alt="MySQL" src ="https://img.shields.io/badge/mysql-4479A1.svg?&style=for-the-badge&logo=mysql&logoColor=white"/> <img alt="Python" src ="https://img.shields.io/badge/Python-3776AB.svg?&style=for-the-badge&logo=Python&logoColor=white"/> <img alt="tailwindcss" src ="https://img.shields.io/badge/tailwindcss-06B6D4.svg?&style=for-the-badge&logo=tailwindcss&logoColor=white"/>
+<img alt="JavaScript" src ="https://img.shields.io/badge/JavaScript-F7DF1E.svg?&style=for-the-badge&logo=JavaScript&logoColor=black"/> <img alt="typescript" src ="https://img.shields.io/badge/typescript-3178C6.svg?&style=for-the-badge&logo=typescript&logoColor=white"/> <img alt="react" src ="https://img.shields.io/badge/react-61DAFB.svg?&style=for-the-badge&logo=react&logoColor=white"/>
+<img alt="tsnode" src ="https://img.shields.io/badge/tsnode-3178C6.svg?&style=for-the-badge&logo=tsnode&logoColor=white"/>
+<img alt="express" src ="https://img.shields.io/badge/express-000000.svg?&style=for-the-badge&logo=express&logoColor=white"/> <img alt="Prisma" src ="https://img.shields.io/badge/prisma-2D3748.svg?&style=for-the-badge&logo=mysql&logoColor=white"/> <img alt="MySQL" src ="https://img.shields.io/badge/mysql-4479A1.svg?&style=for-the-badge&logo=mysql&logoColor=white"/>
+<img alt="jupyter" src ="https://img.shields.io/badge/jupyter-F37626.svg?&style=for-the-badge&logo=jupyter&logoColor=white"/>
+<img alt="Python" src ="https://img.shields.io/badge/Python-3776AB.svg?&style=for-the-badge&logo=Python&logoColor=white"/>
+<img alt="fastapi" src ="https://img.shields.io/badge/fastapi-009688.svg?&style=for-the-badge&logo=fastapi&logoColor=white"/>
+<img alt="pydantic" src ="https://img.shields.io/badge/pydantic-E92063.svg?&style=for-the-badge&logo=pydantic&logoColor=white"/>
+<img alt="pandas" src ="https://img.shields.io/badge/pandas-150458.svg?&style=for-the-badge&logo=pandas&logoColor=white"/>
+<img alt="gunicorn" src ="https://img.shields.io/badge/gunicorn-499848.svg?&style=for-the-badge&logo=gunicorn&logoColor=white"/>
+<img alt="docker" src ="https://img.shields.io/badge/docker-2496ED.svg?&style=for-the-badge&logo=docker&logoColor=white"/>
+<img alt="dotenv" src ="https://img.shields.io/badge/dotenv-ECD53F.svg?&style=for-the-badge&logo=dotenv&logoColor=white"/>
+<img alt="nginx" src ="https://img.shields.io/badge/nginx-009639.svg?&style=for-the-badge&logo=nginx&logoColor=white"/>
+<img alt="swagger" src ="https://img.shields.io/badge/swagger-85EA2D.svg?&style=for-the-badge&logo=swagger&logoColor=white"/>
+<img alt="jest" src ="https://img.shields.io/badge/jest-C21325.svg?&style=for-the-badge&logo=jest&logoColor=white"/>
+<img alt="chakraui" src ="https://img.shields.io/badge/chakraui-319795.svg?&style=for-the-badge&logo=chakraui&logoColor=white"/>
+
+## 협업
+
+<img alt="gitlab" src ="https://img.shields.io/badge/gitlab-FC6D26.svg?&style=for-the-badge&logo=gitlab&logoColor=white"/>
+<img alt="figma" src ="https://img.shields.io/badge/figma-F24E1E.svg?&style=for-the-badge&logo=figma&logoColor=white"/>
+<img alt="notion" src ="https://img.shields.io/badge/notion-000000.svg?&style=for-the-badge&logo=notion&logoColor=white"/>
+<img alt="discord" src ="https://img.shields.io/badge/discord-5865F2.svg?&style=for-the-badge&logo=discord&logoColor=white"/>
 
 ## 서비스 설명
 
@@ -46,10 +69,48 @@ Wordy는 사용자의 영어 학습을 쉽고 재미있게 만들어주는 플�
 
 > 유저 시나리오
 
-- 단어를 혼자 외우던게 어렵던 20살 엘리스씨, 막연히 단어만 외우기도 어렵고 외운 단어에서 예제를 보여주는 좋은 사이트가 없는지 고민을 하던 중, 낱말 카드 형식으로 단어도 학습하고, 학습한 단어 기반으로 예문에 예문 속 문법까지 만들어주는 교육 사이트의 광고를 발견했다.
+- 단어를 혼자 외우던게 어렵던 20살 엘리스씨, 막연히 단어만 외우기도 어렵고 외운 단어에서 예제를 보여주는 좋은 사이트가 없는지 고민을 하던 중, 낱말 카드 형식으로 단어도 학습하고, 학습한 단어 기반으로 예문에 예문 속 문법까지 만들어주는 교육 사이트의 광고를 발견합니다.
 - pre-svg : 페이지 접속
 
----
+- 평소 이직을 희망하며 야간 토익학원을 다니던 30살 이금자씨는 출퇴근 시간에도 영단어 종이 수첩의 불편함을 깨닫고 핸드폰으로 학습 할 수 있는 어플을 찾게 되고, Wordy의 단어장 서비스를 통해 종입 수첩에 있던 단어들을 모바일에 저장하고 Wordy에서 제공되는 단어 학습을 통해 언제 어디서든 쉽게 영어 단어를 저장하고 학습 할 수 있게 됩니다.
+
+> 서비스 시나리오
+
+Wordy는 어디서나 쉽게 영단어 학습을 하며, AI를 통해 문법 교정까지 해주는 서비스 입니다.
+
+Wordy는 기존의 영단어 학습 서비스에서 더 나아가 학습 했던 단어들을 모아 사용자가 문장 생성이라는 컨텐츠를 통해 재학습을 도우며, 평소 영작문에 대한 어려움을 느끼는 유저를 위해 AI 문법 교정을 통해 쉽게 해결할 수 있습니다.
+추가로 사용자가 학습을 할때마다 본인의 학습 진도율과 유저별 진행정도의 랭크 시스템을 통해
+서비스 이용도를 높이기 위한 요소도 추가했습니다.
+
+처음 접속한 유저는 서비스 체험과 회원가입 선택해 서비스를 이용할 수 있으며, 기존 유저는 로그인을 통해 서비스를 바로 이용 가능합니다.
+
+그렇게 회원 가입을 통해 로그인을 한 유저는 처음 단어 학습 페이지가 나오고 만약 워디의 다른 서비스를 보고 싶다면 좌측 상단에 위치한 버튼을 통해 제공되는 서비스를 눌러 이용 가능합니다.
+처음 회원 가입을 할 땐 사용자의 이메일 중복 검사와 인증 번호를 통해 회원가입이 가능하며, 사용자의 이메일 등록을 통해 이후 리마인드 서비스까지 추가적으로 제공 받을 수 있습니다.
+단, 소셜 로그인의 경우 사용자가 이메일 제공을 안한다면 이후 내 정보란에서 이메일을 직접 입력해 리마인드 서비스를 받을 수 있습니다.
+
+처음 보여지는 서비스인 단어 학습은 대중적인 학습을 돕기 위한 대표적인 4개의 공인인증시험 카테고리를 통해 사용자가 직접 선택해 단어를 학습 할 수 있습니다.
+사용자가 카테고리 중 하나를 선택하면 영단어와 단어 뜻을 고르는 4지선다의 문제가 하나 씩 나오며 10개 정도를 학습합니다.
+제공되는 10개의 단어 테스트는 사용자가 직접 버튼을 눌러 정답이면 정답을 출력하고, 오답이면 오답 출력과 함께 정답의 뜻을 출력 해줍니다.
+만일 모르는 문제의 경우 우측 하단의 버튼을 통해 해당 문제를 넘길 수 있습니다.
+이렇게 총 10개의 퀴즈를 풀고 나면 학습 결과 창이 나오고 정답 갯수와 풀었던 문항의 번호와 정답 여부, 단어, 뜻을 이렇게 차례대로 보여줍니다. 이후 사용자가 직접 선택을 통해 학습하고 싶은 단어를 최대 3개까지 골라 문장 단어 학습을 진행 할 수 있으며, 기존과 같이 추가 학습 영단어 10개를 이어갈 수 있습니다.
+
+이후 진행된 단어 학습을 통해 본인의 학습 점수가 Wordy쪽에 점수로 변환되고 이는 곧 랭킹 시스템의 점수로 변환돼 본인의 랭킹과 다른유저들의 랭킹을 확인 할 수 있습니다.
+
+그 다음 문법 교정은 앞서 말한 영작문에서 헷갈리는 문법이나 쓰고자 하는 영어 작문을 AI 문법 교정기를 통해 올바른 영어 작문을 도와줍니다.
+사용자가 직접 문장을 넣고 입력 버튼을 누르면 하단 교정된 문장의 박스 안에 알맞은 영어 작문이 생성 됩니다.
+
+세번째로 기존 단어 학습 페이지에서 했던 문장 단어 학습이 다시금 나오는데, 여기서 사용자가 학습 했던 단어들이 보기로 나오고 보기들 중 세 개를 골라 스크립트(영어 문장)를 생성해 학습을 할 수 있습니다.
+
+네번째로 단어장을 통해 학습했던 단어, 틀린 단어, 그리고 즐겨 찾기를 등록한 단어들을 한눈에 볼 수 있습니다.
+추가적으로 사용자가 직접 영어 단어의 직접 단어의 뜻과 스펠링을 체크하고 지우거나 고칠 수 있습니다.
+또한 상단에 사용자가 단어 검색을 통해 필터링을 할 수 있으며 쉽게 원하는 단어 또는 오답을 찾을 수 있습니다.
+
+다섯번째로 Wordy에서 제공되는 모든 단어를 저장소를 통해 한눈에 확인할 수 있으며 여기서도 단어장과 같이 찾고자 하는 단어와 즐겨 찾기 등록 버튼을 통해 단어장에 곧바로 추가가 가능하며 하단 중앙의 버튼으로 빠른 검색 이동이 가능합니다.
+
+마지막으로 내 정보 페이지를 통해 유저의 사진과 이메일, 이름 그리고 학습 총 진행률과 카테고리 별 진행률을 확인 할 수 있습니다.
+보여지는 이메일을 통해 Wordy측에서 인증 번호 발송 및 리마인드 서비스를 제공하며, 단어 학습 페이지로 빠른 이동이 가능하도록 버튼이 추가 됐습니다.
+
+이외에도 최상단 우측의 사용자의 이미지 클릭을 통해 내 정보로 바로 이동 및 로그아웃을 진행 할 수 있습니다.
 
 ### 기능 소개
 
@@ -137,17 +198,35 @@ Wordy는 영어 단어 학습과 AI 기반 문법 교정 서비스를 제공합�
 - 유저 프로필 목록 조회
 - 유저 정보 수정하기 클릭 시 비밀번호 입력 후 수정가능
 
-### 데이터 셋
+## AI 활용
 
-## 어떤 데이터를 사용했는 지
+### 1. 모델 설정
 
-- T5 small model 활용
+- **T5-small 모델**을 사용하여 영어 문법 오류 수정 작업을 수행할 수 있도록 설정합니다. T5-small 모델은 T5의 경량화 된 모델로, 학습 및 추론 속도가 빠르며 메모리 사용량이 적기 때문입니다.
 
-### 데이터 가공방법
+### 2. 데이터셋 로드
 
-- T5 모델은 Encoder-Decoder 구조를 가진 모델입니다. 문법 교정 학습을 위해 모델의 Encoder에는 오답 데이터가 입력되었고, Decoder에는 정답 데이터가 입력되었습니다. 하지만 오답 데이터들로만 학습을 하면 모델이 입력을 항상 오답으로 간주하여 모든 문장의 문법을 수정하는 문제가 발생했습니다.
+- text-to-text 형식으로 학습하는 모델의 특성상 문장 데이터셋이 필요합니다. 틀린 문장(modified)과 교정된 문장(sentence)을 가진 데이터셋, **'juancavallotti/multilingual-gec'** 을 사용했습니다.
 
-이에, 동일한 데이터셋을 사용하면서도 Encoder에는 정답 데이터를 입력하고, Decoder에도 정답을 입력하는 데이터 Augmentation을 실시했습니다. 학습 데이터셋을 2배로 증가시켜 정확도를 향상시켰고, 올바른 문장을 학습할 때에도 항상 수정하는 문제를 해결할 수 있었습니다.
+### 3. 데이터 전처리
+
+- 불필요한 열을 제거하고, 문장을 토큰화하여 T5 모델에 입력 가능한 형태로 전처리합니다. 기존 데이터에 {교정된 문장, 교정된 문장} 데이터를 Concatenate하여 Data Augmentation을 수행합니다.
+
+### 4. 훈련 및 평가
+
+- Seq2SeqTrainer를 사용하여 모델을 훈련하고 평가합니다. 모델을 학습시키고 성능을 평가하여 최적의 성능을 얻습니다.
+
+### 5. 모델 저장
+
+- 가장 낮은 Loss를 가진 모델을 선택하여 Hugging Face에 'gec-fine-tuned'로 업로드합니다.
+
+### 6. Pipeline 활용
+
+- Hugging Face의 pipeline을 사용하여 미리 훈련된 모델 'gec-fine-tuned'를 활용하여 문법 오류 수정 작업을 쉽게 수행합니다.
+
+### 7. 서버 연결
+
+- 파이썬 fast api를 이용해 빠르게 교정된 문장을 사용자에게 제공합니다.
 
 ## 팀 구성
 
